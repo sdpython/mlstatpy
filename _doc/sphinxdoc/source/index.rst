@@ -33,7 +33,7 @@ Xavier Dupré
     :target: https://travis-ci.org/sdpython/mlstatpy
     :alt: Build status
     
-.. image:: https://ci.appveyor.com/api/projects/status/6qp50sxl22aqwtb5?svg=true
+.. image:: https://ci.appveyor.com/api/projects/status/j5poldtnij0a3ac0?svg=true
     :target: https://ci.appveyor.com/project/sdpython/mlstatpy
     :alt: Build Status Windows
     
