@@ -69,7 +69,7 @@ class TestRunNotebooks(unittest.TestCase):
 
         # selection of notebooks
         fnb = os.path.normpath(os.path.join(
-            os.path.abspath(os.path.dirname(__file__)), "..", "..", "_doc", "notebooks"))
+            os.path.abspath(os.path.dirname(__file__)), "..", "..", "_doc", "notebooks", "ml"))
         keepnote = []
         for f in os.listdir(fnb):
             if os.path.splitext(f)[-1] == ".ipynb":
