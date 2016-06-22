@@ -226,7 +226,8 @@ out_*
 */sphinxdoc/source/LICENSE.txt
 */sphinxdoc/source/filechanges.*
 version.txt
-_doc/sphinxdoc/source/python_template/
+_doc/sphinxdoc/source/python_template/*box.html
+_doc/sphinxdoc/source/python_template/*toc.html
 _doc/sphinxdoc/source/mlstatpy/
 _doc/sphinxdoc/source/coverage/*
 */sphinxdoc/source/all*.rst
@@ -246,3 +247,5 @@ auto_*.xml
 auto_*.db3
 _doc/sphinxdoc/source/phdoc_static/require.js
 _doc/sphinxdoc/require.js
+ex.*
+m.temp

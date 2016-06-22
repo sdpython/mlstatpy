@@ -1,0 +1,11 @@
+.admonition {
+	color: #424242;
+	background-color: #F9F9F9;
+	margin: 20px 30px;
+}
+.admonition-title {
+	font-weight: bold;
+}
+.body {
+	margin-right: 40px;
+}
