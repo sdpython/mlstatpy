@@ -2,26 +2,26 @@
 
 .. _l-issues-todolist:
 
-Issues and enhancements
-=======================
+Bugs et améliorations 
+=====================
 
 .. index:: issues, todo
 
 .. contents::
 
 
-Issues
-++++++
+Bugs
+++++
 
 .. todoextlist::
-    :tag: issue
+    :tag: bug
 
 
-Enhancements
+Amélioration
 ++++++++++++
 
 .. todoextlist::
-    :tag: enhancement
+    :tag: plus
 
 
 

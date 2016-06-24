@@ -18,11 +18,17 @@ init:
 install:
   - "%PYTHON%\\python -m pip install --upgrade pip"
   - "%PYTHON%\\Scripts\\pip install pymyinstall"
-  - "%PYTHON%\\Scripts\\pymy_install3 --set=pyquickhelper"
-  - "%PYTHON%\\Scripts\\pip install pyquickhelper"
-  - "%PYTHON%\\Scripts\\pip install pycryptodome"
+  - "%PYTHON%\\Scripts\\pip install -U git+https://github.com/quantopian/qgrid --no-deps"
+  - "%PYTHON%\\Scripts\\pymy_install3 --set=pyensae"
+  - "%PYTHON%\\Scripts\\pip install cryptography"
+  - "%PYTHON%\\Scripts\\pip install azure"
+  - "%PYTHON%\\Scripts\\pymy_install3 pycrypto"
+  - "%PYTHON%\\Scripts\\pip install pycryptodomex"
+  - "%PYTHON%\\Scripts\\pip install urllib3"
   - "%PYTHON%\\Scripts\\pip install pycodestyle"
-
+  - "%PYTHON%\\Scripts\\pymy_install3 --task=tool --source=zip graphviz"
+  - "set PATH=%PATH%;C:\\projects\\mlstatpy\\build\\update_modules\\Graphviz\\bin"
+  - "dir C:\\projects\\mlstatpy\\build\\update_modules\\Graphviz\\bin"
 build: off
 
 test_script:

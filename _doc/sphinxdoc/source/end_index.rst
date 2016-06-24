@@ -5,12 +5,7 @@ Index
 
 .. toctree::
 
-    defthe_index
-    issues_todoextlist
-    glossary
-    filechanges
-    installation
-    README
-    license
-    generatedoc
-    generatesetup
+    end_index_changes
+    end_index_glossaire
+    end_index_modules
+
