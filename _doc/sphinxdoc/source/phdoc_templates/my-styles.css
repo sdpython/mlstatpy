@@ -12,6 +12,6 @@
 .line-block {
 	margin-left: 30px;
 	margin-bottom: 5px;
-	top: 5px;
-	size: 14;
+	margin-top: 5px;
+	font-size: 14;
 }
