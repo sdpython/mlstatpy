@@ -7,5 +7,5 @@ Index
 
     end_index_changes
     end_index_glossaire
-    end_index_modules
+    end_index_module
 

@@ -18,7 +18,7 @@ ainsi qu'une méthode permettant de supprimer des coefficients inutiles
 :ref`nn-selection_connexion`.
 
 .. contents:: .
-    :depth: 3
+    :depth: 2
 
 
 Définition des réseaux de neurones multi-couches
@@ -111,6 +111,7 @@ des entrées et des poids. Des exemples de fonctions de transfert
 sont donnés par la table qui suit.
 Les plus couramment utilisées sont les fonctions linéaire et sigmoïde.
 
+.. cssclass:: table-hover
 
 ============================================= ======================================
 exemples de fonction de transfert ou de seuil expression
@@ -225,7 +226,45 @@ de la couche :math:`C_{i-1}`. Cette définition est plus facile
 et rappelle le rôle non symétrique des entrées et des poids. 
 Le mécanisme qui permet de calculer les sorties d'un réseau de neurones 
 sachant ses poids est appelé *propagation*.
+
+
+.. mathdef:: 
+    :title: Propagation
+    :tag: Algorithme
+    :lid: algo_propagation
+
+    Cet algorithme s'applique à un réseau de neurones vérifiant la 
+    définition du :ref:`perceptron`. Il s'agit
+    de calculer les sorties de ce réseau connaissant ses poids 
+    :math:`\pa{w_{c,i,j}}` et ses entrées :math:`\pa{x_j}`.
     
+    *Initialisation*
+    
+    | for i in :math:`1..C_0` :
+    |   z_{0,i} \longleftarrow x_i
+    
+    Vient ensuite le calcul itératif de la suite 
+    :math:`\pa{Z_c}_{1 \infegal c \infegal C}` :
+    
+    *Récurrence*
+    
+    | for c in :math:`1..C` :
+    |   for i in :math:`1..C_c` :
+    |       :math:`z_{c,i} \longleftarrow 0`
+    |       for j in :math:`1..C_{i-1}` :
+    |           :math:`z_{c,i} \longleftarrow z_{c,i} + w_{c,i,j} z_{c-1,j}`
+    |       :math:`z_{c,i} \longleftarrow f\pa { z_{c,i} + b_{c,i}}`
+
+    
+Le nombre de couches d'un réseau de neurones n'est pas limité. 
+Les réseaux de deux couches (une couche pour les entrées, une couche de sortie) 
+sont rarement utilisés. Trois couches sont nécessaires (une couche pour 
+les entrées, une couche dite *cachée*, une couche de sortie) pour construire des 
+modèles avec une propriété intéressante de densité :ref:`theoreme_densite`.
+
+
+La régression
+=============
 
 
 

@@ -22,8 +22,10 @@ sys.path.insert(
 
 from pyquickhelper.helpgen.default_conf import set_sphinx_variables
 set_sphinx_variables(__file__, "mlstatpy", "Xavier Dupré", 2016,
-                     sphtheme.__name__, [sphtheme.get_html_theme_path()], locals(),
-                     extlinks=dict(issue=('https://github.com/sdpython/mlstatpy/issues/%s', 'issue')),
+                     sphtheme.__name__, [
+                         sphtheme.get_html_theme_path()], locals(),
+                     extlinks=dict(
+                         issue=('https://github.com/sdpython/mlstatpy/issues/%s', 'issue')),
                      title="Machine Learning, Statistiques et Programmation", book=True)
 
 blog_root = "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/"
@@ -46,4 +48,3 @@ custom_preamble = """\n\\newcommand{\\girafedec}[3]{ \\begin{array}{ccccc} #1 &=
             """
 imgmath_latex_preamble += custom_preamble
 preamble += custom_preamble
-
