@@ -33,7 +33,7 @@ install:
   - pip install -r requirements_ext.txt
   - pip install -U git+https://github.com/quantopian/qgrid --no-deps  
   # we remove MKL
-  - conda remove --features mkl
+  # - conda remove --features mkl
   # - pip install hg+http://bitbucket.org/pygame/pygame
 script:
   - python setup.py unittests
