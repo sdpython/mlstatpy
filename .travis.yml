@@ -25,6 +25,7 @@ install:
   # - make all
   #- conda build build_tools/conda-recipe --quiet
   - conda install -q --file=requirements_conda.txt
+  - conda install --yes mkl mkl-service
   - pip install -r requirements.txt
   - pip install -r requirements2.txt
   - pip install -r requirements_scikit.txt
