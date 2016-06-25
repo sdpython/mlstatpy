@@ -208,17 +208,20 @@ Un réseau de neurones : le perceptron
     :lid: figure_peceptron-fig
 
     .. image:: rnimg/rn_gradient.png
-        :height: 200
+        :width: 200
         
     * :math:`\vecteur{x_1}{x_p}` : entrées
     * :math:`C_i` nombre de neurones sur la couche :math:`i`, :math:`C_0 = p`
     * :math:`z_{c,i}` sortie du neurone :math:`i`, de la couche :math:`c`, par extension, :math:`z_{0,i} = x_i`
     * :math:`y_{c,i}` potentiel du neurone :math:`i` de la couche :math:`c`
-    * :math:`w_{c,i,j}` coefficient associé à l'entrée :math:`j` du neurone :math:`i` de la couche :math:`c`
+    * :math:`w_{c,i,j}` coefficient associé à l'entrée :math:`j` du neurone :math:`i` de la couche :math:`c`,
     * :math:`b_{c,i}` biais du neurone :math:`i` de la couche :math:`c`
     * :math:`f_{c,i}` fonction de seuil du neurone :math:`i` de la couche :math:`c`        
-        
-Souvent, on considère que les entrées forment la couche :math:`C_0` de 
+
+On note :math:`W_c` la matrice des poids associée à la couche :math:`c`.
+De la même manière, :math:`B_c` est le vecteur des biais associée à la couche :math:`c`,
+:math:`Z_c`, :math:`Y_c` sont les objets vectoriels correspondant.
+On considère que les entrées forment la couche :math:`C_0` de 
 manière à simplifier les écritures. Ainsi, 
 chaque couche :math:`C_i` du perceptron a pour entrées les sorties 
 de la couche :math:`C_{i-1}`. Cette définition est plus facile 
@@ -238,22 +241,14 @@ sachant ses poids est appelé *propagation*.
     de calculer les sorties de ce réseau connaissant ses poids 
     :math:`\pa{w_{c,i,j}}` et ses entrées :math:`\pa{x_j}`.
     
-    *Initialisation*
-    
-    | for i in :math:`1..C_0` :
-    |   z_{0,i} \longleftarrow x_i
+    | :math:`Z_c \longleftarrow X`
     
     Vient ensuite le calcul itératif de la suite 
     :math:`\pa{Z_c}_{1 \infegal c \infegal C}` :
     
-    *Récurrence*
-    
     | for c in :math:`1..C` :
-    |   for i in :math:`1..C_c` :
-    |       :math:`z_{c,i} \longleftarrow 0`
-    |       for j in :math:`1..C_{i-1}` :
-    |           :math:`z_{c,i} \longleftarrow z_{c,i} + w_{c,i,j} z_{c-1,j}`
-    |       :math:`z_{c,i} \longleftarrow f\pa { z_{c,i} + b_{c,i}}`
+    |   :math:`Y_c \longleftarrow  W_c Z_{c-1} + B_c`
+    |   :math:`Z_c \longleftarrow F\pa { Y_c }`
 
     
 Le nombre de couches d'un réseau de neurones n'est pas limité. 
