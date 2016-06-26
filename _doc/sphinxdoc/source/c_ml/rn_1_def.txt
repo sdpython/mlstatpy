@@ -1,25 +1,5 @@
 
 
-===================
-Réseaux de neurones
-===================
-
-
-Ce chapitre aborde les réseaux de neurones au travers de deux utilisations courantes, 
-la :ref:`régression <nn-regression>`
-et la :ref:`classification <nn-classification>`
-et une qui l'est moins, 
-l'`analyse en composantes principales <https://fr.wikipedia.org/wiki/Analyse_en_composantes_principales>`_
-ou :ref:`ACP <nn-ACP>`
-sans oublier les méthodes d'estimation des paramètres qui les composent, 
-à savoir optimisations du premier et second ordre 
-(:ref:`nn-rn_optim_premier_ordre`) et :ref`nn-rn_optim_second_ordre`
-ainsi qu'une méthode permettant de supprimer des coefficients inutiles 
-:ref`nn-selection_connexion`.
-
-.. contents:: .
-    :depth: 2
-
 
 Définition des réseaux de neurones multi-couches
 ================================================
@@ -28,7 +8,7 @@ Définition des réseaux de neurones multi-couches
 Les réseaux de neurones multi-couches (ou perceptrons) définissent une 
 classe de fonctions dont l'intérêt est de pouvoir approcher n'importe quelle 
 fonction continue à support compact 
-(voir théorème :ref:`nn-theoreme_densite`).
+(voir théorème sur la :ref:`densité <theoreme_densite>`).
 Aucun autre type de réseau de neurones ne sera étudié et par la suite, 
 tout réseau de neurones sera considéré comme multi-couches
 (donc pas les `réseau de Kohonen <https://fr.wikipedia.org/wiki/Carte_auto_adaptative>`_).
@@ -208,7 +188,7 @@ Un réseau de neurones : le perceptron
     :lid: figure_peceptron-fig
 
     .. image:: rnimg/rn_gradient.png
-        :width: 200
+        :width: 300
         
     * :math:`\vecteur{x_1}{x_p}` : entrées
     * :math:`C_i` nombre de neurones sur la couche :math:`i`, :math:`C_0 = p`
@@ -237,7 +217,7 @@ sachant ses poids est appelé *propagation*.
     :lid: algo_propagation
 
     Cet algorithme s'applique à un réseau de neurones vérifiant la 
-    définition du :ref:`perceptron`. Il s'agit
+    définition du :ref:`perception <perceptron>`. Il s'agit
     de calculer les sorties de ce réseau connaissant ses poids 
     :math:`\pa{w_{c,i,j}}` et ses entrées :math:`\pa{x_j}`.
     
@@ -255,15 +235,7 @@ Le nombre de couches d'un réseau de neurones n'est pas limité.
 Les réseaux de deux couches (une couche pour les entrées, une couche de sortie) 
 sont rarement utilisés. Trois couches sont nécessaires (une couche pour 
 les entrées, une couche dite *cachée*, une couche de sortie) pour construire des 
-modèles avec une propriété intéressante de densité :ref:`theoreme_densite`.
+modèles avec une propriété intéressante de :ref:`densité <theoreme_densite>`.
 
 
-La régression
-=============
-
-
-
-.. [Rumelhart1986] Learning internal representations by error propagation (1986),
-   D. E. Rumelhart, G. E. Hinton, R. J. Williams 
-   in *Parallel distributed processing: explorations in the microstructures of cohniyionn MIT Press, Cambridge*
 

@@ -8,6 +8,11 @@ Listes des définitions et théorèmes
 .. contents:: .
     :depth: 2
 
+Corollaires
++++++++++++
+
+.. mathdeflist::
+    :tag: Corollaire
 
 
 Définitions
@@ -21,6 +26,12 @@ Figures
 
 .. mathdeflist::
     :tag: Figure
+    
+Problèmes
++++++++++
+
+.. mathdeflist::
+    :tag: Problème
 
 Tables
 ++++++

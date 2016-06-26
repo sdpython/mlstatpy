@@ -1,0 +1,211 @@
+
+
+
+Régression par un réseau de neurones multi-couches
+==================================================
+
+.. index:: rn_enonce_probleme_regression
+
+Résolution du problème de la régression
++++++++++++++++++++++++++++++++++++++++
+
+
+Soient deux variables aléatoires continues 
+:math:`\pa{X,Y} \in \R^p \times \R^q \sim \loi` quelconque, 
+la résolution du problème de :ref:`régression <problem-regression>` 
+est l'estimation de la fonction :math:`\esp(Y|X) = F\pa{X}`.
+Pour cela, on dispose d'un ensemble de points 
+:math:`A = \acc{ \pa{X_{i},Y_{i}} \sim \loi | 1 \infegal i \infegal N }`.
+    
+Soit :math:`f : \R^M \times \R^p \longrightarrow \R^q` une fonction, on définit 
+:math:`\forall i \in \intervalle{1}{N}, \; \widehat{Y_{i}^{W}} = f \pa{W,X_{i}}`.
+:math:`\widehat{Y_{i}^{W}}` est appelée la valeur prédite pour `X_{i}`.
+On pose alors 
+:math:`\epsilon_{i}^{W} = Y_{i} -  \widehat{Y_{i}^{W}} = Y_{i} - f \pa{W,X_{i}}`.
+
+Les résidus sont supposés 
+`i.i.d. (identiquement et indépendemment distribués) <https://fr.wikipedia.org/wiki/Variables_ind%C3%A9pendantes_et_identiquement_distribu%C3%A9es>`_,
+et suivant une loi normale 
+:math:`\forall i \in \intervalle{1}{N}, \; \epsilon_{i}^{W} \sim \loinormale{\mu_{W}}{\sigma_{W}}`
+La vraisemblance d'un échantillon
+:math:`\pa{Z_i}_{1\infegal i \infegal N}`, 
+où les :math:`Z_i` sont indépendantes entre elles et suivent la loi de densité 
+:math:`f \pa{z | \theta}` 
+est la densité du vecteur :math:`\vecteur{Z_1}{Z_N}` qu'on exprime 
+comme suit :
+
+.. math::
+
+    \begin{array}{rrcl}
+                    &L\pa{\theta, \vecteurno{Z_1}{Z_N}} & =& \prod_{n=1}^{N} f\pa{Z_i | \theta} \\
+    \Longrightarrow&
+    \ln L\pa{\theta, \vecteurno{Z_1}{Z_N}} &=& \sum_{n=1}^{N} \ln f\pa{Z_i | \theta}
+    \end{array}
+    
+
+La log-vraisemblance de l'échantillon s'écrit
+:math:`L_{W} = -\frac{1}{2\sigma_{W}^2} \sum_{i=1}^{N}
+\pa{Y_{i} - \widehat{Y_{i}^W} - \mu_{W} }^2 + N\ln\pa{\sigma_{W}\sqrt{2\pi}}`.
+Les estimateurs du maximum de vraisemblance 
+pour :math:`\mu_W` et :math:`\sigma_W` sont (voir [Saporta1990]_) :
+
+
+.. math::
+
+    \begin{array}{rcl}
+    \widehat{\mu_{W}}     &=&     \frac{1}{N} \sum_{i=1}^{N} Y_{i} - \widehat{Y_{i}^W} \\
+    \widehat{\sigma_{W}}  &=&     \sqrt{ \frac{ \sum_{i=1}^{N} \pa{Y_{i} - 
+                                  \widehat{Y_{i}^W} - \mu_{W}}^2}{N}}
+    \end{array}
+
+
+L'estimateur de :math:`\widehat{Y}=f\pa{W,X}` désirée est de préférence 
+sans biais (:math:`\mu_W = 0`) et de variance minimum, 
+par conséquent, les paramètres :math:`\overset{*}{W}` 
+qui maximisent la vraisemblance :math:`L_W` sont :
+
+
+.. math::
+    :label: rn_eqn_regression_1
+
+    \begin{array}{rcl}
+    \overset{*}{W}   &=& \underset{W \in \R^M}{\arg \min} \sum_{i=1}^{N} 
+                                            \pa {Y_{i} - \widehat{Y_{i}^W}}^2 \\
+                     &=& \underset{W \in \R^M}{\arg \min} \sum_{i=1}^{N} 
+                            \pa {Y_{i} - f \pa{W,X_{i}}}^2
+    \end{array}
+
+
+Réciproquement, on vérifie que si :math:`W^*` vérifie 
+l'équation :eq:`rn_eqn_regression_1` alors l'estimateur défini par 
+:math:`f` est sans biais
+Il suffit pour s'en convaincre de poser 
+:math:`g = f + \alpha` avec 
+:math:`\alpha \in \R` et de vérifier que la valeur optimale pour 
+:math:`\alpha` est 
+:math:`\alpha = - \frac{1}{N}\, \sum_{i=1}^{N} \, \left. Y_i - f\pa{W,X_i} \right.`.
+L'estimateur minimise la vraisemblance :math:`L_W`. 
+Cette formule peut être généralisée en faisant une autre hypothèse 
+que celle de la normalité des résidus (l'indépendance étant conservée), 
+l'équation :eq:`rn_eqn_regression_1`
+peut généralisée par :eq:`rn_eqn_regression_2`.
+
+.. math::
+    :label: rn_eqn_regression_2
+    
+    \begin{array}{rcl}
+    \overset{*}{W}     &=& \underset{W \in \R^M}{\arg \min} \sum_{i=1}^{N} 
+                                                            e\pa {Y_{i} - \widehat{Y_{i}^W}} \\
+                        &=& \underset{W \in \R^M}{\arg \min} \sum_{i=1}^{N} 
+                                e\pa{Y_{i} - f \pa{W,X_{i}}} 
+    \end{array}
+
+Où la fonction :math:`e : \R^q \in \R` est appelée fonction d'erreur.
+
+
+
+
+
+
+
+Propriété et intérêt des réseaux de neurones
+++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+L'utilisation de réseaux de neurones s'est considérablement 
+développée depuis que l'algorithme de rétropropagation a 
+été trouvé ([LeCun1985]_, [Rumelhart1986]_, [Bishop1995]_). 
+Ce dernier permet d'estimer la dérivée d'un réseau de neurones en 
+un point donné et a ouvert la voie à des méthodes classiques 
+de résolution pour des problèmes d'optimisation tels que la régression non linéaire.
+
+Comme l'ensemble des fonctions polynômiales, 
+l'ensemble des fonctions engendrées par des réseaux de neurones 
+multi-couches possède des propriétés de :ref:`densité <theoreme_densite>`
+et sont infiniment dérivables. Les réseaux de neurones comme 
+les polynômes sont utilisés pour modéliser la fonction 
+:math:`f` de l'équation :eq:`rn_eqn_regression_2`.
+Ils diffèrent néanmoins sur certains points
+
+Si une couche ne contient que des fonctions de transfert bornées 
+comme la fonction sigmoïde, tout réseau de neurones incluant cette couche 
+sera aussi borné. D'un point de vue informatique, il est 
+préférable d'effectuer des calculs avec des valeurs du même 
+ordre de grandeur. Pour un polynôme, les valeurs des termes de 
+degré élevé peuvent être largement supérieurs à leur somme.
+
+Un autre attrait est la symétrie dans l'architecture d'un réseau 
+de neurones, les neurones qui le composent jouent des rôles 
+symétriques (corollaire :ref:`familles libres <corollaire_famille_libre>`. 
+Pour améliorer l'approximation d'une fonction, dans un cas, 
+il suffit d'ajouter un neurone au réseau, dans l'autre, 
+il faut inclure des polynômes de degré plus élevé que ceux déjà  employés.
+
+
+.. mathdef::
+    :title: densité des réseaux de neurones (Cybenko1989)
+    :lid: theoreme_densite
+    :tag: Théorème
+
+    [Cybenko1989]_
+    Soit :math:`E_{p}^{q}` l'espace des réseaux de neurones à 
+    :math:`p` entrées et :math:`q` sorties, possédant une couche cachée dont la
+    fonction de seuil est une fonction sigmoïde 
+    :math:`\left(  x\rightarrow 1-\frac{2}{1+e^{x}}\right)`,
+    une couche de sortie dont la fonction de seuil est linéaire 
+    Soit :math:`F_{p}^{q}` l'ensemble des fonctions continues de 
+    :math:`C\subset\R^{p}\longrightarrow\R^{q}` avec :math:`C` 
+    compact muni de la norme 
+    :math:`\left\| f\right\| =\underset{x\in C}{\sup}\left\|  f\left( x\right)  \right\|`
+    Alors :math:`E_{p}^{q}` est dense dans :math:`F_{p}^{q}`.
+			
+
+La démonstration de ce théorème nécessite deux lemmes. 
+Ceux-ci utilisent la définition usuelle du produit scalaire
+sur :math:`\R^p` défini par
+:math:`\pa{x,y} = \pa{\vecteurno{x_1}{x_p},\vecteurno{y_1}{y_p}} \in \R^{2p} \longrightarrow
+\left\langle x,y \right\rangle = \sum_{i=1}^{p} x_i y_i`.
+et la norme infinie : 
+:math:`x = \vecteur{x_1}{x_p} \in \R^p \longrightarrow \norm{x} = 
+\underset{i \in \intervalle{1}{p}}{\max} x_i`.
+Toutes les normes sont 
+`équivalentes <https://fr.wikipedia.org/wiki/Norme_%C3%A9quivalente>`_ 
+sur :math:`\R^p`.
+
+
+
+
+.. mathdef::
+    :title: approximation d'une fonction créneau
+    :lid: theoreme_densite_lemme_a
+    :tag: Corollaire
+
+    Soit :math:`C \subset \R^p, \; C= \acc { \vecteur{y_1}{y_p} \in \R^p \, |  
+                \forall i\in \intervalle{1}{p},\, 0 \leqslant y_{i}\leqslant 1   }`, 
+    alors :
+    
+    .. math::
+    
+        \begin{array}{l}
+        \forall \varepsilon > 0, \; \forall \alpha>0, \; \exists n \in \N^*, \; 
+                    \exists \vecteur{x_1}{x_n} 
+                    \in\left(  \R^p\right)  ^{n}, \; \exists 
+            \vecteur{\gamma_1}{\gamma_n} \in \R^n  \text{ tels que } \forall x\in \R^p, \\ \\
+        \begin{array}{ll}
+        &   \left| \underset{i=1}{\overset{n}{\sum}}\dfrac{\gamma_i}
+                        {1+e^{\left\langle x_{i},x\right\rangle +b_{i}}}-\indicatrice{x\in C
+            }\right| \leqslant1 \\ \\
+        \text{ et } &   \underset{y\in Fr\left( C\right)  }{\inf }\left\| x-y\right\| > 
+                        \alpha\Rightarrow\left| \underset{i=1}{\overset
+            {n}{\sum}}\dfrac{\gamma_i}{1+e^{\left\langle x_{i},x\right\rangle +b_{i}}} 
+                    -\indicatrice{x\in C}\right| \leqslant\varepsilon
+        \end{array}
+        \end{array}
+		
+		
+
+
+
+
+
