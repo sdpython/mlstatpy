@@ -64,7 +64,7 @@ Un plan a été divisé en deux demi-plan par une droite délimitant deux classe
 le réseau de neurones dont la couche cachée contient deux neurones linéaires, 
 a retrouvé cette séparation malgré les quelques exemples mal classés. 
 
-.. image:: classificationnt.png
+.. image:: rnimg/classificationnt.png
 
 
 En revanche, un réseau de neurones comportant trop de coefficients 
