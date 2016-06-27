@@ -181,8 +181,7 @@ sur :math:`\R^p`.
     :lid: theoreme_densite_lemme_a
     :tag: Corollaire
 
-    Soit :math:`C \subset \R^p, \; C= \acc { \vecteur{y_1}{y_p} \in \R^p \, |  
-                \forall i\in \intervalle{1}{p},\, 0 \leqslant y_{i}\leqslant 1   }`, 
+    Soit :math:`C \subset \R^p, \; C= \acc { \vecteur{y_1}{y_p} \in \R^p \, | \forall i\in \intervalle{1}{p},\, 0 \leqslant y_{i}\leqslant 1   }`, 
     alors :
     
     .. math::
