@@ -1,0 +1,1655 @@
+\input{../../common/livre_begin.tex}
+\firstpassagedo{\input{classification_titre.tex}}
+\input{../../common/livre_table_begin.tex}
+\firstpassagedo{\input{classification_chapter.tex}}
+
+
+Cette annexe recense différents moyens d'effectuer une classification non supervisée et de déterminer le nombre de classes approprié.
+
+\label{classification_non_supervisee}
+
+
+
+
+
+
+
+%-----------------------------------------------------------------------------------------------------------------------
+\section{Algorithme des centres mobiles}
+%-----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+\indexfr{non supervisé}
+\indexfr{inertie}
+\indexfr{centres mobiles}
+\indexfr{nuées dynamiques}
+\indexfrr{variance}{intra-classe}
+\indexfrr{apprentissage}{non supervisé}
+\indexfr{classification}
+\label{emission_continue_centre_mobile}
+
+
+
+\subsection{Principe}
+
+
+Les centres mobiles ou nuées dynamiques sont un algorithme de classification \emph{non supervisé}. A partir d'un ensemble de points, il détermine pour un nombre de classes fixé, une répartition des points qui minimise un critère appelé \emph{inertie} ou variance \emph{intra-classe}.
+
+\quad 
+\label{hmm_classification_obs_un}
+
+		\begin{xalgorithm}{centres mobiles}
+		\label{algo_centre_mobile}
+		\indexfr{centres mobiles}
+		\indexfr{inertie}
+		\indexfr{nuage de points}
+		
+		On considère un ensemble de points~:
+		        $$
+		        \left(  X_{i}\right)  _{1\leqslant i\leqslant P}\in\left(  \R^{N}\right)  ^{P}
+		        $$
+		
+		A chaque point est associée une classe~: $\left(  c_{i}\right)  
+					_{1\leqslant i\leqslant P}\in\left\{1,...,C\right\}  ^{P}$
+		        
+		On définit les barycentres des classes : $\left( G_{i}\right)  
+					_{1\leqslant i\leqslant C}\in\left(  \R^{N}\right) ^{C}$ \newline%
+		
+		\indexfr{barycentre}
+		
+		\begin{xalgostep}{initialisation}
+		        L'initialisation consiste à choisir pour chaque point une classe aléatoirement dans 
+		        $\left\{  1,...,C\right\}$.\\
+		        $t \longleftarrow 0$
+		\end{xalgostep}
+		
+		\possiblecut
+		
+		\begin{xalgostep}{calcul des barycentres}\label{hmm_cm_step_bary}
+		        \begin{xfor}{k}{1}{C}
+		        $
+		        G_{k}^{t} \longleftarrow \frac{\underset{i=1}{\overset{P}{ {\displaystyle\sum} }}
+		        	X_{i}\,\mathbf{1}_{\left\{  c_{i}^{t}=k\right\}  }}{\underset{i=1}
+		        {\overset{P}{ {\displaystyle\sum} }}\mathbf{1}_{\left\{  c_{i}^{t}=k\right\}  }}
+		        $
+		        \end{xfor}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{calcul de l'inertie}
+		        $
+		        \begin{array}{lll}
+		        I^t 		&\longleftarrow& 		\summy{i=1}{P} \; d^{2}\left(  X_i, G_{c_i^t}^t\right) \\
+		        t       &\longleftarrow& 		t+1
+		        \end{array}
+		        $ \\
+		        \begin{xif}{$t > 0$ et $I_t \sim I_{t-1}$}
+		        arrêt de l'algorithme
+		        \end{xif}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{attribution des classes}\label{hmm_cm_step_attr}
+		        \begin{xfor}{i}{1}{P}
+		        $
+		        \begin{array}{l}
+		        c_{i}^{t+1} \longleftarrow \underset{k}{\arg\min} \; d\left(  X_{i},G_{k}^{t}\right) \\
+		        \quad \text{où } d\left(  X_i,G_k^{t}\right)  \text{ est la distance entre } X_i \text{ et }G_k^{t}
+		        \end{array}
+		        $
+		        \end{xfor} \\
+		        Retour à l'étape~\ref{hmm_cm_step_bary} jusqu'à convergence de l'inertie $I^t$.
+		\end{xalgostep}
+		
+		\end{xalgorithm}
+		
+		
+
+
+
+
+
+
+		\begin{xtheorem}{convergence de l'inertie}
+		\label{theoreme_inertie_1}
+		\indexfr{inertie}
+		Quelque soit l'initialisation choisie, la suite $\pa{I_t}_{t\supegal 0}$ 
+		construite par l'algorithme~\ref{algo_centre_mobile} converge.
+		\end{xtheorem}
+
+
+
+La démonstration du théorème~\ref{theoreme_inertie_1} nécessite le lemme suivant.
+
+
+		\begin{xlemma}{inertie minimum}
+		\label{lemme_inertie_minimum}
+		\indexfr{inertie}
+		
+		Soit $\vecteur{X_1}{X_P} \in \pa{\R^N}^P$, $P$ points de $\R^N$, le minimum de la quantité $Q\pa{Y \in \R^N}$~:
+		
+				\begin{eqnarray}
+				Q\pa{Y} = \summy{i=1}{P} \; d^2\pa{X_i,Y}
+				\label{eq_lemme_inertie_q}
+				\end{eqnarray}
+		
+		est atteint pour $Y=G=\dfrac{1}{P} \summy{i=1}{P} X_i$ le barycentre des points $\vecteur{X_1}{X_P}$.
+		
+		\end{xlemma}
+		
+
+
+
+
+\begin{xdemo}{lemme}{\ref{lemme_inertie_minimum}}
+
+Soit $\vecteur{X_1}{X_P} \in \pa{\R^N}^P$, $P$ points de $\R^N$.
+
+        \begin{eqnarray*}
+        										\summy{i=1}{P} \overrightarrow{GX_{i}} = \overrightarrow{0}  
+        &\Longrightarrow&  	\summy{i=1}{P} d^2\pa{X_i,Y} = \summy{i=1}{P} d^2\pa{X_i,G}+ P \, d^2\pa{G,Y} \\
+        &\Longrightarrow& 	\underset{Y\in\R^N}{\arg\min} \; \summy{i=1}{P} d^2\pa{X_i,Y} = \acc{G}
+        \end{eqnarray*}
+
+\end{xdemo}
+
+
+
+
+
+
+
+
+
+
+
+\begin{xdemo}{théorème}{\ref{algo_centre_mobile}}
+
+L'étape~\ref{hmm_cm_step_attr} consiste à attribuer à chaque point le barycentre le plus proche. On définit $J_t$ par~:
+
+
+			\begin{eqnarray}
+			J^{t+1} &=&					\summy{i=1}{P} \; d^2\pa{ X_i, G_{c_i^{t+1}}^t} 
+			\end{eqnarray}
+			
+On en déduit que~:			
+			
+			\begin{eqnarray}
+			J^{t+1}	&=& 				\summyone{i, c_i^t \neq c_i^{t+1}} \; d^2\pa{ X_i, G_{c_i^{t+1}}^t} +
+			J^{t+1}							\summyone{i, c_i^t = c_i^{t+1}} \; d^2\pa{ X_i, G_{c_i^{t+1}}^t}  \nonumber \\
+			J^{t+1}	&\infegal&  \summyone{i, c_i^t \neq c_i^{t+1}} \; d^2\pa{ X_i, G_{c_i^{t}}^t} +
+													\summyone{i, c_i^t = c_i^{t+1}} \; d^2\pa{ X_i, G_{c_i^{t}}^t}  \nonumber  \\
+			J^{t+1}	&\infegal&  I^t
+			\end{eqnarray}
+
+Le lemme~\ref{lemme_inertie_minimum}, appliqué à chacune des classes $\ensemble{1}{C}$, permet d'affirmer que $I^{t+1} \infegal J^{t+1}$. Par conséquent, la suite $\pa{I_t}_{t\supegal 0}$ est décroissante et minorée par $0$, elle est donc convergente.
+
+\end{xdemo}
+
+
+
+
+
+\begin{xremark}{convexité}
+L'algorithme \indexfr{convexité} des centres mobiles cherche à attribuer à chaque point de l'ensemble une classe parmi les $C$ disponibles. La solution trouvée dépend de l'initialisation et n'est pas forcément celle qui minimise l'inertie intra-classe : l'inertie finale est un minimum local. Néanmoins, elle assure que la partition est formée de classes convexes~: soit $c_1$ et $c_2$ deux classes différentes, on note $C_1$ et $C_2$ les enveloppes convexes des points qui constituent ces deux classes, alors $\overset{o}{C_1} \cap \overset{o}{C_2} = \emptyset$. La figure~\ref{mc_fig1} présente un exemple d'utilisation de l'algorithme des centres mobiles. Des points sont générés aléatoirement dans le plan et répartis en quatre groupes.
+\end{xremark}
+
+
+
+        \begin{figure}[ht]
+        $$\frame{$\begin{array}[c]{c}\includegraphics[height=5cm, width=5cm]
+        {\filext{../classification/image/cm}}\end{array}$}$$
+        \caption{ Application des centres mobiles~: classification en quatre classes 
+        					d'un ensemble aléatoire de points plus dense sur la partie droite du graphe. Les quatre classes
+        					ainsi formées sont convexes.}
+        \label{mc_fig1}
+        \end{figure}
+
+
+
+
+
+
+
+
+\subsection{Homogénéité des dimensions}
+\label{hmm_classification_obs_deux}
+\indexfr{homogénéité}
+\indexfr{normalisation}
+
+Les coordonnées des points $\left(  X_{i}\right) \in \R^N$ sont généralement non homogènes~: les ordres de grandeurs de chaque dimension sont différents. C'est pourquoi il est conseillé de centrer et normaliser chaque dimension.
+
+On note~: $\forall i \in \intervalle{1}{P}, \; X_i = \vecteur{X_{i,1}}{X_{i,N}}$
+
+        \begin{eqnarray*}
+        g_k &=& \pa{EX}_k = \frac{1}{P}\underset{i=1}{\overset{P}{ {\displaystyle\sum}}}X_{i,k}\\
+        v_{kk} &=& \pa{E\left(  X-EX\right)  ^{2}}_{kk}=\pa{EX^{2}}_{kk} - g_k^2
+        \end{eqnarray*}
+
+Les points centrés et normalisés sont~:
+
+        $$
+        \forall i \in \intervalle{1}{P}, \;
+        X_{i}^{\prime}=\left(\dfrac{x_{i,1}-g_{1}}{\sqrt{v_{11}}},...,\dfrac{x_{i,N}-g_{N}}{\sqrt{v_{NN}}
+        }\right)
+        $$
+
+L'algorithme des centres mobiles est appliqué sur l'ensemble $\left( X_{i}^{\prime}\right)  _{1\leqslant i\leqslant P}$. Il est possible ensuite de décorréler les variables ou d'utiliser une distance dite de Malahanobis définie par~: \indexfr{Malahanobis}
+
+			\begin{eqnarray*}
+			d_M\pa{X, Y} &=& X \, M \, Y' \\
+				&& \text{où } Y' \text{ désigne la transposée de $Y$} \\
+				&& \text{et $M$ est une matrice symétrique définie positive}
+			\end{eqnarray*}
+
+Dans le cas de variables corrélées, la matrice $M = \Sigma^{-1}$ où $\Sigma^{-1}$ est la matrice de variance-covariance des variables aléatoires $\pa{X_i}_i$.
+
+
+
+
+
+\subsection{Estimation de probabilités}
+\label{hmm_classification_obs_trois}
+\indexfrr{apprentissage}{supervisé}
+
+A partir de cette classification en $C$ classes, on construit un vecteur de probabilités pour chaque point $\pa{X_{i}}_{1 \infegal i \infegal P}$ en supposant que la loi de $X$ sachant sa classe $c_X$ est une loi normale multidimensionnelle. La classe de $X_i$ est notée $c_i$. On peut alors écrire~:
+
+        \begin{eqnarray}
+        \forall i \in \intervalle{1}{C}, \; & & \nonumber\\
+        G_i &=& E\pa{X \indicatrice{c_X = i}} = \dfrac{\summy{k=1}{P} X_k \indicatrice {c_k = i}} 
+        				{\summy{k=1}{P} \indicatrice {c_k = i}} \nonumber\\
+        V_i &=& E\pa{XX' \indicatrice{c_X = i}} = \dfrac{\summy{k=1}{P} X_k X_k' \indicatrice {c_k = i}}
+        				{\summy{k=1}{P} \indicatrice {c_k = i}} \nonumber\\
+        \pr{c_X = i} &=& \summy{k=1}{P} \indicatrice {c_k = i} \label{hmm_rn_densite_p}\\
+        f\pa{X | c_X = i} &=& \dfrac{1}{\pa{2\pi}^{\frac{N}{2}} \sqrt{\det \pa{V_i}}} \; 
+        				e^{ - \frac{1}{2} \pa{X - G_i}' \; V_i^{-1} \; \pa{X - G_i} } \nonumber\\
+        f\pa{X} &=& \summy{k=1}{P}  f\pa{X | c_X = i} \pr{c_X = i} \label{hmm_rn_densite_x}
+        \end{eqnarray}
+
+On en déduit que :
+
+        \begin{eqnarray}
+        \pr{c_X = i |X } = \dfrac{f\pa{X | c_X = i}\pr{c_X = i}} {f\pa{X} }
+        \end{eqnarray}
+
+La densité des obervations est alors modélisée par une mélange de lois normales, chacune centrée au barycentre de chaque classe. Ces probabilités peuvent également être apprises par un réseau de neurones classifieur\seeannex{subsection_classifieur}{classifieur} où servir d'initialisation à un algorithme EM\seeannex{classification_melange_loi_normale}{algorithme EM}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+%---------------------------------------------------------------------------------------------------------------------
+\section{Sélection du nombre de classes}
+%---------------------------------------------------------------------------------------------------------------------
+
+
+\subsection{Critère de qualité}
+\indexfrr{critère}{qualité}
+\indexfrr{classification}{critère}
+
+
+\label{classification_selection_nb_classe_bouldin}
+
+\indexfrr{classification}{pertinence}
+
+L'algorithme~\ref{algo_centre_mobile} effectue une classification non supervisée à condition de connaître au préalable le nombre de classes et cette information est rarement disponible. Une alternative consiste à estimer la pertinence des classifications obtenues pour différents nombres de classes, le nombre de classes optimal est celui qui correspond à la classification la plus pertinente.
+
+Cette pertinence ne peut être estimée de manière unique, elle dépend des hypothèses faites sur les éléments à classer, notamment sur la forme des classes qui peuvent être convexes ou pas, être modélisées par des lois normales multidimensionnelles, à matrice de covariances diagonales,~... Les deux critères qui suivent sont adaptés à l'algorithme~\ref{algo_centre_mobile}. Le critère de Davies-Bouldin (voir~\citeindex{Davies1979}), est minimum lorsque le nombre de classes est optimal (voir figure~\ref{classif_classe_4_dessin}). 
+\indexfrr{critère}{nombre de classes optimal}
+
+				\indexfr{Davies-Bouldin} 
+				\begin{eqnarray}
+				DB &=& \dfrac{1}{C} \; 	\summy{i=1}{C} \; \underset{i \neq j}{\max} \; 
+																\dfrac{\sigma_i + \sigma_j}{ d\pa{C_i,C_j}} 
+																\label{classif_critere_davies_bouldin}
+																\\ \nonumber \\
+				\text{avec} &&															
+									\begin{tabular}{cl}
+									$C$					&	nombre de classes \\
+									$\sigma_i$	& écart-type des distances des observations de la classe $i$ \nonumber \\
+									$C_i$				&	centre de la classe $i$
+									\end{tabular}
+				\end{eqnarray}
+
+Le critère de Goodman-Kruskal (voir~\citeindex{Goodman1954}) est quant à lui maximum lorsque le nombre de classes est optimal. Il est toutefois plus coûteux à calculer.
+\indexfrr{critère}{nombre de classes optimal}
+
+				\indexfr{Goodman-Kruskal}
+	
+				\begin{eqnarray}
+				GK	&=& \dfrac{S^+ - S^-} { S^+ + S^-} \label{classif_critere_goodman_kruskal} \\
+				\text{avec} && \nonumber \\
+				S^+  &=&  \acc{ \pa{q,r,s,t} \sac d\pa{q,r} < d\pa{s,t} \text{ avec } 
+															\left . 
+															\begin{tabular}{l}
+															$\pa{q,r}$ sont dans la même classe \\
+															$\pa{s,t}$ sont dans des classes différentes
+															\end{tabular}
+															\right.
+											  }  \nonumber \\
+				S^-  &=&  \acc{ \pa{q,r,s,t} \sac d\pa{q,r} < d\pa{s,t} \text{ avec } 
+															\left . 
+															\begin{tabular}{l}
+															$\pa{q,r}$ sont dans des classes différentes \\
+															$\pa{s,t}$ sont dans la même classe
+															\end{tabular}
+															\right.
+											  } \nonumber 
+				\end{eqnarray}
+				
+
+
+
+        \begin{figure}[ht]
+        $$
+        \begin{tabular}{|c|c|} \hline
+        $\begin{array}[c]{c}\includegraphics[height=5cm, width=5cm]
+        {\filext{../classification/image/class_4}}\end{array}$
+        &
+				$\begin{array}[c]{c}\includegraphics[height=4cm, width=6cm]
+        {\filext{../classification/image/class_4_db}}\end{array}$
+        \\ \hline
+        \end{tabular}
+        $$
+        \caption{ Classification en quatre classes~: nombre de classes sélectionnées par le critère
+        					de Davies-Bouldin (\ref{classif_critere_davies_bouldin}) dont les valeurs sont
+        					illustrées par le graphe apposé à droite.}
+        \label{classif_classe_4_dessin}
+        \end{figure}
+
+
+
+
+
+\subsection{Maxima de la fonction densité}
+\indexfr{densité}
+\indexfrr{densité}{noyau}
+\indexfr{estimateur à noyau}
+\indexfr{noyau}
+\indexfrr{segmentation}{image}
+\label{classification_herbin_noyau}
+\indexfr{Silverman}
+
+
+L'article \citeindex{Herbin2001} propose une méthode différente pour estimer le nombre de classes, il s'agit tout d'abord d'estimer la fonction densité du nuage de points qui est une fonction de $\R^n \longrightarrow \R$. Cette estimation est effectuée au moyen d'une méthode non paramètrique telle que les estimateurs à noyau (voir \citeindex{Silverman1986} ou paragraphe~\ref{reco_densite_valeur_aberrante}, page~\pageref{reco_densite_valeur_aberrante}). Soit $\vecteur{X_1}{X_N}$ un nuage de points inclus dans une image, on cherche à estimer la densité $f_H\pa{x}$ au pixel $x$~:
+
+			\begin{eqnarray}
+			\hat{f}_H\pa{x} 		&=& \dfrac{1}{N} \; \summy{i=1}{N} \; \dfrac{1}{\det H} \; K\pa{ H^{-1} \pa{x - X_i}} 
+			\;\; \text{où} \;\; 
+			K\pa{x} 	= \dfrac{1}{ \pa{2 \pi}^{ \frac{d}{2}} } \; e^{ - \frac{ \norme{x}^2 } {2} } \\
+					&& \text{$H$ est un paramètre estimée avec la règle de Silverman}
+					 \nonumber
+			\end{eqnarray}
+
+L'exemple utilisé dans cet article est un problème de segmentation d'image qui ne peut pas être résolu par la méthode des nuées dynamiques puisque la forme des classes n'est pas convexe, ainsi que le montre la figure~\ref{classification_herbin_yingyang}. La fonction de densité $f$ est seuillée de manière à obtenir une fonction $g : \R^n \longrightarrow \acc{0,1}$ définie par~:
+
+			$$
+			g \pa{x} = \indicatrice{f\pa{x} \supegal s}
+			$$
+
+\indexfr{composante connexe}
+
+L'ensemble $g^{-1}\pa{\acc{1}} \subset \R^n$ est composée de $N$ composantes connexes notées $\vecteur{C_1}{C_N}$, la classe d'un point $x$ est alors l'indice de la composante connexe à la laquelle il appartient ou la plus proche le cas échéant.
+
+
+			\begin{figure}[ht]
+			$$\begin{tabular}{|c|c|} \hline
+			\includegraphics[height=2cm, width=4cm]{\filext{../classification/image/herbin1}}	&
+			\includegraphics[height=2cm, width=4cm]{\filext{../classification/image/herbin2}}	
+			\\ \hline \end{tabular}$$
+			\caption{	Exemple de classification non supervisée appliquée à un problème
+								de segmentation d'image, la première figure montre la densité obtenue,
+								la seconde figure illustre la classification obtenue, figure extraite de \citeindexfig{Herbin2001}.}
+			\label{classification_herbin_yingyang}
+			\end{figure}
+			
+Cette méthode paraît néanmoins difficilement applicable lorsque la dimension de l'espace vectoriel atteint de grande valeur. L'exemple de l'image est pratique, elle est déjà découpée en région représentées par les pixels, l'ensemble $g^{-1}\pa{\acc{1}}$ correspond à l'ensemble des pixels $x$ pour lesquels $f\pa{x} \supegal s$. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Décroissance du nombre de classes}
+\indexfrr{classification}{nombre de classes}
+
+
+L'article \citeindex{Kothari1999} propose une méthode permettant de faire décroître le nombre de classes afin de choisir le nombre approprié. L'algorithme des centres mobiles présentés au paragraphe~\ref{emission_continue_centre_mobile} proposent de faire décroître l'inertie notée $I$ définie pour un ensemble de points noté $X = \vecteur{x_1}{x_N}$ et $K$ classes. La classe d'un élément $x$ est notée $C\pa{x}$. Les centres des classes sont notés $Y = \vecteur{y_1}{y_K}$. L'inertie de ce nuage de points est définie par~:
+
+
+			\begin{eqnarray}
+			I  =  \summyone{x \in X} \; \norme{ x - y_{C\pa{x} }}^2 
+			\end{eqnarray}
+
+On définit tout d'abord une distance $\alpha \in \R^+$, puis l'ensemble $V\pa{y,\alpha} = \acc{ z \in Y \sac d\pa{y,z} \infegal \alpha }$, $V\pa{y,\alpha}$ est donc l'ensemble des voisins des centres dont la distance avec $y$ est inférieur à $\alpha$. L'article \citeindex{Kothari1999} propose de minimiser le coût $J\pa{\alpha}$ suivant~:
+
+			\begin{eqnarray}
+			J\pa{\alpha}  =  \summyone{x \in X} \; \norme{ x - y_{C\pa{x} }}^2 +
+											 \summyone{x \in X} \; \summyone{y \in V\pa{y_{C\pa{x}}, \alpha} } \; 
+											 			\lambda\pa{y} \, \norme{ y -  y_{C\pa{x}}} ^2
+			\end{eqnarray}
+
+Lorsque $\alpha$ est nul, ce facteur est égal à l'inertie~: $I = J\pa{0}$ et ce terme est minimal lorsqu'il y a autant de classes que d'éléments dans $X$. Lorsque $\alpha$ tend vers l'infini, $J\pa{\alpha} \rightarrow J\pa{\infty}$ où~:
+
+			\begin{eqnarray}
+			J\pa{\infty}  =  \summyone{x \in X} \; \norme{ x - y_{C\pa{x} }}^2 +
+											 \summyone{x \in X} \; \summyone{y \in Y} \; 
+											 			\lambda\pa{y} \, \norme{ y -  y_{C\pa{x}}} ^2
+			\end{eqnarray}
+
+Ici encore, il est possible de montrer que ce terme $J\pa{\infty}$ est minimal lorsqu'il n'existe plus qu'une seule classe. Le principe de cette méthode consiste à faire varier le paramètre $\alpha$, plus le paramètre $\alpha$ augmente, plus le nombre de classes devra être réduit. Néanmoins, il existe des intervalles pour lequel ce nombre de classes est stable, le véritable nombre de classes de l'ensemble $X$ sera considéré comme celui correspondant au plus grand intervalle stable (voir figure~\ref{classification_kothari_nbcl}). 
+
+
+
+			\begin{figure}[ht]
+			$$\begin{tabular}{|c|c|} \hline
+			\includegraphics[height=4cm, width=5cm]{\filext{../classification/image/koth1}}	&
+			\includegraphics[height=4cm, width=5cm]{\filext{../classification/image/koth2}}	\\
+			$(a)$ & $(b)$ 
+			\\ \hline \end{tabular}$$
+			\caption{	Evolutation du nombre de classes en fonction du paramètre $\alpha$ lors de la 
+								minimisation du critère $J\pa{\alpha}$, figure extraite de \citeindexfig{Kothari1999}.
+								La première image représente le nuage de points illustrant quatre classes sans recouvrement.
+								La seconde image montre que quatre classes est l'état le plus longtemps stable
+								lorsque $\alpha$ croît.}
+			\label{classification_kothari_nbcl}
+			\end{figure}
+
+
+\indexfrr{Lagrange}{multiplicateurs}
+\indexfr{multiplicateurs de Lagrange}
+
+Le coût $J\pa{\alpha}$ est une somme de coût dont l'importance de l'un par rapport à l'autre est contrôle par les paramètres $\lambda\pa{y}$. Le problème de minimisation de $J\pa{\alpha}$ est résolu par l'algorithme~\ref{classification_kothari_1999}, il s'appuie sur la méthode des multiplicateurs de Lagrange.
+
+			\begin{xalgorithm}{sélection du nombre de classes (Kothari1999)}
+			\label{classification_kothari_1999}
+			Les notations sont celles utilisés dans les paragraphes précédents. On suppose que le 
+			paramètre $\alpha$ évolue dans l'intervalle $\cro{\alpha_1, \alpha_2}$ à intervalle régulier $\alpha_t$.
+			Le nombre initial de classes est noté $K$ et il est supposé surestimer le véritable 
+			nombre de classes. Soit $\eta \in \left]0,1\right[$, ce paramètre doit être choisi de telle sorte que dans
+			l'algorithme qui suit, l'évolution des centres $y_k$ soit autant assurée par le premier de la fonction de 
+			coût que par le second.
+			
+			\begin{xalgostep}{initialisation}
+			$\alpha \longleftarrow \alpha_1$ \\
+			On tire aléatoirement les centres des $K$ classes $\vecteur{y_1}{y_K}$.
+			\end{xalgostep}
+			
+			\begin{xalgostep}{préparation}\label{classif_kothari_step_a}
+			On définit les deux suites entières $\vecteur{c^1_1}{c^1_K}$, $\vecteur{c^2_1}{c^2_K}$, 
+			et les deux suites de vecteur $\vecteur{z^1_1}{z^1_K}$, $\vecteur{z^2_1}{z^2_K}$. \\
+			$\begin{array}{rlll}
+			\forall k, &  c^1_k &=& 0 \\ 
+			\forall k, &  c^2_k &=& 0 \\ 
+			\forall k, &  z^1_k &=& 0 \\ 
+			\forall k, &  z^2_k &=& 0 
+			\end{array}$
+			\end{xalgostep}
+			
+			\possiblecut
+
+			\begin{xalgostep}{calcul des mises à jour}\label{classif_kothari_step_b}
+			\begin{xfor}{i}{1}{N}
+					\textit{Mise à jour d'après le premier terme de la fonction de coût $J\pa{\alpha}$.} \\
+					$\begin{array}{lll}
+					w 			&\longleftarrow&	 	\underset{1 \infegal l \infegal K}{\arg \min} \; \norme{x_i - y_l}^2 \\
+					z^1_w 	&\longleftarrow&	 	z^1_w + \eta \pa{ x_i - y_w} \\
+					c^1_w 	&\longleftarrow& 		c^1_w + 1 
+					\end{array}$ \\
+					\textit{Mise à jour d'après le second terme de la fonction de coût $J\pa{\alpha}$.} \\
+					\begin{xfor}{v}{1}{K}
+						\begin{xif}{$ \norme{y_v - y_w} < \alpha$}
+							$\begin{array}{lll}
+							z^2_v 	&\longleftarrow&	 	z^2_v - \pa{ y_v - y_w} \\
+							c^2_v 	&\longleftarrow& 		c^2_v + 1 
+							\end{array}$ \\
+						\end{xif}
+					\end{xfor}
+
+					\begin{xfor}{v}{1}{K}
+						$\begin{array}{lll}
+						\lambda_v &\longleftarrow& \frac{ c^2_v \norme{z^1_v} } { c^1_v \norme{z^2_v} } \\
+						y_v				&\longleftarrow& y_v + z^1_v + \lambda_v z^2_v
+						\end{array}$
+					\end{xfor}
+										
+			\end{xfor}
+			\end{xalgostep}
+
+			\begin{xalgostep}{convergence}
+			Tant que l'étape~\ref{classif_kothari_step_b} n'a pas convergé vers une version stable des centres,
+			$y_k$, retour à l'étape~\ref{classif_kothari_step_b}. Sinon, tous les couples de classes $\pa{i,j}$ 
+			vérifiant $\norme{y_i - y_j} > \alpha$ sont fusionnés. \\
+			$ \alpha \longleftarrow \alpha + \alpha_t$ \\
+			Si $\alpha \infegal \alpha2$, retour à l'étape~\ref{classif_kothari_step_a}.
+			\end{xalgostep}
+			
+			\begin{xalgostep}{terminaison}
+			Le nombre de classes est celui ayant prévalu pour le plus grand nombre de valeur de $\alpha$.
+			\end{xalgostep}
+
+			\end{xalgorithm}
+
+
+
+
+
+
+
+%---------------------------------------------------------------------------------------------------------------------
+\section{Extension des nuées dynamiques}
+%---------------------------------------------------------------------------------------------------------------------
+
+
+
+\subsection{Classes elliptiques}
+\indexfr{nuées dynamique}
+\label{classification_nuees_dynamique_extension}
+
+
+La version de l'algorithme des nuées dynamique proposée dans l'article \citeindex{Cheung2003} suppose que les classes ne sont plus de forme circulaire mais suivent une loi normale quelconque. La loi de l'échantillon constituant le nuage de points est de la forme~:
+
+
+				\begin{eqnarray}
+				f\pa{x} &=&  \summy{i=1}{N} \; p_i \; \dfrac{1}{\pa{2 \pi}^{\frac{d}{2}}\sqrt{\det \Sigma_i}} \;
+													exp \pa{-\frac{1}{2}  \pa{x-\mu_i}' \Sigma_i^{-1} \pa{x-\mu_i} } \\
+				&& \text{avec : } \summy{i=1}{N} \; p_i = 1 \nonumber
+				\end{eqnarray}
+
+On définit~:
+
+				$$
+				G\pa{x,\, \mu, \, \Sigma} = \dfrac{1}{\pa{2 \pi}^{\frac{d}{2}}\sqrt{\det \Sigma}} \;
+													exp \pa{-\frac{1}{2}  \pa{x-\mu}' \Sigma^{-1} \pa{x-\mu} }
+				$$
+
+L'algorithme qui suit a pour objectif de minimiser la quantité pour un échantillon $\vecteur{X_1}{X_K}$~:
+
+				\begin{eqnarray}
+				I = \summy{i=1}{N}\summy{k=1}{K} \indicatrice{ i = \underset{1 \infegal j \infegal N}{\arg \max} 
+																			G\pa{X_k, \, \mu_j, \, \Sigma_j} } \;
+																			\ln \cro{ p_i \, G\pa{ X_k, \, \mu_i, \, \Sigma_i } }
+					\label{classification_inertie_gene}																			
+				\end{eqnarray}
+
+
+			\begin{xalgorithm}{nuées dynamiques généralisées}
+			Les notations sont celles utilisées dans ce paragraphe. Soient $\eta$, $\eta_s$ deux réels tels que 
+			$\eta > \eta_s$. La règle préconisée par l'article \citeindex{Cheung2003} 
+			est $\eta_s \sim \frac{\eta}{10}$.
+			
+			\begin{xalgostep}{initialisation}
+			$t \longleftarrow 0$ \\
+			Les paramètres $\acc{p_i^0,\, \mu_i^0,\, \Sigma_i^0 \sac 1 \infegal i \infegal N}$ sont initialisés
+			grâce à un algorithme des centres mobiles (\ref{algo_centre_mobile}) ou FSCL
+			(\ref{classification_fscl}). $\forall i, \; p_i^0 = \frac{1}{N}$ et $\beta_i^0 = 0$.
+			\end{xalgostep}
+			
+			\begin{xalgostep}{récurrence}\label{classification_nuees_gene_step}
+			Soit $X_k$ choisi aléatoirement dans $\vecteur{X_1}{X_K}$. \\
+			$i = \underset{1 \infegal i \infegal N}{\arg \min} \; G\pa{X_k,\, \mu_i^t,\, \Sigma_i^t}$ \\
+			\begin{xfor}{i}{1}{N}
+				$\begin{array}{lll}
+				\mu_i^{t+1} 		&=& \mu_i^t + \eta \, \pa{\Sigma_i^t}^{-1} \, \pa{ X_k - \mu_i^t} \\
+				\beta_i^{t+1} 	&=& \beta_i^t + \eta \, \pa{1 - \alpha_i^t} \\
+				\Sigma^{t+1}_i 	&=& \pa{1 - \eta_s} \, \Sigma_i^t + \eta_s \, \pa{ X_k - \mu_i^t} \pa{ X_k - \mu_i^t}'
+				\end{array}$
+			\end{xfor} \\
+			\begin{xfor}{i}{1}{N}
+			$ p^{t+1}_i = \frac{ e^{ \beta_i^{t+1} } } { \summy{j=1}{N} e^{ \beta_j^{t+1} } }$
+			\end{xfor} \\
+			$t \longleftarrow t + 1$
+			\end{xalgostep}
+			
+
+			\begin{xalgostep}{terminaison}
+			Tant que $\underset{1 \infegal i \infegal N}{\arg \min} \; G\pa{X_k,\, \mu_i^t,\, \Sigma_i^t}$
+			change pour au moins un des points $X_k$ (ou convergence du critère (\ref{classification_inertie_gene})),
+			retour à l'étape~\ref{classification_nuees_gene_step}.
+			\end{xalgostep}
+			
+			
+			\end{xalgorithm}
+
+
+\begin{xremark}{mise à jour de $\Sigma^{-1}$}
+L'algorithme précédent propose la mise à jour de $\Sigma_i$ alors que le calcul de $G\pa{.,\, \mu_i, \, \Sigma_i}$ implique $\Sigma_i^{-1}$, par conséquent, il est préférable de mettre à jour directement la matrice $\Sigma^{-1}$~:
+
+		$$
+		\pa{\Sigma^{t+1}_i}^{-1} = \frac{ \pa{\Sigma_i^t}^{-1} } {1 - \eta_s} 
+																\cro{
+																I - \frac{ \eta_s  \pa{ X_k - \mu_i^t} \pa{ X_k - \mu_i^t}' \pa{\Sigma_i^t}^{-1} }
+																{1 - \eta_s + \eta_s \pa{ X_k - \mu_i^t}' \, \pa{\Sigma_i^t}^{-1}\pa{ X_k - \mu_i^t} }
+																}
+		$$
+
+\end{xremark}
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Rival Penalized Competitive Learning (RPCL)}
+
+\label{class_rpcl}
+
+\indexsee{Rival Penalized Competitive Learning}{RPCL}
+\indexfr{RPCL}
+\indexfr{classification}
+\indexfrr{classification}{nombre de classes}
+
+
+Cet algorithme~\ref{classif_algo_rpcl}, développé dans~\citeindex{Xu1993}, est une variante de celui des centres mobiles~\ref{algo_centre_mobile}. Il entreprend à la fois la classification et la sélection du nombre optimal de classes à condition qu'il soit inférieur à une valeur maximale à déterminer au départ de l'algorithme. Un mécanisme permet d'éloigner les centres des classes peu pertinentes de sorte qu'aucun point ne leur sera affecté.
+
+		\begin{xalgorithm}{RPCL}
+		\label{classif_algo_rpcl}
+		Soient $\vecteur{X_1}{X_N}$, $N$ vecteurs à classer en au plus $T$ classes de centres $\vecteur{C_1}{C_T}$. 
+		Soient deux réels $\alpha_r$ et $\alpha_c$ tels que $0 < \alpha_r \ll \alpha_c < 1$.
+
+		\begin{xalgostep}{initialisation}
+		Tirer aléatoirement les centres $\vecteur{C_1}{C_T}$. \\
+		\begin{xfor}{j}{1}{C}
+		$n_j^0 \longleftarrow 1$
+		\end{xfor}
+		\end{xalgostep}
+
+		\begin{xalgostep}{calcul de poids} \label{class_rpcl_step_1}
+		Choisir aléatoirement un point $X_i$. \\
+		\begin{xfor}{j}{1}{C}
+		$
+		\gamma_j = \dfrac{n_j}{ \summy{k=1}{C} n_k } 
+		$
+		\end{xfor} \\
+		\begin{xfor}{j}{1}{C}
+		$
+		u_j = 			\left \{ \begin{array}{ll}
+							1   & \text{si} j \in \underset{k}{\arg \min} \; \cro {\gamma_k \; d\pa{X_i,C_k} } \\
+							-1  & \text{si} j \in \underset{j \neq k}{\arg \min} \; \cro {\gamma_k \; d\pa{X_i,C_k} } \\
+							0   & \text{sinon}
+							\end{array} \right.
+		$
+		\end{xfor}
+		\end{xalgostep}
+
+		\begin{xalgostep}{mise à jour} \label{class_rpcl_step_2}
+		\begin{xfor}{j}{1}{C}
+		$
+		\begin{array}{lcl}
+		C_j^{t+1} &\longleftarrow&  C_j^t +  \left \{ \begin{array}{ll}
+																\alpha_c \pa{X_i - C_j} & \text{si } u_j = 1 \\
+																- \alpha_r \pa{X_i - C_j} & \text{si } u_j = -1 \\
+																0 & \text{sinon}
+																\end{array} \right. \\
+		n_j^{t+1} &\longleftarrow&  n_j^t +  \left \{ \begin{array}{ll}
+																1 & \text{si } u_j = 1 \\
+																0 & \text{sinon}
+																\end{array} \right. 
+		\end{array}																
+		$
+		\end{xfor} \\
+		$ t \longleftarrow t+1$
+		\end{xalgostep}
+
+		\begin{xalgostep}{terminaison} \label{class_rpcl_step_3}
+		S'il existe un indice $j$ pour lequel $C^{t+1}_j \neq C^t_j$ alors retourner à 
+		l'étape~\ref{class_rpcl_step_1} ou que les centres des classes jugées inutiles 
+		ont été repoussés vers l'infini.
+		\end{xalgostep}
+	
+		\end{xalgorithm}
+
+
+
+Pour chaque point, le centre de la classe la plus proche en est rapproché tandis que le centre de la seconde classe la plus proche en est éloigné mais d'une façon moins importante (condition~$\alpha_r \ll \alpha_c$). Après convergence, les centres des classes inutiles ou non pertinentes seront repoussés vers l'infini. Par conséquent, aucun point n'y sera rattaché.
+
+L'algorithme doit être lancé plusieurs fois. L'algorithme RPCL peut terminer sur un résultat comme celui de la  figure~\ref{classif_rpcl_class6} où un centre reste coincé entre plusieurs autres. Ce problème est moins important lorsque la dimension de l'espace est plus grande.
+
+
+        \begin{figure}[ht]
+        $$\frame{$\begin{array}[c]{c}\includegraphics[height=5cm, width=5cm]
+        {\filext{../classification/image/class6}}\end{array}$}$$
+        \caption{ Application de l'algorithme RPCL~: la classe 0 est incrusté entre les quatre autres et 
+        					son centre ne peut se "faufiler" vers l'infini. }
+        \label{classif_rpcl_class6}
+        \end{figure}
+
+
+
+
+
+
+\subsection{RPCL-based local PCA}
+\label{classification_rpcl_local_pca}
+\indexfrr{RPCL}{based local PCA}
+\indexfrr{loi}{normale}
+\indexfr{ellipse}
+\indexfr{squelettisation}
+
+A l'instar de la méthode décrite au paragraphe~\ref{classification_nuees_dynamique_extension}, l'article \citeindex{Liu2003} propose une extension de l'algorithme RPCL et suppose que les classes ne sont plus de forme circulaire mais suivent une loi normale quelconque. Cette méthode est utilisée pour la détection de ligne considérées ici comme des lois normales dégénérées en deux dimensions, la matrice de covariance définit une ellipse dont le grand axe est très supérieur au petit axe, ce que montre la figure~\ref{classif_rpcl_liu3}. Cette méthode est aussi présentée comme un possible algorithme de squelettisation.
+
+
+
+        \begin{figure}[ht]
+        $$\frame{$\begin{array}[c]{c}\includegraphics[height=3cm, width=5cm]
+        {\filext{../classification/image/liu3}}\end{array}$}$$
+        \caption{ Figure extraite de \citeindexfig{Liu2003}, l'algorithme est utilisé pour la détection de lignes
+        					considérées ici comme des lois normales dont la matrice de covariance définit une ellipse
+        					dégénérée dont le petit axe est très inférieur au grand axe. Les traits fin grisés correspondent aux 
+        					classes isolées par l'algorithme RPCL-based local PCA.}
+        \label{classif_rpcl_liu3}
+        \end{figure}
+
+
+On modélise le nuage de points par une mélange de lois normales~:
+
+				\begin{eqnarray}
+				f\pa{x} &=&  \summy{i=1}{N} \; p_i \; \dfrac{1}{\pa{2 \pi}^{\frac{d}{2}}\sqrt{\det \Sigma_i}} \;
+													exp \pa{-\frac{1}{2}  \pa{x-\mu_i}' \Sigma_i^{-1} \pa{x-\mu_i} } \\
+				&& \text{avec : } \summy{i=1}{N} \; p_i = 1 \nonumber
+				\end{eqnarray}
+
+On suppose que le nombre de classes initiales $N$ surestime le véritable nombre de classes. L'article \citeindex{Liu2003} s'intéresse au cas particulier où les matrices de covariances vérifient~:
+
+			\begin{eqnarray}
+			\Sigma_i &=&	\zeta_i \, I + \sigma_i \, \phi_i \phi_i' \\
+			&& \text{ avec } \zeta_i > 0, \; \sigma_i > 0, \; \phi_i' \phi_i = 1 \nonumber
+			\end{eqnarray}
+
+On définit également~:
+
+				$$
+				G\pa{x,\, \mu, \, \Sigma} = \dfrac{1}{\pa{2 \pi}^{\frac{d}{2}}\sqrt{\det \Sigma}} \;
+													exp \pa{-\frac{1}{2}  \pa{x-\mu}' \Sigma^{-1} \pa{x-\mu} }
+				$$
+
+
+L'algorithme utilisé est similaire à l'algortihme RPCL \ref{classif_algo_rpcl}. La distance $d$ utilisée lors de l'étape~\ref{class_rpcl_step_1} afin de trouver la classe la plus probable pour un point donné $X_k$ est remplacée par l'expression~:
+
+				$$
+				d\pa{X_k, classe \, i} = - \ln { p_i^t \, G\pa{X_k, \, \mu_i^t, \, \Sigma^t_i } }
+				$$
+				
+L'étape~\ref{class_rpcl_step_2} de mise à jour des coefficients est remplacée par~:
+
+			$$
+			x^{t+1} \longleftarrow  x^t +  \left \{ \begin{array}{ll}
+																	\alpha_c \nabla x^t & \text{si } u_j = 1 \\
+																	- \alpha_r \nabla x^t & \text{si } u_j = -1 \\
+																	0 & \text{sinon}
+																	\end{array} \right. \\
+			\text{où $x^t$ joue le rôle d'un paramètre}																
+			$$
+			
+Où $x^t$ est remplacé successivement par $p_i^t$, $\mu_i^t$, $\zeta_i^t$, $\sigma^t_i$, $\phi^t_i$~:
+
+			$$
+			\begin{array}{lll}
+			\nabla p_i^t 			&=&	- \frac{1}{p_i^t} \\
+			\nabla \mu_i^t 		&=& - \pa{ X_k - \mu_i^t} \\
+			\nabla \zeta_i^t  &=& \frac{1}{2} \; tr\cro{ \pa{\Sigma_i^t}^{-1} \, 
+															\pa{ I - \pa{ X_k - \mu_i^t} \pa{ X_k - \mu_i^t}' \pa{\Sigma_i^t}^{-1} } } \\
+			\nabla \sigma_i^t &=&	\frac{1}{2} \; \pa{\phi_i^t}' \pa{\Sigma_i^t}^{-1} 
+														\pa{ I - \pa{ X_k - \mu_i^t} \pa{ X_k - \mu_i^t}' \pa{\Sigma_i^t}^{-1} } \phi_i^t \\
+			\nabla \phi_i^t 	&=&	\sigma_i^t \pa{\Sigma_i^t}^{-1} 
+														\pa{ I - \pa{ X_k - \mu_i^t} \pa{ X_k - \mu_i^t}' \pa{\Sigma_i^t}^{-1} } \phi_i^t \\
+			\end{array}
+			$$
+
+
+
+
+
+
+
+
+
+
+\subsection{FSCL}
+\indexfr{FSCL}
+\indexfr{Frequency Sensitive Competitive Learning}
+\indexfr{Kohonen}
+
+
+
+L'algorithme Frequency Sensitive Competitive Learning est présenté dans \citeindex{Balakrishnan1996}. Par rapport à l'algorithme des centres mobiles classique (voir paragraphe~\ref{emission_continue_centre_mobile}), lors de l'estimation des centres des classes, l'algorithme évite la formation de classes sous-représentées.
+
+		\begin{xalgorithm}{FSCL} \label{classification_fscl}
+		Soit un nuage de points $\vecteur{X_1}{X_N}$, soit $C$ vecteurs $\vecteur{\omega_1}{\omega_C}$ 
+		initialisés de manière aléatoires. Soit $F : \pa{u,t} \in \R^2 \longrightarrow \R^+$ croissante par rapport à $u$.
+		Soit une suite de réels	$\vecteur{u_1}{u_C}$. Soit une suite $\epsilon\pa{t} \in \cro{0,1}$ décroissante où $t$ 
+		représente le nombre d'itérations.
+		Au début $t \leftarrow 0$.
+		
+		\begin{xalgostep}{meilleur candidat}\label{classification_fscl_best}
+		Pour un vecteur $X_k$ choisi aléatoirement dans l'ensemble $\vecteur{X_1}{X_N}$, on détermine~:
+					$$
+					i^* \in \arg \min \acc{ D_i = F\pa{u_i,t} \, d\pa{X_k, \omega_i} }
+					$$
+		\end{xalgostep}
+
+		\begin{xalgostep}{mise à jour}
+		$\omega_{i^*} \pa{t+1}  \longleftarrow \omega_{i^*} \pa{t} + \epsilon\pa{t} \pa { X_k - \omega_{i^*} \pa{t} }$ \\
+		$t \longleftarrow t+1$ \\
+		$u_{i^*} \longleftarrow u_{i^*} + 1$ \\
+		Retour à l'étape~\ref{classification_fscl_best} jusqu'à ce que les nombres $\frac{u_i}{\summyone{i}u_i}$
+		convergent.
+		\end{xalgostep}
+
+		\end{xalgorithm}
+
+Exemple de fonctions pour $F$, $\epsilon$ (voir \citeindex{Balakrishnan1996})~:
+
+			\begin{eqnarray*}
+			F\pa{u,t} 			&=& u \, \beta e^{-t/T} 				\text{ avec } \beta = 0,06 \text{ et } 1/T = 0,00005 \\
+			\epsilon\pa{t} 	&=& \beta \, e^{ - \gamma t } \text{ avec } \gamma = 0,05
+			\end{eqnarray*}
+
+Cet algorithme ressemble à celui des cartes topographiques de Kohonen (voir paragraphe~\ref{classification_carte_kohonen}) sans toutefois utiliser un maillage entre les neurones (ici les vecteurs $\omega_i$). Contrairement à l'algorithme RPCL, les neurones ne sont pas repoussés s'ils ne sont pas choisis mais la fonction croissante $F\pa{u,t}$ par rapport à $u$ assure que plus un neurone est sélectionné, moins il a de chance de l'être, bien que cet avantage disparaisse au fur et à mesure des itérations.
+
+
+%--------------------------------------------------------------------------------------------------------------------
+\section{D'autres méthodes}
+%--------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+\subsection{Mélange de lois normales}
+\label{classification_melange_loi_normale}
+\indexfr{mélange de lois normales}
+
+
+
+		\begin{xdefinition}{mélange de lois normales}
+		\indexfrr{loi}{mélange}
+		\indexfrr{loi}{normale}
+		
+		Soit $X$ une variable aléatoire d'un espace vectoriel de dimension $d$, $X$ 
+		suit un la loi d'un mélange de $N$ lois gaussiennes de paramètres 
+		$\pa{\mu_i, \Sigma_i}_ {1 \infegal i \infegal N}$, 
+		alors la densité $f$ de $X$ est de la forme~:
+		
+		
+				\begin{eqnarray}
+				f\pa{x} &=&  \summy{i=1}{N} \; p_i \; \dfrac{1}{\pa{2 \pi}^{\frac{d}{2}}\sqrt{\det \Sigma_i}} \;
+													exp \pa{-\frac{1}{2}  \pa{x-\mu_i}' \Sigma_i^{-1} \pa{x-\mu_i} } \\
+				&& \text{avec : } \summy{i=1}{N} \; p_i = 1 \nonumber
+				\end{eqnarray}
+				
+		
+		\end{xdefinition}
+		
+
+
+\indexfr{EM}
+\indexsee{Expectation Maximization}{EM}
+
+Dans le cas d'une loi normale à valeur réelle $\Sigma = \sigma^2$, l'algorithme permet d'estimer la loi de l'échantillon $\vecteur{X_1}{X_T}$, il s'effectue en plusieurs itérations, les paramètres $p_i\pa{0}$, $\mu_i\pa{0}$, $\sigma^2\pa{0}$ sont choisis de manière aléatoire, à l'itération $t+1$, la mise à jour des coefficients est faite comme suit~:
+
+		\begin{eqnarray}
+		f_{k,i}\pa{t} 		&=&  p_i \pa{t} \; \dfrac{1}{\pa{2 \pi}^{\frac{d}{2}}\sqrt{\det \Sigma_i\pa{t}}} \;
+															\exp \pa{-\frac{1}{2}  \pa{X_k-\mu_i\pa{t}}' \Sigma_i^{-1}\pa{t} \pa{X_k-\mu_i\pa{t}} } \\
+		\overline{f_{k,i}}\pa{t} &=& \frac{ f_{k,i}\pa{t} } { \summyone{i} \, f_{k,i}\pa{t} } \\
+		p_i\pa{t+1} 				&=&  \frac{1}{T} \;  \summy{k=1}{T} \; \overline{f_{k,i}}\pa{t} \\ 
+		\mu_i\pa{t+1}				&=&	  \cro{ \summy{k=1}{T} \; \overline{f_{k,i}}\pa{t} }^{-1}
+															 \; \summy{k=1}{T} \overline{f_{k,i}}\pa{t} X_k  \\
+		\Sigma^2_i\pa{t+1} 	&=&   \cro{ \summy{k=1}{T} \; \overline{f_{k,i}}\pa{t} }^{-1}
+															 \; \summy{k=1}{T} \overline{f_{k,i}}\pa{t} \, 
+															 \pa{ X_k  - \mu_i\pa{t+1}} \pa{ X_k  - \mu_i\pa{t+1}}'
+		\end{eqnarray}
+
+L'estimation d'une telle densité s'effectue par l'intermédiaire d'un algorithme de type Expectation Maximization (EM) (voir \citeindex{Dempster1977}) ou de ses variantes SEM, SAEM, ... (voir \citeindex{Celeux1985}, \citeindex{Celeux1995}). La sélection du nombre de lois dans le mélange reste un problème ouvert abordé par l'article \citeindex{Biernacki2001}.
+
+
+
+
+
+
+
+
+
+\subsection{Competitive EM algorithm}
+\label{classification_CEM}
+\indexfr{Competitive EM algorithm}
+\indexfrr{Algorithme}{EM}
+\indexfr{mélange de lois normales}
+\indexfrr{loi}{mélange}
+\indexfrr{loi}{normale}
+
+L'algorithme développé dans l'article \citeindex{ZhangB2004} tente de corriger les défauts de l'algorithme~EM illustrés par la figure~\ref{classification_zhang_cem_defaut}. Cette nouvelle version appelée "Competitive EM" ou CEM s'applique à un mélange de lois -~normales en particulier~-, il détermine le nombre de classes optimal en supprimant ou en ajoutant des classes.
+
+
+		\begin{figure}[ht]
+		$$\begin{tabular}{|c|c|c|}\hline
+		\includegraphics[height=3cm, width=3cm]{\filext{../classification/image/zhangc1}} &
+		\includegraphics[height=3cm, width=3cm]{\filext{../classification/image/zhangc2}} &
+		\includegraphics[height=3cm, width=3cm]{\filext{../classification/image/zhangc3}} 
+		\\ \hline \end{tabular}$$
+		\caption{	Figures extraites de \citeindexfig{ZhangB2004}, la première image montre deux classes
+							incluant deux autres classes qui devrait donc être supprimées. La seconde image
+							montre une classe aberrante tandis que la troisième image montre des classes
+							se recouvrant partiellement.}
+		\indexfr{CEM}
+		\label{classification_zhang_cem_defaut}
+		\end{figure}
+
+\indexfr{iid}
+
+On considère un échantillon de variables aléatoires indépendantes et identiquement distribuées à valeur dans un espace vectoriel de dimension $d$. Soit $X$ une telle variable, on suppose que $X$ suit la loi du mélange suivant~:
+
+			\begin{eqnarray}
+			f\pa{X \sac \theta} &=& \summy{i=1}{k}  \alpha_i \, f\pa{X \sac \theta_i} 
+						\label{classif_eqn_cem_vraisemblance}\\
+			&&\text{avec } \theta = \pa{\alpha_i,\theta_i}_{1 \infegal i \infegal k}, \;
+					\forall i, \; \alpha_i \supegal 0
+					\text{ et } \summy{i=1}{k} \alpha_i = 1 \nonumber 
+			\end{eqnarray}
+
+On définit pour une classe $m$ la probabilité $P_{split}(m, \theta)$ qu'elle doive être divisée et celle qu'elle doive être associée à une autre $P_{merge}(m,l, \theta)$. Celles ci sont définies comme suit~:
+
+			\begin{eqnarray}
+			P_{split}(m, \theta)			&=&  \frac{J\pa{m,\theta}}{Z\pa{\theta}}  \label{classif_proba_split}\\
+			P_{merge}(m,l, \theta)		&=&  \frac{\beta}{J\pa{m,\theta}Z\pa{\theta}}  \label{classif_proba_merge}
+			\end{eqnarray}
+
+$\beta$ est une constante définie par expériences. $J\pa{m,\theta}$ est défini pour l'échantillon $\vecteur{x_1}{x_n}$ par~:
+
+			\begin{eqnarray}
+			J\pa{m,\theta} &=& \inte f_m\pa{x,\theta} \; \log \frac{f_m\pa{x,\theta}}{p_m\pa{x,\theta_m}} \, dx \\
+			\text{où } f_m\pa{x,\theta} &=& \frac	{ \summy{i=1}{n} \, \indicatrice{x = x_i} \, \pr{ m \sac x_i,\theta} }
+																						{ \summy{i=1}{n} \, \pr{ m \sac x_i,\theta}} \nonumber
+			\end{eqnarray}
+			
+La constante $Z\pa{\theta}$ est choisie de telle sorte que les probabilités $P_{split}(m, \theta)$ et $P_{merge}(m,l, \theta)$ vérifient~:
+
+			\begin{eqnarray}
+			\summy{m=1}{k} \, P_{split}(m, \theta) + \summy{m=1}{k} \, \summy{l=m+1}{k} \, P_{merge}(m,l, \theta) = 1
+			\end{eqnarray}
+
+
+
+L'algorithme EM permet de construire une suite $\hat{\theta_t}$ maximisant la vraisemblance (\ref{classif_eqn_cem_vraisemblance}) à partir de poids $\hat{\theta_0}$. L'algorithme CEM est dérivé de l'algorithme EM\footnote{voir algorithme~\ref{algorithme_EM}}\seeannex{hmm_algo_em_sec_new}{algorithme EM}.
+
+			\begin{xalgorithm}{CEM}
+			Les notations sont celles utilisées dans les paragraphes précédents. On suppose que la variable 
+			aléatoire $Z=\pa{X,Y}$ où $X$ est la variable observée et $Y$ la variable cachée. $T$ désigne
+			le nombre maximal d'itérations.
+
+			\begin{xalgostep}{initialisation}
+			Choix arbitraire de $k$ et $\hat{\theta}_0$.
+			\end{xalgostep}
+		
+			\begin{xalgostep}{Expectation}\label{classif_expect_step_a}
+					\begin{eqnarray}
+					Q\pa{\theta,\hat{\theta}_t } &=& \esp{ \log \cro{ f\pa{ X,Y \sac \theta }} \sac X, \hat{\theta}_t } 
+					\end{eqnarray}
+			\end{xalgostep}
+			
+			\begin{xalgostep}{Maximization}
+					\begin{eqnarray}
+					\hat{\theta}_{t+1} &=&  \underset{\theta}{\arg \max} \; Q\pa{\theta,\hat{\theta}_t }
+					\end{eqnarray}
+			\end{xalgostep}
+			
+			\begin{xalgostep}{convergence}
+			$t \longleftarrow t + 1$ \\
+			Si $\hat{\theta}_t$ n'a pas convergé vers un maximum local, alors on retourne à
+			l'étape~\ref{classif_expect_step_a}.
+			\end{xalgostep}
+			
+			\begin{xalgostep}{division ou regroupement} \label{classif_division_regroup_step_d}
+			Dans le cas contraire, on estime les probabilités
+			$P_{split}(m, \theta)$ et $P_{merge}(m,l, \theta)$ définie par les expressions
+			(\ref{classif_proba_split}) et (\ref{classif_proba_merge}). On choisit aléatoirement 
+			une division ou un regroupement (les choix les plus probables ayant le plus de chance 
+			d'être sélectionnés). Ceci mène au paramètre $\theta'_t$ dont la partie modifiée par rapport à
+			$\hat{\theta}_t$ est déterminée de manière aléatoire. L'algorithme EM est alors appliqué aux 
+			paramètres $\theta'_t$ jusqu'à convergence aux paramètres $\theta''_t$.
+			\end{xalgostep}
+			
+			\begin{xalgostep}{acceptation}
+					On calcule le facteur suivant~:
+					\begin{eqnarray}
+					P_a &=& \min \acc{ \exp\cro{ \frac{ L\pa{ \theta''_t, X} - L\pa{ \theta_t, X} }{\gamma}
+													}, 1}
+					\end{eqnarray}
+					On génére aléatoirement une variable $u \sim U\cro{0,1}$, si $u \infegal P_a$, alors les 
+					paramètres $\theta''_t$ sont validés. $\hat{\theta}_t \longleftarrow \theta''_t$ 
+					et retour à l'étape~\ref{classif_expect_step_a}. Dans le cas contraire, les paramètres $\theta''_t$
+					sont refusés et retour à l'étape~\ref{classif_division_regroup_step_d}.
+			\end{xalgostep}
+			
+			\possiblecut
+			
+			\begin{xalgostep}{terminaison}
+			Si $t < T$, on retoure à l'étape~\ref{classif_expect_step_a}. 
+			Sinon, on choisit les paramètres $\theta^*=\hat{\theta}_{t^*}$ qui maximisent l'expression~:
+					\begin{eqnarray}
+					L\pa{\theta^* \sac X} &=& \log f \pa{X \sac \theta} - 
+											\frac{N^*}{2} \;  \summy{i=1}{k^*} \log \frac{n \alpha_i^*}{12} -
+											\frac{k^*}{2} \log \frac{n}{12} - \frac{k^*(N^*+1)}{2} 
+											\label{classif_cem_cirtere}\\
+					&&\text{avec } \left \{ \begin{array}{l}											
+										n \text{ est le nombre d'exemples} \\
+										N \text{ est le nombre de paramètres spécifiant chaque composant} \\
+								\end{array} \right. \nonumber
+					\end{eqnarray}
+			\end{xalgostep}
+			
+			
+			\end{xalgorithm}
+
+
+L'article \citeindex{ZhangB2004} prend $\gamma = 10$ mais ne précise pas de valeur pour $\beta$ qui dépend du problème. Toutefois, il existe un cas supplémentaire où la classe $m$ doit être supprimée afin d'éviter sa convergence vers les extrêmes du nuage de points à modéliser. Si $n \alpha_m < N$, le nombre moyen de points inclus dans une classe est inférieur au nombre de paramètres attribués à cette classe qui est alors supprimée. Cette condition comme l'ensemble de l'article s'inspire de l'article \citeindex{Figueiredo2002} dont est tiré le critère décrit en (\ref{classif_cem_cirtere}).
+
+		
+
+
+			
+
+
+
+
+
+
+
+
+\subsection{Neural gas}
+\indexfr{neural gas}
+
+
+\indexsee{quantification vectorielle}{LVQ}
+\indexfr{LVQ}
+\indexsee{learning vector quantization}{LVQ}
+
+Cette méthode proposée dans~\citeindex{Martinetz1993} constitue une méthode non supervisée de quantification vectorielle (learning vector quantization, LVQ). Toutefois, elle peut aussi être considérée comme une extension de la méthode RPCL vue au paragraphe~\ref{class_rpcl}. L'article \citeindex{Camastra2003} l'applique dans le cadre de reconnaissance caractère et le compare aux différents algorithmes LVQ~(1,2,3) et aux cartes de Kohonen (voir paragraphe~\ref{classification_carte_kohonen}).
+
+
+		\begin{xalgorithm}{Neural Gas}
+		\label{classif_algo_neural_gas}
+		Soient $\vecteur{X_1}{X_N}$, $N$ vecteurs à classer et $T$ classes de centres $\vecteur{C_1}{C_T}$. 
+		Soient quatre réels $\epsilon_i$,  $\epsilon_f$, $\lambda_i$, $\lambda_f$ et un nombre 
+		d'itérations maximum $t_f$ (des valeurs pratiques pour ces paramètres sont données 
+		dans~\citeindex{Martinetz1993}).
+
+		\begin{xalgostep}{initialisation}
+		Tirer aléatoirement les centres $\vecteur{C_1}{C_T}$. \\
+		\end{xalgostep}
+
+		\begin{xalgostep}{mise à jour} \label{class_neural_gas_step_2}
+		Choisir aléatoirement un point $X_i$. \\
+		Classer les centres $C_k$ par proximité croissante de $X_i$ de sorte que~:
+		$d\pa{X_i,C_{\sigma\pa{1}}} \infegal ... \infegal d\pa{X_i,C_{\sigma\pa{T}}}$ \\
+		\begin{xfor}{j}{1}{C}
+		$
+		\begin{array}{lcl}
+		C_j^{t+1} &\longleftarrow&  C_j^t +  	\epsilon_j \pa{\dfrac{\epsilon_f}{\epsilon_j}}^{\frac{t}{t_f}} \; 
+																					exp\pa{
+																							- \biggcro{ \sigma\pa{j} - 1 }  
+																							\cro{ \lambda_j \pa{\dfrac{\lambda_f}{\lambda_j}}^{\frac{t}{t_f}} } ^{-1}
+																					}
+																					\; \pa{ X_i - C_j^t	}
+		\end{array}																
+		$
+		\end{xfor} \\
+		$ t \longleftarrow t+1$
+		\end{xalgostep}
+
+		\begin{xalgostep}{terminaison} \label{class_rpcl_step_3}
+		si $t < t_f$ alors retour à l'étape~\ref{class_neural_gas_step_2}
+		\end{xalgostep}
+
+		\end{xalgorithm}
+
+
+Cet algorithme ressemble à celui des cartes de Kohonen (paragraphe~\ref{classification_carte_kohonen}) sans toutefois imposer de topologie entre les différentes classes. Il ressemble également à l'algorithme RPCL~(\ref{classif_algo_rpcl}) à ceci près que lorsqu'un point $X_i$ est choisi aléatoirement, tous les centres des classes sont rapprochés à des degrés différents alors que l'algorithme RPCL rapproche le centre le plus proche et repousse le second centre le plus proche.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Classification ascendante hiérarchique}
+\label{classification_ascendante_hierarchique_CAH}
+\indexfrr{classification}{ascendante hiérarchique (CAH)}
+\indexfr{CAH}
+
+Comme l'algorithme des centres mobiles (\ref{algo_centre_mobile}), cet algorithme permet également d'effectuer une classification non supervisée des données. Soit un ensemble $E = \vecteur{x_1}{x_N}$ à classer, on suppose également qu'il existe une distance entre ces éléments notée $d\pa{x,y}$. De cette distance, on en déduit un critère ou une inertie entre deux parties ne possédant pas d'intersection commune. Par exemple, soient deux parties non vide $A$ et $B$ de $E$ telles	que $A \cap B = \emptyset$, on note $\abs{A}$ le nombre d'éléments de $A$. Voici divers critères possibles~:
+
+		\begin{eqnarray*}
+		\text{le diamètre } D\pa{A,B}  &=& \max \acc{ d\pa{x,y} \sac x,y \in A \cup B } \\
+		\text{l'inertie } 	I\pa{A,B}  &=& \frac{1}{\abs{A \cup B}} \; \summyone{x \in A \cup B} \; d\pa{x,G_{A \cup B}} \\
+								&& \text{où } G_{A \cup B} \text{ est le barycentre de la partie } A \cup B
+		\end{eqnarray*}
+
+
+On note $C\pa{A,B}$ le critère de proximité entre deux parties, la classification ascendante hiérarchique consiste à regrouper d'abord les deux parties minimisant le critère $C\pa{A,B}$.
+
+
+		\begin{xalgorithm}{CAH}
+		Les notations sont celles utilisées dans les paragraphes précédents. 
+		Soit l'ensemble des singletons $P = \vecteur{\acc{x_1}}{\acc{x_N}}$.
+
+		\begin{xalgostep}{initialisation}
+		$t \longrightarrow 0$
+		\end{xalgostep}
+
+		\begin{xalgostep}{choix des deux meilleures parties}\label{classif_cah_step_a}
+		Soit le couple de parties $\pa{A,B}$ défini par~:
+				$$\begin{array}{l}
+				C\pa{A,B} = \min \acc{ C\pa{M,N} \sac M,N \in P, \text{ et } M \neq N }
+				\end{array}$$
+		\end{xalgostep}
+
+		\begin{xalgostep}{mise à jour}
+		$\begin{array}{lll}
+		c_t &\longleftarrow& C\pa{A,B} \\
+		P 	&\longleftarrow& P - \acc{A} - 	\acc{B} \\
+		P 	&\longleftarrow& P \cup \acc{ A \cup B}
+		\end{array}$
+		Tant que $P \neq \acc{E}$, $t \longleftarrow t+1$ et retour à l'étape~\ref{classif_cah_step_a}.
+		\end{xalgostep}
+		
+		\end{xalgorithm}
+
+L'évolution de l'ensemble des parties $P$ est souvent représentée par un graphe comme celui de la figure~\ref{classification_fig_cah}. C'est ce graphe qui permet de déterminer le nombre de classes approprié à l'ensemble $E$ par l'intermédiaire de la courbe $\pa{t,c_t}$. Le bon nombre de classe est souvent situé au niveau d'un changement de pente ou d'un point d'inflexion de cette courbe. Cette méthode est décrite de manière plus complète dans \citeindex{Saporta1990}.
+
+
+		\begin{figure}[ht]
+		$$\begin{tabular}{|c|}\hline
+		\includegraphics[height=5cm, width=7cm]{\filext{../classification/image/cah_ex}}
+		%\filefig{../classification/fig_cah}
+		\\ \hline \end{tabular}$$
+		\caption{ Représentation classique de l'arbre obtenu par une CAH. Chaque palier indique un regroupement
+							de deux parties et la valeur du critère de proximité correspondant.}
+		\indexfr{CAH}
+		\label{classification_fig_cah}
+		\end{figure}
+		
+
+
+
+
+
+
+
+\subsection{Carte de Kohonen}
+\label{classification_carte_kohonen}
+\indexfrr{carte}{Kohonen}
+\indexfr{Kohonen}
+\indexsee{Self Organizing Map}{SOM}
+\indexfr{SOM}
+
+
+Les cartes de Kohonen\footnote{Self Organizing Map (SOM) est le terme anglais pour les cartes de Kohonen.} (voir \citeindex{Kohonen1997}) sont assimilées à des méthodes neuronales. Ces cartes sont constituées d'un ensemble de neurones $\vecteur{\mu_1}{\mu_N}$ lesquels sont reliés par une forme récurrente de voisinage (voir figure~\ref{classification_kohonen_voisinage}). Les neurones sont initialement répartis selon ce système de voisinage. Le réseau évolue ensuite puisque chaque point de l'espace parmi l'ensemble $\vecteur{X_1}{X_K}$ attire le neurone le plus proche vers lui, ce neurone attirant à son tour ses voisins. Cette procédure est réitérée jusqu'à convergence du réseau en faisant décroître l'attirance des neurones vers les points du nuage. 
+
+			\begin{figure}[ht]
+			$$\begin{tabular}{|c|} \hline
+			\includegraphics[height=2cm, width=6cm]{\filext{../classification/image/kohov}}
+			\\ \hline \end{tabular}$$
+			\caption{	Trois types de voisinages couramment utilisés pour les cartes de Kohonen, voisinages
+								linéaire, rectangulaire, triangulaire.}
+			\label{classification_kohonen_voisinage}
+			\indexfrr{voisinage}{linéaire}
+			\indexfrr{voisinage}{rectangulaire}
+			\indexfrr{voisinage}{triangulaire}
+			\end{figure}
+
+
+			\begin{xalgorithm}{cartes de Kohonen (SOM)}\label{classification_som_algo}
+			Soient $\vecteur{\mu_1^t}{\mu_N^t} \in \pa{\R^n}^N$ des neurones de l'espace vectoriel $\R^n$. On 
+			désigne par $V\pa{\mu_j}$ l'ensemble des neurones voisins de $\mu_j$ pour cette carte de Kohoen.
+			Par définition, on a $\mu_j \in V\pa{\mu_j}$. 
+			Soit $\vecteur{X_1}{X_K} \in \pa{\R^n}^K$ un nuage de points. On utilise une suite de réels positifs
+			$\pa{\alpha_t}$ vérifiant~: 
+					$$
+					\summyone{t \supegal 0} \alpha_t^2 < \infty \text{ et } 
+					\summyone{t \supegal 0} \alpha_t = \infty
+					$$
+					
+			\begin{xalgostep}{initialisation}
+			Les neurones $\vecteur{\mu_1^0}{\mu_N^0}$ sont répartis dans l'espace $\R^n$ 
+			de manière régulière selon la forme de leur voisinage
+			(voir figure~\ref{classification_kohonen_voisinage}). \\
+			$t \longleftarrow 0$
+			\end{xalgostep}
+			
+			\begin{xalgostep}{neurone le plus proche}\label{classification_kohonen_step}
+			On choisi aléatoirement un points du nuage $X_i$ puis on définit le neurone $\mu_{k^*}^t$ de telle sorte que~: \\
+			$\norme{ \mu_{k^*}^t - X_i} = \underset{1 \infegal j \infegal N}{\min } \; \norme{ \mu_j^t - X_i }$
+			\end{xalgostep}
+			
+			\begin{xalgostep}{mise à jour}\label{classification_kohonen_update}
+			\begin{xforeach}{\mu^t_j}{V\pa{\mu_{k^*}^t}}
+					$\mu^{t+1}_j \longleftarrow \mu^t_j + \alpha_t \, \pa{X_i - \mu^{t+1}_j}$
+			\end{xforeach}
+			$t \longleftarrow t + 1$ \\
+			Tant que l'algorithme n'a pas convergé, retour à l'étape~\ref{classification_kohonen_step}.
+			\end{xalgostep}
+			
+			\end{xalgorithm}
+
+L'étape~\ref{classification_kohonen_update} de mise à jour peut être modifiée de manière à améliorer la vitesse de convergence (voir \citeindex{Lo1991})~:
+
+			\begin{eqnarray}
+			\mu^{t+1}_j \longleftarrow \mu^t_j + \alpha_t \, h\pa{\mu^{t}_j, \mu_{k^*}^t} \, 
+																					\mu_k\pa{X_i - \mu^{t+1}_j}
+			\end{eqnarray}
+
+Où $h$ est une fonction à valeur dans l'intervalle $\cro{0,1}$ qui vaut~1 lorsque $\mu^t_j = \mu_{k^*}^t$ et qui décroît lorsque la distance entre ces deux neurones augmente. Une fonction typique est~: $h\pa{x,y} = h_0 \, \exp\pa{ - \frac{\norme{x-y}^2} {2\,  \sigma_t^2} }$.
+			
+
+
+Les cartes de Kohonen sont utilisées en analyse des données\indexfr{analyse des données} afin de projeter un nuage de points dans un espace à deux dimensions d'une manière non linéaire en utilisant un voisinage rectangulaire. Elles permettent également d'effectuer une classification non supervisée en regroupant les neurones là où les points sont concentrés. Les arêtes reliant les neurones ou sommets de la cartes de Kohonen sont soit rétrécies pour signifier que deux neurones sont voisins, soit distendues pour indiquer une séparation entre classes.
+
+
+
+
+
+
+
+
+
+\subsection{Carte de Kohonen et classification}
+\label{classification_carte_kohonen}
+\indexfrr{carte}{Kohonen}
+\indexfr{Kohonen}
+\indexsee{Self Organizing Map}{SOM}
+\indexfr{SOM}
+
+
+L'article \citeindex{Wu2004} aborde le problème d'une classification à partir du résultat obtenu depuis une carte de Kohonen (voir algorithme~\ref{classification_som_algo}). Plutôt que de classer les points, ce sont les neurones qui seront classés en $C$~classes. Après avoir appliqué l'algorithme de Kohonen (algorithme~\ref{classification_som_algo}), la méthode proposée dans \citeindex{Wu2004} consiste à classer de manière non supervisée les $A$ neurones obtenus $\vecteur{\mu_1}{\mu_A}$. Toutefois, ceux-ci ne sont pas tous pris en compte afin d'éviter les points aberrants. On suppose que $\alpha_{il} = 1$ si le neurone $l$ est le plus proche du point $X_i$, $0$ dans le cas contraire. Puis on construit les quantités suivantes~:
+
+		\begin{eqnarray*}
+		&& \nu_k			=   \summy{i=1}{N} \; \alpha_{ik} \text { ainsi que }
+		T_k 					= 	\frac{1}{\nu_k} \;  \summy{i=1}{N} \; \alpha_{ik} X_i \text{ et }
+		\theta(T_k) 	= 	\sqrt{ \frac{1}{\nu_k} \;  \summy{i=1}{N} \; \alpha_{ik} \norme{ X_i - T_k}^2 } \\
+		&& 	\text{De plus, } \overline{\theta} = \frac{1}{A} \; \summy{k=1}{A} \theta(T_k) \text{ et }
+						\sigma(\theta) = \sqrt{ \frac{1}{A} \; \summy{k=1}{A} \pa{ \theta(T_k) - \overline{\theta} }^2 }
+		\end{eqnarray*}
+		
+Si $\nu_k = 0$ ou $\norme{ \mu_k - T_k} > \overline{\theta} + \sigma(\theta)$, le neurone $\mu_k$ n'est pas prise en compte lors de la classification non supervisée. Une fois celle-ci terminée, chaque élément $X_i$ est classé selon la classe du neurone le plus proche.
+
+\indexfrr{densité}{interne}
+
+L'article \citeindex{Wu2004} propose également un critère permettant de déterminer le nombre de classes idéale. On note, $a_{ik} = 1$ si $X_i$ appartient à la classe $k$, dans le cas contraire, $a_{ik} = 0$. On définit $n_k$ le nombre d'éléments de la classe $k$, le vecteur moyenne $M_k$ associé à la classe $k$~:
+
+		\begin{eqnarray*}
+		n_k						=   \summy{i=1}{N} \; a_{ik} \text { ainsi que }
+		M_k 					= 	\frac{1}{n_k} \;  \summy{i=1}{N} \; a_{ik} X_i \text{ et }
+		\sigma^2(M_k) = 	\frac{1}{n_k} \;  \summy{i=1}{N} \; a_{ik} \norme{ X_i - M_k}^2 
+		\end{eqnarray*}
+		
+On note au préalable $\sigma = \sqrt{ \frac{1}{C} \summy{k=1}{C} \; \sigma^2(M_k) }$. L'article définit ensuite la densité interne pour $C$~classes~:
+
+			\begin{eqnarray*}
+			D_{int} (C) = \frac{1}{C} \;  \summy{k=1}{C} \; \summy{i=1}{N} \; \summy{j=1}{N} \; 
+													 a_{ik} a_{jk} \indicatrice{ \norme{ X_i - X_j} \infegal \sigma }
+			\end{eqnarray*}
+
+On définit la distance $d^*_{kl}$ pour $\pa{k,l} \in \ensemble{1}{C}^2$, cette distance est égale à la distance minimale pour un couple de points, le premier appartenant à la classe $i$, le second à la classe $j$~:
+
+			
+			\begin{eqnarray*}
+			d^*_{kl} = \min \acc{ \norme{ X_i - X_j} \sac a_{ik} a_{jl} = 1 } = \norme{ X_{i^*}^{kl} - X_{j^*}^{kl} }
+			\end{eqnarray*}
+
+\indexfrr{densité}{externe}
+
+La densité externe est alors définie en fonction du nombre de classes $C$~par~:
+
+			\begin{eqnarray*}
+			D_{ext} (C) =  \summy{k=1}{C} \; \summy{l=1}{C} \; \cro{ 
+													 \frac{ d_{kl} } { \sigma\pa{k} \sigma\pa{l} } \;
+													 \summy{i=1}{N} \; \indicatrice{ a_{ik} + a_{il} > 0 }
+													 										\indicatrice{ \norme{ X_i - \frac{X_{i^*}^{kl} + X_{j^*}^{kl}}{2} } 
+													 																	\infegal 
+													 																	\frac{\sigma\pa{k} +\sigma\pa{l}}{2} }
+													 }
+			\end{eqnarray*}
+			
+
+\indexfr{séparabilité}
+L'article définit ensuite la séparabilité en fonction du nombre de classes~$C$~:
+
+			\begin{eqnarray*}
+			Sep(C) = \frac{1}{D_{ext}(C)} \; \summy{k=1}{C} \; \summy{l=1}{C} \; d^*_{kl}
+			\end{eqnarray*}
+		
+\indexfrr{critère}{nombre de classes optimal}
+
+Enfin, le critère (\ref{classification_critere_cdbw}) noté\footnote{Composing Density Between and With clusters} $CDBw(C)$ est défini par~:
+
+			\begin{eqnarray}
+			CDBw(C) = D_{int} (C) * Sep(C)
+			\label{classification_critere_cdbw}
+			\end{eqnarray}
+		
+Ce critère est maximal pour un nombre de classes optimal. Outre les résultats de l'article \citeindex{Wu2004} sommairement résumés ici, ce dernier revient sur l'histoire des cartes de Kohonen, depuis leur création (\citeindex{Kohonen1982}) jusqu'aux derniers développements récents.
+
+
+
+
+\subsection{Classification à partir de graphes}
+\label{classification_graphe_voisinage}
+\indexfr{graphe}
+\indexfr{Kruskal}
+\indexfrr{arbre}{poids minimal}
+
+
+L'article \citeindex{Bandyopadhyay2004} propose une méthode qui s'appuie sur les graphes et permettant de classer automatiquement un nuage de points organisé sous forme de graphe. Chaque élément est d'abord relié à ses plus proches voisins, les arcs du graphe obtenus sont pondérés par la distance reliant les éléments associés chacun à un n\oe ud. Les arêtes sont ensuite classées par ordre croissant afin de déterminer un seuil au delà duquel ces arcs relient deux éléments appartenant à deux classes différentes. Ceci mène à l'algorithme~\ref{classification_graphe_band}. La figure~\ref{classification_fig_Bandyopadhyay2004} illustre quelques résultats obtenus sur des nuages de points difficiles à segmenter par des méthodes apparentées aux nuées dynamiques.
+
+		\begin{xalgorithm}{classification par graphe de voisinage}
+		\label{classification_graphe_band}
+		On désigne par $e_{ij}$ les arcs du graphe $G(S,A)$ 
+		reliant les éléments $i$ et $j$ et pondérés par $d_{ij} = d\pa{x_i,x_j}$ la distance
+		entre les éléments $x_i$ et $x_j$ de l'ensemble $\vecteur{x_1}{x_N}$. $S$ désigne l'ensemble
+		des sommets et $A$ l'ensemble des arcs $A = \pa{e_{ij}}_{ij}$. 
+		On numérote les arêtes de $1$
+		à $N^2$ de telle sorte qu'elles soient triées~: $w_{\sigma(1)} \infegal w_{\sigma(2)} \infegal ... \infegal
+		w_{\sigma(N^2)}$. On élimine dans cette liste les arcs de même poids, on construit donc la fonction $\sigma'$
+		de telle sorte que~: $w_{\sigma'(1)} < w_{\sigma'(2)} < ... < w_{\sigma'(n)}$ avec $n \infegal N^2$. On pose
+		$\lambda = 2$.
+		
+		\begin{xalgostep}{détermination de l'ensemble des arcs à conserver}
+		On désigne par $X$ l'ensemble des arcs à conserver. $X = A$. Si $w_{\sigma'(n)} < \lambda w_{\sigma'(1)}$ alors $X$
+		est inchangé et on passe à l'étape suivante. Sinon, on construit la suite 
+		$\delta_i = w_{\sigma'(i+1)} - w_{\sigma'(i)}$ pour $i \in \ensemble{1}{n-1}$. La suite $\delta_{\phi(i)}$
+		correspond à la même suite triée~: $\delta_{\phi(1)} \infegal  ... \infegal \delta_{\phi(n-1)}$. On définit 
+		$t = \frac{\delta_{\phi(1)} + \delta_{\phi(n-1)}} {2}$. On définit alors le seuil $\alpha$ tel que~:
+					$$
+					\alpha = \min \acc{ w_{\sigma(i)} \sac
+															1 \infegal i \infegal n-1 \text{ et } 
+															w_{\sigma'(i+1)} - w_{\sigma'(i)} \supegal t \text{ et }
+															w_{\sigma'(i)} \supegal \lambda w_{\sigma'(1)}}
+					$$
+		Si $\alpha$ n'est pas défini, $X$ est inchangé et on passe à l'étape suivante, sinon~:
+					$$
+					X = \acc{ e_{ij} \in A \sac d_{ij} \infegal \alpha}
+					$$
+		\end{xalgostep}
+		
+		\begin{xalgostep}{détermination des classes}
+		Si $X = A$ alors l'algorithme ne retourne qu'une seule classe. Dans le cas contraire,
+		on extrait du graphe $G(S,X)$ l'ensemble des composantes connexes $\ensemble{C_1}{C_p}$ où
+		$p$ désigne le nombre de composantes connexes du graphe.
+		Si $p > \sqrt{ \card{X}}$, l'algorithme mène à une sur-segmentation, on ne retourne à nouveau qu'une seule
+		classe. Dans le cas contraire, on applique ce même algorithme à chacune des composantes connexes $(C_k)$
+		extraites du graphe. 
+		\end{xalgostep}
+		
+		L'algorithme est donc appliqué de manière récursive tant qu'un sous-ensemble
+		peut être segmenté.
+		\end{xalgorithm}
+
+
+
+		\begin{figure}[p]
+		$$\begin{tabular}{|cc|cc|}\hline
+		$(a)$ & \includegraphics[height=7cm, width=7cm]{\filext{../classification/image/band21}} &
+		\includegraphics[height=7cm, width=7cm]{\filext{../classification/image/band22}} & $(d)$ \\ \hline
+		$(b)$ & \includegraphics[height=7cm, width=7cm]{\filext{../classification/image/band23}} &
+		\includegraphics[height=7cm, width=7cm]{\filext{../classification/image/band24}} & $(e)$ \\ \hline
+		$(c)$ & \includegraphics[height=7cm, width=7cm]{\filext{../classification/image/band25}} &
+		\includegraphics[height=7cm, width=7cm]{\filext{../classification/image/band26}} & $(f)$ 
+		\\ \hline \end{tabular}$$
+		\caption{	Figures extraites de \citeindexfig{Bandyopadhyay2004}, 
+							différents nuages de points bien segmentés par l'algorithme~\ref{classification_graphe_band}
+							et de manière évidente impossible à traiter avec des méthodes apparentées aux nuées dynamiques
+							puisque les classes obtenues ne sont pas convexes. L'image $(a)$ permet de vérifier 
+							qu'un nuage compact distribué selon une loi normale n'est pas segmenté. L'image $(b)$ 
+							représente un nuage composée de deux classes bien segmentées. Les autres images montrent
+							des problèmes où les classes ne sont plus circulaires $(d)$ ou non convexes $(c)$, $(e)$, $(f)$.
+							}
+		\indexfrr{classification}{voisinage}
+		\indexfrr{classification}{graphe}
+		\label{classification_fig_Bandyopadhyay2004}
+		\end{figure}
+
+L'algorithme~\ref{classification_graphe_band}, puisqu'il est appliqué récursivement, permet de construire une hiérarchie de classes comme celle obtenue par une classification ascendante hiérarchique\seeannex{classification_ascendante_hierarchique_CAH}{classification ascendante hiérarchique} mais cette fois-ci, l'arbre final est obtenu depuis la racine jusqu'aux feuilles. Le seuil caractérisant les cas de sur-segmentation (ici $\sqrt{X}$) est celui choisi dans l'article \citeindex{Bandyopadhyay2004} permettant de traiter les cas de la figure~\ref{classification_fig_Bandyopadhyay2004}. Celui-ci peut être modifié en fonction du problème à résoudre. 
+
+Cet article précise aussi que l'algorithme peut former des classes de très petites tailles qui devront être agrégées avec leurs voisines à moins que celles-ci ne soient trop éloignées, la distance entre classes étant ici la distance minimum entre leurs éléments. La règle choisie dans l'article \citeindex{Bandyopadhyay2004} est que une classe sera unie à sa voisine si le diamètre de la première est inférieur à $\mu$ fois la distance qui les sépare, avec $\mu = 3 \supegal 2$. Ce paramètre peut différer selon les problèmes.
+
+%-----------------------------------------------------------------------------------------------------------------------
+\section{Prolongations}
+%-----------------------------------------------------------------------------------------------------------------------
+
+\subsection{Classe sous-représentée}
+
+\indexfrr{classification}{classe sous-représentée}
+
+Ce paragraphe regroupe quelques pistes de lecture. Les remarques qui suivent s'appliquent de préférence à une classification supervisée mais peuvent être étendues au cas non supervisé. Le premier article \citeindex{Barandela2003} résume les idées concernant le cas d'un problème de classification incluant une classe sous-représentée. Par exemple, pour un problème à deux classes~A et~B lorsque~A regroupe 98\% des exemples, répondre~A quelque soit l'exemple correspond à une erreur de 2\%. Avec plus de 2\% d'erreur, une méthode de classification serait moins performante et pourtant les classes sous-représentées favorise cette configuration. Diverses méthodes sont utilisées pour contrecarrer cet inconvénient comme la pondération des exemples sous-représentés, la multiplication de ces mêmes exemples, bruitées ou non bruitées ou encore la réduction des classes sur-représentées à un échantillon représentatif. Cette dernière option est celle discutée par l'article \citeindex{Barandela2003} qui envisage différentes méthodes de sélection de cet échantillon.
+
+
+
+
+
+
+
+
+\subsection{Apprentissage d'une distance}
+
+
+\label{classification_graphem_carac_dist}
+\indexfrr{caractéristiques}{distance}
+\indexfrr{distance}{apprentissage}
+\indexfrr{apprentissage}{distance}
+
+Jusqu'à présent, seule la classification a été traitée mais on peut se demander quelle est la distance la mieux adaptée à une classification. La distance euclidienne accorde un poids égal à toutes les dimensions d'un vecteur. On peut se demander quelle est la pondération optimale pour un problème de classification donné. On définit une distance $d_W$ avec $W = \vecteur{W_1}{W_d}$ pondérant les dimensions de manière non uniforme~:
+
+			\begin{eqnarray}
+			d_W\pa{X^1,X^2} = \summy{k=1}{d} \, W_k^2 \, \pa{X^1_k - X^2_k}^2
+			\end{eqnarray}
+			
+\indexfr{prototype}			
+
+Il reste à déterminer le vecteurs de poids $W = \vecteur{W_1}{W_d}$ en s'inspirant par exemple de la méthode développée par \citeindex{Waard1995}. On considère $P$ vecteurs aussi appelés prototypes et notés $\vecteur{X^1}{X^p}$ extrait du nuage $\vecteur{X^1}{X^N}$. On note ensuite pour tout $p \in \ensemble{1}{P}$~:
+
+		\begin{eqnarray}
+		y_p\pa{X} = \frac{1}{1 + \exp\pa{d_{W}\pa{X,X^p} + b}}
+		\end{eqnarray}
+		
+On cherche à minimiser le critère~:
+
+		\begin{eqnarray}
+		E = \summyone{\pa{p,l} \in A} \pa{y_p\pa{X_l} - d_{pl}}^2 \text{ où } 
+				A = \ensemble{1}{P} \times \ensemble{1}{N}
+		\end{eqnarray}
+				
+\indexfr{réseau de neurones}				
+
+Cette minimisation peut être effectuée par une descente de gradient ou dans un algorithme similaire à ceux utilisés pour l'apprentissage des réseaux de neurones (voir paragraphe~\ref{rn_section_train_rn}). Chaque prototype $X_p$ appartient à une classe $C_p$, les coefficients $d_{pl} \in \cro{0,1}$ sont choisis de manière à décrire l'appartenance du vecteur $X_l$ à la classe $C_p$. 
+
+Cette classification pourrait être obtenue à partir d'une classification non supervisée (centres mobiles, classification ascendante hiérarchique) mais cela suppose de disposer déjà d'une distance (comme celle par exemple décrite au paragraphe~\ref{reco_graphem_contour}). Il est possible de répéter le processus jusqu'à convergence, la première classification est effectuée à l'aide d'une distance euclidienne puis une seconde distance est ensuite apprise grâce à la méthode développée dans ce paragraphe. Cette seconde distance induit une nouvelle classification qui pourra à son tour définir une troisième distance. Ce processus peut être répété jusqu'à la classification n'évolue plus.
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Classification à partir de voisinages}
+\label{classification_distance_voisinage}
+
+\indexfrr{classification}{voisinage}
+\indexfrr{voisinage}{classification}
+
+
+L'idée de cette classification est développée dans l'article \citeindex{ZhangYG2004}. Elle repose sur la construction d'un voisinage pour chaque élément d'un ensemble $E = \ensemble{x_1}{x_n}$ à classer. La classification est ensuite obtenue en regroupant ensemble les voisinages ayant une intersection commune. L'objectif étant de proposer une réponse au problème décrit par la figure~\ref{classification_fig_zhang1}.
+
+
+		\begin{figure}[ht]
+		$$\begin{tabular}{|c|}\hline
+		\includegraphics[height=5cm, width=6cm]{\filext{../classification/image/zhang1}}
+		\\ \hline \end{tabular}$$
+		\caption{	Figure extraite de \citeindexfig{ZhangYG2004}, problème classique de classification consistant
+							à séparer deux spirales imbriquées l'une dans l'autre.}
+		\indexfrr{classification}{voisinage}
+		\label{classification_fig_zhang1}
+		\end{figure}
+
+
+
+Pour chaque $x_i \in E$, on définit son voisinage local $\omega_i = \ensemble{x_{i_1}}{x_{i_K}}$. $K$ est le nombre de voisins et ceux-ci sont classés par ordre de proximité croissante. Par la suite, $x_i$ sera également noté $x_{i_0}$. On définit ensuite la matrice de covariance $S_i$ locale associée à $\omega_i$~:
+
+			\begin{eqnarray}
+			m_i = \frac{1}{K+1} \; \summy{k=0}{K} x_{i_k} \text{ et } 
+			S_i = \frac{1}{K+1} \; \summy{k=0}{K} \pa{x_{i_k} - m_i } \pa{x_{i_k} - m_i }'
+			\label{classif_zhang_eq1}
+			\end{eqnarray}
+
+Le vecteur $\lambda_i = \vecteur{\lambda_{i,1}}{\lambda_{i,d}}'$ vérifiant $\lambda_{i,1} \supegal ... \supegal \lambda_{i,d}$, $d$ est la dimension de l'espace vectoriel. L'\emph{adaptibilité} $a_i$  de l'ensemble $\omega_i$ est définie par~: \indexfr{adaptabilité}
+
+			\begin{eqnarray}
+			\overline{\lambda_{i,j}}  = \frac{1}{K} \; \summyone{t \in \ensemble{i_1}{i_K} } \lambda_{t,j} \text{ et }
+			a_i = \frac{1}{d} \; \summy{j=1}{d} \frac{ \lambda_{i,j} } { \overline { \lambda_{i,j}} }
+			\label{classif_zhang_eq2}
+			\end{eqnarray}
+			
+On note également~:
+
+			\begin{eqnarray}
+			E\pa{a_i} = \frac{1}{N} \; \summy{i=1}{N} a_i \text{ et } 
+			D\pa{a_i} = \sqrt{ \frac{1}{N} \; \summy{i=1}{N} \pa{ a_i - E\pa{a_i} }^2 }
+			\label{classif_zhang_eq3}
+			\end{eqnarray}
+			
+			
+Dans un premier temps, les voisinages déterminés par cette méthode vont être nettoyés des voisins indésirables. Ce système est souvent représenté sous forme de graphe, chaque n\oe ud représente un élément, chaque arc détermine l'appartenance d'un élément au voisinage d'un autre. Ces graphes sont appelés "\emph{mutual neighborhood graph}" ou \emph{graphe des voisinages mutuels}.
+\indexfr{mutual neighborhood graph}
+\indexfr{graphe des voisinages mutuels}
+
+
+			\begin{xalgorithm}{nettoyage des voisinages}
+			Les notations utilisées sont celles des expressions (\ref{classif_zhang_eq1}), 
+			(\ref{classif_zhang_eq2}), (\ref{classif_zhang_eq3}).
+			
+			\begin{xalgostep}{estimation}\label{classif_algo_zhang_1}
+			Les valeurs $a_i^l$ sont calculées pour chaque ensemble $\omega_i$ privé de $x_{i_l}$ pour élément
+			de l'ensemble $\omega_i$.
+			\end{xalgostep}
+
+			\begin{xalgostep}{suppression}
+			Si $a_i^l > E\pa{a_i} + D\pa{a_i}$, alors l'algorithme s'arrête. Sinon, l'élément $x_{i_s}$ correspondant
+			à la plus petite valeur $x_{i_l}$ est supprimée de l'ensemble $\omega_i$. 
+			On retourne ensuite à l'étape~\ref{classif_algo_zhang_1}.
+			\end{xalgostep}
+			
+			\end{xalgorithm}
+
+
+\indexfr{composante connexe}\indexfrr{distance}{euclidienne}
+
+La classification correspond aux composantes connexes du graphe nettoyé qui détermine par ce biais le nombre de classes. L'article suggère également d'associer à chaque élément $x_i$ le vecteur $\pa{x_i, \beta \lambda_i}'$ où $\beta$ est un paramètre de normalisation. Le vecteur $\beta \lambda_i$ caractérise le voisinage. Ainsi, la distance entre deux points dépend à la fois de leur position et de leur voisinage. Les auteurs proposent également d'autres distances que la distance euclidienne. Il reste toutefois à déterminer les paramètres $K$ et $\beta$. 
+
+
+
+
+
+\subsection{Modélisation de la densité des observations}
+
+
+\label{classification_modelisation_densite}
+\indexfrr{densité}{semi-paramétrique}
+
+L'article \citeindex{Hoti2004} présente une modélisation semi-paramétrique. Soit $Z = \pa{X,Y}$ une variable aléatoire composée du couple $\pa{X,Y}$. La densité de $z$ est exprimée comme suit~:
+
+		\begin{eqnarray}
+		f_{X,Y}(x,y) = f_{Y | X=x}(y) \, f_X(x)
+		\end{eqnarray}
+
+Dans cet article, la densité $f_X\pa{x}$ est estimée de façon non paramétrique tandis que $f_{Y|X}\pa{y}$ est modélisée par une loi gaussienne. On note $p$ la dimension de $X$ et $q$ celle de $Y$. On note $K_H \pa{x} = \frac{1}{\det H} K \pa{H^{-1} X}$ où $H \in M_p\pa{\R}$ est une matrice carrée définie strictement positive et $K$ un noyau vérifiant $\int_{\R^p} K\pa{x} dx = 1$. $K$ peut par exemple être une fonction gaussienne. Les notations reprennent celles du paragraphe~\ref{modification_janvier_2004_new} (page~\pageref{modification_janvier_2004_new}). On suppose également que la variable $Y | X=x \sim \loinormale{\mu(x)}{\sigma(x)}$. Par conséquent, la densité de la variable $Z =\pa{X,Y}$ s'exprime de la façon suivante~:
+
+
+		\begin{eqnarray}
+		f_{X,Y}(x,y) =  \frac{ f_X(x) } { \sqrt{ \pa{2 \pi}^q \, \det \sigma^2(x) } } \;
+										\exp \pa{ - \frac{1}{2} \cro{y - \mu(x)} \, \sigma^{-1}(x) \, \cro{y - \mu(x)}' }
+		\end{eqnarray}
+
+
+La densité $f_X$ est estimée avec un estimateur à noyau à l'aide de l'échantillon $\pa{X_i,Y_i}_{1 \infegal i \infegal N}$~:
+
+		
+		\begin{eqnarray}
+		\widehat{f_X} (x) = \frac{1}{N} \; \summy{i=1}{N} K_{H} \pa{ x - X_i}
+		\end{eqnarray}
+
+On note~:
+
+		\begin{eqnarray}
+		W_H\pa{x - X_i} =  \frac{K_H\pa{x - X_i}} {\summy{i=1}{N} K_H\pa{x - X_i} }
+		\end{eqnarray}
+		
+Les fonctions $\mu(x)$ et $\sigma(x)$ sont estimées à l'aide d'un estimateur du maximum de vraisemblance~:
+		
+		\begin{eqnarray}
+		\widehat{\mu}(x) 		&=& \summy{i=1}{n} W_H\pa{x - X_i} \, Y_i \\
+		\widehat{\sigma}(x) &=& \summy{i=1}{n} W_H\pa{x - X_i} \, 
+														\cro{Y_i - \widehat{\mu}(x)}' \cro{Y_i - \widehat{\mu}(x)} 
+		\end{eqnarray}
+
+Le paragraphe~\ref{modification_janvier_2004_new} (page~\pageref{modification_janvier_2004_new}) discute du choix d'une matrice $H$ appropriée (voir également \citeindex{Silverman1986}). En ce qui concerne le problème de classification étudiée ici, la variable $X$ est simplement discrète et désigne la classe de la variable $Y$. Cette méthode est proche de celle développée au paragraphe~\ref{classification_melange_loi_normale} à la seule différence que l'information $X_i$ est ici connue. L'intérêt de cette méthode est sa généralisation au cas où $X$ est une variable continue comme par exemple un vecteur formé des distances du point $X_i$ aux centres des classes déterminées par un algorithme de classification non supervisée. L'article \citeindex{Hoti2004} discute également d'un choix d'une densité $f_X$ paramétrique.
+
+
+
+
+
+
+
+
+
+\firstpassagedo{
+	\begin{thebibliography}{99}
+	\input{classification_bibliographie.tex}
+	\end{thebibliography}
+}
+
+
+\input{../../common/livre_table_end.tex}
+\input{../../common/livre_end.tex}

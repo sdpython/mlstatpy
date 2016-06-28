@@ -13,18 +13,19 @@ l'`analyse en composantes principales <https://fr.wikipedia.org/wiki/Analyse_en_
 ou :ref:`ACP <nn-ACP>`
 sans oublier les méthodes d'estimation des paramètres qui les composent, 
 à savoir optimisations du premier et second ordre 
-(:ref:`nn-rn_optim_premier_ordre`) et :ref`nn-rn_optim_second_ordre`
+(:ref:`rn_optim_premier_ordre`) et :ref`rn_optim_second_ordre`
 ainsi qu'une méthode permettant de supprimer des coefficients inutiles 
-:ref`nn-selection_connexion`.
+:ref`selection_connexion`.
 
-.. contents:: .
-    :depth: 2
+.. toctree::
+    :maxdepth: 2
     
-.. include:: rn_1_def.txt
-.. include:: rn_2_reg.txt
-.. include:: rn_3_clas.txt
-.. include:: rn_4_reg2.txt
-.. include:: rn_biblio.txt
+    rn_1_def
+    rn_2_reg
+    rn_3_clas
+    rn_4_densite
+    rn_5_newton
+    rn_biblio
 
 
 

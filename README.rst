@@ -40,7 +40,7 @@ README
     
 .. image:: https://badge.waffle.io/sdpython/mlstatpy.png?label=ready&title=Ready
     :alt: Waffle
-    :target: https://waffle.io/mlstatpy/pymyinstall    
+    :target: https://waffle.io/mlstatpy/mlstatpy    
         
       
 

@@ -1,0 +1,2193 @@
+\input{../../common/livre_begin.tex}%
+\firstpassagedo{\input{image_titre.tex}}
+\input{../../common/livre_table_begin.tex}%
+
+
+
+\sloppy
+
+%--------------------------------------------------------------------------------------------------------------
+\chapter{Traitement d'images}
+%--------------------------------------------------------------------------------------------------------------
+
+\label{image_chapitre_label}
+
+
+Ce chapitre regroupe tous les traitements d'images préalables à l'utilisation de modèles probabilistes qu'on peut scinder en deux ensembles. Le premier corrige les imperfections de l'image comme un bruit importun, un soulignement non désiré, une mauvaise inclinaison. Le second groupe concerne essentiellement la segmentation en graphèmes qui consiste à découper l'image d'un mot cursif en petites images, ceci afin de réduire la complexité des modèles probabilistes utilisés par la suite. La première idée explorée fut d'un apprentissage de cette segmentation. Les résultats insuffisants orientèrent ensuite ces travaux vers la réalisation d'une segmentation à l'aide d'algorithmes plus classiques incluant notamment un traitement dissocié des accents dont la pertinence a été évaluée.
+
+
+%--------------------------------------------------------------------------------------------------------------
+\section{Préambule}
+%--------------------------------------------------------------------------------------------------------------
+
+\indexfr{prétraitement}
+
+\indexfrr{séquence}{observations}
+\indexfrr{mot}{mathématique}
+
+Avant de se lancer dans la reconnaissance à proprement parler, l'image doit être prétraitée de manière à passer d'une information souvent bruitée, toujours de taille variable à une information standardisée. Une série de traitements parfois simples, parfois complexes est d'abord appliquée à l'image avant de la convertir en une séquence d'observations ou mot mathématique, matériau utilisé par les modèles de reconnaissance statistique. L'image d'un mot affronte des traitements tels que l'extraction de la zone à reconnaître, la binarisation, le nettoyage, le redressement de l'inclinaison, la squelettisation, la segmentation en graphèmes, en mots (voir figure~\ref{image_global}).
+			
+			
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=6cm, width=10cm]
+	    {\filext{../image/image/global}}\end{array}$}$$
+	    \caption{Schéma global des prétraitements d'image.}
+	    \label{image_global}
+			\end{figure}
+			
+\indexfr{heuristique}			
+\indexfr{nettoyage}
+\indexfr{graphème}
+Chacune de ces étapes est souvent très rapide et est fréquemment basée sur des heuristiques. L'extraction, la binarisation, la squelettisation\seeannex{annexe_squelettisation}{squelettisation} sont des traitements communs qui ne seront pas plus détaillés. Le nettoyage est en pratique adapté pour chaque type de problème. Le nettoyage d'un peigne est différent du nettoyage d'une ligne et il n'existe pas encore de méthode générale pour ce type de tâche. Le redressement se réduit à l'estimation de l'inclinaison du texte, une méthode basée sur des histogrammes convient comme celle expliquée au paragraphe~\ref{image_seg_line} ou celle du paragraphe~\ref{image_redressement_sobel}. La plupart de ces prétraitements sont décrits sommairement dans~\citeindex{Yanikoglu1998}.
+			
+L'objectif avoué de cette partie est la conception d'une segmentation en graphèmes, c'est-à-dire le découpage de l'image d'un mot en une succession d'images correspondant à ses lettres ou à des morceaux de ses lettres qui seront utilisés plus tard par des modèles de reconnaissance de l'écriture. C'est un traitement souvent complexe et rarement parfait. Segmentation et reconnaissance sont encore deux étapes distinctes et ceci explique pourquoi ce traitement inclut généralement une multitude de cas particuliers (voir~\citeindex{Lecolinet1991}, \citeindex{Simon1992}). La figure~\ref{image_grapheme_erreur} résume les faiblesses d'un algorithme de segmentation en graphèmes. Ce traitement produit des erreurs quelle que soit la méthode choisie car il est des configurations qui nécessitent la reconnaissance des lettres à segmenter afin d'être tranchées comme la lettre "m" qui se confond avec le couple "rn".
+	    
+	    
+			\begin{figure}[t]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=8cm, width=16cm]
+	    {\filext{../image/image/failure}}\end{array}$}$$
+	    \caption{  	Erreurs de segmentation en graphèmes pour un algorithme (voir~\citeindexfig{Baret1991}) 
+	    						qui s'appuie 
+	    						essentiellement sur le squelette. Cette opération est erronnée dans environ 10\% des cas.
+	    						Comment segmenter les deux premières lettres du mot "souris" ou "chat" alors que, dans ces
+	    						deux cas, ce sont presque deux boucles qui possèdent une paroi commune~? Ces configurations
+	    						sont difficiles à segmenter car les lettres sont souvent écrites de manière enchevêtrée
+	    						comme les deux "t" consécutifs, les lettres à liaisons hautes (b,o,v,w).}
+	    \label{image_grapheme_erreur}
+			\end{figure}
+			
+\indexfrr{liaison}{haute}			
+	    						
+L'algorithme utilisé pour découper les mots de la figure~\ref{image_grapheme_erreur} segmente mal les couples de lettres à liaison haute comme "oi" contrairement au couple "da" pour lequel, il y a très peu d'erreurs. Il n'est pas évident de juger de l'efficacité d'un algorithme de segmentation en graphèmes, le résultat peut être décevant pour l'\oe il humain et néanmoins être performant s'il est apparié à des modèles de reconnaissance qui peuvent par exemple modéliser ses erreurs (voir paragraphe~\ref{hmm_bi_lettre}, page~\pageref{hmm_bi_lettre}). 
+
+Les paragraphes qui suivent se proposent de décrire différentes méthodes de segmentations (lignes, mots, graphèmes) qui permettront de résoudre le problème de reconnaissance de mots-clé dans un paragraphe manuscrit. Il y aura peu d'évaluation de performances car il est difficile de juger la qualité d'un traitement d'image autrement qu'en observant. La seule sanction est le taux de reconnaissance~: combien d'images ont-elles été bien décryptées~? Et dans le cas d'une amélioration des performances, on peut se demander si celles-ci sont dues à une amélioration de la segmentation en graphèmes ou à une meilleure modélisation de cette dernière par des modèles probabilistes.
+
+L'objectif de cette partie n'est donc pas d'améliorer une segmentation graphème existante (celle developpée dans~\citeindex{Baret1991}) mais d'en proposer une autre afin d'obtenir deux chaînes de reconnaissance suffisamment différentes afin que leurs résultats soient si possible corrélés pour des images de bonne qualité mais divergents pour des images de qualité moyenne.
+
+
+
+
+
+
+
+%-------------------------------------------------------------------------------------------------------------
+\section{Apprentissage d'une segmentation}
+%-------------------------------------------------------------------------------------------------------------
+\label{image_apprentissage_segmentation}
+\indexfrr{apprentissage}{segmentation}
+\indexfr{Voronoï}
+\indexfr{diagramme de Voronoï}
+\indexfr{composante connexe}
+\indexfr{connexité}
+\indexfr{squelette}
+
+La segmentation en graphèmes présentée par la suite (paragraphe~\ref{image_choix_segmentation}) s'appuie sur de nombreux seuils fixés "manuellement", ajustés lors de la visualisation du résultat sur quelques images. Ces heuristiques interviennent lors de la segmentation d'une manière qui rend impossible une estimation autre qu'un tâtonnement progressif. Une segmentation pouvant être apprise a l'avantage de pouvoir être modifiée en utilisant les résultats de la reconnaissance. Le second objectif visé est une adaptation plus facile lorsque les documents à traiter changent. De plus, il serait possible d'envisager une boucle alternant les apprentissages de la reconnaissance et de la segmentation automatique. 
+
+
+
+
+\subsection{Principe}
+
+
+Cette idée s'appuie sur les diagrammes de Voronoï qui proposent un maillage d'une image (figure~\ref{image_voronoi1}). L'image est d'abord décrite par ses composantes connexes puis réduite à l'état de squelette\seeannex{annexe_squelettisation}{squelettisation}. Ce squelette est ensuite découpé de manière à ce que les morceaux ainsi formés soient cohérents avec la segmentation désirée. En résumé, aucun des morceaux obtenus ne doit appartenir à deux zones différentes (voir~\ref{image_voronoi1}).
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{ccc}
+	    \includegraphics[height=3.5cm, width=5cm] {\filext{../image/image/voronoi0}} & & 
+	    \includegraphics[height=3.5cm, width=5cm] {\filext{../image/image/voronoi1}}
+	    \end{array}$}$$
+	    \caption{	Diagramme de Voronoï utilisé pour une segmentation en lignes~: l'image de gauche représente la 
+	    					segmentation à apprendre, les lignes foncées de l'image de droite indiquent les frontières du 
+	    					diagramme de Voronoï correspondant le mieux aux frontières entre les zones 
+	    					de la segmentation désirée.}
+	    \label{image_voronoi1}
+			\end{figure}
+
+La segmentation en lignes d'une image telle que celle de la figure~\ref{image_voronoi1} devient un problème de classification en deux classes~: chaque segment du diagramme de Voronoï est une frontière entre deux zones à partager ou ne l'est pas. Comme le montre la figure~\ref{image_voronoi_local}, la classification d'un segment peut intégrer des informations relatives aux segments connectés aux deux extrémités ainsi que des caractéristiques sur la forme du texte dans le voisinage de ce segment. L'objectif est la recherche d'une fonction du type~:
+
+			\begin{eqnarray}
+			f : S \times S^S_1 \times S^S_2 \times F^S_1 \times F^S_2 \longrightarrow \cro{0,1}
+			\label{image_voronoi_f}
+			\end{eqnarray}
+		
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{ccc}
+	    \includegraphics[height=3cm, width=3cm] {\filext{../image/image/voronoi10}} &&
+	    \includegraphics[height=3cm, width=3cm] {\filext{../image/image/voronoi11}}
+	    \end{array}$}$$
+	    \caption{	Voisinage d'un segment du diagramme de Voronoï~: tout segment 
+	    					est connecté à d'autres segments à ses 
+	    					deux extrémités et il sépare deux zones contenant chacune une petite partie 
+	    					du texte que contient l'image.}
+	    \label{image_voronoi_local}
+			\end{figure}
+			
+$S$ est vecteur caractérisant le segment à classer, $S^S_1$ et $S^S_2$ sont deux vecteurs de même dimension caractérisant les vecteurs connectés à $S$ à chacune de ses deux extrémités, $F^S_1$ et $F^S_2$ sont deux vecteurs caractérisant la forme du contenu des deux zones de textes que $S$ sépare (figure~\ref{image_voronoi_local}). 
+			
+
+
+
+\subsection{Expérimentations}
+
+
+Dans un premier temps, la fonction $f$ (\ref{image_voronoi_f}) a été estimée à l'aide d'un réseau de neurones classifieur\seeannex{subsection_classifieur}{classifieur}. Les vecteurs $S$, $F^S_1$, $F^S_2$ contenaient des informations relatives à la longueur du segment, sa courbure, son inclinaison, la distance du segment au texte. Les vecteurs $S^S_1$ et $S^S_2$ contenaient des moyennes des mêmes informations. L'estimation de la fonction $f$ a conduit au résultat figure~\ref{image_voronoi2} avec un pourcentage de bonne classification proche de 95\%.
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=5cm, width=7cm]
+	    {\filext{../image/image/voronoi2}}\end{array}$}$$
+	    \caption{	Diagramme de Voronoï utilisé pour une segmentation en lignes~: 
+	    					le résultat laisse apparaître des lignes
+	    					en pointillé. Dans 95\% des cas, les segments de Voronoï sont bien classés.}
+	    \label{image_voronoi2}
+			\end{figure}
+			
+Même si le pourcentage d'erreur est faible, il mène à l'apparition de lignes "trouées" qui suggère soit l'abandon de la méthode, soit son perfectionnement selon deux directions qui sont la création d'un processus itératif permettant de faire évoluer la probabilité d'un segment en fonction de ses voisins et un post-traitement dont l'objectif est l'élimination des "trous". La première direction passe par la construction d'une suite $\pa{p_t}$ pour chaque segment de telle sorte que~:
+
+			\begin{eqnarray*}
+			p^S_0 &=& f\pa{S, S^S_1, S^S_2, F^S_1, F^S_2} \\
+			\forall t \supegal 0, \; p^S_{t+1} &=& g\pa{p^S_t, S, p^{S_1}_t, S^S_1, p^{S_2}_t, S^S_2, F^S_1, F^S_2}
+			\end{eqnarray*}
+			
+Le processus s'arrête lorsque la suite $\pa{p^S_t}_{t\supegal 0}$ converge pour chaque segment $S$. Il reste à estimer la fonction $g$. Le nombre d'itérations nécessaires à la convergence d'un tel système demeure inconnu. La seconde direction correspond en quelque sorte au nettoyage des résultats retournés par la fonction $f$ (ou son prolongement $g$), les lignes presque achevées sont complétées, les bouts de lignes ne menant à rien sont effacées. 
+
+Cette méthode s'appuie sur un diagramme de Voronoï qui peut s'avérer instable lorsque l'image est de mauvaise qualité, lorsque quelques pixels égarés créent des régions artificielles. Les diagrammes de Voronoï flous (\citeindex{Zhao2000}) seraient peut-être une alternative à ce problème. De plus, la convergence de l'ensemble n'est pas assurée et peut déboucher sur des temps de traitements longs inconvenants pour des applications telles que la reconnaissance de l'écriture. Aucun des deux prolongements n'a été étudié.
+			
+			
+
+
+
+
+
+\subsection{Extension au problème de nettoyage}
+
+\indexfr{nettoyage}
+\indexfr{Voronoï}
+
+Le nettoyage est un problème dual du précédent puisqu'au lieu de classer les segments du diagramme de Voronoï, il suffit de classer les zones délimitées par ce diagramme en deux classes~: zone à nettoyer ou non. L'avantage du diagramme de Voronoï est de proposer un voisinage (figure~\ref{image_voronoi_local}) pour chaque petite région. Une application pratique est la suppression d'une ligne qui sert de guide pour l'écriture comme celle montrée figure~\ref{image_global}. L'intérêt de la méthode réside toujours dans son apprentissage et son inconvénient dans la forte sensibilité du diagramme de Voronoï aux ruptures de connexité.
+
+
+
+
+
+
+
+\subsection{Diagramme de Kohonen}
+\indexfr{Kohonen}
+\indexfr{relaxation probabiliste}
+\indexfr{champs de Markov}
+\indexfrr{Markov}{champs}
+\indexfrr{segmentation}{ligne}
+\indexfrr{segmentation}{mot}
+
+Outre le fait que le diagramme de Voronoï est très sensible au bruit, pour une région donnée, le nombre de voisins est très variable, il est alors nécessaire de résumer l'information contenue par ce voisinage. On utilise une carte de Kohonen dont la structure est celle d'un quadrillage. Les pixels noirs attirent les neurones qui étirent les arêtes qui les relient comme le montre la figure~\ref{image_koho_lines}a. Les arêtes les plus grandes forment des ponts entre deux régions, un simple seuillage (figure~\ref{image_koho_lines}b) permet presque d'isoler les mots. L'avantage de cette nouvelle structure est son voisinage de taille fixe, quelle que soit la déformation du treillis de Kohonen, chaque neurone conservera quatre voisins, il est alors possible d'utiliser des algorithmes (relaxation probabiliste, champs de Markov) permettant de classer les arêtes en deux catégories~: arête à l'intérieur d'une région, arête reliant deux régions à segmenter.
+
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|c|}\hline
+	    \includegraphics[height=4cm, width=6cm]{\filext{../image/image/koholine1}} &
+	    \includegraphics[height=4cm, width=6cm]{\filext{../image/image/koholine2}} \\
+	    $(a)$ & $(b)$ 
+	    \\ \hline \end{tabular}$$
+	    \caption{	Treillis de Kohonen appliqué à la segmentation en ligne, l'image $(a)$ 
+	    					présente le résultat après convergence
+	    					des neurones, l'image $(b)$ représente le même treillis dont les arêtes les 
+	    					plus grandes ont été ôtées. Il reste dans le meilleur des cas des assemblages connexes
+	    					recouvrant l'image d'un des mots.}
+	    \label{image_koho_lines}
+			\end{figure}
+
+
+L'inconvénient de cette méthode réside dans l'obtention du treillis final de Kohonen, la convergence est gourmande en temps de calcul pour de grandes images. C'est pour cela que cette idée n'a pas été poursuivie. En revanche, ce temps de calcul devient acceptable si la dimension de l'image est celle d'un mot, cette méthode pourrait donc être utilisée pour apprendre une segmentation en graphèmes. 
+
+Cet apprentissage nécessite malgré tout de nombreuses images pour lesquelles la segmentation en graphèmes doit être connue. L'obtention d'une telle base de données peut être manuelle mais ce travail est long ou effectué à partir d'un système de reconnaissance déjà existant mais contenant des erreurs. Les mots les mieux reconnus sont alors découpés en graphèmes ou caractères selon l'usage désiré puis serviront d'apprentissage. Cette direction n'a pour le moment pas été envisagée, une autre permettant de modéliser des erreurs de segmentation en graphèmes lui a été préférée dans un premier temps (voir paragraphe~\ref{hmm_bi_lettre}, page~\pageref{hmm_bi_lettre}). \indexfrr{segmentation}{graphème} \indexfr{graphème} Cette modélisation permet d'ailleurs une meilleure appréciation de la segmentation en graphèmes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+%-------------------------------------------------------------------------------------------------------------
+\section{Segmentation en lignes}
+%-------------------------------------------------------------------------------------------------------------
+\label{image_seg_line}
+\indexfrr{segmentation}{ligne}
+\indexfr{histogramme}
+
+Lors de la scannerisation d'un document, il peut arriver que celui-ci soit incliné (figure~\ref{image_segline_direction}). La première étape consiste donc à redresser une image de telle sorte que les lignes qui la composent soient horizontales. Ce paragraphe aborde diverses solutions existantes et résume les résultats énoncés dans~\citeindex{Dupré2000}.
+
+
+
+
+
+
+\subsection{Redressement de l'inclinaison de l'image}
+\indexfr{inclinaison}
+
+
+De nombreuses méthodes sont utilisées pour détecter l'inclinaison des lignes, leurs robustesses variant avec la difficulté du problème. L'article~\citeindex{Cao2003} par exemple propose une méthode plus adaptée aux textes imprimés. Les composantes connexes (des lettres principalement) sont toutes décrites par un point situé au milieu du bord inférieur de leurs boîtes englobantes. Par la suite, ces points sont regroupés et classés en lignes. Une régression linéaire sur chacune des lignes termine l'estimation de l'inclinaison de l'image. \indexfr{chaîne de plus proches voisins} Une autre méthode présentée dans~\citeindex{Lu2003} utilise des chaînes de plus proches voisins (ou nearest neighbors chains), celles-ci sont constituées par l'appariement de voisins. L'inclinaison est mesurée sur chacune des chaînes qui doivent être suffisamment longues pour une mesure précise mais pas trop pour éviter le regroupement de voisins trop éloignés n'appartenant pas à la même ligne de texte. \indexfrr{Hough}{transformée de ...} La transformée de Hough est aussi une méthode très utilisée (voir~\citeindex{Pal1996}), chaque petit segment de l'image permet d'estimer les coefficients du vecteur directeur de la droite qui le soutient. La direction de l'inclinaison du document correspond aux coefficients les plus représentés. Les histogrammes permettent également d'estimer cette inclinaison (voir~\citeindex{Bloomberg1995}) comme de segmenter l'image redressée en lignes (voir~\citeindex{Gatos1997}, \citeindex{Pal2001}). C'est cette approche qui est présentée ici.
+
+
+
+
+			\begin{xdefinition}{histogramme}
+			\indexfr{histogramme}
+			
+			L'histogramme d'une image selon une direction $\alpha$ est une projection de cette image 
+			sur une droite parallèlement à une droite de vecteur directeur $d=\pa{\begin{subarray}{c} 1 
+			\\ tan \alpha \end{subarray}}$. Concrètement, si $I$ est une image de dimension $\pa{X,Y}$, un
+			histogramme est un vecteur dont chaque élément contient le nombre de pixels noirs sur une ligne de
+			direction~$d$ tracée avec un algorithme comme celui de~\citeindex{Bresenham1965} (voir
+			également~\citeindex{Bresenham1977}).
+			
+			\end{xdefinition}
+
+
+
+La qualité de l'histogramme ou sa pertinence est estimée par son entropie.
+
+
+
+		\begin{xdefinition}{entropie d'un histogramme}
+		\indexfr{entropie d'un histogramme}
+		
+		Soit $H = \vecteur{h_1}{h_n}$, on définit le vecteur défini par $H' = \vecteur{p_1}{p_n}$~:
+		
+					$$
+					\forall i \in \intervalle{1}{n}, \; p_i =  \frac{h_i} { \summy{k=1}{n} \, h_k }
+					$$
+		
+		L'entropie de l'histogramme $H$ est le nombre suivant calculé sur l'histogramme $H'$~:
+		
+					\begin{eqnarray}
+					E\pa{H} &=& E\pa{H'} = \summy{i=1}{n} \; p_i \, \ln p_i
+					\end{eqnarray}
+		
+		\end{xdefinition}
+
+\indexfr{redressement}\indexfr{glissement de pixels}
+
+La direction la plus probable est celle qui maximise l'entropie (voir~\citeindex{Côté1997}). Graphiquement, l'histogramme d'entropie maximale est celui dont les extrema sont les plus marqués (voir figure~\ref{image_segline_direction}).
+L'image est finalement redressée de façon à ce que l'image ne contienne plus des lignes horizontales. Ce redressement peut tout simplement être effectué par un glissement des colonnes de pixels de l'image les unes par rapport aux autres. 
+
+
+			\begin{figure}[t]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=4cm, width=14cm]
+	    {\filext{../image/image/segline1}}\end{array}$}$$
+	    \caption{	Segmentation en lignes~: recherche de la meilleure orientation, celle-ci accentue 
+	    					le plus possible les extrema.}
+	    \label{image_segline_direction}
+			\end{figure}
+
+
+\indexfr{Radon}\indexfrr{transformée}{Radon}\indexfr{Hough}\indexfrr{transformée}{Hough}
+Il existe des méthodes plus récentes comme par exemple celle décrite dans \citeindex{Kapoor2004}. A partir d'une transformée de Radon de l'image et d'une transformée de Hough. Cette méthode est plus souple que la précédente. La méthode des histogrammes détermine l'orientation la plus probable dans un ensemble discret de solutions possibles. L'article \citeindex{Kapoor2004} détermine directement cette meilleure orientation.
+
+
+
+
+\subsection{Segmentation en lignes}\label{section_segmentation_ligne}
+\indexfrr{segmentation}{ligne}
+
+
+L'histogramme obtenu figure~\ref{image_segline_direction} est bruité. Afin de diminuer l'importance de ce bruit, l'histogramme est lissé par la méthode des moyennes mobiles. Selon les problèmes, la taille de cette moyenne est plus ou moins grande. Soit $H_l = \vecteur{l_1}{l_n}$ l'histogramme lissé, il est donc obtenu à partir de $H$ comme suit~:
+
+
+			\begin{eqnarray}
+			\begin{array}{rrcl}
+			\forall i \in \intervalle{w+1}{n-w-1}, 	\; & 	l_i &=& \dfrac{1}{2w+1} \, \summy{k=-w}{+w} \, h_{i+k} \\
+			\forall i \in \intervalle{1}{w}, 				\; & 	l_i &=& \dfrac{1}{i+w} \, \summy{k=1}{i+w} \, h_k \\
+			\forall i \in \intervalle{n-w}{n}, 			\; & 	l_i &=& \dfrac{1}{n-i+ w + 1} \, \summy{k=i-w}{n} \, h_k 
+			\end{array}
+			\label{image_lissage_equation}
+			\end{eqnarray}
+
+
+Les maxima locaux indiquent la position des lignes, les minima locaux la position des frontières entre lignes. On définit pour chaque ligne les minima $\pa{m_i^x}_i$ et les maxima $\pa{M_i^x}_i$~:
+
+
+			$$
+			\begin{array}{rcl}
+			\forall i, \; m_i^x = \left\{ \begin{array}{l}
+																		1 \text{ si } l_i = \min \acc { l_k \sac l-x \infegal k \infegal l+x } \\
+																		0 \text{ sinon}
+																	\end{array} \right. \\
+			\forall i, \; M_i^x = \left\{ \begin{array}{l}
+																		1 \text{ si } l_i = \max \acc { l_k \sac l-x \infegal k \infegal l+x } \\
+																		0 \text{ sinon}
+																	\end{array} \right.
+			\end{array}
+			$$
+
+
+La figure~\ref{image_segline_extrema} montre que bien souvent le nombre d'extrema détectés est supérieur au nombre réel d'extrema. Une étude sur quelques dizaines d'images a permis d'éliminer les cas de mauvaises détections les plus courants~:
+
+\begin{enumerate}
+\indexfr{petit palier}
+\item \textit{Le petit palier}~: ce cas se présente le plus souvent lorsqu'une ou plusieurs majuscules font partie de la ligne de texte. Le dessin de ces lettres contient des traits horizontaux tracés au-dessus de la ligne des minuscules. Une barre de "F" bien marquée peut entraîner de mauvaises segmentations.
+\indexfr{petit extremum}
+\item \textit{Le petit extremum}~: lorsque les mots ne sont pas tout-à-fait bien alignés sur une même horizontale, les extrema sont plus diffus, il faut alors regrouper plusieurs maxima ensemble.
+\end{enumerate}
+
+
+Deux règles permettent l'élimination de ces mauvaises détections~:
+
+			\begin{enumerate}
+			\item Soit $\acc{e_i \sac 1 \infegal i \infegal 4}$ quatre extrema consécutifs, alors~:
+								\begin{eqnarray}
+								\abs{e_2 - e_3} \infegal \beta \abs{e_1 - e_4} \Longrightarrow 
+								\acc{e_2, \, e_3} \text{ doivent être éliminés.} 
+								\label{image_ligne_critere_palier_1}
+								\end{eqnarray}
+			\item Soit $e_2$ un minimum et $e_1$ et $e_3$ les extrema qui l'entourent, alors~:
+								\begin{eqnarray}
+								e_2 \infegal \gamma \min\acc{e_1,e_3} \Longrightarrow 
+								\acc{e_2, \, e_1 \text{ ou } e_3} \text{ doivent être éliminés.} 
+								\label{image_ligne_critere_palier_2}
+								\end{eqnarray}
+			\end{enumerate}
+	
+Ce processus est illustré par la figure~\ref{image_segline_extrema}. Les valeurs intéressantes pour les quatre paramètres $w$, $x$, $\beta$, $\gamma$ sont~:
+
+			$$
+			\begin{array}{ccccccc}
+			w &=& 4  \text{ pixels} 	&&    \beta 	&=& 0,2 \\
+			x &=& 4  \text{ pixels}  	&&    \gamma 	&=& 0,5 
+			\end{array}
+			$$
+
+
+
+			\begin{figure}[t]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=6cm, width=12cm]
+	    {\filext{../image/image/segline2}}\end{array}$}$$
+	    \caption{	Segmentation en lignes~: recherche des bons extrema. Les extrema trop proches vérifiant les
+	    					critères~(\ref{image_ligne_critere_palier_1}) et~(\ref{image_ligne_critere_palier_2})
+	    					ne sont pas pris en compte.}
+	    \label{image_segline_extrema}
+			\end{figure}
+
+
+
+Le processus de suppression des "faux" extrema nécessite plusieurs itérations, à chacune d'elle, le plus petit palier est isolé et supprimé, ensuite, l'opération est répétée pour les petits extrema. Le processus s'arrête lorsqu'il ne peut plus rien supprimer, autrement dit, lorsqu'aucun petit palier et aucun petit extremum n'a pu être trouvé.
+
+
+
+
+
+\subsection{Traitements des lignes enchevêtrées}
+
+\indexfrr{ligne}{enchevêtrée}
+
+
+
+C'est la dernière étape avant la reconnaissance du contenu des lignes. L'étude de l'histogramme a permis d'encadrer chaque ligne par un rectangle dont dépassent certaines grandes lettres ascendants et/ou descendants comme les "j" ou les "p". Le module de reconnaissance des mots est basé sur une extraction de graphèmes utilisant la connexité du dessin des lettres.
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=2cm, width=4cm]
+	    {\filext{../image/image/segline3}}\end{array}$}$$
+	    \caption{Segmentation en lignes~: connexité}
+	    \label{image_segline_connex}
+			\end{figure}
+
+
+
+En partant de la même idée, on va supposer que le "j" de "Lajoie" (figure~\ref{image_segline_connex}) est formé d'une seule composante connexe. La segmentation en lignes s'achève donc par le recollement des morceaux d'une même lettre égarés des deux côtés d'une frontière séparant deux lignes. Le principe est le suivant~:
+
+			\begin{enumerate}
+			\item On parcourt la frontière entre deux lignes jusqu'à ce qu'on intercepte une lettre.
+			\item On parcourt le contour extérieur du morceau situé au-dessus, si lors de ce parcours, 
+							on revient à la même frontière sans en rencontrer aucune autre, alors ce morceau de 
+							lettre est considéré comme étant du mauvais côté.
+			\item On parcourt le contour extérieur du morceau situé au-dessous, si lors de ce parcours, 
+							on revient à la même frontière sans en rencontrer aucune autre, alors ce morceau de 
+							lettre est considéré comme étant du mauvais côté.
+			\item Si un seul des deux morceaux est du mauvais côté alors ce morceau est remis dans la bonne ligne, 
+							sinon on ne fait rien.
+			\item On continue le parcours de la frontière au cas où d'autres lettres intercepteraient celle-ci.
+			\end{enumerate}
+
+Dorénavant, l'extraction des lignes est terminée. Cette méthode fonctionne efficacement sur des adresses mais possède quelques écueils récurrents (figure~\ref{image_segline_bad}).
+
+
+			\begin{figure}[t]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=12cm, width=8cm]
+	    {\filext{../image/image/segline_bad}}\end{array}$}$$
+	    \caption{Segmentation en lignes~: exemples qui ne marchent pas.}
+	    \label{image_segline_bad}
+			\end{figure}
+
+
+
+
+
+
+
+
+\subsection{Segmentation à partir d'un graphe}
+\indexfr{graphe}
+\indexfrr{segmentation}{ligne}
+
+
+L'article \citeindex{Abuhaiba1996} propose une autre alternative, une méthode de segmentation en lignes basée sur un graphe $k$-connexe (voir figure~\ref{image_graphe_distance_segment_fig}). L'image d'un paragraphe est d'abord squelettisée puis vectorisée\seeannex{squelette_vectorisation_Abuhaiba1996}{squelettisation}. Chaque arc ainsi obtenu est ensuite relié à $k$-plus proches voisins ordonnés selon la distance (\ref{image_graphe_distance_segment}). Soient deux segments $S_1$ et $S_2$, la distance $d\pa{S_1,S_2}$ est définie par~:
+
+
+			\begin{eqnarray}
+			d_x\pa{S_1,S_2} 	&=&		\underset{\pa{u,v} \in S_1 \times S_2} {\min } \; \abs{ u_x - v_x } \nonumber \\
+			d_y\pa{S_1,S_2} 	&=&		\underset{\pa{u,v} \in S_1 \times S_2} {\min } \; \abs{ u_y - v_y } \nonumber \\
+			d\pa{S_1,S_2}			&=&		\cro { 1 + \gamma \, \pa{ \frac{\pi}{2} }^{-1}  \arctan \frac{ d_y\pa{S_1,S_2} } {d_x\pa{S_1,S_2} } }
+															\; \sqrt { d_x\pa{S_1,S_2} ^2 + d_y\pa{S_1,S_2} ^ 2} 
+						\label{image_graphe_distance_segment}
+			\end{eqnarray}
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=3cm, width=6cm]
+	    {\filext{../image/image/abusl}}\end{array}$}$$
+	    \caption{Segmentation en lignes en recherchant l'arbre de poids minimal. L'axe vertical 
+	    					sur la droite de l'image est ajouté de façon à relier toutes les lignes entre elles, figure 
+	    					extraite de \citeindexfig{Abuhaiba1996}.}
+	    \label{image_graphe_distance_segment_fig}
+			\end{figure}
+			
+\indexfr{Kruskal}
+\indexfrr{arbre}{poids minimal}
+			
+Le paramètre $\gamma$ est choisi de telle sorte que deux segments appartenant à la même ligne soient plus proches que deux segments situés sur deux lignes consécutives. Chaque segment est donc relié à ses $k$ plus proches voisins par un arc dont le poids est la distance (\ref{image_graphe_distance_segment}). A ce graphe est ajouté un axe constitué de petits segments très peu éloignés de sorte qu'une connexion à cet axe est beaucoup moins coûteuse que tout autre connexion. L'arbre est ensuite réduit à un arbre de poids minimal en appliquant l'algorithme de Kruskal (voir \citeindex{Kruskal1956}). La segmentation en lignes s'achève par la détection de toutes les liaisons à l'axe virtuel non détruit par l'algortihme de Kruskal.
+
+
+
+
+
+
+
+
+
+%-------------------------------------------------------------------------------------------------------------
+\section{Prétraitements de l'image}
+%-------------------------------------------------------------------------------------------------------------
+\indexfr{prétraitement de l'image}
+
+Ce paragraphe regroupe ensemble différents prétraitements précédant une segmentation en graphèmes, il regroupe le redressement d'image ou l'estimation de différents paramètres comme la largeur moyenne d'une lettre, son épaisseur moyenne. Contrairement à la segmentation en lignes, ces méthodes sont particulières à l'écriture romaine. Les caractères chinois par exemple présentent des "imperfections" qui leur sont propres et qui nécessitent des traitements différents.
+
+
+
+
+\subsection{Redressement de l'image}
+\label{image_redressement_sobel}
+\indexfrr{filtre}{Sobel}
+\indexfr{Sobel}
+\indexfr{convolution}
+\indexfrr{gradient}{image}
+\indexfr{inclinaison}
+
+Une fois les lignes d'un paragraphe extraites, il est parfois utile de redresser son image lorsque le scripteur a écrit "penché". Le rapport~\citeindex{Slavik2000} compare les performances en reconnaissance sur des images redressées ou non et montre l'apport substantiel des méthodes de prétraitement d'image. Les méthodes de redressement diffèrent bien sûr par leurs méthodes d'estimation de l'inclinaison mais aussi par les régions de l'image utilisées pour effectuer cette estimation. 
+
+\indexfr{ascendant}
+\indexfr{descendant}
+L'inclinaison d'un mot est surtout visible pour les lettres possédant des ascendants et des descendants et c'est a priori cette partie de l'image qui doit être utilisée pour l'estimation de l'inclinaison comme le suggère la méthode de~\citeindex{Bozinovic1989} (voir figure~\ref{image_slant_correction_bozinovic}) qui sélectionne les ascendants et descendants situés dans les parties supérieure et inférieure de l'image. 
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|} \hline
+	    \includegraphics[height=3cm, width=6cm]{\filext{../image/image/slantst}}  \\ \hline
+	    \end{tabular}
+	    $$
+	    \caption{	Méthode de Bozinovic et Srihari (voir~\citeindexfig{Bozinovic1989}), figure exraite 
+	    					de~\citeindexfig{Vinciarelli2000}. Le principe de cette méthode consiste à estimer 
+	    					l'orientation	du texte en ne considérant que les ascendants ou descendants suffisamment
+	    					grands compris entre deux lignes verticales reliées aux bords supérieur et inférieur de l'image.}
+	    \label{image_slant_correction_bozinovic}
+			\indexfr{ascendant}
+			\indexfr{descendant}
+			\end{figure}
+
+
+La méthode décrite dans~\citeindex{Slavik2000} quant à elle mesure l'inclinaison de chaque bord latéral des différentes composantes connexes puis en fait la moyenne pondérée par la longueur des segments obtenus. \citeindex{Kim1997} et \citeindex{Knerr1997} propose une estimation fondée sur les contours. Si $n_+$ et $n_-$ désignent le nombre de déplacements positifs et négatifs selon l'axe des abscisses, et $n_v$ le nombre de déplacements verticaux, l'angle~$\theta$ de l'inclinaison est obtenu à partir de l'expression de sa tangente~: $\tan \theta = \frac{n_+ - n_-}{n_v+n_++n_-}$. La méthode de \citeindex{Vinciarelli2000} utilise des histogrammes. Pour différentes valeurs d'angles $\alpha$, on calcule le nombre $H_{\alpha}\pa{x} = \frac{h_{\alpha}\pa{x}}{\Delta y_{\alpha}\pa{x}}$, où $h_{\alpha}\pa{x}$ est le nombre de pixels sur la colonne $x$ et $\Delta y_{\alpha}\pa{x}$ la distance qui sépare les pixels noirs situés le plus haut et le plus bas. $H_{\alpha}\pa{x}$ vaut $1$ uniquement si la colonne est constituée d'un seul segment. Ensuite, pour chaque valeur d'angle, on calcule $S\pa{\alpha} = \sum_{x, H_{\alpha}\pa{x} = 1} h_{\alpha}^2\pa{x}$. L'inclinaison du mot est alors l'angle $\alpha$ qui maximise $S\pa{\alpha}$. Toutes ces méthodes sont mieux adaptées à la détection de l'inclinaison de l'écriture romaine, d'autres types d'écriture, comme le montre l'article \citeindex{You2003} dans le cas de l'écriture coréenne, nécessitent des développements plus spécifiques. \indexfrr{écriture}{coréenne}
+
+
+La méthode proposée ici s'inspire de celle décrite dans~\citeindex{Yanikoglu1998} et s'avère plus simple que l'estimation d'histogrammes. Elle donne les mêmes résultats qu'une méthode estimant l'inclinaison à partir du contour sans pour autant chercher à les obtenir. Les deux filtres de Sobel (\ref{image_eq_sobel_filtre}) (voir~\citeindex{Prewitt1970}) permettent de retrouver en chaque point de l'image la direction du gradient. 
+
+
+			\begin{eqnarray}
+			F_x = 
+			\begin{array}{|c|c|c|} \hline
+			-1 & 0 & 1 \\ \hline
+			-2 & 0 & 2 \\ \hline
+			-1 & 0 & 1 \\ \hline
+			\end{array}
+			&
+			\text{ et }
+			&
+			F_y =
+			\begin{array}{|c|c|c|} \hline
+			 1 & 2 & 1 \\ \hline
+			 0 & 0 & 0 \\ \hline
+			-1 & -2 & -1 \\ \hline
+			\end{array}
+			\label{image_eq_sobel_filtre}
+			\end{eqnarray}
+
+
+Soit $I$ l'image d'un mot, On note $G_x = I * F_x$ et $G_y = I * F_y$ les produits de convolution de l'image par les deux filtres décrits en (\ref{image_eq_sobel_filtre}). Il est alors possible de déterminer en un point $\pa{x,y}$ la direction du gradient de la façon suivante en s'arrangeant pour que celle-ci appartienne à l'intervalle $\left[0,\pi \right[$~:
+
+			\begin{eqnarray}
+			\theta\pa{x,y} &=& \arctan\cro{\dfrac{G_y\pa{x,y}}{G_x\pa{x,y}}} 
+			\in \left[0,\pi \right[
+			\end{eqnarray}
+
+
+Cet intervalle est ensuite divisé en $n$ sous-intervalles de longueur identique afin de construire l'histogramme $\pa{\alpha_i}_{1 \infegal i \infegal n}$ suivant~:
+
+
+		\begin{eqnarray}
+		\forall i \in \ensemble{1}{n}, \; \alpha_i &=&  card 
+		\acc{ \pa{x,y} \in I \sac \theta\pa{x,y} \in \left[0,\pi \right[ } \nonumber
+		\end{eqnarray}
+
+
+			\begin{figure}[ht]
+	    $$\begin{array}{|c|c|} \hline
+	    \includegraphics[height=1.1cm, width=2.5cm]{\filext{../image/image/histo_word}}   &
+	    \includegraphics[height=2cm, width=5cm]{\filext{../image/image/histo_incl}}   \\ \hline
+	    \end{array}
+	    $$
+	    \caption{	Répartition de la direction du gradient pour une image de mot en neuf intervalles
+	    					d'angle (les angles sont en radians).
+	    					Le pic de l'histogramme est décalé par rapport à $\pi/2$.  }
+	    \label{image_gradient_direction_histogramme}
+			\end{figure}
+
+
+Un exemple d'un tel histogramme est donné par la figure~\ref{image_gradient_direction_histogramme}. Il montre un pic principal qui correspond à l'orientation des lettres hautes (t,l,...). Toutefois, à partir de quelques images, on a constaté que cet histogramme mène à une estimation moins précise de la direction d'inclinaison qu'une moyenne sur l'ensemble des directions calculées en évitant les directions proches de l'horizontale. On note $\hat{\theta}$ cette estimation~:
+
+			\begin{eqnarray}
+			\hat{\theta} &=& 		\dfrac{1}{
+																\summyone{\pa{x,y}} \; 
+																\indicatrice{ \theta\pa{x,y} \in \cro{\frac{\pi}{8},\frac{7\pi}{8}}} } \;
+													\summyone{\pa{x,y}} \; \theta\pa{x,y} 
+													\indicatrice{ \theta\pa{x,y} \in \cro{\frac{\pi}{8},\frac{7\pi}{8}}}
+								\label{image_direction_estimation}
+			\end{eqnarray}
+			
+
+
+L'image est ensuite redressée en faisant glisser les lignes de pixels les unes sur les autres comme le montre la figure~\ref{image_gradient_direction_histogramme_correct}.
+
+
+			\begin{figure}[ht]
+	    $$\begin{array}{|c|c|} \hline
+	    \includegraphics[height=1.1cm, width=2.5cm]{\filext{../image/image/histo_word}}   &
+	    \includegraphics[height=1.1cm, width=3cm]{\filext{../image/image/histo_wori}}   \\ \hline
+	    \end{array}$$
+	    \caption{	Correction de l'inclinaison de l'image effectuée par un glissement des lignes 
+	    					les unes sur les autres. L'estimation de la direction par 
+	    					(\ref{image_direction_estimation}) donne 58 degrés, 90 étant la valeur pour
+	    					écriture non inclinée.}
+	    \label{image_gradient_direction_histogramme_correct}
+			\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Lissage du contour}
+
+\indexfrr{lissage}{contour}
+\indexfrr{contour}{lissage}
+\label{image_lissage_contour__}
+
+La correction de l'inclinaison se termine par la construction de l'image corrigée qui est le résultat d'un glissement des lignes de pixels les unes par rapport aux autres. Cette méthode simple a pourtant l'inconvénient de produire des irrégularités tout le long du contour des lettres (voir figure~\ref{image_lissage_contour_said}). Ces petits bruits peuvent altérer les résultats de la reconnaissance (voir~\citeindex{Slavik2000}). 
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|} \hline
+	    \includegraphics[height=3cm, width=3cm]{\filext{../image/image/smoothsaid}} \\ \hline
+	    \end{tabular}$$
+	    \caption{	Ces deux images proviennent de la barre du "d" 
+	    					de la figure~\ref{image_gradient_direction_histogramme_correct}. Le résultat obtenu
+	    					dû aux glissements des lignes les unes par rapport aux autres 
+	    					présente de nombreuses irrégularités qu'il serait préférable de gommer.
+	    					}
+	    \label{image_lissage_contour_said}
+			\end{figure}
+
+\indexfrr{point}{inflexion}
+
+La méthode proposée dans~\citeindex{Slavik2000} s'appuie sur la même méthode que celle qui permet d'obtenir le squelette d'une image\seeannex{annexe_squelettisation}{squelettisation}. Par l'application des masques de la figure~\ref{image_lissage_contour}, les lettres dont l'inclinaison a été corrigée perdent peu à peu leurs petites rides. Le processus continue tant que l'image évolue. Cet algorithme a été utilisé pour lisser l'image de la figure~\ref{image_smooth_deslant} dont l'inclinaison a été corrigée.
+La figure~\ref{image_smooth_deslant}c montre le résultat obtenu grâce à cet algorithme de lissage utilisant les masques cités par la figure~\ref{image_lissage_contour}. Le résultat est satisfaisant, les lignes droites incluent néanmoins de larges créneaux qu'il serait possible d'élaguer en étudiant la convexité du contour, en minimisant le nombre de ses points d'inflexion.
+
+
+
+
+			\begin{figure}[t]
+	    $$\begin{tabular}{|c|} \hline
+	    \includegraphics[height=6cm, width=5cm]{\filext{../image/image/smoothbo}} \\ \hline
+	    \end{tabular}$$
+	    \caption{	Les configurations pixelliques ci-dessus permettent de lisser le contour après que 
+	    					l'inclinaison d'un mot a été corrigée. Cette figure est extraite de \citeindexfig{Slavik2000}
+	    					à laquelle il faut ajouter les configurations obtenues par rotation de celles présentées 
+	    					ci-dessus.}
+	    \label{image_lissage_contour}
+			\end{figure}
+
+
+
+			\begin{figure}[t]
+			$$\begin{tabular}{|c|c|c|} \hline
+			\includegraphics[height=3cm, width=4cm]{\filext{../image/image/imslant}} &
+			\includegraphics[height=4cm, width=6cm]{\filext{../image/image/imslant_}} &
+			\includegraphics[height=4cm, width=6cm]{\filext{../image/image/imslants}}  \\
+			(a) & (b) & (c) \\ \hline
+			\end{tabular}$$
+			\caption{	L'inclinaison de l'image~(a) est corrigée par la méthode exposée
+								au paragraphe~\ref{image_redressement_sobel} et donne l'image~(b). Les irrégularités 
+								du contour sont ensuite corrigées grâce à l'algorithme présenté au 
+								paragraphe~\ref{image_lissage_contour__} et qui aboutit à l'image~(c).}
+			\label{image_smooth_deslant}
+			\end{figure}
+			
+
+
+
+
+
+
+
+
+
+\subsection{Lignes d'appui}
+\label{image_ligne_appui}
+\indexfrr{ligne}{appui}
+\indexfrr{ligne}{base}
+\indexfr{ascendant}\indexfr{descendant}
+
+Les lignes d'appui encadrent la bande des minuscules et délimitent les zones contenant les ascendants et descendants (voir figure~\ref{image_ligne_appui_fig}). Plusieurs méthodes permettent de détecter ces lignes virtuelles mais toutes nécessitent quelques lettres afin de retourner un résultat fiable. Il est par exemple impossible de distinguer un "o"~minuscule d'un "O"~majuscule si aucune autre lettre qui serait juxtaposée ne vient aider la lecture. 
+
+\indexfrr{Hough}{transformée de ...}
+L'article \citeindex{Wang1997} propose une méthode utilisant ces mêmes extrema locaux du contour extérieur de l'image d'un mot mais les lignes d'appui sont estimées globalement sur toute l'image à partir d'une transformée de Hough. Comme les images sont supposées contenir deux lignes d'appui parallèles et proches, les résultats sont affinés afin d'obtenir cette configuration.
+
+Un autre article (\citeindex{Madhvanath1999}) suggère que l'estimation globale de la position de ces lignes mène fréquemment à un résultat de mauvaise qualité surtout si les lettres ne sont pas disposées sur une droite ou si les minuscules présentent des tailles différentes. La méthode proposée dans cet article s'appuie sur les extrema du contour de l'image d'un mot puis regroupe localement ces points en petits segments regroupant des points proches et presque alignés. L'ensemble de ces petits segments définit des lignes d'appui variables tout au long du mot.
+
+Plusieurs histogrammes peuvent être utilisés, épaisseurs des traits, nombre de transitions blanc-noir, projection des points du contour, celui-ci est souvent lissé par une moyenne mobile. En règle générale, la ligne d'appui basse est la plus fiable. Soit un histogramme $h=\vecteur{h_1}{h_N}$, où $h_1$ correspond au bas de l'image et $h_i$ est la moyenne des longueurs des segments blancs de la ligne $i$. L'histogramme est lissé avec une moyenne mobile analogue à (\ref{image_lissage_equation}). On définit $l_b$ comme la ligne d'appui basse, $l_h$ la ligne d'appui haute, $l$ la ligne correspond au maximum de l'histogramme~:
+
+			\begin{eqnarray}
+			l \in \underset{i \in \ensemble{1}{N}} { \arg \min } \; h_i
+			\end{eqnarray}
+
+On définit ensuite l'intervalle $\cro{l_b,l_h}$ autour de $l$ vérifiant~:
+
+			\begin{eqnarray}
+			\forall i \in \cro{l_b,l_h}, \; h_i \infegal \alpha \, h_l
+			\end{eqnarray}
+
+Le résultat de la figure~\ref{image_ligne_appui_fig} est obtenu pour $\alpha = 3$ ainsi que ceux de la figure~\ref{image_ligne_appui_fig_bad}. Ces formules peuvent être ajustées manuellement sur quelques images. Puisqu'elles sont basées sur des histogrammes, elles sont en général robustes. De plus, un écart de quelques pixels n'altère pas les résultats de la reconnaissance, l'essentiel est de définir un repère qui permette de positionner les lettres les unes par rapport aux autres à partir d'une origine définie par les lettres. La seconde ligne d'appui représente en quelque sorte un facteur d'échelle.
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=1cm, width=4cm]
+	    {\filext{../image/image/segline_appui}}\end{array}$}$$
+	    \caption{	Lignes d'appui encadrant la bande des minuscules}
+			\indexfrr{ligne}{appui}
+	    \label{image_ligne_appui_fig}
+			\end{figure}
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=3cm, width=8cm]
+	    {\filext{../image/image/seg_appui_bad}}\end{array}$}$$
+	    \caption{	Mauvais positionnement des lignes d'appui~: les mots sont trop courts ou incluent 
+	    					des minuscules décorées comme la lettre "i". Ces cas sont minoritaires.}
+			\indexfrr{ligne}{appui}
+	    \label{image_ligne_appui_fig_bad}
+			\end{figure}
+
+Afin de limiter les erreurs comme celles présentées figure~\ref{image_ligne_appui_fig_bad}, les algorithmes incluent parfois une préclassification des histogrammes en quatre classes qui déterminent s'il faut chercher les lignes d'appui, une seule ou aucune~: (voir~\citeindex{Hennig2002})
+
+			\begin{enumerate}
+			\item mot sans ascendant, sans descendant
+			\item mot avec ascendant(s), sans descendant
+			\item mot sans ascendant, avec descendant(s)
+			\item mot avec ascendant(s), avec descendant(s)
+			\end{enumerate}
+
+Le principe exposé ci-dessus est valable essentiellement pour des images de mots. Pour une ligne entière composée de plusieurs mots, même si la méthode ci-dessus peut servir de première approximation, elle doit être affinée pour chacun des mots en utilisant les boîtes englobantes des graphèmes par exemple (paragraphe~\ref{image_segmentation_grapheme}). L'article~\citeindex{Hennig2002} présente une autre méthode basée sur des splines résolvant ce problème.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Estimation de l'épaisseur du tracé}
+\label{image_epaisseur_trace}
+\indexfr{épaisseur du tracé}
+
+Selon les scripteurs, l'écriture peut-être plus ou moins épaisse (voir figure~\ref{image_trace_epaisseur}). Cette différence n'est pas toujours intéressante à prendre en compte (redressement de l'image) comme elle peut parfois être une donnée non négligeable. Par exemple, on considère un histogramme de projection verticale utilisé pour la segmentation graphème (paragraphe~\ref{image_segmentation_histogramme_direction}), ses minima locaux sont a priori supérieurs à l'épaisseur du trait qui peut servir de seuil de coupure.
+
+
+
+			\begin{figure}[ht]
+	    $$\begin{array}{|c|c|}\hline 
+	    \includegraphics[height=1cm, width=3cm]{\filext{../image/image/attitude1}} &
+	    \includegraphics[height=1cm, width=3cm]{\filext{../image/image/attitude2}} \\ \hline
+	    \end{array}$$
+	    \caption{	Différentes épaisseurs de tracé pour deux images dont les dimensions sont 206x69 pixels 
+	    					pour la première et 211x97 pixels pour la seconde.}
+	    \label{image_trace_epaisseur}
+			\end{figure}
+
+L'article \citeindex{Abuhaiba1996} propose une estimation à partir d'une carte de distance\seeannex{ske_carte_distance_sec}{carte de distance} et d'un masque de distance défini comme suit~:
+
+			$$
+			\begin{array}{c|c|c}
+			4 & 3 & 4 \\ \hline
+			3 & 0 & 3 \\ \hline
+			4 & 3 & 4 \\
+			\end{array}
+			$$
+
+On note $d_*$ la valeur de la distance la plus fréquente, l'épaisseur du trait $\widehat{e_0}$ est alors définie comme~:
+
+			\begin{eqnarray}
+			\widehat{e_0} &=& \frac{2}{3} \; d^* - 1
+			\end{eqnarray}
+
+
+
+\indexfrr{histogramme}{segment}
+Cette estimation peut être aussi effectuée au moyen d'histogrammes de projection. Une ligne ou une colonne de pixels extraite de l'image est constituée d'une suite de segments de la couleur de l'écriture. A priori, la longueur minimale de ces segments est égale à l'épaisseur du trait. Par conséquent, on construit l'histogramme $\pa{h_i}_{1 \infegal i }$ suivant~:
+
+			\begin{eqnarray}
+			\forall i \supegal 1, \; h_i &=& card  \acc{ \text{ segments de longueur $i$ } }
+			\end{eqnarray}
+
+
+La figure~\ref{image_trace_epaisseur_histo} illustre les histogrammes obtenus pour les deux images de la figure~\ref{image_trace_epaisseur}. La longueur (\ref{image_epaisseur_estimateur_1}) correspondant au maximum est une première estimation de l'épaisseur du trait. Un second estimateur (\ref{image_epaisseur_estimateur_2}) est construit à partir de celui-ci dans le cas où on considère que la distribution de la longueur des segments suit grossièrement une loi normale autour de cet extremum~: 
+
+		\begin{eqnarray}
+		\widehat{e_1} &=&	\underset{i \supegal 1}{\arg \max} \; h_i \label{image_epaisseur_estimateur_1} \\
+		\widehat{e_2}	&=&	\frac{1}{h} \; \summy{i = 1}{2\widehat{e_1}} \; i \; h_i  
+																							\label{image_epaisseur_estimateur_2} 
+		\end{eqnarray}
+
+
+
+			\begin{figure}[ht]
+	    $$\begin{array}{|c|}\hline 
+	    \includegraphics[height=3cm, width=6cm]{\filext{../image/image/epais}} \\ \hline
+	    \end{array}$$
+	    \caption{	Histogramme de répartition des longueurs des traits pour les deux images
+	    					de la figure~\ref{image_trace_epaisseur}.}
+	    \label{image_trace_epaisseur_histo}
+			\end{figure}
+
+
+
+
+		\begin{table}[ht]
+    $$\begin{array}{|c|c|c|}\hline 
+    											& \text{première image} & \text{seconde image} \\ \hline
+  	\widehat{e_1}  				&	4											& 10 		\\ \hline
+  	\widehat{\sigma\pa{\widehat{e_2}}} 		
+  												&	0,15	  				& 0,20 \\ \hline
+    \end{array}$$
+    \caption{	Valeurs obtenues par les deux estimateurs définis en (\ref{image_epaisseur_estimateur_1}) 
+    					et (\ref{image_epaisseur_estimateur_2}) 
+    					pour les deux images de la figure~\ref{image_trace_epaisseur}.}
+    \label{image_trace_epaisseur_estimateur_valeur}
+		\end{table}
+
+\indexfr{largeur moyenne d'une lettre}
+
+Cette épaisseur est calculée pour les deux images de la figure~\ref{image_trace_epaisseur} dans la table~\ref{image_trace_epaisseur_estimateur_valeur}. Nécessairement, la largeur d'une lettre dépasse l'épaisseur du trait et on peut vraisemblablement penser que la largeur des lettres est au moins supérieure à deux fois cette épaisseur (voir~\citeindex{Yanikoglu1998}).
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Estimation de la largeur moyenne d'une lettre}
+\label{image_largeur_lettre}
+\indexfr{largeur moyenne d'une lettre}
+
+La largeur d'une lettre peut être une information intéressante à prendre en compte lors de la segmentation en graphèmes. Cette grandeur est d'abord estimée par la longueur moyenne entre deux transitions pixel noir - pixel blanc dans la bande des minuscules délimitées par les deux lignes d'appui estimées au paragraphe~\ref{image_ligne_appui}. Cette estimation est notée $e_l$ par la suite.
+
+
+
+
+
+
+
+\subsection{Nettoyage de l'image}
+\indexfr{nettoyage}
+
+
+Les illustrations représentent souvent des images binaires où seul le mot à reconnaître apparaît. Toutefois, ces images "propres" sont rarement celles immédiatement obtenues après scannerisation du document. Il n'existe pas de méthodes générales associées à ces nettoyages car ils dépendent fortement du type de documents à traiter et des informations qui doivent y être reconnues. Les algorithmes développés sont donc spécifiques à un type précis de document (chèque, ordonnance, feuille de maladie, ...). Néanmoins, il se dégage trois catégories de prétraitements~: la binarisation (voir \citeindex{Kwon2004}) ou tout traitement d'image global, la localisation ou la recherche de l'information à reconnaître et à extraire, le nettoyage proprement dit qui consiste à enlever tout ce qui peut gêner la reconnaissance de la partie extraite, c'est un traitement local.
+
+\indexfr{soulignement}
+\indexfr{binarisation}
+
+La figure~\ref{image_nettoyage_texte} est un exemple emprunté à une image en niveaux de gris dont le fond est foncé. La première étape consiste généralement à binariser l'image. Ce premier traitement n'est pas incontournable mais il permet de réduire fortement la taille des images lors de la constitution de grandes bases de données et d'utiliser des algorithmes fondés sur la connexité. L'image de la figure~\ref{image_nettoyage_texte} est déjà le résultat d'une extraction dont il faut ensuite enlever le trait de soulignement et les formes situées au-dessous du mot. Le résultat de ces prétraitements correspond à la seconde image de la figure~\ref{image_nettoyage_texte}.
+
+
+
+			\begin{figure}[ht]
+	    $$\begin{array}{|c|c|}\hline 
+	    \includegraphics[height=1.5cm, width=4cm]{\filext{../image/image/nettoy}} &
+	    \includegraphics[height=1.5cm, width=4cm]{\filext{../image/image/nettoy2}} \\ \hline
+	    \end{array}$$
+	    \caption{	Un mot extrait d'une page en niveaux de gris, avant de pouvoir reconnaître le mot, 
+	    					il faut binariser l'image et extraire le mot à reconnaître ce qui revient 
+	    					à enlever le soulignement et les divers lettres ou trait situés en-dessous. 
+	    					La seconde image est issue de la première après avoir été nettoyée.}
+	    \label{image_nettoyage_texte}
+			\end{figure}
+
+Les procédures de nettoyage du trait de soulignement consiste d'abord à estimer son épaisseur puis à enlever les pixels qui le composent en prenant soin de laisser les pixels communs aux lettres et au trait de soulignement. Ces derniers sont fréquemment repérés par une zone de sur-épaisseur due au chevauchement des traits.
+
+\indexfr{histogramme}
+\label{image_nettoyage_desolneux}
+
+La détection des traits n'est pas non plus un problème simple même si, pour certains documents, le trait de soulignement est toujours présent (écriture d'un nombre de famille sur une ligne horizontale par exemple). Il est possible d'utiliser des méthodes à base d'histogrammes comme ceux présentés au paragraphe~\ref{image_seg_line}. Une autre méthode intéressante est présentée dans les articles \citeindex{Desolneux2000}, \citeindex{Desolneux2002}, \citeindex{Desolneux2003} qui propose un formalisme adapté à la détection de toute figure géométrique simple comme un segment, un carré, un cercle. Par exemple, un alignement de segments comme celui de la figure~\ref{image_nettoyage_texte_morel} n'est détecté que s'il est suffisamment isolé pour que sa présence ne puisse pas être considérée comme une coïncidence. En résumé, à partir des segments présents dans l'image, on quantifie d'abord la probabilité d'obtenir un alignement quelconque de petits segments n'importe où dans l'image ou plutôt le nombre moyen de segments faisant partie d'un alignement. S'il existe un ensemble de segments alignés supérieur au seuil déterminé juste avant, alors, on considère que cet alignement est plus que probable. 
+
+
+			\begin{figure}[ht]
+	    $$\begin{array}{|c|}\hline 
+	    \includegraphics[height=3cm, width=6cm]{\filext{../image/image/desol}}  \\ \hline
+	    \end{array}$$
+	    \caption{	Figure extraite de \citeindexfig{Desolneux2002}, les traits isolés présents
+	    					au bas de la figure paraissent alignés mais noyés dans le nuage au-dessus, ils 
+	    					deviennent "invisibles".}
+	    \label{image_nettoyage_texte_morel}
+			\end{figure}
+
+\indexfr{squelettisation}
+Une méthode plus élaborée décrite dans \citeindex{Cheng2004} permet de débarrasser l'image de mots manuscrits d'une ligne ou d'une courbe sur laquelle les lettres s'appuient, ou une courbe qui traverse l'image comme celle de l'exemple de la figure~\ref{image_nettoyage_ligne_courbe}. Cette méthode s'appuie sur la construction d'un graphe qui résulte d'une squelettisation. La courbe principale découle d'une ou plusieurs recherche d'un plus court chemin.
+
+
+			\begin{figure}[ht]
+	    $$\begin{array}{|c|}\hline 
+	    \includegraphics[height=5cm, width=8cm]{\filext{../image/image/cheng}}  \\ \hline
+	    \end{array}$$
+	    \caption{	Figure extraite de \citeindexfig{Cheng2004}, la première image $(a)$ est l'image originale,
+	    					les deux images suivantes résultent du nettoyage de cette première image, la courbe principale
+	    					et les mots ont été séparées.}
+	    \label{image_nettoyage_ligne_courbe}
+			\end{figure}
+
+
+
+%-------------------------------------------------------------------------------------------------------------
+\section{Diverses segmentations en graphèmes}
+%-------------------------------------------------------------------------------------------------------------
+\indexfrr{segmentation}{graphème}
+\indexfr{graphème}
+\label{image_segmentation_grapheme}
+
+
+La segmentation en graphèmes permet de délocaliser le problème de reconnaissance du niveau des mots au niveau des lettres. Reconnaître l'image d'un mot sans la découper au préalable est une méthode limitée à des problèmes restreints où le nombre de mots est faible comme l'écriture d'un nombre en lettres. Comme la reconnaissance se résume à un problème de classification. Plus la liste des mots possibles est longue, plus le classifieur à construire est complexe. C'est pourquoi il est préférable de scinder ce problème de reconnaissance d'un mot en une somme de problèmes plus simples qui sont la reconaissance des lettres présentes dans l'image. 
+
+\indexfr{MMC}\indexfrr{séquence}{observation}
+Découper l'image soulève plusieurs questions dont la première concerne le résultat à obtenir~: est-il dépendant des modèles de reconnaissance utilisés par la suite~? Dans le cas de modèles de Markov cachés, le résultat souhaité est une séquence d'observations, ce qui signifie que la seule dimension variable du découpage est le nombre d'objets ainsi formés. Une extension de ces modèles statistiques permet d'étendre le concept de séquence à un graphe d'observations incluant plusieurs options de segmentations. Toutefois, quelle que soit l'option choisie, elle résulte des compromis suivants~: 
+
+			\begin{enumerate}
+			\item Plus la segmentation possède de degrés de liberté (plus elle propose d'alternatives), 
+						plus les modèles de reconnaissance seront complexes, plus les modèles de reconnaissance 
+						sont complexes, plus ils sont difficiles à apprendre.
+			\item Moins la segmentation possède de degrés de liberté, plus elle est susceptible de faire des erreurs.
+			\end{enumerate}
+
+
+Nous allons aborder une segmentation sous forme de séquences de graphèmes. Cette étape de segmentation est indispensable pour la construction d'un système de reconnaissance de l'écriture, diverses méthodes sont passées en revue dans les articles \citeindex{Lecolinet1991} ou plus récemment \citeindex{Lu1996}. Les paragraphes qui suivent reprennent quelques-unes des méthodes présentées dans ces articles puis concluent sur la conception de la segmentation qui a été élaborée dans le cadre de ces travaux de recherche. \indexfrr{accent}{graphème}\indexfrr{graphème}{accent} Cette segmentation propose également une solution au problème des accents dont la lettre d'attache est parfois située assez loin, ce qui n'a pas été pris en compte jusqu'à présent.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Segmentation à partir du squelette}
+\indexfrr{segmentation}{graphème}
+\label{image_sequence_graphem}
+
+
+\indexfr{ordonnancement}
+\indexfrr{graphème}{taille}
+\indexfrr{graphème}{ordonnancement}
+
+Les graphèmes sont des images extraites de l'image à segmenter. Passer d'une seule image à une séquence de graphèmes soulève deux problèmes (voir~\citeindex{Baret1991}) qui sont la taille que doivent avoir les graphèmes et l'ordonnancement des morceaux segmentés. Ils ne doivent pas être trop petits afin d'être différents les uns des autres, différents d'un simple trait. Ils ne doivent pas être trop gros pour ne pas dépasser la taille d'une lettre. Chaque lettre représentera entre un et trois graphèmes. Ce choix facilite l'ordonnancement des graphèmes qui doivent respecter le sens gauche-droite de la lecture. 
+
+
+\indexfr{squelette}\indexfr{motifs}
+L'image peut être rendue à l'état de squelette\seeannex{annexe_squelettisation}{squelettisation}. Ce dernier est ensuite parcouru de manière à repérer certains motifs synonymes de césure entre lettres (figure~\ref{image_graphe_cut}). La détection de ces motifs introduit des calculs de courbure, d'angle qui sont comparés à des seuils ajustés de manière à obtenir le résultat désiré. Ces algorithmes sont mieux détaillés dans~\citeindex{Lecolinet1991}.
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=3cm, width=10cm]
+	    {\filext{../image/image/grm_cut}}\end{array}$}$$
+	    \caption{Segmentation à partir du squelette~: segmentation basée sur des motifs.}
+	    \label{image_graphe_cut}
+			\end{figure}
+
+La figure~\ref{image_graphe_noel} est un exemple de ce qui est obtenu et des problèmes qui accompagnent l'utilisation de seuils. Les lettres en fin de mots, plus petites, sont parfois agrégées. La figure~\ref{image_grapheme_erreur} recense la liste de ces problèmes.
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=1.5cm, width=5cm]
+	    {\filext{../image/image/grm_noel}}\end{array}$}$$
+	    \caption{	Segmentation à partir du squelette~: 
+	    					chaque graphème est entouré de sa boîte englobante, les deux lignes horizontales
+	    					modélisent les lignes d'appui (ou lignes de bases) qui encadrent la bande où 
+	    					sont écrites les lettres
+	    					minuscules (paragraphe~\ref{image_ligne_appui}).}
+	    \label{image_graphe_noel}
+			\end{figure}
+
+
+
+
+
+
+
+\subsection{Segmentation à partir du contour}
+\indexfrr{segmentation}{graphème}
+\label{image_sequence_graphem_contour}
+\indexfr{contour}
+
+
+Cette méthode esquissée dans~\citeindex{Madhvanath2001} ne s'intéresse pas au squelette mais uniquement au contour dont elle détermine les meilleurs points candidats à une coupure entre graphèmes (voir figure~\ref{image_segmentation_contour}). Lors du parcours du contour, les extrema locaux sont marqués (point culminant et selle) puis les paires les plus proches sont regroupées de part et d'autre du trait.
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=2cm, width=4cm]
+	    {\filext{../image/image/grm_seg_bound}}\end{array}$}$$
+	    \caption{	Segmentation à partir du contour~: les points représentent les minima et les maxima
+	    					locaux (ordonnée des points) le long du contour. Les paires des points des plus
+	    					proches disposés de part et d'autre du trait
+	    					forment les candidats les plus probables pour une césure.
+	    					}
+			\indexfrr{ligne}{appui}
+	    \label{image_segmentation_contour}
+			\end{figure}
+
+
+\indexfr{tâtonnement}
+La direction de coupure n'est pas toujours horizontale comme le montre la figure~\ref{image_segmentation_contour2}. A l'instar de la méthode précédente, la segmentation en graphèmes à partir du contour nécessite de nombreux ajustements avant de trouver les critères de décision. Cette mise au point par tâtonnements est le point commun de nombreux traitements d'images liées à l'écriture manuscrite. Faciles à ajuster lorsque la qualité de l'écriture est bonne (figure~\ref{image_segmentation_contour}), ces prétraitements peuvent avoir des comportements tout-à-fait erratiques lorsque l'écriture est de mauvaise qualité (voir figure~\ref{image_graphe_grapheme}).
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=2cm, width=4cm]
+	    {\filext{../image/image/grm_seg_bound2}}\end{array}$}$$
+	    \caption{	Segmentation à partir du contour~: si la césure du couple "Je" s'appuie sur les extrema 
+	    					environnants, sa direction est plus horizontale que verticale.}
+	    \label{image_segmentation_contour2}
+			\end{figure}
+
+
+
+
+
+
+
+			
+			
+\subsection{Ordonnancement}
+\indexfrr{graphème}{ordonnancement}
+\indexfr{ordonnancement}
+\indexfrr{graphème}{séquence}
+\indexfrr{séquence}{graphème}
+\label{image_ordonnancement}
+\indexfr{voyageur de commerce}
+
+Une fois la segmentation effectuée, il ne reste plus qu'à ordonner les morceaux afin de former une séquence d'observations. Ce problème n'est pas simple et doit inclure des étapes de regroupement afin de traiter des problèmes tels que des accents qui doivent être associés à une lettre. Dans un premier temps, les accents, les points, c'est-à-dire tout morceau isolé au-dessus de la ligne d'appui haute, ne sont pas intégrés par l'algorithme d'ordonnancement, ils sont affectés aux graphèmes une fois ce dernier terminé. Ce problème d'ordonnancement est similaire au problème du voyageur de commerce. Une fois que les graphèmes de début et de fin sont déterminés, le plus court chemin reliant les graphèmes de début et de fin et incluant tous les autres graphèmes peut être assimilé à la séquence la plus probable.
+
+
+
+
+
+
+
+
+\subsection{Fenêtres glissantes}
+\indexfrr{fenêtre}{glissante}
+\label{image_fenetre_glissante}
+
+Découper l'image en bandelettes verticales est la segmentation la plus simple comme le montre la figure~\ref{image_window_slide}. Ce découpage peut être régulier ou dépendre des minima d'un histogramme de projection par exemple, il peut également se recouvrir. L'inconvénient de cette méthode est qu'elle génère trop de graphèmes regroupant les morceaux de plusieurs lettres, c'est d'ailleurs pourquoi les petites images obtenues se recouvrent en partie. Le paragraphe suivant~\ref{image_segmentation_histogramme_direction} étend cette méthode à plusieurs directions de projection pour les histogrammes. Cette représentation est utilisée par le système de reconnaissance décrit dans \citeindex{Knerr2001}.
+
+
+    \begin{figure}[t]
+    $$\frame{$\begin{array}[c]{c}\includegraphics[height=2cm, width=16cm]
+     {\filext{../bibliographie/image/biblio_window_slide}}\end{array}$}$$
+    \caption{	Image extraite de~\citeindexfig{Knerr2001} illustrant le découpage de l'image d'un mot 
+    					par des fenêtres glissantes.}
+    \label{image_window_slide}
+    \end{figure}
+
+\indexfr{connexité}\indexfr{ordonnancement}
+Cette méthode comme la suivante d'ailleurs possède néanmoins l'avantage par rapport à celle présentée dans les paragraphes~\ref{image_sequence_graphem} et~\ref{image_sequence_graphem_contour} de n'être pas dépendante de la connexité et d'être moins sensible au bruit. L'ordonnancement (voir paragraphe~\ref{image_ordonnancement}) est lui aussi évident puisque la segmentation basée sur le squelette ou le contour produit des morceaux répartis dans un espace en deux dimensions alors que cette méthode segmente l'image selon l'axe des abscisses qui est aussi l'axe de lecture.
+
+
+
+
+
+
+
+\subsection{Segmentation basée sur des histogrammes}
+\indexfrr{segmentation}{histogramme}
+\label{image_segmentation_histogramme_direction}
+\indexfr{connexité}
+\indexfr{ordonnancement}
+
+
+Cette méthode est décrite dans l'article~\citeindex{Yanikoglu1998} et produit une segmentation semblable à celle illustrée figure~\ref{image_grapheme_segmentation_histogramme}. Elle consiste à déterminer des droites de segmentation de l'image à partir d'histogrammes de projection effectués selon différentes directions proches de la verticale. Ces droites sont choisies de telle sorte qu'elles interceptent le moins de pixels noirs et sont régulièrement espacées dans l'image. Cette méthode simple et peu dépendante de la connexité ne peut malgré tout pas tout résoudre comme en témoignent les exemples de la figure~\ref{image_grapheme_segmentation_histogramme_bad}. La méthode possède également l'avantage de ne pas être assujettie au problème d'ordonnancement (voir paragraphe~\ref{image_ordonnancement}).
+
+
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=1cm, width=4cm]
+	    {\filext{../image/image/seg_dir_gra}}\end{array}$}$$
+	    \caption{	Segmentation en graphèmes à partir d'histogrammes de projection selon
+	    					plusieurs directions.}
+	    \label{image_grapheme_segmentation_histogramme}
+			\end{figure}
+
+
+
+			\begin{figure}[ht]
+	    $$\begin{array}{|c|c|c|} \hline
+	    \includegraphics[height=1cm, width=4cm]		{\filext{../image/image/histo_seg1}} &
+	    \includegraphics[height=1cm, width=2.5cm]	{\filext{../image/image/histo_seg2}} &
+	    \includegraphics[height=1cm, width=2.5cm]	{\filext{../image/image/lahs_black}} \\ \hline
+	    \end{array}$$
+	    \caption{	Deux exemples où la segmentation par histogramme est difficilement applicable~:
+	    					le premier cas contient une barre de "t" qui sera nécessairement coupée puisqu'elle 
+	    					touche la lettre "a". Le second exemple contient le couple "op" fortement
+	    					lié du fait de l'épaisseur du trait, la liaison entre les 
+	    					deux lettres est plus épaisse qu'ailleurs. Le dernier mot présente un couple
+	    					"La" qu'aucune droite ne saurait séparer.}
+	    \label{image_grapheme_segmentation_histogramme_bad}
+			\end{figure}
+
+
+
+
+
+
+
+
+\subsection{Segmentation basée sur des réservoirs}
+\indexfrr{segmentation}{réservoir}
+\label{image_segmentation_reservoir}
+\indexfr{réservoir}
+
+
+Cette idée est dévelopée dans l'article~\citeindex{Pal2003} et est appliquée dans le cadre d'une segmentation de chiffres cursifs. Elle consiste à détecter tout d'abord les vallées et les collines séparant deux chiffres appartenant à la même composante connexe, ces formes sont illustrées pour un mot dans la figure~\ref{image_grapheme_reservoir}. Deux chiffres liés dans une même composante seront séparés si une vallée ou une colline représente un espace suffisamment grand par rapport à la taille des chiffres. En ce qui concerne les lettres, les règles de décision sont plus difficiles à mettre en place car les lettres ont des hauteurs variables.
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|}\hline
+	    \includegraphics[height=2cm, width=4cm]{\filext{../image/image/reser}}
+	    \\ \hline \end{tabular}$$
+	    \caption{	Segmentation à partir de réservoirs d'eau (\citeindexfig{Pal2003})~: 
+	    					les vallées et les collines sont en quelque sorte	remplies d'eau, si elles
+	    					sont suffisamment profondes ou hautes, elles marquent la séparation entre deux
+	    					caractères.}
+	    \label{image_grapheme_reservoir}
+	    \indexfrr{réservoir}{eau}
+			\end{figure}
+
+Une fois que les zones de coupures sont détectées, il reste à déterminer à quelle catégorie elle appartient (voir figure~\ref{image_grapheme_reservoir_cut}) afin de placer la césure à l'endroit le plus approprié. Cette idée est reprise dans~\citeindex{Elnagar2003} à ceci près que la méthode s'applique au squelette des chiffres et pas à l'image initiale.
+
+
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|}\hline
+	    \includegraphics[height=2cm, width=4cm]{\filext{../image/image/grmcut1}}
+	    \\ \hline \end{tabular}$$
+	    \caption{	Segmentation à partir de réservoirs d'eau (\citeindexfig{Pal2003})~: deux points de coupures
+	    					différents, le premier est situé au fond d'une vallée à droite sur un embranchement,
+	    					le second est situé dans un creux, au milieu d'une courbe en "u". La coupure ne doit donc pas
+	    					toujours intervenir à l'endroit du minimum local.}
+	    \label{image_grapheme_reservoir_cut}
+			\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Graphes de graphèmes}
+\indexfrr{graphe}{graphème}
+\indexfrr{graphème}{graphe}
+
+
+La segmentation en graphèmes donne parfois des résultats erronés. La figure~\ref{image_graphe_grapheme} propose une manière d'éviter ces erreurs en résumant au travers d'un graphe plusieurs options de segmentation. La séquence de graphèmes est un cas particulier de ce graphe, elle est la segmentation la plus probable pour la partie qui concerne le traitement d'image mais pas forcément la meilleure pour la partie reconnaissance qui suit. Il peut donc être intéressant de proposer plusieurs segmentations afin d'augmenter la probabilité que la bonne segmentation soit trouvée. Ce procédé revient souvent comme un leitmotiv dans la reconnaissance de l'écriture, il s'agit de retarder la prise de décision afin de conserver à chaque étape le plus de solutions possibles.
+
+
+
+
+			\begin{figure}[t]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=7.5cm, width=12cm]
+	    {\filext{../hmm_seq/image/graphe_obs}}\end{array}$}$$
+	    \caption{	Segmentation en graphèmes~: graphes. Aucune décision n'est prise à ce niveau, 
+	    					le choix de la bonne segmentation sera effectué par le module de reconnaissance.}
+	    \label{image_graphe_grapheme}
+			\end{figure}
+
+
+
+
+
+
+%-------------------------------------------------------------------------------------------------------------
+\section{Choix d'une segmentation en graphèmes}
+%-------------------------------------------------------------------------------------------------------------
+\indexfrr{segmentation}{graphème}
+\label{image_choix_segmentation}
+
+
+La segmentation décrite dans les paragraphes qui suivent fonctionne bien lorsque l'écriture est de bonne qualité. Comme tous les algorithmes de segmentation fondés sur des heuristiques, celui-ci ne peut traiter correctement la totalité des images. Cependant sa construction met en lumière les difficultés rencontrées lorsque la qualité de l'écriture décroît et les ajustements rendus nécessaires par des problèmes récurrents.
+
+
+
+\subsection{Segmentation à partir d'histogrammes}
+
+
+Le choix d'une segmentation dépend des modèles de reconnaissance qui devront l'utiliser. Segmenter en lettres ou morceaux de lettres les mots illustrés par la figure~\ref{image_grapheme_segmentation_histogramme_bad} ou~\ref{image_graphe_grapheme_ing} peut paraître une gageure. Toutefois le paragraphe~\ref{hmm_bi_lettre} permet d'assouplir cette contrainte. La segmentation proposée ici vise seulement le découpage d'un mot en morceaux pouvant aller d'une simple partie de lettre à des groupes de deux ou trois lettres, pourvu que ceux-ci soient aisément identifiables. L'objectif est aussi d'éviter le plus possible les traitements basés sur la connexité car ils sont très sensibles au bruit.
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=1cm, width=2cm]
+	    {\filext{../image/image/being}}\end{array}$}$$
+	    \caption{	Segmentation en graphème d'un mot couramment employé en langue anglaise~: \textit{being}.
+	    					Les trois dernières lettres "ing" sont simplement esquissées.}
+	    \label{image_graphe_grapheme_ing}
+			\end{figure}
+
+
+L'impossibilité de qualifier la pertinence d'une segmentation demeure un inconvénient majeur, il est en effet difficile d'apprécier directement un prétraitement de l'image dont on attend les bénéfices seulement en fin de chaîne, c'est-à-dire en terme de taux de reconnaissance. L'appréciation n'est donc que visuelle.
+
+\indexfrr{segmentation}{contour}
+\indexfrr{segmentation}{squelette}
+\indexfrr{segmentation}{histogramme}
+
+L'approche proposée ici est un compromis. La première étape consiste à segmenter grâce à la méthode des histogrammes (paragraphe~\ref{image_segmentation_histogramme_direction}) en ne conservant que des coupures évidentes. Un premier ensemble de points de coupures est ainsi obtenu parmi lesquels seront sélectionnés ceux définissant la segmentation en graphèmes finale. Ce dernier résultat n'est pourtant pas encore parfait, ce que tenteront de corriger les méthodes basées sur les contours ou les réservoirs, celles-ci permettront ensuite de couper les morceaux litigieux.
+
+Tout d'abord, les pixels sont projetés selon sept directions entourant la direction verticale $-30^o$, $-20^o$, $-10^o$, $0^o$, $10^o$, $20^o$, $30^o$.  On note $\pa{h_{ij}} _ { \begin{subarray}{c} -3 \infegal i \infegal 3 \\ 1 \infegal j \infegal X \end{subarray} }$ les sept histogrammes obtenus où $X$ est la longueur de l'image. $h_{ij}$ est donc le nombre de pixels noirs (écrits) selon une droite formant un angle $i \times 10^o$ avec la verticale et interceptant la ligne d'appui basse au point d'abscisse $j$. Ces histogrammes sont ensuite lissés par une moyenne mobile analogue aux formules~(\ref{image_lissage_equation}). On définit $e_t$ comme étant l'épaisseur du tracé (paragraphe~\ref{image_epaisseur_trace}), $e_l$ correspond à la largeur moyenne d'une lettre estimée au paragraphe~\ref{image_largeur_lettre}. Enfin $C$ est l'ensemble de coupures et défini par~:
+
+
+			\begin{eqnarray}
+			C &=&  \acc{ h_{ij} \sac h_{ij} \infegal \beta \, e_t } \text{ où } \beta \supegal 1
+			\label{image_graphem_seg_eq_1}
+			\end{eqnarray}
+
+
+Le paramètre $\beta$ est généralement compris entre $1$ et $2$ de manière à ne pas couper un mot selon une droite interceptant deux fois le tracé. Il est possible d'écrire l'ensemble $C$ comme une réunion d'intervalles.
+
+
+			\begin{eqnarray}
+			C &=& \union{k=-3}{3} \union{i=1}{I} \; \cro{a_i^k, b_i^k} 
+											\text{ avec } \left\{ \begin{array}{l}
+																a_i^k \infegal b_i^k < a^k_{i+1} \; \forall i,k \\
+																h_x^k \infegal \beta \, e_t \; \forall x \in \cro{a_i^k, b_i^k}
+																\end{array} \right.
+			\label{image_graphem_seg_eq_2}
+			\end{eqnarray}
+
+
+
+Pour chaque intervalle de la forme $\cro{a_i^k, b_i^k}$, on vérifie que $b_i^k - a_i^k \infegal e_l$. Dans le cas contraire, on scinde cet intervalle jusqu'à ce que chacun des morceaux soit inférieur à $e_l$. La figure~\ref{image_graphem_zone_coupure_soulignement} soulève le problème de soulignement. Etant donné la condition exprimée en~(\ref{image_graphem_seg_eq_2}), il est impossible de sélectionner une seule zone de coupure probable entre graphèmes. Par conséquent, la solution adoptée est l'introduction de points de coupure entre les zones de non-coupure correspondant à des minima locaux. 
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=1.6cm, width=3cm]
+	    {\filext{../image/image/souligne}}\end{array}$}$$
+	    \caption{	Sélection des zones de coupures entre graphèmes~: problème des mots soulignés,
+	    					l'histogramme représenté correspond à une projection verticale lissée par une 
+	    					moyenne mobile uniforme d'ordre trois.}
+	    \label{image_graphem_zone_coupure_soulignement}
+	    \indexfr{soulignement}
+			\end{figure}
+			
+Dans ce cas, pour une direction donnée $k$, l'ensemble des points de coupures correspond aux minima locaux de l'histogramme $\pa{h_i^k}_i$. Un minimum $m^k$ local vérifie la condition suivante~:
+
+			\begin{eqnarray}
+			h^k_{m^k} &=& \min \acc{ h_x^k \sac  m^k - e_t \infegal x \infegal m^k + e_t } 
+			\label{image_graphem_seg_eq_2_prime}
+			\end{eqnarray}
+
+
+Ces minima locaux n'existent pas toujours, dans ces cas, on cherche à déterminer le point $c_i^k \in \cro{a_i^k, b_i^k}$, l'unique point de coupure de la zone de coupure $\cro{a_i^k, b_i^k}$. La figure~\ref{image_grapheme_reservoir_cut} suggère que ce point se situe à droite du milieu de cet intervalle, par conséquent, $\tau_2 > \tau_4 > \tau_3$ dans la définition suivante~:
+
+			\begin{eqnarray}
+			m_i^k	&=&					\frac{a_i^k + b_i^k}{2} \nonumber \\
+			c^k_i &=& 		  	\underset{x \in \pa{a_i^k, b_i^k}}{\arg \min} \; \cro {
+												\tau_1 	\, \frac{h_x^k}{e_t}  + 
+												\frac{4}{e_l^2}	\cro{ \indicatrice{x < m_i^k} 
+																								\pa{\tau_2 - \tau_3} + \tau_3}  \;
+														  						\cro{x - m_i^k}^2  +
+												\frac{2 \tau_4 \; e_t^2}{e_t^2 + \abs{s_{x^-}^k - s_{x^+}^k} }
+												}
+			\label{image_graphem_seg_eq_3}
+			\end{eqnarray}
+			
+
+\indexfrr{droite}{coupure}
+\indexfrr{ligne}{appui}
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=2cm, width=2cm]
+	    {\filext{../image/image/cutcut}}\end{array}$}$$
+	    \caption{	Définition des nombres $s_{x^-}^k$ et $s_{x^+}^k$ de la 
+	    					formule~(\ref{image_graphem_seg_eq_3}). $s_{x^-}^k$ correspond au nombre de pixels contenus
+	    					dans la première colonne du rectangle quadrillé (couleur gris foncé), $s_{x^+}^k$ correspond
+	    					à la colonne de droite (couleur noire). Le côté des petits carrés est égal à $e_t$ soit
+	    					l'épaisseur moyenne de l'écriture.
+	    					}
+	    \label{image_graphem_aire_cut}
+			\end{figure}
+
+
+
+Les nombres $s_{x^-}^k$ et $s_{x^+}^k$ sont définis par la figure~\ref{image_graphem_aire_cut}. L'ensemble $\acc{c^k_i}_{ik}$ est l'ensemble des droites de segmentation possibles sélectionnées par l'algorithme, cet ensemble est trié par $i$ et $k$ croissant ($i$ d'abord, l'indice $k$ départageant les points de même indice $i$) et aboutit à la suite $\pa{d_n}_{ 1 \infegal n \infegal N }$. Il reste à déterminer quelles sont parmi les points de cette suite les droites de segmentation les plus pertinentes.
+
+
+A cette suite, sont ajoutés les éléments sélectionnés par l'équation~(\ref{image_graphem_seg_eq_2_prime}) et deux éléments $d_0$ et $d_{N+1}$ qui correspondent aux deux séparations verticales de début et de fin, c'est-à-dire les limites de l'image. On suppose qu'il existe une distance entre deux droites de coupures $i$ et $j$ notée $\pa{D_{ij}}_{ 0 \infegal i,j \infegal N+1 }$, trouver la meilleure segmentation revient alors à trouver le plus court chemin entre les n\oe uds $d_0$ et $d_{N+1}$ en passant ou non par $n$ autres n\oe uds $\pa{d_n}_{ 1 \infegal n \infegal N }$. Ce problème est usuel et résolu par un algorithme du plus court chemin de type Djikstra (voir \citeindex{Dijkstra1971}). Il reste à déterminer la distance $D_{ij}$ entre deux droites de coupures qui doit prendre en compte trois éléments~:
+
+		\indexfr{Djikstra}
+		\indexfr{plus court chemin}
+		\indexfr{droite de coupure!distance@distance}
+
+		\begin{enumerate}
+		\item Le nombre de pixels noirs interceptés par les droites de coupures, noté $p_i$ et $p_j$.
+		\item Le fait que les droites s'interceptent ou non, noté $t_{ij} \in \acc{0,1}$ 
+						(voir figure~\ref{image_droite_coupure_croisees}).
+		\item La distance entre les deux points d'intersection des deux droites avec la ligne d'appui basse, 
+						notée $d_j - d_i$ cette distance devrait être proche de 
+						$\lambda_4$ fois la largeur supposée d'une lettre, notée $e_l$ et calculée au 
+						paragraphe~\ref{image_largeur_lettre}.
+		\end{enumerate}
+		
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=1cm, width=2cm]
+	    {\filext{../image/image/droit_sec}}\end{array}$}$$
+	    \caption{	Droites de coupures sécantes issues d'une segmentation non pertinente, 
+	    					deux droites de coupures peuvent se croiser, auquel cas, 
+	    					il n'est pas très pertinent de les associer ensemble pour former la segmentation en graphèmes. }
+	    \label{image_droite_coupure_croisees}
+			\end{figure}
+
+A chaque abcisse $d_i$ est associé un angle $u_i$ qui correspond à la direction de l'histogramme qui a permis d'obtenir $d_i$. A l'aide de ces notations, la distance $D_{ij}$ est définie par~:
+
+			\begin{eqnarray}
+			D_{ij} &=& 			\lambda_1 \frac{p_i + p_j} {e_t} + 
+											\lambda_2 \, t_{ij} + 
+											\lambda_3 \frac{\pa{ d_j - d_i - \lambda_4 e_l}^2} {e_l^2} +
+											\lambda_5 \pa{u_j - u_i}^2 
+											\label{image_distance_droite_coupure}
+			\label{image_graphem_seg_eq_4}
+			\end{eqnarray}
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|c|c|c|c|} \hline
+	    \includegraphics[height=1cm, width=3cm]{\filext{../image/image/lahsene}} &
+	    \includegraphics[height=1cm, width=3cm]{\filext{../image/image/grtemp1}} &
+	    \includegraphics[height=1cm, width=3cm]{\filext{../image/image/grtemp2}} &
+	    \includegraphics[height=1cm, width=3cm]{\filext{../image/image/grtemp3}} & 
+	    \includegraphics[height=1cm, width=3cm]{\filext{../image/image/grtemp4}} \\ 
+	    \textit{(a)} & \textit{(b)} & \textit{(c)} & \textit{(d)} & \textit{(e)} \\ \hline
+	    \end{tabular}$$
+	    \caption{	Résultat intermédiaire de la segmentation graphème après obtention du meilleur
+	    					chemin dans le graphe défini par la matrice d'adjacence 
+	    					(\ref{image_distance_droite_coupure}). Les valeurs des paramètres utilisées
+	    					pour cet exemple sont données par le tableau~\ref{image_graphem_segmentation_parametre}, 
+	    					page~\pageref{image_graphem_segmentation_parametre}.}
+	    \label{image_segmentation_grapheme_1}
+			\end{figure}
+
+
+En pratique, $\lambda_4$ est choisi proche de $1$, $\lambda_2$ est grand, $\lambda_3$ et $\lambda_1$ sont choisis proches de $1$. Divers problèmes subsistent après ce traitement illustré par la figure~\ref{image_segmentation_grapheme_1}, il reste des bouts de lettres mal appariés, des accents mal placés, des couples de lettres inséparables par une droite et pourtant formés de deux composantes connexes ou presque disjointes, des petits morceaux qu'on pourrait associer à un graphème voisin plus gros. Ce découpage plus fin s'effectue en deux étapes~:
+
+
+		\begin{enumerate}
+		\item Découpage d'un graphème contenant deux formes reliées par un pont de pixels 
+					comme le couple "lf" de l'image~\textit{(c)} de la figure~\ref{image_segmentation_grapheme_1}.
+		\item Découpage d'un graphème contenant plusieurs composantes connexes de tailles suffisantes pour être scindées
+					en plusieurs graphèmes, image \textit{(e)} de la figure~\ref{image_segmentation_grapheme_1}.
+		\end{enumerate}
+
+
+
+
+
+
+\subsection{Segmentation à partir de "réservoirs"}
+\label{image_segmentation_reservoir_graphem}
+\indexfr{réservoir}
+\indexfrr{graphème}{réservoir}
+
+\indexfr{vallée}\indexfr{colline}			
+
+Comme le montre la figure~\ref{image_segmentation_grapheme_1}, le traitement précédent laisse quelques imperfections qu'il serait possible de résorber en utilisant la méthode des réservoirs illustrée par la figure~\ref{image_grapheme_reservoir} et développée dans~\citeindex{Pal2003}. On considère les vallées et les collines dont la profondeur est supérieure à $\eta_1 e_t$ et la surface est supérieure à $\eta_2 \, e_t \pa{e_l-e_t}$. Il s'agit ensuite d'isoler les parties du tracé qui constituent le fond des vallées et des collines et susceptibles d'être coupées. Ce tracé correspond à la frontière d'une vallée ou d'une colline dont la largeur décroît, cette frontière inclut le fond de la vallée ou le sommet d'une colline noté $\pa{x^v, y^v}$. Si $e_t\pa{x}$ est l'épaisseur du tracé à l'abscisse $x$, il est possible de choisir le point de coupure $c_v$ en s'inspirant de l'équation~(\ref{image_graphem_seg_eq_3})~:
+
+
+			\begin{eqnarray}
+			c^v &=&   		  	\underset{\pa{x,y} \in \textit{vallée}}{\arg \min} \; \cro {
+												\tau_1 	\, \frac{e_t\pa{x}}{e_t}  + 
+												\frac{4}{e_l^2}	\cro{ \indicatrice{x < x^v} 
+																								\pa{\tau_2 - \tau_3} + \tau_3}  \;
+														  						\cro{x - x_v}^2  +
+												\frac{\tau_5}{e_t} \, \abs{y - y^v}
+												}
+			\label{image_graphem_reservoir_1}
+			\end{eqnarray}
+
+\indexfrr{vallée}{sans fond}		
+\label{image_valley_eta}	
+
+L'algorithme décrit dans~\citeindex{Pal2003} s'applique à l'ensemble du mot, il coupe en deux l'image du mot, puis réitère le procédé pour chaque morceau obtenu jusqu'à qu'il ne puisse plus couper. Ce processus sera également appliqué à chaque graphème. Il reste à traiter le cas des vallées sans fond comme celle de la figure~\ref{image_graphem_reservoir_vallee_sans_fond}. Comme précédemment, si la largeur de cette vallée correspondant à la partie grisée est supérieure à $\eta_2 e_t \, \pa{e_l - e_t}$, alors le graphème sera scindé.
+
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=1.5cm, width=1cm]
+	    {\filext{../image/image/grmvalno}}\end{array}$}$$
+	    \caption{	Segmentation à partir de réservoirs~: vallée sans fond, la partie grisée correspond à la 
+	    					largeur de la vallée, si celle-ci est supérieure à $e_l e_t$, alors le graphème sera
+	    					scindé en deux morceaux. }
+	    \label{image_graphem_reservoir_vallee_sans_fond}
+			\indexfrr{vallée}{sans fond}		
+			\end{figure}
+			
+\indexfrr{graphème}{accent}
+\indexfrr{accent}{graphème}
+
+
+Vient ensuite le problème des accents qui se présente sous deux formes~\textit{image~(a)} et~\textit{images~(c)-(d)} de la figure~\ref{image_graphem_reservoir_decouper_accent}. Dans le premier cas, il suffit de séparer deux composantes connexes en utilisant une vallée sans fond. Le second cas paraît impossible, le point de la lettre "i" vient toucher la lettre "d" (image~\textit{(c)}) ou la lettre "a" (image~\textit{(d)}). Le problème posé par l'image~\textit{(e)} ou~\textit{(f)} apparaît fréquemment, il s'agit de lettres dont les tracés parallèles se chevauchent, comme les couples "oc" ou "cl" des images~\textit{(d)} et~\textit{(e)} de la figure~\ref{image_graphem_reservoir_decouper_accent}.
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|c|c|c|c|c|} \hline
+	    \includegraphics[height=1.5cm, width=1cm]{\filext{../image/image/valaccent}} 	&
+	    \includegraphics[height=1.5cm, width=1cm]{\filext{../image/image/valaccent2}} 	&
+	    \includegraphics[height=1cm, width=3cm]{\filext{../image/image/valaccent3}} 		&
+	    \includegraphics[height=1cm, width=3cm]{\filext{../image/image/valaccent4}} 		&
+	    \includegraphics[height=1cm, width=3cm]{\filext{../image/image/valaccent5}} 		&
+	    \includegraphics[height=1cm, width=3cm]{\filext{../image/image/valaccent6}} 
+	    \\ \textit{(a)} & \textit{(b)} & \textit{(c)} & \textit{(d)} & \textit{(e)} & \textit{(f)} 
+	    \\ \hline
+	    \end{tabular}$$
+	    \caption{	Segmentation à partir de réservoirs~: cas des accents, il serait préférable que 
+	    					ceux-ci soient dissociés de la séquence de graphèmes car leur position est variable.
+	    					Toutefois, aucune vallée ne permet de séparer l'accent (image~\textit{(a)}) 
+	    					à moins de considérer la transposée de l'image, mais dans ce cas, certaines lettres comme celle 
+	    					de l'image~\textit{(b)} seraient coupées par la méthode des réservoirs. 
+	    					De plus, comment détecter l'accent de l'image~\textit{(c)} 
+	    					ou celui de l'image~\textit{(d)}~? Comment traiter le problème des traits 
+	    					parallèles se chevauchant (images~\textit{(e)} ou~\textit{(f)} et des couples "oc" et "cl")~?
+	    					} 
+	   	\indexfrr{graphème}{accent}
+	    \label{image_graphem_reservoir_decouper_accent}
+			\end{figure}
+
+\indexfr{composante connexe}
+
+Parmi ces différents problèmes, seul le cas des accents appartenant à des composantes connexes différentes sera traité. Les autres n'apparaissent que pour des couples ou des groupes de lettres précis et seront modélisés ultérieurement notamment (voir paragraphe~\ref{hmm_bi_lettre}, page~\pageref{hmm_bi_lettre}). Il n'est pas non plus nécessaire de traiter des problèmes qui ne surviennent que peu fréquemment, des développements spécifiques risquent d'introduire de mauvais cas parmi ceux déjà bien traités. Un motif trop peu fréquent ne peut être appris par des modèles probabilistes tels que les chaînes de Markov cachées et les réseaux de neurones, et ce, qu'il soit bien ou mal segmenté.
+
+
+L'algorithme qui suit permet de déterminer la profondeur des vallées, celle des collines s'en déduit facilement. On cherche la vallée la plus profonde et pour ce faire, on construit la matrice $v\pa{x,y}_{ \begin{subarray}{c} 1 \infegal x \infegal X \\ 1 \infegal y \infegal Y \end{subarray}}$ où $\pa{x,y}$ est un pixel de l'image. Cette matrice est définie par l'algorithme suivant~\ref{image_algorithm_vpaxy_profondeur}.
+
+
+		\begin{xalgorithm}{profondeur des vallées, calcul de
+												$v\pa{x,y}$
+												%$v\pa{x,y}_{ \begin{subarray} 
+												%	1 \infegal x \infegal X \\ 1 \infegal y \infegal Y 	\end{subarray}}$
+													}
+		\label{image_algorithm_vpaxy_profondeur}
+		
+		On considère une image $I\pa{x,y}$ de dimension $\pa{X,Y}$, on note la propriété qu'un pixel 
+		soit noir par $N\pa{x,y}$. Le premier pixel est le coin supérieur gauche.
+		$v\pa{x,y}$ désigne la profondeur de la vallée.
+				
+		\begin{xalgostep}{initialisation}
+		\begin{xfor}{x}{1}{X}
+			$v\pa{x,Y} \longleftarrow 0$ 
+		\end{xfor}
+		\end{xalgostep}
+			
+		\begin{xalgostep}{mise à jour}
+		\begin{xfor}{y}{Y-1}{1}
+			\begin{xfor}{x}{1}{X}
+			$v\pa{x,y} \longleftarrow \left\{ \begin{array} {ll}
+												0 						& \text{si } N\pa{x,y} \\
+												v\pa{x,y+1}+1 & \text{sinon}
+												\end{array} \right.$ 
+			\end{xfor} \\
+			\begin{xfor}{x}{2}{X}
+			$v\pa{x,y} \longleftarrow \left\{ \begin{array} {ll}
+												0 														  							& 
+																\text{si } \forall i \infegal x, \; N\pa{i,y} \text{ est faux}\\
+												max \acc{\; v\pa{x,y}, \; v\pa{x,y+1}+1 \; }		& \text{sinon}
+												\end{array} \right.$ 
+			\end{xfor} \\
+			\begin{xfor}{x}{X-1}{1}
+			$v\pa{x,y} \longleftarrow \left\{ \begin{array} {ll}
+												0 														  							& 
+																\text{si } \forall i \supegal x, \; N\pa{i,y} \text{ est faux}\\
+												max \acc{\; v\pa{x,y}, \; v\pa{x,y+1}+1 \; }		& \text{sinon}
+												\end{array} \right.$ 
+			\end{xfor}
+			\begin{xfor}{x}{2}{X}
+			$v\pa{x,y} \longleftarrow \left\{ \begin{array} {ll}
+												0 														  							& \text{si } N\pa{x,y} \\
+												max \acc{ \; v\pa{x-1,y}, \; v\pa{x,y} \; }  	& \text{sinon}
+												\end{array} \right.$ 
+			\end{xfor} \\
+			\begin{xfor}{x}{X-1}{1}
+			$v\pa{x,y} \longleftarrow \left\{ \begin{array} {ll}
+												0 														  							& \text{si } N\pa{x,y} \\
+												max \acc{ \; v\pa{x,y}, \; v\pa{x+1,y} \; }  	& \text{sinon}
+												\end{array} \right.$ 
+			\end{xfor} \\
+		\end{xfor}
+		\end{xalgostep}
+		
+		Le maximum atteint sur la première ligne de l'image correspond à la vallée la plus profonde.
+													
+		\end{xalgorithm}													
+		 
+
+En conservant en chaque point de l'image le pixel qui a permis d'atteindre le maximum, il est possible d'en déduire la surface de la vallée la plus profonde. L'algorithme peut être adapté de manière à estimer la surface de la colline la plus profonde. Il reste à déterminer l'épaisseur locale de l'écriture depuis une position particulière sur le contour, ce qui n'est pas toujours évident comme le montre la figure~\ref{image_graphem_valley_where_to_cut}.
+
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|} \hline
+	    \includegraphics[height=3cm, width=2cm]{\filext{../image/image/valleyt}} \\ \hline
+	    \end{tabular}$$
+	    \caption{	Cette figure illustre une vallée qui propose trois directions différentes de coupure
+	    					afin de segmenter ce graphème en deux composantes connexes. La première direction 
+	    					(vers la gauche n'est pas adaptée, la direction verticale est souvent la meilleure,
+	    					la dernière (la plus à droite) mène vers une boucle. Ces trois directions correspondent
+	    					à trois mesures de l'épaisseur du tracé.
+	    				}
+	    \label{image_graphem_valley_where_to_cut}
+			\end{figure}
+
+			
+Sur les trois directions proposées par la figure~\ref{image_graphem_valley_where_to_cut}, seules deux seront conservées, celles qui permettent de relier un point de la vallée à un point n'y appartenant pas mais pour lequel il existe un chemin le reliant à l'un des bords de l'image, autrement dit, à un point non inclus dans une boucle. Le segment de coupure doit être le plus vertical possible, la distance entre un point $\pa{x^v,y^v}$ de la vallée et un point de l'extérieur $\pa{x^e,y^e}$ est donnée par~:
+
+
+			\begin{eqnarray}
+			d\pa{ \pa{\begin{subarray}{c} x^y \\ y^v \end{subarray}}, 
+						\pa{\begin{subarray}{c} x^e \\ y^e \end{subarray}}} &=&
+						\abs{ x^v - x^e } + \mu \, \abs{ y^v - y^e }
+						\label{image_graphem_reservoir_2}
+			\end{eqnarray}
+
+Le nombre $e_t\pa{\begin{subarray}{c} x^y \\ y^v \end{subarray}}$ défini dans l'équation~\ref{image_graphem_reservoir_1} est alors égal à~:
+
+			
+			\begin{eqnarray}
+			e_t\pa{\begin{subarray}{c} x^y \\ y^v \end{subarray}} &=&
+						\underset{\pa{x^e,y^e}}{\min} \; 
+						d\pa{ \pa{\begin{subarray}{c} x^y \\ y^v \end{subarray}}, 
+						\pa{\begin{subarray}{c} x^e \\ y^e \end{subarray}}}
+						\label{image_graphem_reservoir_3}
+			\end{eqnarray}
+
+
+
+
+\subsection{Détection des accents}
+\indexfr{composante connexe}
+\label{image_segmentation_connexe_graphem}
+
+L'étape suivante consiste à extraire les accents et les points de la séquence de graphèmes déjà obtenue afin de les placer dans une autre séquence. L'idée la plus simple utilise une séparation horizontale de l'image représentée par la figure~\ref{image_graphem_valley_accent_d}. Si cette division est possible, la distance entre les deux objets est alors supérieure à $\pa{\zeta_1 e_t}$ et la surface de l'accent est supérieure à $\pa{\zeta_2 \,\frac{\pi}{4} \, e_t^2}$. Dans ce cas, l'objet supérieur sera nettoyé de la séquence de graphèmes et inséré dans la séquence des accents.
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|} \hline
+	    \includegraphics[height=2cm, width=2cm]{\filext{../image/image/accentd}} \\ \hline
+	    \end{tabular}$$
+	    \caption{	Deux objets séparés par une ligne horizontale. 
+	    					La double flèche représente la distance qui les sépare. }
+	    \label{image_graphem_valley_accent_d}
+			\end{figure}
+			
+
+
+
+
+\subsection{Recollement de petits segments}
+\indexfrr{graphème}{recollement}
+
+Il arrive parfois que les méthodes décrites dans les paragraphes~\ref{image_segmentation_reservoir_graphem} et~\ref{image_segmentation_connexe_graphem} divisent les graphèmes de manière trop fine, en particulier en ce qui concerne les traits quasiment horizontaux. Il est parfois utile de recoller de trop petits segments aux lettres voisines afin d'éviter qu'ils ne soient considérés comme des points.
+
+
+
+
+
+
+
+
+\subsection{Illustration et résultats}
+\label{image_illustration_resultat}
+
+
+			\begin{table}[t]
+			$$
+			\begin{array}{|c|c|c|c|} \hline
+			\text{paramètre} 	& 	\text{valeur} & \text{équation} & \text{page} \\ \hline
+			\beta 						& 	1,5 					&	(\ref{image_graphem_seg_eq_2}) 	
+																					& \pageref{image_graphem_seg_eq_2} \\ \hline
+			\tau_1 						& 	1   					&	(\ref{image_graphem_seg_eq_3}) 	
+																					& \pageref{image_graphem_seg_eq_3}	\\ \hline
+			\tau_2						& 	1   					&	(\ref{image_graphem_seg_eq_3}) 	
+																					& \pageref{image_graphem_seg_eq_3}	\\ \hline
+			\tau_3						& 	0,2  					&	(\ref{image_graphem_seg_eq_3}) 	
+																					& \pageref{image_graphem_seg_eq_3}	\\ \hline
+			\tau_4						& 	0,3 					&	(\ref{image_graphem_seg_eq_3}) 	
+																					& \pageref{image_graphem_seg_eq_3}	\\ \hline
+			\tau_5						& 	1   					&	(\ref{image_graphem_reservoir_1}) 
+																					& \pageref{image_graphem_reservoir_1}	\\ \hline
+			\lambda_1 				& 	1   					&	(\ref{image_graphem_seg_eq_4}) 	
+																					& \pageref{image_graphem_seg_eq_4}	\\ \hline
+			\lambda_2					& 	1000 					&	(\ref{image_graphem_seg_eq_4}) 	
+																					& \pageref{image_graphem_seg_eq_4}	\\ \hline
+			\lambda_3					& 	1   					&	(\ref{image_graphem_seg_eq_4}) 	
+																					& \pageref{image_graphem_seg_eq_4}	\\ \hline
+			\lambda_4					& 	1   					&	(\ref{image_graphem_seg_eq_4}) 	
+																					& \pageref{image_graphem_seg_eq_4}	\\ \hline
+			\lambda_5	  			& 	0,1  					&	(\ref{image_graphem_seg_eq_4}) 	
+																					& \pageref{image_graphem_seg_eq_4}	\\ \hline
+			\eta_1	  				& 	1  	  				&	(\ref{image_valley_eta}) 				
+																					& \pageref{image_valley_eta}	\\ \hline
+			\eta_2	  				& 	0,5  					&	(\ref{image_valley_eta}) 				
+																					& \pageref{image_valley_eta}	\\ \hline
+			\mu	      				& 	5    					&	(\ref{image_graphem_reservoir_2}) 
+																					& \pageref{image_graphem_reservoir_2}	\\ \hline
+			\zeta_1   				& 	1    					&	(\ref{image_segmentation_connexe_graphem}) 
+																					& \pageref{image_segmentation_connexe_graphem}	\\ \hline
+			\zeta_2    				& 	1    					&	(\ref{image_segmentation_connexe_graphem}) 
+																					& \pageref{image_segmentation_connexe_graphem}	\\ \hline
+			\end{array}
+			$$
+			\caption{	Liste des paramètres et valeurs utilisés pour la segmentation
+								d'un mot en graphèmes, ces paramètres sont ajustés manuellement à la vue des résultats
+								obtenus sur quelques images prises 
+								au hasard dans une large base de données ou sélectionnées de manière automatique
+								en assimilant les graphèmes mal segmentés à des graphèmes peu probables 
+								(voir paragraphe~\ref{reco_densite_valeur_aberrante}, page~\pageref{reco_densite_valeur_aberrante}).}
+			\label{image_graphem_segmentation_parametre}
+			\indexfrr{graphème}{paramètre}
+			\end{table}
+			
+											
+			\begin{figure}[t]
+	    $$\begin{tabular}{|c|c|c|} \hline
+	    \includegraphics[height=2cm, width=6cm]{\filext{../image/image/finalgrm1}} &
+	    \includegraphics[height=2cm, width=4cm]{\filext{../image/image/finalgrm2}} &
+	    \includegraphics[height=2cm, width=6cm]{\filext{../image/image/finalgrm3}} \\
+	    \textit{(a)} & \textit{(b)} & \textit{(c)} \\ \hline
+	    \includegraphics[height=2cm, width=5cm]{\filext{../image/image/finalgrm4}} & &
+	    \includegraphics[height=2cm, width=5cm]{\filext{../image/image/finalgrm5}}  \\ 
+	    \textit{(d)} & & \textit{(e)}  \\ \hline
+	    \end{tabular}$$
+	    \caption{	Résultat final de la segmentation graphème. Les valeurs des paramètres utilisées
+	    					pour cet exemple sont données par le tableau~\ref{image_graphem_segmentation_parametre}.
+	    					Il reste encore des erreurs. Le seul accent segmenté comme tel est celui de l'image "Lahsène".
+	    				}
+	    \label{image_graphem_resultat}
+			\end{figure}
+
+
+La figure~\ref{image_graphem_resultat} présente quelques résultats de cette segmentation obtenue pour les paramètres de la table~\ref{image_graphem_segmentation_parametre} qui ont aussi servi à produire les illustrations intermédiaires. Il subsiste encore des erreurs. L'expérience montre qu'il est impossible d'ajuster les paramètres afin de les faire disparaître sans générer des erreurs sur d'autres documents.
+
+Afin d'évaluer la pertinence d'un traitement dissocié des accents, l'expérience suivante anticipe celle du paragraphe~\ref{reco_reco_knn_sequence}\footnote{Le paragraphe~\ref{reco_reco_knn_sequence} (page~\pageref{reco_reco_knn_sequence}) précise la source des données ainsi que la manière dont ont été constituées les bases d'apprentissage et de test.}. Elle consiste à comparer les résultats d'une reconnaissance mot, réalisée avec une méthode des plus proches voisins, effectuée sur des images non segmentées dans un premier temps et segmentées en graphèmes dans un second temps. La table~\ref{image_kppv_word_recognition} reprend ces résultats.
+
+
+
+				\begin{table}[ht]
+				$$\begin{tabular}{|l|l|l|c|}  \hline
+					base & expérience															&			jeu 									&     
+														\begin{minipage}[l]{2.5cm}taux de reconnaissance \smallskip \end{minipage}	\\ \hline \hline
+					% ------------------------------------------------------
+					&	non segmentée														& $Mat\pa{10,5}$				  	&   68,20 \%		  \\ 
+					&	non segmentée														& $Mat\pa{20,10}$				  	&   69,45 \%		  \\ 
+		ICDAR
+					&	segmentée	(accents inclus)				    	& $Mat\pa{5,5}$							&		52,12 \%		  \\  
+					&	segmentée	(accents séparés)							& $Mat\pa{5,5}$             &		52,06 \%		  \\  
+					&	segmentée	(accents séparés + dist)			& $Mat\pa{5,5}$						  &		52,07 \%		  \\  \hline \hline
+					% ------------------------------------------------------
+					&	non segmentée														& $Mat\pa{10,5}$				  	&   48,16 \%		  \\ 
+		prénoms
+					&	non segmentée														& $Mat\pa{20,10}$				  	&   57,59 \%		  \\ 
+		français
+					&	segmentée	(accents inclus)				    	& $Mat\pa{5,5}$							&		40,21 \%		  \\  
+					&	segmentée	(accents séparés)							& $Mat\pa{5,5}$             &		42,04 \%		  \\  
+					&	segmentée	(accents séparés + dist)			& $Mat\pa{5,5}$						  &		41,96 \%		  \\  
+					% ------------------------------------------------------
+					\hline \end{tabular}$$
+				\caption{	Taux de reconnaissance pour une reconnaissance de mot à l'aide de plus proches voisins.
+									Les bases d'apprentissage et de tests contiennent chacune 15000 mots anglais cursifs
+									appartenant à un vocabulaire de 116 mots différents pour la base ICDAR. Elles contiennent 
+									également 15000 prénoms français cursifs parmi une liste de 157 
+									pour la base des prénoms français dont 13,3\% contiennent des accents. 
+									Les bases d'apprentissage et de test contiennent chacune au moins plus de 100 
+									occurrences d'un mot pour
+									la base ICDAR et au moins plus de 50 occurrences pour la base des prénoms français.
+									Chaque exemple de la base d'apprentissage
+									est classé selon les plus proches voisins dans la base d'apprentissage. Ces voisins 
+									sont recherchés à partir d'une distance calculée sur l'image non segmentée ou segmentée.}
+				\label{image_kppv_word_recognition}
+				\end{table}
+
+\indexfrr{dictionnaire}{dynamique}
+\indexfrr{dictionnaire}{statique}
+
+
+L'expérience utilise le jeu de caractéristiques $Mat$ décrit au paragraphe paragraphe~\ref{reco_graphem_matrice} car ils sont aussi pertinents sur l'image d'un mot que sur l'image d'un graphème. Tout d'abord, le tableau~\ref{image_kppv_word_recognition} montre que la segmentation fait décroître les performances obtenues pour cette expérience de reconnaissance avec dictionnaire statique, à la fois pour une base d'images de mots anglais et une base d'images de prénoms français. La segmentation peut donc être perçue comme une perte d'information néanmoins nécessaire dans le cas des vocabulaires dynamiques pour lesquels on ne dispose pas d'exemple pour chacun des mots qu'ils contiennent.
+
+Le second résultat concerne trois types de traitements des accents. La première segmentation en graphèmes ne sépare pas les accents comme il est décrit au paragraphe~\ref{image_segmentation_connexe_graphem}. Le second traitement enlève les accents de la séquence de graphèmes. La troisième option inclut dans la séquence de caractéristiques liées aux graphèmes des caractéristiques décrivant les accents selon le mécanisme décrit au paragraphe~\ref{reco_sel_feat_acc}. Ces trois traitements aboutissent à des performances similaires sur des bases de mots anglais qui ne contiennent comme accents que des points (sur les lettres "i" et "j"). En revanche, pour une base de prénoms français, le traitement dissocié des accents permet d'accroître légèrement les performances. Toutefois, tenir compte des accents au niveau des caractéristiques ou les oublier ne semble pas faire de différence.
+
+Ces expériences montrent que le traitement des accents n'apporte rien lorsque la langue elle-même n'en contient pas mais il n'altère rien non plus. Pour une langue incluant des accents, il apparaît préférable d'en tenir compte, soit de les nettoyer dans les images où ils apparaissent, soit de les inclure dans les caractéristiques. Les résultats obtenus ne permettent pas de déterminer si une méthode est préférable à une autre. Il reste qu'un traitement dissocié des accents n'est justifié que par leur importance dans la langue étudiée.
+
+
+
+
+
+
+
+
+
+
+\subsection{Prolongements}
+\label{image_prolongement_segmentation_grapheme}
+
+La segmentation en graphèmes proposée ici utilise un grand nombre de seuils de décision (var table~\ref{image_graphem_segmentation_parametre}) que l'expérience permet d'ajuster. Au final, le résultat est obtenu après l'application successive d'algorithmes variés de segmentation ou de regroupement. La méthode présentée dans les articles \citeindex{Desolneux2000}, \citeindex{Desolneux2002}, \citeindex{Desolneux2003} (également abordée au paragraphe~\ref{image_nettoyage_desolneux}) offre une direction de recherche intéressante. Plutôt que de varier les algorithmes, il serait possible de n'utiliser qu'une seule méthode dédiée à la détection de différentes formes géométriques simples telles que les boucles, les ascendants et descendants, les liaisons et autres formes récurrentes de l'écriture. La segmentation s'appuierait sur les frontières des formes détectées. Une telle méthode aurait également l'avantage de ne pas utiliser la connexité entre pixels.
+
+\indexfrr{segmentation}{apprentissage}
+\indexfrr{segmentation}{graphème}
+
+Cette segmentation apparaît comme une multitude de petites recettes appliquées les unes à la suite des autres afin de corriger les imperfections des couches précédentes. Cette première étape, même imparfaite, est néanmoins nécessaire afin de construire une première version des modèles de reconnaissance. Il n'existe pas de définition précise de ce qu'est un graphème mais ce premier jeu de modèles de reconnaissance permet d'extraire les segmentations qui ont participé à une bonne reconnaissance. Il serait possible alors de construire une segmentation en graphèmes apprise à partir de ces bons exemples. La conception d'un tel algorithme est une autre direction de recherche possible pour la poursuite de ces travaux.
+
+\indexfrr{directions de recherche}{segmentation graphème apprise}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%-------------------------------------------------------------------------------------------------------------
+\section{Segmentation en mots}
+%-------------------------------------------------------------------------------------------------------------
+\indexfrr{segmentation}{mot}
+\indexfr{histogramme}
+
+
+Il est possible de segmenter en mots avant ou après la segmentation en graphèmes. Dans le premier cas, la segmentation est semblable à un découpage en lignes et utilise des projections de l'image selon une direction verticale. Seuls les seuils sont différents. Dans le cas d'une segmentation en mots s'appuyant sur celle en graphèmes, il s'agit de déterminer les graphèmes consécutifs qui appartiennent à deux mots différents.
+
+\indexfr{réseau de neurones}
+
+S'il existe des bases de données contenant des images de lignes déjà segmentées en mots, la seconde méthode utilisant les graphèmes est mieux adaptée. Par exemple, la figure~\ref{image_graphe_noel} contient 17 graphèmes, soit au plus seize coupures entre deux mots. Le principe consiste à affecter à chacune de ces coupures une probabilité de séparer deux mots, celle-ci est apprise à partir de la base de données et dépend de paramètres tels que la distance entre les deux graphèmes qui l'entourent, leurs tailles, leurs formes... S'il y a $N$ graphèmes, on obtient $N-1$ probabilités de césure $\vecteur{p_1}{p_{N-1}}$. A chaque point de césure, on associe la variable aléatoire $Y_i \in \acc{0,1}$ vérifiant $\pr{Y_i = 1} = p_i$. Une segmentation en mots est alors complètement décrite par la donnée de $\vecteur{Y_1}{Y_{N-1}}$. Comme ces variables aléatoires sont indépendantes, la probabilité associée à cette segmentation est~:
+
+			\begin{eqnarray}
+			\pr{\vecteurno{Y_1}{Y_{N-1}}} &=& \prody{i=1}{N-1} \; p_i\pa{\theta}^{Y_i} \, \pa{1-p_i\pa{\theta}}^{1-Y_i}
+			\label{image_vraisemblance_seg_mot}
+			\end{eqnarray}
+
+\indexfr{réseau de neurones}
+
+Chaque $p_i\pa{\theta}$ est fonction à valeur dans $\cro{0,1}$ et qui dépend de caractéristiques $\theta$ extraites de l'image. Cette fonction peut être par exemple un réseau de neurones\seeannex{annexe_reseau_neurone}{réseau de neurones} estimé en maximisant la vraisemblance~(\ref{image_vraisemblance_seg_mot}) par rapport à $\theta$ sur une base d'images pour laquelle les valeurs $\pa{Y_i}_i$ sont connues. Une fois cette fonction apprise, cette écriture permet de trouver la segmentation en mots la plus probable. Il est également parfois utile de conserver les segmentations les plus probables lorsque l'écriture à découper est ambiguë.
+
+
+
+
+
+
+
+
+
+%--------------------------------------------------------------------------------------------------------------
+\section{Post-traitement des graphèmes}
+%--------------------------------------------------------------------------------------------------------------
+
+
+Avant de pouvoir reconnaître un graphème ou un caractère, il faut décrire son image à l'aide de caractéristiques qui sont généralement un vecteur de $\R^n$ où $n$ est le nombre de caractéristiques (voir paragraphe~\ref{reco_description_grapheme}, page~\pageref{reco_description_grapheme}). Les graphèmes sont parfois très bruités et ce bruit se répercute sur la qualité de leur description. Diminuer l'importance de ce bruit peut améliorer les performances de reconnaissance (voir paragraphe~\ref{reco_restauration_image_graheme}). Ces graphèmes peuvent également inclure plusieurs composantes connexes qui nuisent à certaines extractions de caractéristiques basées sur le contour de la forme (voir paragraphe~\ref{reco_connexion_composante_connexe}).
+
+
+
+
+
+
+
+
+
+\subsection{Restauration de l'image des graphèmes}
+\label{reco_restauration_image_graheme}
+\indexfrr{graphème}{restauration}
+\indexfrr{restauration}{graphème}
+\indexfrr{restauration}{caractère}
+
+
+\indexfr{contour}
+\indexfrr{caractère}{bruité}
+\indexfr{squelette}
+
+Les caractères manuscrits sont parfois mal scannérisés, la binarisation de l'image aboutit parfois à des caractères bruités qu'il est préférable de restaurer. L'article \citeindex{Whichello1996} se penche sur un bruit diffus qui se manifeste par la dissémination de pixels blancs à travers le caractère à reconnaître (voir figure~\ref{image_restauration_mbruit}). La squelettisation et en particulier l'extraction de contour d'une telle forme est impossible et mène souvent à myriade de petits morceaux proches les uns des autres. La restauration proposée dans \citeindex{Whichello1996} s'intéresse à l'extraction du contour de la forme bruitée. 
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|} \hline
+	    \includegraphics[height=1cm, width=1.5cm]{\filext{../image/image/mbruit}}
+	    \\ \hline  \end{tabular}$$
+	    \caption{	Lettre "m" bruitée, la binarisation a conservé environ un pixel noir sur deux.}
+	    \label{image_restauration_mbruit}
+			\end{figure}
+
+\indexfr{composante connexe}
+\indexfr{masque}
+
+La méthode s'appuie sur des masques dits $\pa{N,M}$, à partir d'un pixel du contour, on cherche le pixel suivant de ce contour non plus sur un voisinage $\pa{3,3}$ comme c'est le cas pour une composante connexe mais sur un voisinage $\pa{N,M}$. La table~\ref{image_restauration_mbruit_masque} illustre les masques $\pa{1,1}$ et $\pa{3,3}$. En partant d'un premier pixel, le pixel suivant est alors le pixel noir dont le numéro est le plus faible. Le masque est ensuite tourné selon la direction du déplacement précédemment trouvé.
+
+			\begin{table}[ht]
+			$$ \begin{tabular}{ccc}
+				\begin{tabular}{|c|c|c|} \hline
+				4	&	3	& 2 \\ \hline
+				5	&	0	& 1 \\ \hline
+				6	&	7	& 8 \\ \hline
+				\end{tabular}
+				& &
+				\begin{tabular}{|c|c|c|c|c|c|c|} \hline
+				19	& 18	& 16	& 13	& 12	& 10	& 7		\\ \hline
+				22	& 20	& 17	& 14	& 11	& 8		& 6		\\ \hline
+				24	& 23	& 21	& 15 	& 9		& 5		& 4		\\ \hline
+				25	& 26	& 27	& 0		& 3		& 2		& 1		\\ \hline
+				28	& 29	& 33	& 39	& 45	& 47	& 48	\\ \hline
+				30	& 32	& 35	& 38	& 41	& 44	& 46	\\ \hline
+				31	& 34	& 36	& 37	& 40	& 42	& 43	\\ \hline
+				\end{tabular} \\ 
+				masque $\pa{1,1}$ & & masque $\pa{3,3}$  
+				\end{tabular} $$
+	    	\caption{	Masques de différentes tailles pour la recherche du contour, les cases sont numérotées par 
+	    						angle croissant et par distance au centre décroissante. Les autres masques sont obtenus en effectuant
+	    						des rotations des positions.}
+	    	\label{image_restauration_mbruit_masque}
+	    	\end{table}
+				
+
+\indexfr{composante connexe}
+\indexfr{squelette}
+
+L'article \citeindex{Wang1999} s'attaque à un autre type de détérioration des caractères. La connexité peut être brisée lorsque le caractère dépasse du cadre de l'image ou qu'une partie est escamotée après une binarisation trop rugueuse (voir figure~\ref{image_restauration_mbruitwang}a). L'algorithme suppose que l'image ne contient qu'une seule composante connexe et cherche à recoller les morceaux si elle en contient plus d'un. Les extrémités du squelette sont prolongées afin d'atteindre une autre composante connexe. Le prolongement est cependant contraint par la courbure du squelette à ses extrémités.
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|c|} \hline
+	    \includegraphics[height=4cm, width=4cm]{\filext{../image/image/cutwang}} &
+	    \includegraphics[height=2cm, width=2cm]{\filext{../image/image/cutwang2}} \\
+	    $(a)$ & $(b)$ 
+	    \\ \hline  \end{tabular}$$
+	    \caption{	Figure extraite de \citeindexfig{Wang1999}, les deux chiffres sont incomplets. Les extremités
+	    					du squelette sont alors prolongées. La figure $b$ illustre le coût d'un changement de direction par
+	    					rapport à une direction verticale.}
+	    \label{image_restauration_mbruitwang}
+			\end{figure}
+
+La figure~\ref{image_restauration_mbruitwang}b permet d'illustrer le coût d'un changement de direction lors du prolongement. A chaque pixel est tout d'abord associée une distance nulle s'il est une extrémité du squelette, infinie dans le cas contraire et un vecteur tangente tenant compte de l'orientation du squelette à son extremité. Cette information est propagée par l'intermédiaire d'une carte de distance\seeannex{ske_carte_distance_sec}{carte de distance} utilisant un masque calculé à partir du schéma~\ref{image_restauration_mbruitwang}b. Les liaisons les moins coûteuses sont conservées de manière à ne former plus qu'une seule composante connexe. Une fois le squelette reconstitué, ce dernier est enrobé d'une épaisseur de pixels conforme à celle du reste de la figure.
+
+\indexfr{ondelettes}
+
+L'article \citeindex{Hwang1998} s'intéresse aux documents imprimés dont les caractères apparaissent en traits trop gras. Les boucles caractères ne sont décelables, noyées par l'épaisseur des traits. Les auteurs utilisent une méthode fondée sur des ondelettes, ces dernières permettant de détecter la présence de segments rectilignes dans une image en niveaux de gris. Cette détection terminée, leur configuration permet de supposer la présence de boucles et ainsi de binariser l'image sans commettre trop d'erreurs (voir figure~\ref{image_restauration_hwang}).
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|c|c|} \hline
+	    \includegraphics[height=3cm, width=3cm]{\filext{../image/image/hawang1}} &
+	    \includegraphics[height=3cm, width=3cm]{\filext{../image/image/hawang2}} &
+	    \includegraphics[height=3cm, width=3cm]{\filext{../image/image/hawang3}} 
+	    \\ \hline  \end{tabular}$$
+	    \caption{	Figure extraite de \citeindexfig{Hwang1998}, la première image est l'image originale tandis
+	    					que la seconde est le résultat du traitement proposé dans \citeindexfig{Hwang1998}. Cette 
+	    					binarisation est difficilement accessible aux méthodes reposant sur les simples
+	    					histogrammes représentant la densité des niveaux de gris (troisième image).
+	    				}
+	    \label{image_restauration_hwang}
+			\end{figure}
+
+
+
+
+
+La figure~\ref{image_restauration_o}a montre le dessin d'une lettre "o" partiellement escamotée par la scannerisation. L'\oe il humain peut facilement reconnaître la lettre "o" même si elle est composée de deux morceaux. Toutefois, la figure~\ref{image_restauration_o}b montre un exemple où il est parfois impossible d'effectuer cette restauration sans avoir connaissance du contexte.
+
+
+			\begin{figure}[ht]
+	    $$\begin{array}{|c|c|c|} \hline
+	    \includegraphics[height=2cm, width=5cm]{\filext{../image/image/restaure}} &
+	    \includegraphics[height=2cm, width=2.5cm]{\filext{../image/image/restaure_au}} &
+	    \includegraphics[height=2cm, width=2cm]{\filext{../image/image/restm}} \\
+	    $(a)$ & $(b)$ & $(c)$ \\ \hline
+	    \end{array}$$
+	    \caption{	Restauration souhaitée de l'image d'une lettre "o" et restauration ambiguë d'une lettre 
+	    					qui pourrait être soit~"a" soit~"u". L'image~(c) montre le résultat obtenu pour une lettre~$M$
+	    					et une valeur de $\alpha$ négligeable (voir expression~\ref{image_restauration_equation}). 
+	    					La perte de connexité a été corrigée en altérant toutefois le reste de l'image. De petits ergots 
+	    					se sont accrochés sur la partie supérieure de la lettre de façon à créer artificiellement
+	    					des lignes à trois transitions comme c'est habituellement le cas pour une lettre~"M".}
+	    \label{image_restauration_o}
+			\end{figure}
+
+
+A partir d'une classification non supervisée des graphèmes obtenue grâce à un jeu de caractéristiques tels que ceux présentés aux paragraphes~\ref{reco_graphem_matrice} ou~\ref{reco_graphem_histo}, il est possible de déterminer des formes litigieuses, pour lesquelles la classification est ambiguë. Plutôt que de laisser ce doute, la reconnaissance pourrait être améliorée si l'image de départ était modifiée de façon à se rapprocher de l'une des classes avoisinant ce graphème.
+
+Soit $v\pa{G}$ un vecteur de caractéristiques attaché à un graphème~$G$ et~$v\pa{H}$ le vecteur attaché au graphème~$H$ qui est un exemple représentatif d'une classe quelconque, est-il possible de trouver une forme $G'$ obtenue par une transformation $f$ de coût $c_f$ telle que~:
+
+		$$
+		d\pa{v\pa{G'},v\pa{H}} + c_f \infegal d\pa{v\pa{G},v\pa{H}} 
+		$$
+
+\indexfrr{carte}{distance}
+
+$G$ est une image dont il est possible d'extraire le contour. A partir de celui-ci, on construit une carte de distance $D_G$ selon la méthode utilisée en annexe\seeannex{ske_def_cart_dist_def}{carte de distance}, cette carte contient pour chaque pixel la distance au pixel noir le plus proche. Pour $\alpha > 0$, la forme $G^*_\alpha$ restaurée est celle qui permet d'atteindre le minimum suivant $G^*_\alpha$~:
+
+		\begin{eqnarray}
+		G^*_\alpha \in \underset{G'}{\arg \min} \cro{ d\pa{v\pa{G'},v\pa{H}} + 
+							\alpha \; \summyone{x,y} \; \abs{G'\pa{x,y} - G\pa{x,y}} \; D_G\pa{x,y} }
+							\label{image_restauration_equation}
+		\end{eqnarray}
+
+Les différences entre $G^*_\alpha$ et $G$ sont pondérées par leur éloignement par rapport au contour de la forme initiale. Il reste à ajuster $\alpha$ de telle sorte que la restauration ne soit pas trop éloignée de la forme d'origine ni trop discrète. Le meilleur moyen de mesurer l'apport d'une telle méthode est de comparer les performances en reconnaissance entre l'image non restaurée et l'image restaurée. Il est également possible de changer l'équation (\ref{image_restauration_equation}) en~(\ref{image_restauration_equation_2})~:
+
+		\begin{eqnarray}
+		G^*_\alpha &\in& \underset{G'}{\arg \min} \cro{ f\pa{v\pa{G'}} + 
+							\alpha \; \summyone{x,y} \; \abs{G'\pa{x,y} - G\pa{x,y}} \; D_G\pa{x,y} } 
+							\label{image_restauration_equation_2} \\
+		&& \text{ avec } f\pa{v\pa{G'}} \text{ densité du vecteur } v\pa{G'} 
+								\text{ (voir paragraphe~\ref{reco_densite_valeur_aberrante})} \nonumber
+		\end{eqnarray}
+
+
+\indexfr{homotope}
+
+En supposant raisonnablement que la forme $G^*$ doit rester homotope\seeannex{annexe_squelettisation}{squelettisation} à $G$, il est possible de réduire la complexité lors de la recherche du minimum des équations (\ref{image_restauration_equation}) et (\ref{image_restauration_equation_2}) en classant les pixels par ordre croissant de distance $D_G\pa{x,y}$. Ceci aboutit à l'algorithme approché suivant~:
+
+			\begin{xalgorithm}{restauration}
+			Soient $G$ et $H$ deux graphèmes, l'objectif est de restaurer $G$ en prenant $H$ comme modèle. 
+			Soit $\alpha > 0$.
+			La carte de distance $D_G\pa{x,y}$ est construite à partir de l'image du contour en utilisant
+			l'algorithme~\ref{ske_algo_cart_dist}. On suppose également que $\vecteur{p_1}{p_n}$ est une suite 
+			de pixels vérifiant~:
+			
+					$$
+					\begin{array}{rl}
+					\forall i, 				& G\pa{p_i} \neq H\pa{p_i} \\
+					\forall \pa{i,j}, &  i \infegal j \Longrightarrow D_G\pa{p_i} \infegal D_G\pa{p_j}
+					\end{array}
+					$$
+			
+			
+			\begin{xalgostep}{initialisation}
+			$\begin{array}{lll}
+			G' &\longleftarrow& G \\
+			m  &\longleftarrow& d\pa{v\pa{G},v\pa{H}}
+			\end{array}$
+			\end{xalgostep}
+			
+			\begin{xalgostep}{restauration}
+			\begin{xfor}{i}{1}{n}
+			$\begin{array}{lll}
+			G^t 				&\longleftarrow& G' \\
+			G^t\pa{p_i} &\longleftarrow& H\pa{p_i} \\
+			m^t					&\longleftarrow& d\pa{v\pa{G^t},v\pa{H}} + \alpha D_G\pa{p_i}
+			\end{array}$ \\
+			\begin{xif}{$m^t < m$}
+			$\begin{array}{lll}
+			G' &\longleftarrow& G^t \\
+			m  &\longleftarrow& m^t
+			\end{array}$
+			\end{xif}
+			\end{xfor}
+			\end{xalgostep}
+			
+			\end{xalgorithm}
+		
+
+		
+\indexfr{caractéristiques}		
+\indexfrr{classification}{non supervisée}
+		
+		
+Pour tester cet algorithme de restauration, la méthode utilisée s'inspire de celle permettant de sélectionner le meilleur jeu de caractéristiques (voir paragraphe~\ref{reco_selection_caracteristique}, page~\pageref{reco_selection_caracteristique}). Un premier jeu de caractéristiques est choisi de manière à effectuer une classification non supervisée dont le nombre de classes est choisi d'après le critère de Davies-Bouldin\seeannex{classification_selection_nb_classe_bouldin}{Davies-Bouldin}. Un second jeu de caractéristiques est choisi de manière à effectuer une classification par la méthodes des plus proches voisins. Quatre tests sont effectués~:
+
+			\begin{enumerate}
+			\item Le premier test sert de repère~: un caractère non restauré de la base de test est classé 
+						par rapport à ses voisins non restaurés dans la base d'apprentissage. Ce test est nommé $App \, Test$.
+			\item Le second test est un compromis~: un caractère non restauré de la base de test est classé 
+						par rapport à ses voisins restaurés dans la base d'apprentissage. Ce test est nommé $App^r \, Test$.
+			\item Le troisième test est un autre compromis~: un caractère restauré de la base de test est classé 
+						par rapport à ses voisins non restaurés dans la base d'apprentissage. Ce test est nommé $App \, Test^r$.
+			\item Le dernier test~: un caractère restauré de la base de test est classé 
+						par rapport à ses voisins restaurés dans la base d'apprentissage. Ce test est nommé $App^r \, Test^r$.
+			\end{enumerate}
+			
+			
+
+\indexfrr{test}{$App \, Test$}
+\indexfrr{test}{$App^r \, Test$}
+\indexfrr{test}{$App \, Test^r$}
+\indexfrr{test}{$App^r \, Test^r$}
+
+			\begin{table}[ht]
+			$$\begin{tabular}{|c|c|c|cccc|} \hline
+									   & nombre de &                       &            &              &              &                \\
+			$1^{er}$ jeu   & classes   &	$2^{\text{ème}}$ jeu & $App \, Test$	& $App^r \, Test$ & 
+																												$App \, Test^r$	& $App^r \, Test^r$ \\ \hline
+			$Prof\pa{5,5}$ &  8    &  $Prof\pa{5,5}$  & 90,88 \% &	87,84 \%	&	 	90,58 \% &	91,79  \%  	       \\ \hline
+			\end{tabular}$$
+			\caption{ Résultats obtenus concernant la restauration d'images 
+							  (la désignation du jeu de caractéristiques reprend celle de la figure~\ref{reco_carac_distance_assoc}, 
+							  page~\pageref{reco_carac_distance_assoc}) pour les quatre tests 
+							  $App \, Test$, $App^r \, Test$, $App \, Test^r$, $App^r \, Test^r$. Ces résultats ont été obtenus
+							  avec environ 2000~images dans les bases d'apprentissage et de test et quatre classes de caractères, 
+							  "M", "N", "U", "V".}
+			\label{image_restau_test_app_test_feat}
+			\end{table}
+	
+		
+Pour chaque test, le taux de reconnaissance est estimé, les résultats de ces quatre tests sont résumés dans la table~\ref{image_restau_test_app_test_feat}. Etant donné les temps de traitements, ces résultats ont été obtenus sur de petites bases d'apprentissage et de test (2000~images chacune) et quatre classes de caractères à identifier. Les résultats sont meilleurs que pour une reconnaissance ne prenant pas en compte la restauration. Afin d'expliquer ce gain, on dénombre dans chacune des deux bases d'apprentissage restaurée et non restaurée le nombre d'images pour lesquelles les $k$ plus proches voisins appartiennent à la même classe (voir table~\ref{image_reco_kppv_restauration}). Cette proportion décroît avec $k$ mais reste toujours supérieure pour la base d'images restaurées, la restauration des images sépare mieux les classes.
+
+\indexfr{kPPV}
+\indexfr{k plus proche voisins}
+
+						\begin{table}[ht]
+						$$\begin{tabular}{|c|cccc|}\hline 
+						$k$									& 1				& 2				& 3				& 4  		\\  \hline
+						base non restaurée	& 91,3\%	& 88,2\%	& 85,2\%	& 81,7\% \\
+						base restaurée			& 93,9\%	& 91,7\%	& 89,1\%	& 88,2\% \\ \hline
+						\end{tabular}$$
+						\caption{ Nombre d'images dont les $k$ plus proches voisins appartiennent à la même classe. 
+										  Cette proportion décroît avec $k$ mais reste toujours supérieure pour la base d'images
+										  restaurées.}
+						\label{image_reco_kppv_restauration}
+						\end{table}
+						
+						
+
+						
+						
+						
+						
+
+
+
+\subsection{Connexion de plusieurs composantes connexes}
+\label{reco_connexion_composante_connexe}
+
+\indexfr{abscisse curviligne}
+\indexfr{composante connexe}
+\indexfr{centre de gravité}
+\indexfr{contour}
+\indexfrr{recollement}{composante connexe}
+
+Certaines descriptions de graphèmes utilisent des caractéristiques extraites à partir du contour de l'image. Le contour est alors considéré comme une fonction continue~: $f : s \in \cro{0,1} \rightarrow \R$ où $s$ est l'abscisse curviligne. Dans le cas des caractéristiques décrites aux paragraphes~\ref{reco_profil_polair} et~\ref{reco_feature_fourier_contour} (pages~\pageref{reco_profil_polair} et~\pageref{reco_feature_fourier_contour}), la fonction $f$ est la distance du point du contour dont l'abscisse curviligne est $s$, au centre de gravité de l'image. Cette méthode n'est pas applicable dans le cas où l'image contient plusieurs composantes connexes. Il devient nécessaire de les relier entre elles afin d'extraire un seul contour. Le paragraphe~\ref{reco_restauration_image_graheme} mentionne l'article \citeindex{Wang1999} qui recolle les morceaux d'une lettre, la méthode utilisée ici est plus simple mais peut être considérée comme un cas particulier.
+
+
+\indexfrr{carte}{distance}
+
+L'idée développée ici s'inspire en partie des travaux de \citeindex{Wang1999}. Une carte des distances\seeannex{ske_carte_distance_sec}{carte de distance} est d'abord extraite de l'image $I$. A chaque pixel $\pa{x,y}$ sont alors associées deux informations~:
+
+				$$\begin{tabular}{ll}
+				$pix_I\pa{x,y}$ 	& est le pixel noir le plus proche du pixel $\pa{x,y}$ \\
+				$dist_I\pa{x,y} = d\pa{\pa{x,y}, \; pix_I\pa{x,y}}$  & 
+														est la distance du pixel $\pa{x,y}$ au pixel noir le plus proche 
+				\end{tabular}$$
+				
+L'objectif consiste à relier deux composantes connexes différentes par une ligne. Ces lignes doivent être les plus courtes possible afin de ne pas trop altérer l'image originale. Par conséquent, on cherche d'abord les pixels voisins dont les prédécesseurs appartiennent à des composantes connexes différentes. Les lignes qui doivent les relier passent nécessairement pas ces points situés à mi-chemin entre deux composantes connexes, il suffit alors de sélectionner ceux pour lesquels la distance $dist_I\pa{x,y}$ est la plus courte. Ceci débouche sur l'algorithme suivant~:
+
+
+			\begin{xalgorithm}{connexion de composantes connexes}
+			Les notations sont celles utilisées dans ce paragraphe, à chaque pixel de l'image $I$ est associé le pixel
+			$pix_I\pa{x,y}$ défini plus haut. On suppose également que $C\pa{x,y}$ est l'indice de la composante 
+			connexe à laquelle appartient le pixel $\pa{x,y}$. On désigne le voisinage d'un pixel $\pa{x,y}$
+			par l'ensemble~:
+					
+					$$
+					V\pa{x,y} = \acc{ \pa{x',y'} \sac \pa{x',y'} \neq \pa{x,y}, \; \abs{x'-x} \infegal 1, 
+																\; \abs{y'-y} \infegal 1 }
+					$$
+
+			\begin{xalgostep}{tri de l'ensemble $F$}
+			$F \longleftarrow \emptyset$ \\
+			\begin{xforeach}{\pa{x,y}}{I}
+				\begin{xforeach}{\pa{x',y'}}{V\pa{x,y}}				
+					\begin{xif}{$C\pa{pix_I\pa{x,y}} \neq C\pa{pix_I\pa{x',y'}}$}
+							$F \longleftarrow F \cup \acc{ \pa{x,y} }$
+					\end{xif}
+				\end{xforeach}
+			\end{xforeach}
+			\end{xalgostep}
+
+			\begin{xalgostep}{connexion des composantes connexes}
+			L'ensemble $F$ est trié, on note $F = \vecteur{p_1}{p_M}$, il vérifie~:
+					$$
+							\forall i, \; dist_I\pa{p_i} \infegal dist_I\pa{p_{i+1}}
+					$$
+			\end{xalgostep}
+			
+			%\possiblecut
+			
+			\begin{xalgostep}{choix des pixels sur les frontières}
+					$c \longleftarrow $ le nombre de composantes connexes \\
+					$i \longleftarrow 1 $\\
+					\begin{xwhile}{$c > 1$}
+					   $c_1 \longleftarrow C\pa{pix_I\pa{p_i}}$ \\
+					   \begin{xif}{ il existe un voisin $q$ de $p_i$ tel que $C\pa{pix_I\pa{q}} \neq c_1$}
+						   	$c_2 \longleftarrow C\pa{pix_I\pa{q}}$ \\
+						   	On trace la ligne reliant les points $pix_I\pa{p_i}$ et $pix_I\pa{q}$. \\
+					   		$c \longleftarrow c-1$ \\
+					   		\begin{xforeach}{\pa{x,y}}{I}
+					   			\begin{xif}{$C\pa{x,y} = c_2$}
+					   				$C\pa{x,y} \longleftarrow c_1$ 
+					   			\end{xif}
+					   	  \end{xforeach}
+					   \end{xif} \\
+					   $i \longleftarrow i + 1$
+					\end{xwhile}
+			\end{xalgostep}
+			\end{xalgorithm}
+
+
+
+Un exemple est donné par la figure~\ref{image_connexion_composante_connexion_a}. La lettre $A$ est composée de cinq composantes connexes, chacune est reliée à la plus grande d'entre elles. Il est maintenant possible de n'extraire qu'un seul contour de cette image.
+
+
+
+			\begin{figure}[ht]
+	    $$\begin{array}{|c|c|} \hline
+	    \includegraphics[height=2cm, width=2cm]{\filext{../image/image/conal1}} &
+	    \includegraphics[height=2cm, width=2cm]{\filext{../image/image/conal2}} \\
+	    $(a)$ & $(b)$ \\ \hline
+	    \end{array}$$
+	    \caption{	Connexion de composantes connexes, la première image contient quatre composantes
+	    					connexes dont un pixel isolé. Après leur connexion, il n'en reste plus qu'une~:
+	    					toutes ont été reliées à la plus grande d'entre elles.}
+	    \label{image_connexion_composante_connexion_a}
+			\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%-------------------------------------------------------------------------------------------------------------
+\section{Conclusion}
+%-------------------------------------------------------------------------------------------------------------
+\label{image_conclusion}
+
+
+Disposant déjà d'une segmentation en graphèmes\footnote{Celle utilisée dans la thèse \citeindex{Augustin2001}.} fondée sur des heuristiques, l'objectif était d'inclure lors de cette étape une partie apprentissage. Cependant, les méthodes actuelles de segmentations d'image fondées sur des optimisations concernent l'extraction de régions ou la segmentation de textures. La première direction de recherche fut alors l'élaboration d'une segmentation dont les paramètres seraient appris en tenant compte notamment du voisinage des frontières. Mais l'idée développée n'a pas obtenu de résultats satisfaisants. 
+
+Ces travaux se sont ensuite orientés vers le problème des accents en langue française qui occasionnent souvent des erreurs de segmentation. A l'aide d'une segmentation en graphèmes inspirés d'algorithmes existants, des expériences ont alors montré qu'un traitement dissocié améliore légèrement les performances en reconnaissance et ne les détériore pas lorsque la langue de l'expérience ne contient pas d'accents. La dernière contribution concerne la restauration des graphèmes abordée ici d'un point de vue statistique, la méthode proposée est lente mais obtient des résultats attrayants à condition de réellement accélérer ce processus.
+
+De plus, cette partie s'est attachée à détailler les prétraitements permettant de décrire l'information contenue dans l'image sous une forme plus exploitable, une séquence de graphèmes, ceux-ci sont ensuite utilisés par les modèles de reconnaissance statistique. Ce processus permet donc de diviser le problème de la reconnaissance d'un paragraphe en une succession de reconnaissances de mots isolés. Il inclut les étapes suivantes~:
+		
+			\begin{enumerate}
+			\item extraction de la zone à reconnaître
+			\item binarisation
+			\item nettoyage (soulignement par exemple)
+			\item correction de l'inclinaison des lignes
+			\item segmentation en lignes
+			\item correction de l'inclinaison des lettres
+			\item segmentation en graphèmes
+			\item segmentation en mots
+			\end{enumerate}
+
+
+La suite concerne la modélisation probabiliste des séquences de graphèmes au travers de modèles de Markov cachés.
+
+
+
+
+
+
+
+
+
+
+\newpage
+
+\firstpassagedo{
+	\begin{thebibliography}{99}
+	\input{image_article.tex}
+	\end{thebibliography}
+}
+
+
+
+\input{../../common/livre_table_end.tex}%
+\input{../../common/livre_end.tex}%

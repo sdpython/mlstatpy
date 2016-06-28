@@ -20,10 +20,11 @@ sys.path.insert(
             "pyquickhelper",
             "src")))
 
+local_template = os.path.join(os.path.abspath(os.path.dirname(__file__)), "phdoc_templates")
+
 from pyquickhelper.helpgen.default_conf import set_sphinx_variables
 set_sphinx_variables(__file__, "mlstatpy", "Xavier Dupré", 2016,
-                     sphtheme.__name__, [
-                         sphtheme.get_html_theme_path()], locals(),
+                     sphtheme.__name__, [sphtheme.get_html_theme_path()], locals(),
                      extlinks=dict(
                          issue=('https://github.com/sdpython/mlstatpy/issues/%s', 'issue')),
                      title="Machine Learning, Statistiques et Programmation", book=True)
@@ -52,6 +53,7 @@ custom_preamble = """\n\\newcommand{\\girafedec}[3]{ \\begin{array}{ccccc} #1 &=
             \\newcommand{\\loi}[0]{{\\cal L}}
             \\newcommand{\\vecteurno}[2]{#1,\\dots,#2}
             \\newcommand{\\norm}[1]{\\left\\Vert#1\\right\\Vert}
+            \\newcommand{\\dans}[0]{\\rightarrow}
             """
 
 imgmath_latex_preamble += custom_preamble

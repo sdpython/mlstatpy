@@ -1,0 +1,420 @@
+\input{../../common/livre_begin.tex}
+\firstpassagedo{\input{svm_titre.tex}}
+\input{../../common/livre_table_begin.tex}
+\firstpassagedo{\input{svm_chapter.tex}}
+
+
+
+\label{annexe_svm}
+\indexfr{SVM}
+\indexsee{Support Vector Machine}{SVM}
+\indexsee{Séparateur à Vastes Marges}{SVM}
+
+\indexfrr{ACP}{SVM}
+\indexfr{méthodes à noyaux}
+
+Les \emph{Support Vector Machine} ou \emph{Séparateurs à Vastes Marges} (SVM) ont été pour la première fois présentés par V. Vapnik dès 1979 (voir \citeindex{Vapnik1979}) et sont plus amplement développés dans \citeindex{Vapnik1998}. Les définitions et résultats proposés sont extraits de \citeindex{Burges1998}, document plus didactique d'après son auteur, \citeindex{Smola2004} -~ cet article existe en une version plus étendue (voir \citeindex{Smola1998})~- document plus complet qui présente la régression à partir de SVM et l'article \citeindex{Müller2001}, document plus récent qui évoque notamment l'analyse en composantes principales à partir de SVM. Ce dernier document applique les SVM à la reconnaissance de caractères. Cette annexe n'a pas pour but de décrire en détail ces modèles mais seulement de les introduire sommairement. Le site internet \textit{http://www.kernel-machines.org/} référence tous ces documents et recense les derniers développements autour des méthodes à noyaux dont font partie les SVM. Il référence également un large panel d'applications ou de code informatique permettant d'utiliser les méthodes à noyaux.
+
+
+
+%------------------------------------------------------------------------------------------------------------------
+\section{Séparateur linéaire}
+%------------------------------------------------------------------------------------------------------------------
+
+\label{svm_separateur_lineaire}
+
+\subsection{Ensemble séparable}
+\indexfrr{ensemble}{séparable}
+
+
+On s'intéresse tout d'abord à l'hyperplan séparateur d'un ensemble de points répartis en deux classes. Cet ensemble est noté $\pa{X_i,Y_i}_{1 \infegal i \infegal N}$ où, $\forall i$, $X_i \in \R^d$ et $Y_i \in \acc{-1,1}$. Pour simplifier les expressions par la suite, les deux classes sont donc labellées -1 et~1. On cherche alors un vecteur $w$ et une constante $b$ qui vérifient~:
+
+			$$
+			\forall i, \; 1 \infegal i \infegal N, \; 
+						Y_i = \left\{ \begin{array}{rl}
+														-1 & \text{ si } w.X_i + b \supegal 1 \\ 
+														 1 & \text{ si } w.X_i + b \infegal -1
+													\end{array} \right.
+			$$
+
+On cherche donc $w$ et $b$ tels que~:
+
+			$$
+			\forall i, \; 1 \infegal i \infegal N, \; 
+						Y_i \pa{ w.X_i + b} - 1 \supegal 0
+			$$
+
+Comme on cherche également un vecteur $w$ de norme minimum, l'hyperplan cherché est la solution du problème de minimsation suivant~:
+
+
+			\begin{xproblem}{meilleur hyperplan séparateur, cas séparable}\label{svm_problem_def}
+			\indexfr{séparable}\indexfrr{hyperplan}{séparateur}
+			Le meilleur hyperplan séparateur de l'ensemble de points labellés
+			$\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \R^d \times \acc{-1,1} }^N$ est la solution
+			d'un problème de minimisation. Cet hyperplan a pour équation $x.w^* + b^* = 0$ où 
+			$w^*$ et $b^*$ vérifient~:
+					$$
+					\begin{array}{rcl}	\pa{w^*,b^*} &=& \underset{w,b}{\arg \min} \frac{1}{2} \norme{w}^2 \\
+										 && \text{avec } \forall i, \; Y_i \pa{ X_i .w + b } -1 \supegal 0 
+					\end{array}										
+					$$
+			\end{xproblem}
+
+
+\indexfrr{Lagrange}{multiplicateurs}
+La résolution d'un tel problème s'effectue à l'aide des multiplicateurs de Lagrange, on affecte à chaque contrainte le coefficient $\alpha_i$, il s'agit alors de minimiser l'expression~:
+
+			\begin{eqnarray}
+			L_P = \frac{1}{2} \norme{w}^2 - \summy{i=1}{N} \alpha_i Y_i \pa{ X_i . w + b } + \summy{i=1}{N} \alpha_i
+			\label{svm_lagrange_lineaire}
+			\end{eqnarray}
+
+En dérivant par rapport à $w$ et $b$, on obtient que~:
+
+		\begin{eqnarray}
+		w 													&=& \sum_{i=1}^N \alpha_i Y_i X_i \\
+		\summy{i=1}{N} \alpha_i Y_i &=& 0
+		\end{eqnarray}
+		
+Par conséquent, on peut substituer l'expression~\ref{svm_lagrange_lineaire} par~:
+
+			\begin{eqnarray}
+			L_D = \frac{1}{2} \summy{i=1}{N}\summy{j=1}{N} 
+								\alpha_i \alpha_j \, Y_i Y_j \, X_i . X_j - 
+								\summy{i=1}{N} \alpha_i
+			\label{svm_lagrange_lineaire_2}
+			\end{eqnarray}
+
+\indexfr{noyau}\indexfrr{fonction}{noyau}
+Cette dernière équation (\ref{svm_lagrange_lineaire_2}) est importante puisqu'elle permet d'introduire les SVM non linéaires pour lesquels le produit scalaire $X_i. X_j$ sera remplacé par une fonction noyau $K\pa{X_i, X_j}$. 
+
+
+
+
+\subsection{Ensemble non séparable}
+\indexfrr{ensemble}{non séparable}
+
+Le paragraphe précédent supposait que l'ensemble $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \R^d \times \acc{-1,1} }^N$ était séparable ce qui, d'après le paragraphe~\ref{svm_dimension_vc_lin} implique dans la plupart des cas que $N \infegal d+1$. Pour un ensemble non séparable (voir figure~\ref{svm_non_separable_fig}), il est impossible de trouver un hyperplan séparateur. Par conséquent, il n'existe pas de solution au problème~\ref{svm_problem_def} vérifiant les contraintes telles qu'elles ont été exprimées. La recherche du meilleur hyperplan séparateur devient alors l'énoncé~\ref{svm_problem_def_2}.
+
+
+		\begin{figure}[ht]
+    $$\frame{$\begin{array}[c|c]{c}\includegraphics[height=3cm, width=3cm]
+    {\filext{../svm/image/non}}\end{array}$}$$
+    \caption{	Exemple d'un nuage de points non séparable par un hyperplan.}
+    \label{svm_non_separable_fig}
+		\end{figure}
+
+
+
+			\begin{xproblem}{meilleur hyperplan séparateur, cas non séparable}\label{svm_problem_def_2}
+			\indexfr{non séparable}
+			Soit $C \in \R^*_+$ une constante et $k \in \N^*$ un entier,
+			le meilleur hyperplan séparateur de l'ensemble de points labellés
+			$\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \R^d \times \acc{-1,1} }^N$ est la solution
+			d'un problème de minimisation. Cet hyperplan a pour équation $x.w^* + b^* = 0$ où 
+			$w^*$ et $b^*$ vérifient~:
+					$$
+					\begin{array}{rcl}	\pa{w^*,b^*} &=& \underset{w,b}{\arg \min} \dfrac{1}{2} \norme{w}^2 + 
+																								C \pa{\summy{i=1}{N} \xi_i}^k \\
+										 \text{avec }  	&& \forall i, \; Y_i \pa{ X_i .w + b + \xi_i } - 1 \supegal 0 \\
+										 \text{et }			&& \forall i, \; \xi_i \supegal 0 
+					\end{array}										
+					$$
+			\end{xproblem}
+
+$C$ et $k$ sont des constantes à déterminer. Toutefois, dans le cas où $k = 1$, la solution du problème précédent est identique à celle du problème suivant~:
+
+
+			\begin{xproblem}{meilleur hyperplan séparateur, cas non séparable, problème dual}
+			\label{svm_problem_def_2p}\indexfr{non séparable}\indexfrr{problème}{dual}
+			Soit $C \in \R^*_+$ une constante,
+			le meilleur hyperplan séparateur de l'ensemble de points labellés
+			$\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \R^d \times \acc{-1,1} }^N$ est la solution
+			d'un problème de minimisation. 
+					$$
+					\begin{array}{rcl}	\pa{\alpha_i^*} &=& \underset{\alpha_i}{\arg \min} \dfrac{1}{2}  
+																					\summy{i=1}{N}\summy{j=1}{N}
+																							\alpha_i \alpha_j \,
+																							Y_i Y_j \,
+																							X_i . X_j
+																					- \summy{i=1}{N} \alpha_i \\
+										 \text{avec }  	&& \forall i, \; 1 \infegal \alpha_i \infegal C \\
+										 \text{et }	  	&& \summy{i=1}{N} Y_i \, \alpha_i = 0
+					\end{array}										
+					$$
+			L'hyperplan séparateur est donné par l'équation $ x.w + b = 0$ où 
+			$w = \summy{i=1}{N} \alpha_i Y_i X_i$.
+			\end{xproblem}
+
+\indexfr{dual}
+Ce dernier problème est appelée la forme duale du problème~\ref{svm_problem_def_2}.
+
+%------------------------------------------------------------------------------------------------------------------
+\section{Dimension de Vapnik-Chervonenkis (VC)}
+%------------------------------------------------------------------------------------------------------------------
+\label{svm_dimension_vc}
+
+
+
+\subsection{Définition}
+
+\indexfr{dimension de Vapnik-Chervonenkis}
+
+
+
+Dans le problème de classification introduit au chapitre~\ref{svm_separateur_lineaire}, la dimension de Vapnik-Chervonenkis sert à majorer le risque d'erreur de classification empirique au risque d'erreur théorique. Nous allons tout d'abord définir la dimension de Vapnik-Chervonenkis pour un ensemble de points donné et noté $\pa{X_i}_{1 \infegal i \infegal N}$ et une classe de fonction $f\pa{x,\alpha}$ paramétrée par $\alpha$.
+
+
+
+			\begin{xdefinition}{dimension de Vapnik-Chervonenkis}
+			Soit $\pa{X_i}_{1 \infegal i \infegal N}$ un ensemble de points appartenant à $\R^d$. On définit une 
+			fonction $f\pa{x,\alpha} : \R^d \times \Omega \longmapsto  \R$ 
+			où $x \in \R^d$ et $\alpha \in \Omega$.
+			$\Omega$ est appelé l'ensemble des paramètres.
+			On définit la dimension de Vapnik-Chervonenkis comme étant le nombre de suites 
+			$\pa{Y_i}_{1 \infegal i \infegal N} \in \acc{-1,1}^N$ vérifiant~:
+					$$
+					\exists \alpha \in \Omega, \text{ tel que } \forall i, \; 1 \infegal i \infegal N, \;
+							sgn\pa{ f\pa{X_i,\alpha} } = Y_i
+					$$
+			La fonction $sgn\pa{x}$ désigne le signe de $x$~: $sgn\pa{x} = \left\{ \begin{array}{rl}
+																														 1 & \text{si } x \supegal 0 \\
+																														-1 & \text{si } x < 0 
+																														\end{array} \right. $
+																														
+			Par définition, cette dimension est inférieure à $2^N$.
+			\end{xdefinition}
+
+
+
+
+
+\subsection{Résultats}
+\label{svm_dimension_vc_lin}
+
+
+Dans le cas où la fonction $f$ est linéaire, il existe quelques résultats intéressants.
+
+
+		\begin{xtheorem}{dimension VC d'un ensemble de vecteurs linéairement indépendants}
+		Soit un ensemble de $N$ points inclus dans l'espace vectoriel $\R^d$ dont un définit l'origine.
+		Alors les $N$ points peuvent être séparés de n'importe quel manière en deux classes
+		par des hyperplans orientés si et seulement si les vecteurs positions sont linéairement indépendants.
+		\end{xtheorem}
+
+		\begin{xcorollary}{dimension VC d'un ensemble de vecteurs linéairement indépendants}
+		La dimension de Vapnik-Chervonenkis d'un ensemble d'hyperplans séparateurs de $\R^d$ est $d+1$
+		puisqu'il est toujours possible de choisir $d+1$ points linéairement indépendants qui puissent 
+		être séparés quelque soit leurs classes.
+		\end{xcorollary}
+
+
+
+\subsection{Exemple}
+
+On définit la suite de points $\pa{X_i}_{1 \infegal i \infegal N}$ par $\forall i, \, 1 \infegal i \infegal N, \; X_i = 10^{-i}$ et l'ensemble de fonctions~:
+
+			$$
+			\acc{\alpha \in \R, \; f\pa{x,\alpha} = \left\{
+																\begin{array}{rl}
+																1 	& \text{ si } \sin \alpha x \supegal 0 \\
+																-1	& \text{ si } \sin \alpha x < 0 
+																\end{array} \right.}
+			$$
+
+
+Quelque soit la suite $\pa{Y_i}_{1 \infegal i \infegal N} \in \acc{-1,1}^N$, il est possible de choisir~:
+
+			$$
+			\alpha = \pi \pa{ 1 + \summy{i=1}{N} \frac{ \pa{ 1 - Y_i} 10^i}{ 2 } }
+			$$
+
+De telle sorte que~: $\forall i, \; f\pa{X_i,\alpha} = Y_i$. Par conséquent, la dimension VC cet ensemble de points associés à l'ensemble de fonctions $f$ est $2^N$.
+
+
+
+\subsection{Risque}
+
+\indexfrr{risque}{théorique}
+On définit maintenant le risque théorique de classification comme étant~:
+
+			\begin{eqnarray}
+			R\pa{\alpha} = \int \frac{1}{2} \abs{y - f\pa{x,\alpha}} dP\pa{x,y}
+			\label{svm_risque_theorique}
+			\end{eqnarray}
+
+\indexfrr{risque}{empirique}
+Et le risque empirique pour le nuage de points $\pa{X_i,Y_i}_{1 \infegal i \infegal N}$ par~:
+
+			\begin{eqnarray}
+			R_{emp}\pa{\alpha} = \frac{1}{2N} \; \summy{i=1}{N} \abs{ Y_i - f\pa{X_i,\alpha}}
+			\label{svm_risque_empirique}
+			\end{eqnarray}
+
+		\begin{xtheorem}{majoration du risque empirique}
+		En reprenant les notations utilisées dans les expressions 
+		(\ref{svm_risque_theorique}) et (\ref{svm_risque_empirique}). Pour 
+		un nuage de points  $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{\R^d \times \acc{-1,1} }^N$, 
+		on démontre (voir \citeindex{Vapnik1995}) que $\forall \eta \in \cro{0,1}$~:
+					$$
+					\pr{ 
+					R\pa{\alpha} \infegal R_{emp}\pa{\alpha} +
+							\sqrt{\frac	{h \pa{ 1+ \ln \frac{2N}{h} } - \ln \frac{\eta}{4} }
+													{N}
+							}
+					} = 1 - \eta
+					$$
+		où $h$ est la dimension de Vapnik-Chervonenkis.
+		\end{xtheorem}
+		
+
+
+
+
+
+%------------------------------------------------------------------------------------------------------------------
+\section{Séparateur non linéaire}
+%------------------------------------------------------------------------------------------------------------------
+
+
+
+\subsection{Principe}
+
+Il est possible d'étendre les SVM au cas non linéaire à partir du problème~\ref{svm_problem_def_2} d'après \citeindex{Boser1992} en remplaçant le produit scalaire $X_i . X_j$ par une fonction noyau telle qu'une fonction gaussienne\footnote{$K\pa{X,Y} = \exp\pa{ - \frac{ \norme{ X - Y }^2 }{2 \sigma^2}}$}.
+
+
+			\begin{xproblem}{meilleur hyperplan, cas non séparable, non linéaire, problème dual}\label{svm_problem_def_3}
+			\indexfr{non séparable}
+			\indexfrr{problème}{dual}
+			Soit $C \in \R^*_+$ une constante, soit $K : \R^d \times \R^d \longmapsto \R^+$ une fonction noyau,
+			le meilleur hyperplan séparateur de l'ensemble de points labellés
+			$\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \R^d \times \acc{-1,1} }^N$ est la solution
+			d'un problème de minimisation~: 
+					$$
+					\begin{array}{rcl}	\pa{\alpha_i^*} &=& \underset{\alpha_i}{\arg \min} \dfrac{1}{2}  
+																					\summy{i=1}{N}\summy{j=1}{N}
+																							\alpha_i \alpha_j \,
+																							Y_i Y_j \,
+																							K\pa{X_i,X_j}
+																					- \summy{i=1}{N} \alpha_i \\
+										 \text{avec }  	&& \forall i, \; 1 \infegal \alpha_i \infegal C \\
+										 \text{et }	  	&& \summy{i=1}{N} Y_i \, \alpha_i = 0
+					\end{array}										
+					$$
+			La classification d'un élément $x \in \R^d$ dépend du signe de la fonction~:
+					$$
+					f\pa{x} = \summy{i=1}{N} \alpha_i Y_i K\pa{X_i,x} + b
+					$$
+			\end{xproblem}
+
+
+\subsection{Interprétation, exemple}
+
+
+Le problème~\ref{svm_problem_def_3} revient en fait à projeter l'élément $X_i \in \R^d$ dans un autre espace de dimension généralement supérieure $\R^{d'}$ dans lequel la séparation sera un hyperplan. Par exemple, on définit le noyau $K : \R^2 \times \R^2 \longmapsto \R^+$ par~:
+
+			$$
+			K\pa{X_i,X_j} = \pa{X_i.X_j}^2
+			$$
+
+On définit également la fonction $\Phi : \R^2 \longmapsto \R^3$ par~:
+
+			$$
+			\Phi\pa{x_1,x_2} = \pa{ \begin{array}{c} x_1^2 \\ \sqrt{2} x_1 x_2 \\ x_2^2 \end{array} }
+			$$
+
+On vérifie alors que~:
+
+			$$
+			K\pa{X_i,X_j} = \Phi\pa{X_i} . \Phi\pa{X_j}
+			$$
+
+\indexfr{Mercer}
+Plus généralement, pour qu'un noyau $K$ corresponde à un produit scalaire dans un espace de dimension supérieure, il suffit qu'il vérifie la conditions de Mercer (voir \citeindex{Vapnik1995})~:
+	
+			$$
+			\begin{tabular}{l}
+			Pour toute fonction $g$ telle que~: $\displaystyle\int g(x)^2 dx < + \infty$ alors \\
+			$\displaystyle\int K\pa{x,y} g(x) g(y) dx dy \supegal 0$
+			\end{tabular}
+			$$
+			
+			
+			
+\subsection{Autre formulation}
+
+Le problème~\ref{svm_problem_def_3} peut être formulé d'une manière différente proche de celle du problème~\ref{svm_problem_def_2}.
+			
+
+			\begin{xproblem}{meilleur hyperplan séparateur, cas non séparable, non linéaire}\label{svm_problem_def_4}
+			\indexfr{non séparable}
+			Soit $C \in \R^*_+$ une constante, soit $K : \R^d \times \R^d \longmapsto \R^+$ une fonction noyau,
+			le meilleur hyperplan séparateur de l'ensemble de points labellés
+			$\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \R^d \times \acc{-1,1} }^N$ est la solution
+			d'un problème de minimisation~: 
+					$$
+					\begin{array}{rcl}	\pa{\alpha_i^*, \xi_i^*} &=& \underset{\alpha_i}{\arg \min} \dfrac{1}{2}  
+																					\summy{i=1}{N}\summy{j=1}{N}
+																							\alpha_i \alpha_j \,
+																							Y_i Y_j \,
+																							K\pa{X_i,X_j}
+																					+ C \pa{\summy{i=1}{N} \xi_i}^k \\ \\
+										 \text{avec }  	&& \forall i, \;  Y_i \pa{ \summy{k=1}{N} \alpha_k Y_k K\pa{X_k,x} + b + \xi_i } - 1 \supegal 0 \\
+										 \text{et }			&& \forall i, \; \xi_i \supegal 0 
+					\end{array}										
+					$$
+			La classification d'un élément $x \in \R^d$ dépend du signe de la fonction~:
+					$$
+					f\pa{x} = \summy{i=1}{N} \alpha_i Y_i K\pa{X_i,x} + b
+					$$
+			\end{xproblem}
+			
+			
+%------------------------------------------------------------------------------------------------------------------
+\section{Extensions}
+%------------------------------------------------------------------------------------------------------------------
+
+\subsection{Classification en plusieurs classes}
+
+Jusqu'à présent, le seul problème évoqué concerne une classification en deux classes. Une classification en $N$ classes est néanmoins possible selon deux stratégies. La première consiste à isoler une classe contre toutes les autres puis à procéder récusivement de cette manière jusqu'à finalement obtenir un problème de classification en deux classes. La seconde stratégie consiste à regrouper le nombre de classes en deux groupes puis à appliquer la méthode des SVM. Ensuite, à l'intérieur de chaque groupe, on réitère cette méthode de manière à diviser le nombre de classes jusqu'à obtenir un problème de classification à deux classes.
+
+Il existe une autre possibilité plus coûteuse et plus fiable. Si on désire réaliser une classification en $N$ classes, plutôt que de réaliser au plus $N-1$ classifications en deux classes, on réalise $\frac{(N-1)^2}{2}$ classifications pour tous les couples de deux différentes classes. Il suffit de prendre la classe qui ressort le plus souvent vainqueur.
+
+
+\subsection{Ensembles réduits}
+
+L'article \citeindex{Burges1997} propose une méthode permettant de réduire l'ensemble de point $\pa{X_i}$ afin d'accélerer la résolution du problème de minimisation, tout en n'accroissant que légèrement l'erreur ($\sim$1\% d'après les auteurs). 
+
+\indexfr{courbure}
+L'article \citeindex{Zhan2005} propose une autre méthode qui supprime des points. Plusieurs optimisations sont réalisées et, après chaque étape, les points proches des zones de forte courbure de la frontière sont enlevés de l'ensemble d'apprentissage. L'article étudie la perte de performances en fonction du nombre de points supprimés.
+
+
+\subsection{Sélection des paramètres}
+
+Les problèmes de minimisation~\ref{svm_problem_def_2}, \ref{svm_problem_def_2p}, \ref{svm_problem_def_3} et~\ref{svm_problem_def_4} mentionnent une constante $C$ dont l'article \citeindex{Mattera1999} (voir également \citeindex{Cherkassky2004}) discute le choix dans le cas non pas d'un problème de classification mais dans celui d'une régression à l'aide des SVM.
+\indexfr{régression}
+
+\subsection{Régression}
+\indexfr{régression}
+
+
+
+
+
+
+
+
+\newpage
+
+\firstpassagedo{
+	\begin{thebibliography}{99}
+	\input{svm_biblio.tex}
+	\end{thebibliography}
+}
+
+
+\input{../../common/livre_table_end.tex}
+\input{../../common/livre_end.tex}
+
+
+

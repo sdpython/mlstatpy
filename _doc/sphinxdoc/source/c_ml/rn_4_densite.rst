@@ -385,7 +385,7 @@ compacts connexes par arcs et disjoints
 
 
 
-**Démontration du théorème de :ref:`densité des réseaux de neurones <theoreme_densite>`**
+**Démontration du théorème de** :ref:`densité des réseaux de neurones <theoreme_densite>`
 
 *Partie 1*
 

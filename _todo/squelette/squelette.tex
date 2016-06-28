@@ -1,0 +1,2074 @@
+\input{../../common/livre_begin.tex}
+\firstpassagedo{\input{squelette_titre.tex}}
+\input{../../common/livre_table_begin.tex}
+\firstpassagedo{\input{squelette_chapter.tex}}
+
+\sloppy
+
+\label{annexe_squelettisation}
+
+
+\indexfrr{homotope}{squelette}
+La squelettisation est une opération qui permet de passer d'une image aux traits épais à une représentation en "fil de fer" dont la première apparition date de \citeindex{Blum1967}. La figure~\ref{squelette_fig2} représente à la fois l'image initiale et le résultat obtenu en filigrane. Cette représentation "fil de fer" est appelée \emph{squelette}. Il n'existe pas de définition unique du squelette, il doit seulement respecter la connexité de la forme qu'il est censé représenter ou plus précisément, une forme et son squelette doivent être \emph{homotopes}. Pour une composante connexe, le squelette correspondant ne forme également qu'une seule composante connexe incluse dans la première. 
+
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=5cm, width=6.5cm]
+	    {\filext{../squelette/image/ske_example}}\end{array}$}$$
+	    \caption{Squelettisation d'une figure quelconque}
+	    \label{squelette_fig2}
+			\end{figure}
+
+L'article \citeindex{Lam1992} propose une revue des algorithmes de squelettisation. Ce chapitre présente quelques-unes des méthodes qui y sont présentées comme la squelettisation par érosion (voir paragraphe~\ref{ske_par_erosion}), ainsi que d'autres issues d'articles plus récents et mieux adaptées à la reconnaissance de l'écriture comme la modélisation des intersections (voir paragraphe~\ref{squelette_modelisation_intersection_modele}).
+
+
+
+
+
+
+
+
+
+%------------------------------------------------------------------------------------------------------------
+\section{Squelette d'une forme continue}
+%------------------------------------------------------------------------------------------------------------
+\indexfr{boule maximale}
+\indexfrr{squelette}{continu}
+\indexfrr{forme}{continue}
+
+On se place ici dans le plan $\R^2$ et on considère une partie $F$ du plan qu'on appellera par la suite \emph{forme continue}. C'est en général une partie connexe d'intérieur non vide. L'objectif est ici de définir le squelette de cette forme, c'est-à-dire une partie d'intérieur vide la représentant le mieux possible. On définit une boule comme un disque de rayon strictement positif du plan. Les définitions qui suivent restent valables pour des espaces de dimension supérieure à deux (voir \citeindex{Blum1973}, \citeindex{Thiel1994}).
+
+		\begin{xdefinition}{boule maximale}
+		\indexfr{boule maximale}
+		\label{ske_def_boule_max}
+		
+		Soit $F$ une forme continue, on note $\mathcal{B}_F$ l'ensemble des boules incluses dans $F$. 
+		Une boule $B$ est dite maximale si et seulement si~:
+		
+						$$
+						B \text{ est maximale } \Longleftrightarrow \forall B' \in \mathcal{B}_F, 
+						\; B \subset B' \Longrightarrow B = B'
+						$$
+		
+		\end{xdefinition}
+
+Par conséquent, une boule $B$ est maximale pour la forme $F$ si aucune autre boule incluse dans cette forme n'inclut $B$.
+
+
+			\begin{xdefinition}{axe médian}
+			\indexfr{axe médian}
+			\label{ske_def_axe_med}
+
+			L'axe médian d'une forme $F$ est le lieu des centres des boules maximales de cette forme.
+
+			\end{xdefinition}
+
+
+Un exemple d'axe médian est donné par la figure~\ref{squelette_continu}. L'axe médian est aussi un moyen de compresser l'information puisque la description de cet axe ainsi que la donnée du rayon de la boule maximale pour chaque point qui en est le centre permet de reconstituer exactement la forme (\citeindex{Rosenfeld1986}).
+
+
+\indexfr{connexité}
+\indexfr{composante connexe}
+\indexfr{homotope}
+L'axe médian n'est pourtant pas encore le squelette car, même si une forme $F$ n'a qu'une composante connexe, l'axe médian peut en avoir plusieurs. Il suffit, pour s'en convaincre, de considérer deux disques tangents comme l'illustre la figure~\ref{squelette_deux_cercles}. Axe médian et forme ne sont donc pas forcément homotopes.
+
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=3cm, width=6cm]
+	    {\filext{../squelette/image/ske_continu}}\end{array}$}$$
+	    \caption{	Axe médian d'une forme continue (trait pointillé) dont seul le contour est représenté, 
+	    					figure extraite de~\citeindexfig{Thiel1994}.}
+	    \label{squelette_continu}
+			\end{figure}
+
+
+
+			\begin{figure}[ht]
+	    \[
+	    \unitlength 1mm
+	    \fbox{
+	    \filefig{../squelette/fig_circle}
+	    }
+	    \]
+	    \caption{	Deux disques tangents~: cette forme ne contient qu'une seule composante 
+	    					connexe alors que son axe
+	    					médian n'est constitué que de deux points, les deux centres des disques.}
+	    \label{squelette_deux_cercles}
+			\end{figure}
+
+
+
+
+L'axe médian, qui est unique, sert de base à la construction d'un squelette, qui ne l'est pas. Il est possible de prolonger ses extremités afin d'obtenir un ensemble homotope à la forme d'origine. Mais il n'est pas toujours évident de les prolonger et c'est pourquoi il est parfois préférable de rogner la forme jusqu'au squelette, en particulier dans le cas du traitement d'images discrétisées qui est l'objet de ce chapitre.
+
+
+
+
+
+
+%------------------------------------------------------------------------------------------------------------
+\section{4-connexité ou 8-connexité}
+%------------------------------------------------------------------------------------------------------------
+\indexfr{4-connexité}
+\indexfr{8-connexité}
+\indexfrr{connexité}{4}
+\indexfrr{connexité}{8}
+\indexfrr{connexité}{par arcs}
+
+Afin d'être capable de construire le squelette d'une forme, la notion de connexité doit être transposée du plan à l'ensemble discret de pixels que forme une image. La figure~\ref{squelette_connexe48} représente un disque et un carré qui peuvent, selon la définition de la connexité par arc dans une image, être ou ne pas être scindés. Les deux figures (disque et carré) n'en forment qu'une seule si tout point de l'une peut être relié à tout point de l'autre par un chemin inclus dans la réunion des deux.
+
+		\begin{xdefinition}{chemin}
+		\indexfr{chemin}
+		Un chemin $C$ allant du pixel $x$ au pixel $y$ est une succession de petits déplacements 
+		$\pa{v_i}_{1 \infegal i \infegal n}$ telle que~:
+		
+				$$
+				y = x + \summy{i=1}{n} \; v_i
+				$$
+				
+		Ce chemin $C$ est inclus dans un ensemble de pixels $P$ si tous les points empruntés par 
+		ce chemin appartiennent à $P$~:
+		
+				$$
+				C \text{ est inclus dans } P \Longleftrightarrow 	x \in P \text{ et } 
+																													\forall k \in \ensemble{1}{n}, \; 
+																													x + \summy{i=1}{k} v_i \in P
+				$$
+				
+		\end{xdefinition}
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=3cm, width=3cm]
+	    {\filext{../squelette/image/ske_connexe}}\end{array}$}$$
+	    \caption{	Un disque et un carré qui se "touchent" en 8-connexité mais qui sont séparés en 4-connexité.}
+	    \label{squelette_connexe48}
+			\end{figure}
+
+
+On définit deux ensembles de déplacements élémentaires, $E_4$ et $E_8$~:
+
+		\begin{eqnarray*}
+		E_4 	&=&		\acc{ \vecteurim{1}{0}, \vecteurim{0}{1}, \vecteurim{-1}{0}, \vecteurim{0}{-1}   } \\
+		E_8 	&=&		E_4 \cup \acc{ \vecteurim{1}{1}, \vecteurim{-1}{1}, \vecteurim{-1}{1}, \vecteurim{-1}{-1}   } 
+		\end{eqnarray*}
+
+
+		\begin{xdefinition}{chemin k-connexe}
+		Le chemin $C= \pa{v_i}_{1 \infegal i \infegal n}$ est dit $k$-connexe 
+		si $\forall i \in \ensemble{1}{n}, \; v_i \in E_k$. 
+		\end{xdefinition}
+
+Ceci nous permet de définir la 4-connexité et la 8-connexité.
+
+		\begin{xdefinition}{4-connexité et 8-connexité}
+		On considère une image $I$ et $P$ une partie de cette image. On dit que $P$ 
+		est $k$-connexe ($k \in \acc{4,8}$) si et seulement si pour tout couple de pixels 
+		$\pa{x,y} \in P^2$, il existe un chemin $k$-connexe inclus dans $P$ allant de $x$ à $y$.
+		\end{xdefinition}
+
+
+\indexfr{Freeman}
+Le code de \emph{Freeman} est très utilisé pour représenter les chemins 4-connexe ou 8-connexe. Il consiste à associer à chaque déplacement de $E_8$ un numéro en tournant dans le sens inverse des aiguilles d'une montre.
+
+
+			\begin{figure}
+			$$
+			\begin{tabular}{|c|c|c|}\hline 
+					$
+					\begin{array}{c|c}
+					\vecteurim{1}{0}   	&   0 \\ \hline
+					\vecteurim{0}{1}   	&   2 \\ \hline
+					\vecteurim{-1}{0}   	&   4 \\ \hline
+					\vecteurim{0}{-1}   	&   6
+					\end{array}
+					$
+					&
+					$
+					\begin{array}{c|c}
+					\vecteurim{1}{1}   	&   1 \\ \hline
+					\vecteurim{-1}{1}   	&   3 \\ \hline
+					\vecteurim{-1}{-1}  	&   5 \\ \hline
+					\vecteurim{1}{-1}   	&   7
+					\end{array}
+					$
+					&
+					\filefig{../squelette/fig_freeman}
+				 \\					
+			\hline
+			\end{tabular}
+			$$
+			\caption{ Code de Freeman permettant de coder les huit directions éléments d'un pixel vers 
+								un de ses huit voisins en 8-connexité.}
+			\indexfr{Freeman}
+			\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%------------------------------------------------------------------------------------------------------------
+\section{Carte de distance}
+%------------------------------------------------------------------------------------------------------------
+
+\indexfrr{carte}{distance}
+\indexfrr{distance}{carte}
+\label{ske_carte_distance_sec}
+
+		\begin{xdefinition}{carte de distance}
+		\label{ske_def_cart_dist_def}
+		
+		Soit $I_{XY}$ une image binaire, avec $Y$ lignes et $X$ colonnes. $I_{XY}\pa{x,y} \in \acc{0,1}$ 
+		désigne le pixel de coordonnées $\pa{x,y}$. Soit $d$ une distance entre pixels. On désigne par 
+		$F$ l'ensemble des pixels noirs de l'image $I_{XY}$, soit $F = \acc{ \pa{x,y} \sac I_{XY}\pa{x,y} = 1}$.
+		La carte de distance $C^{I_{XY}}$ est
+		une matrice de mêmes dimensions que l'image vérifiant~:
+		
+				\begin{eqnarray}
+				\forall \pa{x,y}, \; C^{I_{XY}}\pa{x,y} = \min \acc{ d\cro{ \pa{x,y}, \pa{x',y'}} 
+																															\sac \pa{x',y'} \in \overline{F} } 
+				\label{ske_eq_carte_dist}																													
+				\end{eqnarray}
+		
+		\end{xdefinition}
+
+\indexfrr{masque}{distance}
+\indexfrr{distance}{masque}
+
+La figure~\ref{ske_cart_dist} illustre une carte de distance pour une distance qui associe à deux pixels le nombre de déplacements verticaux ou horizontaux nécessaires pour aller de l'un à l'autre. Pour cette figure, la valeur d'une case correspond à la distance entre le pixel noir considéré et le pixel blanc le plus proche. Cette distance est introduite car ses maxima locaux ont une forte probabilité d'appartenir au squelette. Il n'existe pas une unique distance (voir \citeindex{Arcelli1985}), elles sont définies en général par leur masque (table~\ref{ske_tab_masque_dist}) qui donne leur valeur dans un petit voisinage. Masque et distance sont définis comme suit~:
+
+
+		\begin{table}
+		$$
+		\begin{tabular}{|c|c|c|} \hline
+		$\begin{array}{ccc}
+		2 & 1 & 2 \\
+		1 & 0 & 1 \\
+		2 & 1 & 2 
+		\end{array}$
+		&
+		$\begin{array}{ccc}
+		\sqrt{2} & 1 & \sqrt{2} \\
+		1 & 0 & 1 \\
+		\sqrt{2} & 1 & \sqrt{2} 
+		\end{array}$ ou 
+		$\begin{array}{ccc}
+		4 & 3 & 4 \\
+		3 & 0 & 3 \\
+		4 & 3 & 4 
+		\end{array}$
+		&		
+		$\begin{array}{ccccc}
+		7 & 6 & 5 & 6 & 7 \\
+		6 & 4 & 3 & 4 & 6 \\
+		5 & 3 & 0 & 3 & 5 \\ 
+		6 & 4 & 3 & 4 & 6 \\ 
+		7 & 6 & 5 & 6 & 7 \\
+		\end{array}$
+		\\ \hline 
+		\begin{minipage}{3cm}
+		Masque de la distance utilisée pour calculer la carte de la figure~\ref{ske_cart_dist}.
+		\end{minipage}
+		&
+		\begin{minipage}{6.5cm}
+		Masques correspondant à la distance euclidienne, le premier est peu utilisé 
+		car il implique des calculs réels plus longs
+		que des calculs sur des entiers. $\sqrt{2}$ est de préférence estimé par un rationnel, 
+		$\frac{3}{4}$ ou $\frac{5}{7}$.
+		\end{minipage}
+		&
+		\begin{minipage}{6.5cm}
+		Exemple de masque 5x5, si ce masque est noté 
+		$M \in M_5\pa{\R} = \pa{m_{ij}}_{ -2 \infegal i,j \infegal 2}$,
+		lorsque $m_{20} > 2 m_{10}$, le calcul de distance défini en~\ref{squelette_def_dist_masque} ne fera jamais
+		intervenir le déplacement $\vecteurim{2}{0}$.
+		\end{minipage}
+		\\ \hline
+		\end{tabular}
+		$$
+		\caption{Masques de distance~: chaque case contient la distance d'un pixel au pixel central de la matrice.}
+		\label{ske_tab_masque_dist}
+		\end{table}
+
+
+
+
+
+		\begin{figure}
+		\tiny
+		$$
+\begin{tabular}{|p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}@{}p{2mm}|}\hline
+.& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .\\
+.& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& 1& 1& 1& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .\\
+.& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& 1& 1&\textbf{2}& 1& 1& .& .& .& .& 1& 1& 1& 1& 1& .& .& .& .& .\\
+.& .& .& 1& 1& 1& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& 1& 2& 2& 2& 1& .& .& 1& 1& 1& 2& 2& 2& 1& 1& 1& .& .& .\\
+.& .& 1& 1&\textbf{2}& 1& 1& .& .& .& .& .& .& .& .& .& .& .& .& .& .& 1& 2&\textbf{3}& 2& 1& .& .& 1& 2& 2& 2&\textbf{3}& 2& 2& 2& 1& 1& .& .\\
+.& .& 1& 2& 2& 2& 1& .& .& .& .& .& .& .& .& .& .& .& .& .& .& 1& 2&\textbf{3}& 2& 1& .& .& 1& 2& 3& 3& 3& 3& 3& 2& 2& 1& .& .\\
+.& 1& 1& 2&\textbf{3}& 2& 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& 2&\textbf{3}& 2& 1& 1& 1& 1& 2& 3& 4& 4& 4& 3& 3& 2& 1& .& .\\
+.& 1& 2& 2&\textbf{3}& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2&\textbf{3}& 2& 2& 2& 2& 2& 2& 3& 4&\textbf{5}& 4&\textbf{4}& 3& 2& 1& .& .\\
+.& 1& 1& 2&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}& 3& 3& 4&\textbf{5}& 4&\textbf{4}& 3& 2& 1& .& .\\
+.& .& 1& 2&\textbf{3}& 2& 2& 2& 2& 2& 2&\textbf{3}& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2&\textbf{3}& 2& 2& 2& 2& 2& 3&\textbf{4}& 4& 4& 4& 3& 3& 2& 1& .& .\\
+.& .& 1& 2&\textbf{3}& 2& 1& 1& 1& 1& 2&\textbf{3}& 2& 1& 1& 1& 1& 1& 1& 1& 1& 1& 2&\textbf{3}& 2& 1& 1& 1& 2& 3&\textbf{4}& \textbf{4}& 3& 3& 3& 2& 2& 1& .& .\\
+.& .& 1& 2&\textbf{3}& 2& 1& .& .& 1& 2&\textbf{3}& 2& 1& .& .& .& .& .& .& .& 1& 2&\textbf{3}& 2& 1& .& 1& 2& 3& 3& 3&3& 2& 2& 2& 1& 1& .& .\\
+.& .& 1& 2&\textbf{3}& 2& 1& .& .& 1& 2&\textbf{3}& 2& 1& .& .& .& .& .& .& .& 1& 2&\textbf{3}& 2& 1& .& 1& 2& 2& 2& 2&\textbf{3}& 2& 1& 1& 1& .& .& .\\
+.& .& 1& 2& 2& 2& 1& .& .& 1& 2&\textbf{3}& 2& 1& 1& 1& 1& 1& 1& 1& 1& 1& 2&\textbf{3}& 2& 1& .& 1& 1& 1& 1& 2&\textbf{3}& 2& 1& .& .& .& .& .\\
+.& .& 1& 1&\textbf{2}& 1& 1& .& .& 1& 2&\textbf{3}& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 1& .& .& .& .& 1& 2& 2& 2& 1& .& .& .& .& .\\
+.& .& .& 1& 1& 1& .& .& .& 1& 2& 2&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}&\textbf{3}& 2&\textbf{2}& 1& 1& .& .& .& .& 1& 1&\textbf{2}& 1& 1& .& .& .& .& .\\
+.& .& .& .& .& .& .& .& .& 1& 1& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 2& 1& 1& .& .& .& .& .& .& 1& 1& 1& .& .& .& .& .& .\\
+.& .& .& .& .& .& .& .& .& .& 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& 1& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .\\
+.& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .\\
+.& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .& .\\ 
+		\hline
+		\end{tabular}
+		$$
+		\caption{	Carte de distance~: la distance entre deux pixels correspond au nombre de déplacements
+							horizontaux et verticaux nécessaires pour aller de l'un à l'autre. 
+							La valeur d'une case correspond à la distance entre le pixel noir considéré et le pixel blanc 
+							le plus proche.	Les maxima locaux (en gras) ont de forte chance d'appartenir au squelette.
+							Son masque est le 
+							premier de la table~\ref{ske_tab_masque_dist}. Le contour de la forme est l'ensemble des points
+							pour lesquels la carte retourne la valeur 1.}
+		\label{ske_cart_dist}
+		\indexfr{contour}
+		\end{figure}
+		
+
+
+
+
+		\begin{xdefinition}{masque de distance}
+		\indexfrr{masque}{distance}
+		
+		Soit $M \in M_{2n+1}\pa{\R} = \pa{m_{ij}}_{ -n \infegal i,j \infegal n}$ une matrice carrée 
+		de dimension $2n+1$. La matrice $M$ est un masque de distance de dimension $n$ si~:
+		
+				\begin{itemize}
+				\item  $\forall \pa{i,j} \neq \pa{0,0}, \; m_{ij} > 0$
+				\item  $m_{00} = 0$
+				\item  $M$ est symétrique selon le pixel central
+				\end{itemize}
+		
+		\end{xdefinition}
+
+
+
+
+
+			\begin{xdefinition}{distance induite par un masque}
+			\indexfrr{distance}{induite par un masque}
+			\label{squelette_def_dist_masque}
+			Soit $M$ un masque de dimension $n$, soient deux pixels $p_1$, $p_2$ et $C\pa{p_1,p_2}$, 
+			l'ensemble des chemins allant de $p_1$ et $p_2$ dont les vecteurs sont de longueur inférieure ou 
+			égale à $n$. Alors~:
+			
+						$$
+						d_M\pa{p_1,p_2} = \underset{c \in C\pa{p_1,p_2}}{\min} \; \summyone{v = \pa{ \begin{subarray} {c}
+									v_x \\ v_y \end{subarray} }
+									\in c} m_{v_x, v_y}
+						$$
+			
+			\end{xdefinition}
+
+
+L'application définie en~\ref{squelette_def_dist_masque} est bien une distance. Comme le masque est symétrique, elle est aussi  symétrique. De plus, $d_M\pa{p_1,p_2} = 0 \Longleftrightarrow p_1 = p_2$. L'inégalité triangulaire est aussi facile à vérifier puisque pour trois points $p_1,p_2,p$, la concaténation des chemins allant de $p_1$ à $p$, puis de $p$ à $p_2$ forme un chemin allant de $p_1$ à $p_2$. Par conséquent~: $d_M\pa{p_1,p_2} \infegal d_M\pa{p_1,p} + d_M\pa{p_2,p}$.
+
+\indexfr{passe d'image}
+L'algorithme qui suit permet d'obtenir la carte~\ref{ske_cart_dist} à partir d'une distance définie en~\ref{squelette_def_dist_masque} de manière rapide, soit en deux "passes" d'image. Plus précisément, il est nécessaire de parcourir deux fois l'ensemble des pixels de l'image afin de construire la carte de distance. Auparavant, on définit les deux voisinages de pixels suivants~:
+
+			\begin{eqnarray*}
+			V_h\pa{n} &=& \acc{  v = \vecteurimm{v_x}{v_y} \; \left| \; 
+												-n \infegal v_y \infegal 0 \text{ et } 
+												 \left\{ \begin{array}{l}  -n \infegal v_x < 0 \text{ si } v_y = 0 \\
+																											-n \infegal v_x \infegal n \text{ si } v_y < 0 
+																											\end{array} \right.
+																											\right. } 
+							\\
+			V_b\pa{n} &=& \acc{  v = \vecteurimm{v_x}{v_y} \; \left| \; 
+												0 \infegal v_y \infegal n \text{ et } 
+												 \left\{ \begin{array}{l}  0 < v_x \infegal n \text{ si } v_y = 0 \\
+																											-n \infegal v_x \infegal n \text{ si } v_y > 0 
+																											\end{array} \right.
+																											\right. } 
+			\end{eqnarray*}
+			
+Ces deux voisinages sont résumés par la figure~\ref{ske_vois_vb_vh}.
+
+
+
+
+			\begin{figure}
+			$$
+			\begin{tabular}{|c|}\hline
+			\filefig{../squelette/fig_neib}
+	    \\ \hline
+	    \end{tabular}
+	    $$
+			\caption{ Voisinages $V_h\pa{n}$ et $V_b\pa{n}$, le voisinage $V_h\pa{n}$ désigne 
+								la partie située au-dessus et
+								à gauche du pixel central, $V_b\pa{n}$ la partie située au-dessous à et à droite.}
+			\label{ske_vois_vb_vh}
+			\end{figure}
+
+
+
+
+
+		\begin{xalgorithm}{carte de distance}
+		\indexfrr{carte}{distance}
+		\label{ske_algo_cart_dist}
+		
+		L'objectif est de construire la carte de distance $C$ pour la forme $F$ et définie par
+		(\ref{ske_eq_carte_dist}) pour la distance induite par le masque $M$ de dimension $n$. 
+		$I_{XY}$ est une image avec $X$ colonnes et $Y$ lignes. 
+		$\forall \pa{x,y}, \; I_{XY}\pa{x,y} = \indicatrice{\pa{x,y} \in F}$. 
+		Pour ne pas alourdir les notations, $I = I_{XY}$ et $C = C^{I_{XY}}$. 
+		On impose que $C\pa{x,y} = I\pa{x,y} = \infty$ si $\pa{x,y} \notin \intervalle{1}{X} \times \intervalle{1}{Y}$. 
+		
+		\begin{xalgostep}{première passe d'image}
+				\begin{xfor}{y}{1}{Y}
+					\begin{xfor}{x}{1}{X}
+					$C\pa{x,y} \longleftarrow \left\{ \begin{array}{l}
+																	0 \text{ si } I\pa{x,y} = 0 \\
+																	\min  \acc{ C\cro{ \pa{x,y} - v} + M_{v_x,v_y} 
+																				\sac v \in V_h\pa{n}} \text{ sinon}
+																	\end{array}\right.$ 
+					\end{xfor}
+				\end{xfor}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{seconde passe d'image}
+				\begin{xfor}{y}{Y}{1}
+					\begin{xfor}{x}{X}{1}
+					$C\pa{x,y} \longleftarrow \min\acc{ C\pa{x,y},  \min  
+								\acc{ C\cro{ \pa{x,y} - v} + M_{v_x,v_y} \sac v \in V_b\pa{n}}}$ 
+					\end{xfor}
+				\end{xfor}
+		\end{xalgostep}
+		
+		\end{xalgorithm}
+		
+
+
+L'algorithme~\ref{ske_algo_cart_dist} mène bien à la carte de distance définie par (\ref{ske_eq_carte_dist}). Cette démonstration est assez simple et s'effectue par récurrence sur $x$ et $y$. La première passe détermine pour un pixel noir (1) la distance au pixel blanc (0) le plus proche situé dans une moitié supérieure de l'image. La seconde passe détermine ce minimum dans la moitié inférieure et choisit le minimum des deux.
+
+
+
+
+
+
+
+%------------------------------------------------------------------------------------------------------------
+\section{Squelettisation discrète}
+%------------------------------------------------------------------------------------------------------------
+\indexfr{squelette}
+\indexfr{squelettisation}
+
+
+La squelettisation doit aboutir à une image style "fil de fer" comme celle de la figure~\ref{squelette_fig2}. Il existe plusieurs méthodes de squelettisation discrète, certaines s'appuient sur une carte de distance comme celle de la figure~\ref{ske_cart_dist}. D'autres approches sont cependant possibles comme par l'intermédiaire d'un graphe de Voronoï (paragraphe~\ref{ske_voronoi_ske_ske}). 
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Erosion à partir de masques $\pa{3,3}$}
+\indexfr{morphomathématique}
+\indexfr{érosion}
+\label{ske_par_erosion}
+\indexfrr{masque}{$\pa{3,3}$}
+
+
+
+L'érosion d'une forme consiste à lui retirer l'ensemble des pixels qui forme son contour. Toutefois, l'érosion d'une forme composée d'une seule composante connexe peut aboutir à plusieurs composantes. Son squelette est donc obtenu après plusieurs érosions successives tout en conservant à chaque étape des formes homotopes à la forme initiale.
+
+Tout d'abord, on définit la fonction $f_k$ qui associe à un pixel un ensemble de pixels correspondant à un de ses voisinages définis par la figure~\ref{ske_vois_48con} (4~ou~8 connexité). On définit également pour une forme $F$~:
+
+
+			$$
+			f_k \pa{F} = \underset{p \in F}{\cup} \; f_k\pa{p}
+			$$
+			
+Les algorithmes qui suivent supposent fréquement que la forme à squelettiser ne contient qu'une seule composante connexe. Il suffit de répéter cet algorithme pour chaque composante connexe si ce n'est pas le cas.			
+			
+
+		\begin{xalgorithm}{squelettisation par érosion (1)}
+		\indexfr{squelettisation}
+		\indexfr{érosion}
+		\label{ske_algo_ske_ero_1}
+		
+		Pour une forme $F$, on construit son squelette $S_k$ en $k$-connexité érosions successives.
+		$\overline{S_k}$ désigne le complémentaire de $S_k$ dans l'image. On suppose que $F$ n'a qu'une composante connexe.
+		Le squelette est l'ensemble $S_k$ final.
+		
+		\begin{xalgostep}{initialistion}
+				$S_k = F$
+		\end{xalgostep}
+		
+		\begin{xalgostep}{érosion}\label{ske_algo_ske_ero_a}
+				$X \longleftarrow f_{12-k}\pa{\overline{S_k}} \cap S_k$ \\
+				$L \longleftarrow \emptyset$ \\
+				\begin{xforeach}{p}{X}
+					\begin{xif}{$S_k - \acc{p}$ ne contient qu'une composante connexe}
+						$L \longleftarrow L \cup \acc{p}$
+					\end{xif} 
+				\end{xforeach} \\ 
+				$S_k \longleftarrow S_k - L$
+		\end{xalgostep}
+		
+		\begin{xalgostep}{terminaison}
+				\begin{xif}{$L \neq \emptyset$}
+				retour à l'étape~\ref{ske_algo_ske_ero_a}
+				\end{xif}
+		\end{xalgostep}
+		
+		\end{xalgorithm}
+
+
+			\begin{figure}
+			$$
+			\begin{tabular}{|c|c|}\hline
+					$\begin{array}{c|c|c} 
+					2 & 1 & 2 \\ \hline
+					1 & 0 & 1 \\ \hline
+					2 & 1 & 2 \medskip
+					\end{array}$ 
+					&
+					$\begin{array}{c|c|c} 
+					1 & 1 & 1 \\ \hline
+					1 & 0 & 1 \\ \hline
+					1 & 1 & 1 \medskip
+					\end{array}$ 
+			\\ \hline
+			$M_4$ & $M_8$\\ \hline
+			\end{tabular}
+			$$
+			\caption{Masques de distance $M_4$ et $M_8$ utilisés pour construire un squelette en $k$-connexité.}
+			\label{ske_masque_ske_k_con}
+			\end{figure}
+
+
+
+
+L'ensemble $X$ correspond au squelette de la forme en cours d'érosion. Cet algorithme est assez coûteux puisque, à chaque étape~\ref{ske_algo_ske_ero_a}, une passe d'image est effectuée pour construire l'ensemble $f_{12-k}\pa{\overline{S_k}}$. L'idée est alors d'utiliser la carte de distance (définie en~\ref{ske_def_cart_dist_def}) construite à l'aide du masque $M_4$ ou $M_8$ (figure~\ref{ske_masque_ske_k_con}). Cette dernière contient pour chaque pixel de la forme $F$ un nombre qui correspond presque à l'itération de l'étape~\ref{ske_algo_ske_ero_a} de l'algorithme~\ref{ske_algo_ske_ero_1} dans laquelle il sera traité.
+
+
+
+
+
+
+
+			\begin{figure}
+			$$
+			\begin{tabular}{|c|c|}\hline
+					\filefig{../squelette/fig_mask1}
+	    &
+					\filefig{../squelette/fig_mask2}
+	    \\ \hline
+	    $V_4$ & $V_8$ \\ \hline
+	    \end{tabular}
+	    $$
+			\caption{	Voisinages 4-connexe et 8-connexe~: le voisinage du point central correspond à l'ensemble des
+								cases cochées.}
+			\label{ske_vois_48con}
+			\end{figure}
+
+
+
+
+\indexfr{composante connexe}
+
+Réaliser une érosion sur une forme $F$ revient à chercher tous les points du contour qu'on peut supprimer sans accroître le nombre de composantes connexes. Pour cela, il suffit de se limiter à un voisinage 3x3 d'un point du contour et de vérifier s'il correspond à une des configurations de la figure~\ref{ske_masque_clean_k_con}. Ceci mène à l'algorithme suivant~:
+
+
+			
+
+		\begin{xalgorithm}{squelettisation par érosion (2)}
+		\indexfr{squelettisation}
+		\indexfr{érosion}
+		\indexfrr{carte}{distance}
+		\label{ske_algo_ske_ero_algo_2}
+		\indexfr{masque}
+		
+		Pour une forme $F$ incluse dans l'image $I$, on construit son squelette $S_4$ en $4$-connexité, 
+		par érosions successives. Le squelette est l'ensemble $L$ final.
+		
+		\begin{xalgostep}{carte de distance}
+				On construit la carte de distance avec l'algorithme~\ref{ske_algo_cart_dist} et le masque $M_4$ de la
+				figure~\ref{ske_masque_ske_k_con}. La forme $F$ est constituée des pixel $p$ 
+				pour lesquels $C^I\pa{p} > 0$ où 
+				$C$ est la carte de distance. Puis on construit la liste des pixels $L=\vecteur{p_1}{p_n}$. 
+				Cette liste est triée 
+				par ordre de distance croissante~: $i \infegal j \Longrightarrow C^I\pa{p_i} \infegal C^I\pa{p_j}$.
+		\end{xalgostep}
+		
+		\begin{xalgostep}{érosion}\label{ske_algo_ske_2_a}
+				$A \longleftarrow \emptyset$ \\
+				\begin{xforeach}{p}{L}
+				Si le voisinage du pixel $p$ correspond à une des configurations $N_1$ à $N_7$ de la 
+				figure~\ref{ske_masque_clean_k_con} (ou leurs transformations par symétrie axiale ou rotation) alors~: 
+				$A \longleftarrow A \cup \acc{p}$
+				\end{xforeach}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{suppression}
+				\begin{xif}{$A \neq \emptyset$}
+					$L \longleftarrow L - A$ \\
+					L'ordre initial des pixels dans la liste $L$ doit être conservé. \\
+					Retour à l'étape~\ref{ske_algo_ske_2_a}.
+				\end{xif}		
+		\end{xalgostep}
+				
+		
+		\end{xalgorithm}
+
+
+
+
+
+			
+
+			\begin{figure}
+			$$
+			\begin{tabular}{|c|c|c|c|c|c|c|}\hline
+					\filefig{../squelette/fig_8mask1}
+				&
+					\filefig{../squelette/fig_8mask2}
+				&
+					\filefig{../squelette/fig_8mask3}
+				&
+					\filefig{../squelette/fig_8mask4}
+				&
+					\filefig{../squelette/fig_8mask5}
+				&
+					\filefig{../squelette/fig_8mask6}
+				&
+					\filefig{../squelette/fig_8mask7}
+			\\ \hline
+			$N_1$ & $N_2$ & $N_3$ & $N_4$ & $N_5$ & $N_6$ & $N_7$ \\ \hline
+			\end{tabular}
+			$$
+			\caption{	Masques de nettoyage pour construire un squelette en $4$ ou $8$-connexité. Pour chaque masque,	
+								l'ensemble des cases cochées correspond à des pixels appartenant à la figure $F$ dont il faut obtenir 
+								le squelette. Si le voisinage du pixel central correspond à une de ces figures, il est nettoyé et 
+								prend la couleur du fond.	Il faut également envisager les transformations 
+								(par symétrie axiale ou rotation) 
+								de ces figures, 4 images par rotation, 4 images par symétrie axiale, 
+								soit 36 figures différentes au total.}
+			\label{ske_masque_clean_k_con}
+			\end{figure}
+
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=3cm, width=6cm]
+	    {\filext{../squelette/image/ske_decentre}}\end{array}$}$$
+	    \caption{	Squelette décentré obtenu lorsque l'érosion n'est pas effectuée 
+	    					en éliminant d'abord les pixels noirs 
+	    					les plus proches de pixels blancs, soit lorsque l'algorithme~\ref{ske_algo_ske_ero_algo_2} 
+	    					ne trie pas l'ensemble $L$. Ce résultat est à comparer avec 
+	    					celui de la figure~\ref{squelette_fig2}.}
+	    \label{squelette_non_centre}
+			\end{figure}
+
+\begin{xremark}{tri de la liste $L$}
+\indexfr{tri}
+Le tri de la liste $L$ par ordre de distance croissante permet de supprimer d'abord les points du contour avant ceux de l'intérieur. Si ce tri n'est pas fait, le résultat n'est plus aussi parfait (figure~\ref{squelette_non_centre}).
+\end{xremark}
+
+
+\begin{xremark}{masques $N_6$ et $N_7$}
+Les masques $N_6$ et $N_7$ (voir figure~\ref{ske_masque_clean_k_con}) sont nécessaires afin d'éviter que le squelette ne présente des configurations comme celle de la figure~\ref{squelette_non_parfait_recoin} où il reste une case à nettoyer.
+\end{xremark}
+
+			\begin{figure}
+					$$
+					\begin{tabular}{|c|}\hline
+					\filefig{../squelette/fig_maskfail}
+			    \\ \hline
+			    \end{tabular}
+			    $$
+			    \caption{	L'érosion de la forme n'est pas terminée sans l'application
+			    					des masques $N_6$ ou $N_7$ de la figure~\ref{ske_masque_clean_k_con}.}
+			    \label{squelette_non_parfait_recoin}
+			    \end{figure}
+
+
+\begin{xremark}{quatre points résistants}
+L'algorithme de squelettisation~\ref{ske_algo_ske_ero_algo_2} produit une figure particulière qui peut être délicate à traiter si l'objectif est de vectoriser le squelette. La figure~\ref{squelette_4_mousquetaires} montre quatre branches qui se rejoignent en un bloc de quatre pixels dont on aurait préféré qu'ils ne soient qu'un.
+\end{xremark}
+
+
+			\begin{figure}
+					$$
+					\begin{tabular}{|c|}\hline
+					\filefig{../squelette/fig_maskfail2}
+			    \\ \hline
+			    \end{tabular}
+			    $$
+			    \caption{	Quatre branches liées par un bloc de quatre pixels, cette figure 
+			    					est obtenue pour un squelette
+			    					$4$-connexe. }
+			    \label{squelette_4_mousquetaires}
+			  	\end{figure}
+
+
+
+Le passage à un squelette $8$-connexité s'effectue en appliquant de nouveaux masques au squelette $4$-connexe. Il s'agit de l'algorithme suivant~:
+
+
+
+		\begin{xalgorithm}{squelettisation par érosion (3)}
+		\indexfr{squelettisation}
+		\indexfr{érosion}
+		\indexfr{masque}
+		\label{ske_algo_ske_ero_algo_3}
+		
+		Pour une forme $F$ incluse dans l'image $I$, on construit son squelette $S_4$ en 
+		$4$-connexité par érosions successives. Le squelette est l'ensemble $L$ final.
+		
+		\begin{xalgostep}{squelette $4$-connexe}
+				On construit le squelette $S_4$ ($4$-connexe) grâce à l'algorithme~\ref{ske_algo_ske_ero_algo_2}. \\
+				$L \longleftarrow S_4$
+		\end{xalgostep}
+		
+		\begin{xalgostep}{érosion}\label{ske_algo_ske_3_a}
+				$A \longleftarrow \emptyset$ \\
+				\begin{xforeach}{p}{L}
+				Si le voisinage du pixel $p$ correspond à la configuration $N'_1$ de la 
+				figure~\ref{ske_masque_clean_k_con_8} (ou à ses transformations) alors~: 
+				$A \longleftarrow A \cup \acc{p}$
+				\end{xforeach}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{suppression}\label{ske_algo_ske_3_b}
+				\begin{xif}{$A \neq \emptyset$}
+					$L \longleftarrow L - A$ \\
+					Retour à l'étape~\ref{ske_algo_ske_3_a}.
+				\end{xif}		
+		\end{xalgostep}
+				
+		
+		\end{xalgorithm}
+		
+		
+		
+		
+
+
+
+			\begin{figure}
+			$$
+			\begin{tabular}{|c|}\hline
+					\filefig{../squelette/fig_masksp2}
+			\\ \hline
+			$N'_1$ \\ \hline
+			\end{tabular}
+			$$
+			\caption{	Masque de nettoyage pour construire un squelette en $8$-connexité. 
+								Pour ce masque, l'ensemble des
+								cases cochées correspond à des pixels appartenant à la figure $F$, les cases marquées 
+								d'un point d'interrogation peuvent être cochées ou non. Si le voisinage du pixel central 
+								correspond à cette figure (ou ses transformations par sysmétrie ou rotation), 
+								il est nettoyé et prend la couleur du fond.
+								}
+			\label{ske_masque_clean_k_con_8}
+			\end{figure}
+
+
+
+
+	
+
+
+\indexfr{Marthon}
+Dans les algorithmes précédents (\ref{ske_algo_ske_ero_algo_2} et~\ref{ske_algo_ske_ero_algo_3}), il faut vérifier le voisinage de chaque pixel correspond à des configurations. L'algorithme qui suit propose une expression simplifiée de ces vérifications, il est tiré de~\citeindex{Marthon1979}.
+
+
+		\begin{xalgorithm}{squelettisation de Marthon}
+		\indexfr{squelettisation}
+		\indexfrr{carte}{distance}
+		\indexfr{érosion}
+		\label{ske_algo_ske_ero_algo_marthon}
+		
+		Pour une forme $F$ incluse dans l'image $I$, on construit son squelette $S_k$ en $k$-connexité.
+		
+		\begin{xalgostep}{carte de distance}
+				On construit la carte de distance avec l'algorithme~\ref{ske_algo_cart_dist} et le masque $M_k$ de la
+				figure~\ref{ske_masque_ske_k_con}. La forme $F$ est constituée des pixels 
+				$p$ pour lesquels $C^I\pa{p} > 0$ où 
+				$C$ est la carte de distance. Puis on construit la liste des pixels $L=\vecteur{p_1}{p_n}$. 
+				Cette liste est triée 
+				par ordre de distance croissante~: $i \infegal j \Longrightarrow C^I\pa{p_i} \infegal C^I\pa{p_j}$.
+		\end{xalgostep}
+		
+		\begin{xalgostep}{érosion}\label{ske_algo_ske_2_a}
+				$A \longleftarrow \emptyset$ \\
+				\begin{xforeach}{p}{L}
+					Soit $V_k$ le voisinage de la figure~\ref{ske_vois_48con} pour le pixel $p$.\\
+					$\begin{array}{lll}
+					U &\longleftarrow& V_k \cap L \\
+					x &\longleftarrow& \summyone{p' \in U} \; p'_x - p_x \text{ et }	
+								y \longleftarrow \summyone{p' \in U} \; p'_y - p_y \\
+					z &\longleftarrow& \abs{x} + \abs{y}
+					\end{array}$ \\
+					\begin{xif}{$z = 4$}
+						$A \longleftarrow A \cup \acc{p}$ 
+					\xelse
+						\begin{xif}{$z = 3$}
+							selon ses voisins, $A \longleftarrow A \cup \acc{p}$
+						\end{xif}
+					\end{xif}
+				\end{xforeach}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{suppression}
+				\begin{xif}{$A \neq \emptyset$}
+					$L \longleftarrow L - A$ \\
+					L'ordre initial des pixels dans la liste $L$ doit être conservé. \\
+					Retour à l'étape~\ref{ske_algo_ske_2_a}.
+				\end{xif}		
+		\end{xalgostep}
+		
+		
+		\end{xalgorithm}
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Erosion à partir de masques plus larges}
+\indexfr{érosion}
+\indexfrr{masque}{$\pa{4,4}$...}
+\indexfr{voisinage}
+
+
+Les érosions décrites au paragraphe~\ref{ske_par_erosion} éliminent les pixels en s'appuyant sur un voisinage $\pa{3,3}$ centré sur le pixel considéré, elles mènent parfois à des configurations indésirables (figure~\ref{squelette_4_mousquetaires}) ou éliminent trop de pixels (voir figure~\ref{squelette_elimination_trop}). Pour des algorithmes plus minutieux, il faut avoir recours à un voisinage plus grand. Les problèmes liés à la taille du voisinage rencontrés ici sont similaires à ceux concernant le lissage du contour évoqué au paragraphe~\ref{image_lissage_contour__} (page~\pageref{image_lissage_contour__}). Certains masques utilisés pour cette tâche sont définis sur des voisinages plus grands que~3x3 (voir figure~\ref{image_lissage_contour}, page~\pageref{image_lissage_contour}) et donnent une idée de ce qu'il est possible de faire à partir des méthodes de squelettisation par érosion.
+
+
+
+			\begin{figure}
+					$$
+					\begin{tabular}{|c|c|c|}\hline
+					\filefig{../squelette/fig_nmask1}
+					&					
+					\filefig{../squelette/fig_nmask2}
+					&					
+					\filefig{../squelette/fig_nmask3}
+			    \\ masque 1 & masque 2 & forme à squelettiser \\ \hline
+			    \end{tabular}
+			    $$
+			    \caption{	Le nettoyage de cette forme par les deux masques de gauche ne laisse que trois pixels. }
+			    \label{squelette_elimination_trop}
+			  	\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Ligne de crête}
+\indexfrr{ligne}{crête}
+\label{ske_par_crete}
+
+La carte de distance associe à chaque pixel d'une forme $F$ la distance au pixel blanc le plus proche. Si cette distance est considérée comme une altitude, il est possible de définir les lignes de crêtes du paysage formé par la carte. Cette méthode de squelettisation est composée de deux étapes~:
+
+		\begin{enumerate}
+		\item Recherche des maximas locaux~: le squelette inclut les points dont l'altitude est supérieure à toutes
+					celles de ses 4 ou 8 voisins.
+		\item Prolongations des lignes formées à l'étape~1~: la première étape aboutit à la formation de lignes 
+					discontinues qui doivent être prolongées afin de retrouver un squelette homotope 
+					à la forme d'origine.
+		\end{enumerate}
+		
+Cette méthode est plus rapide qu'un algorithme basé sur des érosions succesives lorsque la forme dont il faut extraire le squelette est "épaisse" car l'algorithme se concentre tout de suite sur les points essentiels.
+
+
+
+
+
+
+
+
+
+\subsection{Algorithmes parallèles de squelettisation}
+\indexfrr{érosion}{parallèle}
+\indexfrr{squelettisation}{parallèle}
+\indexfr{processus}
+\label{ske_squelettisation_parallele}
+
+
+Les algorithmes de squelettisation basés sur une érosion à l'aide de masques incluent de nombreux tests sur les pixels. En divisant cet ensemble de masques en plusieurs groupes disjoints (ou de faible intersection), il est possible de paralléliser ces algorithmes~: dans ce cas, plusieurs processus  -~autant qu'il y a de groupes~- érodent l'image, chacun capable de n'enlever que des pixels vérifiant la configuration décrite par le groupe de masques qui lui est associé. La parallélisation ne rend pas l'algorithme moins coûteux mais permet de dimininuer son temps d'exécution. L'article \citeindex{ZhangY1997} s'intéresse à quatre de ces algorithmes utilisés avec deux processus. Il compare leur coût et leur redondance, qui est définie ici comme l'intersection entre les deux groupes de masques utilisés.
+
+
+
+
+
+
+
+
+
+
+\subsection{Extraction du squelette basée sur un critère de connexité}
+\indexfrr{critère}{connexité}
+\label{ske_critere_connexite}
+
+La méthode est tirée de l'article \citeindex{Choi2003}. Si on considère un point $P$ d'une forme à squelettiser, on note $Q\pa{P}$ le point le plus proche de $P$ appartenant au contour, on note également $\pa{P_i}_{1 \infegal i \infegal 8}$ les huits voisins de $P$. A priori, si le point $P$ n'appartient pas au squelette, l'ensemble de points $\pa{Q\pa{P_i}}_{1 \infegal i \infegal 8}$ seront proches les uns des autres. En revanche, si le point $P$ appartient au squelette, l'ensemble $\pa{Q\pa{P_i}}_{1 \infegal i \infegal 8}$ sera dispersé sur deux bords opposés du contour (voir figure~\ref{ske_choi2003}).
+
+
+		\begin{figure}[ht]
+		$$\begin{tabular}{|c|}\hline 
+		\filefig{../squelette/fig_choi}
+		\\ \hline \end{tabular}$$
+		\caption{	Idée sous-jacente de la squelettisation proposée par~\citeindexfig{Choi2003}.
+							Le point $A$ n'est pas situé sur le squelette, tous ses voisins sont plus proches
+							du bord supérieur que du bord supérieur. A l'inverse, le point $B$ appartient au
+							squelette, ses voisins, selon leur position par rapport à $A$, sont plus proches
+							soit du bord supérieur, soit du bord inférieur.}
+		\label{ske_choi2003}
+		\end{figure}
+
+
+\indexfrr{carte}{distance}
+
+L'algorithme suppose de connaître pour chaque pixel de la forme le point le plus proche appartenant au contour, cette information peut être obtenue facilement à partir des cartes de distance (voir paragraphe~\ref{ske_carte_distance_sec}) en conservant le pixel ayant permis d'atteindre le minimum de distance (la carte de distance est ici estimée pour une forme réduite à son contour).
+
+		\begin{xalgorithm}{squelettisation (Choi2003)}
+		La forme à squelettiser est notée $F$, son contour est noté $\overline{F}$ et son squelette $S\pa{F}$. 
+		On note $\rho > 0$ un paramètre réel et positif. On note également $X\pa{P}$ et $Y\pa{P}$ 
+		respectivement l'abscisse et l'ordonnée de $P$.
+		
+		\begin{xalgostep}{carte de distance}
+		Calcul d'une carte de distance permettant d'associer à chaque pixel $P \in F$ 
+		le point $Q\pa{P} \in \overline{F}$.
+		\end{xalgostep}
+		
+		\begin{xalgostep}{squelettisation}
+		Pour tout point $P \in F$, soit $\pa{P_i}_{1 \infegal i \infegal 8}$ les voinsins de $P$ 
+		en 8-connexité, on définit~:
+		
+				$$
+				\forall i \in \ensemble{1}{8}, \; Q_i = Q\pa{P_i} + P - P_i
+				$$
+				
+		Alors $P$ appartient au squelette s'il existe $i \in \ensemble{1}{8}$ tel que~:
+		
+				\begin{eqnarray}
+				\norme{Q_i - Q\pa{P}}^2 		&\supegal& \rho  \label{squelette_choi_condition_1}\\
+				\text{et } \norme{Q_i}^2 - \norme{Q}^2	&\infegal& \max \acc{ X\pa{Q_i - Q}, \; Y\pa{Q_i - Q}}
+				\end{eqnarray}
+				
+		\end{xalgostep}
+		\end{xalgorithm}
+
+
+Le coût de cet algorithme est linéaire par rapport au nombre de pixels de la forme à squelettiser, ce qui représente un avantage certain par rapport aux algorithmes basés sur une érosion (voir paragraphe~\ref{ske_par_erosion}). Il reste à ajuster la valeur $\rho$, petite pour des squelettes fournis, grande pour des squelettes dégarnis (voir figure~\ref{squelette_choi_connexite}). Sans la seconde condition de l'algorithme, le squelette obtenu a trois pixels d'épaisseur, cette condition permet de ramener cette épaisseur sur un pixel dans la majorité des cas. Il est parfois souhaitable d'affiner le résultat par une étape d'érosion afin d'obtenir l'epaisseur ou la connexité voulues.
+
+
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=5cm, width=12cm]
+	    {\filext{../squelette/image/choi}}\end{array}$}$$
+	    \caption{	Squelettisation à partir d'un critère de connexité, squelettes obtenus pour
+	    					différentes valeurs du paramètre $\rho$ (figure extraite de~\citeindexfig{Choi2003}).}
+	    \label{squelette_choi_connexite}
+			\end{figure}
+
+
+
+\begin{xremark}{pertes de connexité}
+Cet algortihme n'est pas bien adapté à la squelettisation des caractères manuscrits. Ces formes sont souvent très fines et le résultat final présente de nombreuses barbules et quelques pertes de connexité dues à la condition~(\ref{squelette_choi_condition_1}) qui détruit le squelette dans les zones dont l'épaisseur est trop fine.
+\end{xremark}
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Squelettisation à partir de filtre de Gabor}
+\indexfr{Gabor}
+\indexfrr{filtrage}{Gabor}
+\indexfrr{squelettisation}{Gabor}
+\label{ske_squelettisation_gabor}
+
+L'article \citeindex{Su2003} propose une méthode fondée sur les filtres de Gabor et l'applique au cas des caractères chinois. Ces caractères sont principalement composés des traits verticaux, horizontaux et diagonaux, une première étape de filtrage permet d'extraire ces quatre types de traits comme le montre la figure~\ref{squelette_su_gabor_1}, chaque trait est ensuite vectorisé ce qui permet d'obtenir une première approximation du squelette (avant-dernière colonne de la figure~\ref{squelette_su_gabor_1}). Les traits sont ensuite reconnectés entre eux pour obtenir le squelette final selon des critères de proximités et de direction. L'avantage de cette méthode est sa grande stabilité par rapport au bruit comme le montre les deux dernières lignes de la figure~\ref{squelette_su_gabor_1}. Les post-traitements regroupant le nettoyage et la connexion des traits succèdent au filtrage de Gabor. Comme ils sont indépendants de la squelettisation, seul le filtrage de Gabor sera décrit.
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}[c]{|rc|}\hline
+	    image nette 		& \includegraphics[height=2cm, width=10cm]{\filext{../squelette/image/su1}} \\
+	    image bruitée 	& \includegraphics[height=2cm, width=10cm]{\filext{../squelette/image/su2}} \\
+	    contour altéré 	& \includegraphics[height=2cm, width=10cm]{\filext{../squelette/image/su3}} 
+	    \\ \hline \end{tabular}$$
+	    \caption{	Extraction des traits d'une image selon quatre directions, verticale, horizontale, diagonales,
+	    					à l'aide de filtres de Gabor, figure extraite de \citeindexfig{Su2003}). La première ligne
+	    					montre le résultat sur une image nette, la seconde ligne sur une image bruitée aléatoirement,
+	    					la dernière ligne, sur une image dont le contour a été altéré.}
+	    \label{squelette_su_gabor_1}
+			\end{figure}
+
+On note $i\pa{x,y} \in \cro{0,1}$ l'intensité de l'image, et $h\pa{x,y}$ le filtre de Gabor défini par~:
+
+			\begin{eqnarray}
+			h\pa{x,y} &=&\exp\pa{ -\pi \; \frac{x^2 + y^2}{\sigma^2} } \; 
+													\exp\pa { 2i \pi \, f \, \pa{ x \, \cos \theta + j \, \sin \theta } }
+			\end{eqnarray}
+			
+La réponse de l'image au filtre de Gabor est notée $I\pa{x,y}$~:
+
+
+			\begin{eqnarray}
+			I\pa{x,y} &=&		\abs{ i\pa{x,y} \otimes h\pa{x,y} }
+			\end{eqnarray}
+
+Les paramètres utilisées sont les suivants~:
+
+			$$
+			\begin{array}{cc}
+			\sigma = \frac{ \sqrt{2} }{f} & f = 0,9857 \frac{ e } {dh }
+			\end{array}
+			$$
+			
+$e$ est l'épaisseur moyenne des traits (voir paragraphe~\ref{image_epaisseur_trace}, page~\pageref{image_epaisseur_trace}), $h$ est la hauteur de l'image, $d$ est la densité de l'image où le rapport entre le nombre de pixels noirs et la taille de d'image. L'angle $\theta$ prend quatre valeurs pour les quatre directions désirées~: $\theta \in \acc{0, \frac{\pi}{4}, \frac{\pi}{2}, \frac{3\pi}{4} }$, le résultat de ces quatre filtres est illustré par la figure~\ref{squelette_su_gabor_2}.
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|}\hline
+	    \includegraphics[height=3cm, width=14cm]{\filext{../squelette/image/su4}} 
+	    \\ \hline \end{tabular}$$
+	    \caption{	Réponses des quatres filtres de Gabor correspondant aux quatre directions, 
+	    					$0^\circ$, $45^\circ$, $90^\circ$, $135^\circ$, figure extraite de \citeindexfig{Su2003}.}
+	    \label{squelette_su_gabor_2}
+			\end{figure}
+
+Ces quatre images sont ensuite binarisées pour obtenir les quatre images $K_n\pa{x,y}_{1 \infegal n \infegal 4}$~:
+
+
+			\begin{eqnarray}
+			\forall \pa{x,y}, \; K_n\pa{x,y} &=& \indicatrice{ I_n\pa{x,y} \supegal \alpha }
+			\end{eqnarray}
+
+Le seuil $\alpha$ est calculé de manière itérative de façon à ce que les quatre images $K_n$ ne contiennent pas d'informations redondantes, deux autres images sont alors construites~:
+
+			\begin{eqnarray}
+			\forall \pa{x,y}, \; M_\alpha \pa{x,y} &=& \summy{n=1}{4} \; K_n\pa{x,y} \\
+			\forall \pa{x,y}, \; N_\alpha \pa{x,y} &=& \summy{n=1}{4} \; \indicatrice{ M_\alpha \pa{x,y} \supegal 1}
+			\end{eqnarray}
+
+\indexfrr{erreur}{perte}
+\indexfrr{erreur}{recouvrement}
+\indexfr{recouvrement}
+
+Les quatre images $K_n$ permettent de reconstruire l'image originale, deux types d'erreurs sont alors quantifiés, l'erreur en perte $E_p\pa{\alpha}$ et l'erreur de recouvrement $E_r\pa{\alpha}$~:
+
+			\begin{eqnarray}
+			\begin{array}{ccc}
+			E_p\pa{\alpha}   =  \frac{ \summyone{x,y} \; \abs{ N_\alpha \pa{x,y} - i\pa{x,y} } } 
+																{ \summyone{x,y} \; i\pa{x,y} } &&
+			E_r\pa{\alpha}   =  \frac{ \summyone{M_\alpha \pa{x,y} > 1} \; M_\alpha \pa{x,y} - i\pa{x,y}  } 
+																{ \summyone{x,y} \; i\pa{x,y} } 
+			\end{array}
+			\end{eqnarray}
+			
+L'erreur globale est définie comme la moyenne des deux~: $E\pa{\alpha} = \frac{1}{2} \pa{ E_r\pa{\alpha} + E_p\pa{\alpha}}$. Le seuil $\alpha$ est choisi comme la limite de la suite $\alpha_t$ définie par~:
+
+			\begin{eqnarray}
+			\alpha_0   		&\in&  \cro{0,1}  \\
+			\alpha_{t+1}	&=&		\alpha_t + \cro{ \indicatrice{ E\pa{\alpha_t} \supegal E\pa{\alpha_{t-1}}} - 
+																					\indicatrice{ E\pa{\alpha_t} < E\pa{\alpha_{t-1}}}   }
+													\; \tanh \pa{ \frac{ E\pa{\alpha} }{2} }
+			\end{eqnarray}			
+			
+Les images obtenus après ce seuillage ne sont pas encore parfaites (voir figure~\ref{squelette_su_gabor_3}), elles sont ensuite nettoyées des trop petits segments en tenant compte des attributs tels que la surface et la longueur, leur présence sur plus d'une image.
+
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|}\hline
+	    \includegraphics[height=3cm, width=14cm]{\filext{../squelette/image/su5}} 
+	    \\ \hline \end{tabular}$$
+	    \caption{	Réponses seuillées des quatres filtres de Gabor 
+	    					correspondant aux quatres directions verticale, horizontale,
+	    					diagonales, figure extraite de \citeindexfig{Su2003}. 
+	    					Les petits segments entourés vont être supprimés par le nettoyage.}
+	    \label{squelette_su_gabor_3}
+			\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%------------------------------------------------------------------------------------------------------------------
+\section{Squelettisation d'une forme vectorielle}
+%------------------------------------------------------------------------------------------------------------------
+\indexfrr{forme}{vectorielle}
+
+
+
+Ces méthodes diffèrent des précédentes car elles utilisent uniquement le contour de la forme à squelettiser, ce dernier étant décrit comme une succession de segments. Les méthodes d'érosion, quant à elles, partent d'une forme décrite par un ensemble de pixels connexes. Il est bien sûr possible d'appliquer les méthodes vectorielles à ces ensembles de pixels en les réduisant à leur contour. Les pixels du contour obtenus sont alors les sommets des segments. Afin de réduire la complexité des méthodes vectorielles, l'ensemble des pixels formant le contour est souvent réduit. Les sommets utilisés pour la squelettisation sont répartis à égale distance le long de la courbe (voir figure~\ref{squelette_voronoi}) ou celle-ci peut-être vectorisée de manière à regrouper ensemble des segments successifs colinéaires (voir figure~\ref{squelette_reseau_bissecteur}).
+
+
+
+\subsection{Diagramme de Voronoï}
+\indexfr{Voronoï}\indexfr{médiatrice}
+\label{ske_voronoi_ske_ske}
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=8cm, width=12cm]
+	    {\filext{../squelette/image/ske_voronoi}}\end{array}$}$$
+	    \caption{	Squelettisation à partir d'un graphe de Voronoï, figure extraite de~\citeindexfig{Attali1995}.}
+	    \label{squelette_voronoi}
+			\end{figure}
+
+\indexfr{axe médian}
+
+La définition de l'axe médian (\ref{ske_def_axe_med}) fait intervenir le centre de boules tangentes en au moins deux points du contour de cette forme. Par conséquent, en considérant deux points du contour, le squelette est susceptible de passer par la médiatrice de ces deux points. Le diagramme de Voronoï est justement un ensemble de médiatrices. Il suffit alors de disposer des points éparpillés sur le contour, de déterminer le diagramme de Voronoï puis de l'élaguer pour ne garder que les segments de médiatrice empruntés par le squelette. Cette idée a été developpée dans~\citeindex{Ogniewicz1992}, \citeindex{Ogniewicz1995}, ou encore~\citeindex{Attali1995}. La figure~\ref{squelette_voronoi} montre que le squelette est plus précis lorsque les points sur le contour sont plus nombreux mais évidemment plus lent à calculer. Une fois que le diagramme de Voronoï associé à une forme est construit, le squelette est tout simplement constitué des seuls segments inclus dans l'intérieur de cette forme.
+
+
+
+
+
+
+\subsection{Réseau bissecteur}
+\indexfrr{réseau}{bissecteur}
+\label{ske_reseau_bissecteur}
+
+La squelettisation par réseau bissecteur est assez proche de celle developpée à partir d'un diagramme de Voronoï (voir~\citeindex{Cloppet2000}). Une forme est définie par son contour lui-même défini comme une succession d'arêtes. Les premiers  n\oe uds du réseau bissecteur sont formés par les bissectrices de chaque angle. Lorsque deux bissectrices s'interceptent, elles forment un angle dont on peut à nouveau tracer la bissectrice (voir figure~\ref{squelette_reseau_bissecteur}). Ce graphe est similaire à celui obtenu par le diagramme de Voronoï, le squelette est simplement une sous-partie de ce diagramme.
+
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=4cm, width=4cm]
+	    {\filext{../squelette/image/ske_bis}}\end{array}$}$$
+	    \caption{	Squelettisation à partir d'un réseau bissecteur, figure extraite de~\citeindexfig{Cloppet2000}.}
+	    \label{squelette_reseau_bissecteur}
+			\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%------------------------------------------------------------------------------------------------------------
+\section{Affinement du résultat}
+%------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+\subsection{Nettoyage des barbules}
+\label{ske_par_barbule}
+\indexfrr{nettoyage}{barbule}
+\indexfr{barbule}
+
+
+\indexfr{axe médian}\indexfr{composante connexe}
+
+Le squelette d'une image est sa représentation en "fil de fer", celle-ci peut-être plus ou moins précise. Après la squelettisation, un grand nombre de petits segments du squelette peuvent s'avérer non pertinents comme le montre la figure~\ref{squelette_barbule}. Le squelette d'un mot manuscrit devrait être proche du mouvement du stylo. Toutefois, la squelettisation conserve un ensemble de petits segments sans importance dont la suppression ne modifie pas le nombre de composantes connexes. Nettoyé de ces barbules, le squelette est en quelque sorte plus "lisible" mais il n'y a pas de règles pour ce nettoyage, il dépend à la fois de l'algorithme de squelettisation employé et de la précision désirée.
+
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|c|}\hline
+	    \includegraphics[height=4cm, width=4cm]{\filext{../squelette/image/ske_barbule2}}&
+	    \includegraphics[height=4cm, width=4cm]{\filext{../squelette/image/ske_barbule1}} \\ \hline
+	    \end{tabular}$$
+	    \caption{	La seconde image représente le squelette de la première image nettoyé de ses barbules, 
+	    					la seconde image contient simplement l'information pertinente.}
+	    \label{squelette_barbule}
+			\end{figure}
+
+
+Ce nettoyage peut s'appuyer sur des critères géométriques tel que celui proposé dans \citeindex{Jang1992} qui mesure le rapport entre la forme $F$ à squelettiser et l'aire formée par l'ensemble $G$ des boules maximales incluses dans $F$ dont le centre appartient au squelette. Par définition, $G \subset F$, le critère de \citeindex{Jang1992} est égal à~:
+
+				\begin{eqnarray}
+				c_J   =  \frac{ aire\pa{G} } { aire \pa{F} }  \infegal 1
+				\end{eqnarray}
+				
+Le squelette est rogné à ses extrémités tant que le critère $c_J$ est supérieur à un certain seuil. Un autre critère provient de \citeindex{Huang2003} qui compare les longueurs (en pixel) du squelette et du contour~:
+
+				\begin{eqnarray}
+				c_H   =  \frac{ aire\pa{squelette} } { aire \pa{contour} }  \infegal 1
+				\label{squelette_haung_critere}
+				\end{eqnarray}
+
+
+
+
+
+
+
+\subsection{Squelette d'une boucle}
+\indexfrr{squelette}{boucle}
+
+
+Cet article \citeindex{Huang2003} propose également d'effectuer l'érosion de la forme tant que le critère $c_H$ (\ref{squelette_haung_critere}) est supérieur à un certain seuil. Par conséquent, pour un seuil bien ajusté, les zones peu épaisses sont bien squelettisées tandis que les zones épaisses sont un compromis entre squelette et contour, la figure~\ref{squelette_barbule_six_stop} montre le résultat qu'il est possible d'obtenir avec ce genre de méthode. Le squelette du chiffre "6" est obtenu avec sa boucle bien que celle-ci soit comblée de pixels noirs.
+
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|}\hline
+	    \includegraphics[height=2cm, width=1.2cm]{\filext{../squelette/image/sixstop}}
+	    \\ \hline \end{tabular}$$
+	    \caption{	Le squelette de cet image est une étape intermédiaire entre le contour et le véritable squelette.
+	    					Ce résultat est pourtant proche de celui qu'il faut obtenir puisque la boucle du chiffre "6"
+	    					disparaît avec un algorithme de squelettisation classique.}
+	    \label{squelette_barbule_six_stop}
+			\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Améliorer la représentation des intersections}
+
+\indexfrr{instersection}{squelette}
+\indexfrr{squelette}{instersection}
+\indexfrr{squelette}{embranchement}
+
+Lors de l'extraction du squelette d'un caractère, les intersections entre deux segments de droites sont souvent scindées comme le montre la figure~\ref{squelette_zhong_intersection}b. La méthode développée dans \citeindex{Zhong1999} propose de corriger le squelette obtenu en figure~\ref{squelette_zhong_intersection}b pour aboutir à celui~\ref{squelette_zhong_intersection}c.  La méthode est appliquée sur des caractères chinois qui présentent souvent des intersections croisant un trait horizontal et un trait vertical. En explorant l'image initiale selon des lignes parallèles aux diagonales, il est possible de marquer quatre types de points caractéristiques d'une intersection (voir figure~\ref{squelette_zhong_intersection}d qui indique le début ou la fin d'un embranchement). 
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|c|c|c|} \hline
+	    \includegraphics[height=3cm, width=3cm]{\filext{../squelette/image/cross1}} & 
+	    \includegraphics[height=3cm, width=3cm]{\filext{../squelette/image/cross2}} & 
+	    \includegraphics[height=3cm, width=3cm]{\filext{../squelette/image/cross3}} &
+	    \includegraphics[height=3cm, width=3cm]{\filext{../squelette/image/cross4}} \\
+	    $(a)$ & $(b)$ & $(c)$ & $(d)$ 
+	    \\ \hline \end{tabular}$$
+	    \caption{	Correction du squelette afin de mieux représenter les intersections, figures extraites 
+	    					de~\citeindexfig{Zhong1999}). L'image~(\textit{d}) montre les quatre points cardinaux 
+	    					d'une intersection. L'objectif de la méthode est de passer l'image~(\textit{b})
+	    					à l'image~(\textit{c}). Avant l'érosion, des points cardinaux sont détectés, symbolisant
+	    					chacun un embranchement. Quatre d'entre eux à la figure~(\textit{d}) 
+	    					permettent de repérer une intersection, le squelette à l'intérieur de la zone encadrée par 
+	    					ces quatre points ne sera pas issu d'une érosion mais deux droites joignant les quatre extrémités
+	    					du squelette situées aux limites de cette zone. }
+	    \label{squelette_zhong_intersection}
+			\end{figure}
+
+
+\indexfr{run-length}
+\indexfrr{squelette}{divergence}
+\indexfrr{squelette}{convergence}
+
+Le squelette est alors corrigé en effaçant tout d'abord la partie incluse entre ces quatre points puis en faisant converger vers un même et unique point les quatre extremités du squelette le reliant à cette zone.
+
+Les points caractéristiques sont détectés à l'aide des "run-length" définis dans l'article comme des segments de points contigüs ou  ensembles de pixels noirs contigüs positionnés sur la même ligne. Les embranchements sont détectés en étudiant le nombre de "run-length" et leur chevauchement. Un "run-length" chevauchant deux "run-length" de la ligne suivante désignent une divergence. La configuration opposée désigne une convergence.
+
+
+
+
+
+
+
+
+
+\subsection{Modéliser les intersections dans les caractères}
+\indexfrr{intersection}{squelette}
+\indexfr{reconstruction du tracé}
+\indexfrr{tracé}{reconstruction}
+\label{squelette_modelisation_intersection_modele}
+
+L'article \citeindex{L'Homer2000} propose une modélisation intéressante du squelette. Cet article s'intéresse tout particulièrement à la squelettisation de caractères manuscrits et cherche à extraire un squelette décrit comme une fonction dépendant du temps et proche de l'évolution du stylo sur la feuille de papier. L'auteur construit un modèle permettant de décomposer le tracé d'une lettre sous forme d'arcs continus et réguliers (la dérivée est bornée) représentés dans la troisième ligne de la figure~\ref{squelette_lhomer_intersection}. 
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|} \hline
+	    \includegraphics[height=6cm, width=8cm]{\filext{../squelette/image/lhomer}}
+	    \\ \hline \end{tabular}$$
+	    \caption{	Figure extraite de~\citeindexfig{L'Homer2000} représentant la modélisation de différentes lettres "a".
+	    					Les arcs formant ces lettres peuvent se rejoindre dans un point de rebroussement (premier colonne),
+	    					s'intercepter comme pour la barre d'un "T" (seconde colonne), se croiser (dernière colonne).}
+	    \label{squelette_lhomer_intersection}
+			\end{figure}
+
+
+\indexfrr{arc}{régulier}\indexfr{jointure}\indexfr{croisement}\indexfrr{point}{rebroussement}
+
+L'algorithme détecte les arcs réguliers (première ligne de la figure~\ref{squelette_lhomer_intersection}) ainsi que leurs extremités devant être jointes. L'attrait de cet article réside essentiellement dans la façon de réaliser ces jointures. Certains croisements représentent deux traits qui se rejoignent à un point de rebroussement (première lettre~"a" de la figure~\ref{squelette_lhomer_intersection}), d'autres représentent des traits qui se croisent (dernière lettre~"a" de la figure~\ref{squelette_lhomer_intersection}). La liste des modèles de jointures est illustrée par la figure~\ref{squelette_lhomer_intersection_modele}. Le modèle le plus probable tend à conserver les courbes les plus régulières possibles.
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|c|} \hline
+	    \includegraphics[height=5cm, width=5cm]{\filext{../squelette/image/lhomer3}} &
+	    \includegraphics[height=5cm, width=5cm]{\filext{../squelette/image/lhomer4}} 
+	    \\ \hline \end{tabular}$$
+	    \caption{	Figure extraite de~\citeindexfig{L'Homer2000} représentant les différentes 
+	    					types des jointures entre arcs.
+	    					Un même trait peut cacher deux passages du stylo et c'est ce que ces modèles tentent de détecter.	
+	    					La première image présente les huit possibilités de branchements lorsque trois arcs se croisent. 
+	    					La seconde image présente les seize possibilités de branchements lorsque quatre arcs se croisent.}
+	    \label{squelette_lhomer_intersection_modele}
+			\end{figure}
+
+
+Cette représentation du squelette est conçue pour des caractères manuscrits et propose une description du squelette plus évoluée que les précédentes. La détection de figures particulières incluses dans les caractères se contente souvent des boucles. Cet article propose une description sous forme d'arcs réguliers ainsi que les types d'intersections les reliant entre eux. Il pourrait être intéressant d'étudier l'apport de telles caractéristiques pour la reconnaissance des caractères.
+
+Cette méthode propose à la fois une représentation paramétrée du squelette ainsi qu'une amélioration de la description des intersections. Cette représentation sous forme d'arcs est guidée par la forme des caractères et même si la plupart des méthodes abordées dans ce document ont traits à ce domaine, il est possible d'adopter des représentations paramétriques du squelette plus simple mais plus générales, par exemple, sous forme de droites. Ce processus s'appelle la vectorisation et est présentée dans les paragraphes qui suivent.
+
+
+
+
+
+
+
+
+
+
+%------------------------------------------------------------------------------------------------------------
+\section{Post-traitements}
+%------------------------------------------------------------------------------------------------------------
+
+
+
+
+\subsection{Vectorisation du squelette}
+\indexfrr{vectorisation}{squelette}
+
+
+Le squelette obtenu est une suite de pixels. Il peut être intéressant de le vectoriser, autrement dit de le décrire à l'aide de segments de droites. Cette vectorisation peut consister en la recherche des droites qui auraient permis le tracé du squelette comme le suggère les thèses~\citeindex{Reveillès1991} et \citeindex{Vittone1999}. Ces travaux utilisent la définition suivante (extraite de~\citeindex{Reveillès1991})~:
+
+
+
+		\begin{xdefinition}{droite discrète}
+		\indexfrr{droite}{discrète}
+		\label{squelette_droite_discrete_def}
+		
+		Soient $\pa{a,b,r} \in \mathbb{Z}^2$ et $\omega \in \N^*$. Une droite de vecteur directeur $\pa{b,a}$ 
+		avec $\pa{a,b} \neq \pa{0,0}$ et $pgcd\pa{a,b}=1$, de paramètre de translation $r$ et d'épaisseur
+		arithmétique $\omega$ est l'ensemble noté $D\pa{a,b,r,\omega}$ des points $\pa{x,y} \in \mathbb{Z}^2$
+		satisfaisant l'inégalité~:
+		
+					$$
+					0 \infegal ax + by + r < \omega
+					$$
+		
+		De plus~:
+		
+					$$
+					\begin{tabular}{lcl}
+					si $1 \infegal w \infegal max\pa{\abs{a},\abs{b}}$ & alors & 
+								la droite n'est pas connexe et est dite déconnectée. \\
+					si $\omega = max\pa{\abs{a},\abs{b}}$ & alors & la droite est 8-connexe. \\
+					si $max\pa{\abs{a},\abs{b}} \infegal \omega \abs{a} + \abs{b}$ & alors & 
+								la droite est 8-connexe et 4-connexe par moment. \\
+					si $\omega = \abs{a} + \abs{b}$ & alors & la droite est 4-connexe. \\
+					si $\omega > \abs{a} + \abs{b}$ & alors & la droite est épaisse
+					\end{tabular}
+					$$
+		
+		\end{xdefinition}
+
+
+D'un point de vue plus pragmatique, l'article~\citeindex{Freeman1970} décrit les trois propriétés vérifiées par le code de Freeman\indexfr{Freeman} d'une ligne $8$-connexe~:
+
+
+			\begin{enumerate}
+			\item Au plus deux directions peuvent être présentes dans le code et ne peuvent différer que d'une
+						unité modulo $8$.
+			\item Une des deux directions apparaît toujours de manière isolée.
+			\item La direction isolée apparaît de manière uniforme dans le code.
+			\end{enumerate}
+
+La première propriété permet d'isoler les portions de code susceptibles de représenter des droites, les deux suivantes permettent d'estimer les paramètres de son équation. En effet, les occurences des deux directions intervenant dans la description mènent directement au vecteur directeur de la droite. Les algorithmes développés dans~\citeindex{Vittone1999} ou~\citeindex{Breton2002} utilisent la définition~\ref{squelette_droite_discrete_def} et retrouvent les segments de droite au pixel près comme le montre la figure~\ref{squelette_vector}~: la droite est recouverte par l'ensemble de pixels vectorisés par cette droite.
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=2cm, width=4cm]
+	    {\filext{../squelette/image/ske_vector}}\end{array}$}$$
+	    \caption{	Vectorisation d'un contour : figure extraite de~\citeindexfig{Breton2002}, le contour vectorisé
+	    					est recouvert par l'ensemble de pixels formant le contour. }
+	    \label{squelette_vector}
+			\end{figure}
+
+
+Une autre méthode permet de vectoriser un arc quelconque de manière approchée. Si cet arc est proche d'une droite alors la corde reliant ses deux extrémités est une bonne approximation (voir figure~\ref{squelette_vector_corde}). En revanche, si cet arc n'est pas une droite, la corde est une mauvaise approximation, l'arc est alors divisé en deux parties dont l'extrémité commune est le point de l'arc le plus éloigné de sa corde. Ceci mène à l'algorithme suivant~:
+
+
+		\begin{xalgorithm}{vectorisation approchée}
+		\indexfrr{vectorisation}{approchée}\label{algo_vecto_appro}
+		
+		Soit un arc $k$-connexe défini par une suite de pixels $\vecteur{p_1}{p_n}$ vérifiant~:
+		
+					$$
+				  \forall i \in \intervalle{2}{n}, \; p_{i-1} \in V_k\pa{p_i}
+					$$
+		
+		On calcule le critère $c$ défini par~:
+		
+					$$
+					c = \underset{i \in \intervalle{1}{n} }{\max} \;  d\pa{p_i, D\pa{p_1,p_n} }
+					$$
+		
+		où $d\pa{p_i, D\pa{p_1,p_n}}$ est la distance du point $p_i$ à la droite passant par les points $p_1$ et
+		$p_n$. Si $c$ est trop grand (supérieur à un seuil), alors l'arc est divisé en deux parties
+		$\vecteur{p_1}{p_j}$ et $\vecteur{p_j}{p_n}$ où $p_j$ vérifie~:
+		
+					$$
+					p_j \in \underset{i \in \intervalle{1}{n} }{\arg \max} \;  d\pa{p_i, D\pa{p_1,p_n} } \\
+					$$
+					
+		L'arc est ainsi découpé jusqu'à ce que plus aucune division ne soit possible.
+		
+		\end{xalgorithm}
+
+
+\begin{xremark}{choix de $p_j$}
+Dans le précédent algorithme, $p_j$ est un des points les plus éloignés de la corde. Si plusieurs points sont à égale distance de la corde, le point $p_j$ choisi est de préférence celui qui est le plus au centre de l'arc.
+\end{xremark}
+
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=4cm, width=8cm]
+	    {\filext{../squelette/image/ske_veccorde}}\end{array}$}$$
+	    \caption{Vectorisation approchée d'un arc~: l'arc est divisé en deux parties dont l'extrémité
+	    					commune est le point de l'arc le plus éloigné de sa corde.}
+	    \label{squelette_vector_corde}
+			\end{figure}
+
+
+\indexfr{composante connexe}
+
+L'article \citeindex{Yeung1996} effectue ce travail dans le cadre de caractères chinois avec une méthode différente, les arcs du squelette sont scindés en plusieurs segments de droites en détectant les changements abruptes d'orientation, le découpage n'est pas plus conditionné par des contraintes de distances mais des contraintes angulaires. Comme ce travail s'articule autour de la reconnaissance de caractères chinois comprenant souvent plusieurs composantes connexes, il propose également une méthode pour connecter les squelettes de deux composantes connexes lorsque certains configurations apparaissent -~par exemple la lettre "T" dont la barre est dissociée de son support~-.
+
+Il est possible d'aller plus loin dans la vectorisation du squelette et c'est ce que propose l'article~\citeindex{Chakravarthy2003}. Des points caractéristiques sont détectés et étiquetés le long du squelette. La figure~\ref{squelette_vector_etendu} illustre cette description sous forme de graphe à l'aide des cinq points caractéristiques parmi douze possibles~:
+
+		\begin{itemize}
+		\item A~: (Angle), deux arcs se rejoignent pour former un point de rebroussement.
+		\item B~: (Bump), milieu d'un arc courbe.
+		\item C~: (Cusp), jonction d'une courbe et d'un segment de droite.
+		\item T~: (T point), un segment de droite vient en intercepter un autre en son milieu.
+		\item P~: (Peck), un point de rebroussement situés au milieu d'un segment de droite.
+		\end{itemize}
+
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=6cm, width=6cm]
+	    {\filext{../squelette/image/skevect2}}\end{array}$}$$
+	    \caption{	Vectorisation étendue du squelette~: le squelette est vectorisé et chaque arc
+	    					reçoit une étiquette choisie (A,B,C,T,P).}
+	    \label{squelette_vector_etendu}
+			\end{figure}
+
+
+Ces descriptions complexes d'un squelette sous forme de graphe tendent à tirer le plus d'informations possibles de l'image elle-même de manière à pouvoir, depuis cette structure, identifier la forme représentée. Cette identification peut être effectuée grâce à une distance d'édition entre graphe, celui obtenu et un modèle représentant au mieux la forme à identifier. \indexfrr{distance}{édition}
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Vectorisation et intersection}
+\label{squelette_vectorisation_Abuhaiba1996}
+\indexfr{vectorisation}
+\indexfr{intersection}
+\indexfr{zones d'attraction}
+
+L'article \citeindex{Abuhaiba1996} suppose que lorsque deux traits s'interceptent comme c'est souvent le cas pour une image contenant de l'écriture, la zone de l'intersection est plus épaisse que les zones où seul un trait apparaît. La figure~\ref{squelette_vector_Abuhaiba1996} illustre ceci dans le cas d'une étoile. Le squelette sans aucun post-traitement contient six points reliant trois branches. A partir d'une estimation de l'épaisseur du trait (voir paragraphe~\ref{image_epaisseur_trace}, page~\pageref{image_epaisseur_trace}), il est possible de déterminer la zone d'attraction de l'intersection, zone où la carte des distances contient des valeurs supérieures à cette épaisseur.
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=4cm, width=10cm]
+	    {\filext{../squelette/image/abus}}\end{array}$}$$
+	    \caption{	Figure extraite de \citeindexfig{Abuhaiba1996}, l'épaisseur du trait est plus épais aux intersections,
+	    					la vectorisation utilise ces zones étendues pour relier entre eux les arcs du squelette. La première
+	    					image est l'image originale, la seconde représente le squelette, la troisième le squelette 
+	    					vectorisé.}
+	    \label{squelette_vector_Abuhaiba1996}
+			\end{figure}
+
+Les six points reliant chacun trois branches appartiennent tous à cette zone d'attraction et sont alors considérés comme étant une seule et même intersection. La vectorisation de ce squelette associe donc les huit segments sortant de la zone d'attraction à un seul point de recoupement.
+
+
+\subsection{Squelette d'une image de texte}
+
+Dans certains cas, certains a priori permettent d'améliorer la qualité du résultat. C'est le cas de la méthode développée au paragraphe~\ref{dla_squelette}, page~\pageref{dla_squelette} qui tient compte du fait que l'image est celle d'un ou plusieurs mots. L'hypothèse simplificatrice est dans ce cas une relative homogénéité de l'épaisseur de la forme à squelettiser.
+
+
+
+
+
+\subsection{Appariement squelette - image originale}
+
+\indexfr{appariement}
+\indexfr{graphème}
+
+La segmentation en graphèmes utilise le squelette afin de découper l'image d'un mot en lettres ou morceaux de lettres. Il s'agit maintenant de propager ce découpage à l'ensemble de l'image, donc de retrouver de quelle partie de la forme initiale un morceau est le squelette. Il est possible d'utiliser la carte de distance définie en~\ref{ske_def_cart_dist_def}. Pour chaque pixel noir, le pixel du squelette qui en est le plus proche apparaît en se déplaçant dans la carte de distance selon la plus grande pente. Il suffit de réitérer ce procédé pour chaque pixel à apparier.
+
+Une autre approche permet de résoudre un problème plus général. On suppose que l'image contient un ensemble de pixels $\vecteur{p_1}{p_n}$ répartis en $C$ classes. Chaque pixel $p_i$ est donc étiqueté par $c_i \in \intervalle{1}{C}$. Pour un pixel $p$ quelconque de l'image, le point le plus proche dans la suite $\vecteur{p_1}{p_n}$ détermine sa classe. L'algorithme qui suit permet d'effectuer cet étiquetage de manière analogue à l'algorithme~\ref{ske_algo_cart_dist} utilisé pour calculer une carte de distance.
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=5cm, width=8cm]
+	    {\filext{../squelette/image/ske_appari}}\end{array}$}$$
+	    \caption{	Appariement : les frontières (gris pâle et foncé) délimitent 
+	    					les zones de pixels (noirs) appariés au même morceau du squelette. }
+	    \label{squelette_appariement}
+			\end{figure}
+
+
+
+		\begin{xalgorithm}{appariement}
+		\indexfr{appariement}
+		\label{ske_algo_appariement}
+		
+		Soit $P=\vecteur{p_1}{p_n}$ une suite de points, et $\vecteur{c_1}{c_n} \in \intervalle{1}{C}^n$ 
+		leurs classes associées. On note $D\pa{x,y}$ la distance au point le plus proche de l'ensemble $P$ 
+		et $C\pa{x,y}$ la classe de ce point. On impose que $D\pa{x,y} = \infty$ si $\pa{x,y} \notin
+		\intervalle{1}{X} \times \intervalle{1}{Y}$.
+		
+		
+		\begin{xalgostep}{première passe d'image}
+				\begin{xfor}{y}{1}{Y}
+					\begin{xfor}{x}{1}{X}
+						$
+						\begin{array}{lll}
+						D\pa{x,y} &\longleftarrow& \left\{ \begin{array}{l}
+																		0 \text{ si } \exists i \text{ tel que } p_i = \pa{x,y} \\
+																		\min  \acc{ D\cro{ \pa{x,y} - v} + M_{v_x,v_y} 
+																				\sac v \in V_h\pa{k}} \text{ sinon}
+																		\end{array}\right.  \\ \\
+						C\pa{x,y} &\longleftarrow& \left\{ \begin{array}{l}
+																		\text{n'est pas défini si } D\pa{x,y} = \infty \\
+																		c_i \text{ si } \exists i \text{ tel que } p_i = \pa{x,y} \\
+																		C\pa{\pa{x,y} - v^*} \\
+																		\quad \text{ où } v^* \in \arg \min  
+																		\acc{ D\cro{ \pa{x,y} - v} + M_{v_x,v_y} \sac v \in V_h\pa{k}} 
+																						\text{ sinon}
+																		\end{array}\right.
+						\end{array}																
+						$
+					\end{xfor}
+				\end{xfor}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{seconde passe d'image}
+				\begin{xfor}{y}{Y}{1}
+					\begin{xfor}{x}{X}{1}
+						$
+						\begin{array}{lll}
+						D\pa{x,y} &\longleftarrow&  \min\acc{ D\pa{x,y},  \min  \acc{ D\cro{ \pa{x,y} - v} + M_{v_x,v_y} 
+																					\sac v \in V_b\pa{k}}} \\ \\
+						C\pa{x,y} &\longleftarrow&  C\pa{\pa{x,y} - v^*} \\ 
+																				&& \quad	\text{ où } v^* \in \arg \min  
+																					\acc{ D\cro{ \pa{x,y} - v} + M_{v_x,v_y} 
+																					\sac v \in V_b\pa{k} \cup \acc{\pa{0,0}}}
+						\end{array}																
+						$
+					\end{xfor}
+				\end{xfor}
+		\end{xalgostep}
+		
+		
+		\end{xalgorithm}
+		
+
+
+
+\begin{xremark}{lien avec le diagramme de Voronoï}
+Si pour chaque point $p_i$, $c_i = i$, alors cet algorithme aboutit à la construction de régions de "Voronoï" qui serviront à construire le diagramme illustré dans la figure~\ref{squelette_voronoi}. Le squelette sera constitué des segments séparant deux pixels appartenant à des régions différentes.\indexfr{Voronoï}
+\end{xremark}
+
+
+
+
+
+
+
+\subsection{Construction d'un graphe pour une classification}
+\label{squelettisation_graphe_construction}
+\indexfrr{squelette}{graphe}
+\indexfrr{graphe}{squelette}
+\indexfrr{point}{singulier}
+\indexfrr{singulier}{point}
+
+L'article \citeindex{Ruberto2004} propose la construction d'un graphe résumant le squelette. Les arcs représentent des parties du squelette tandis que les n\oe uds sont ses points singuliers (voir figure~\ref{squelette_point_singuliers}).
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|} \hline 
+	    \includegraphics[height=5cm, width=4cm] {\filext{../squelette/image/sing}} 
+	    \\ \hline \end{tabular}$$
+	    \caption{	Ce squelette présente trois points singuliers~: le premier est une extremité, le second 
+	    					est la jonction de quatre arcs, le dernier est la jonction de trois arcs.}
+	    \label{squelette_point_singuliers}
+			\end{figure}
+
+\indexfr{reconnaissance}
+\indexfr{barbules}
+
+La méthode développée dans cet article utilise un tel graphe qui est d'abord nettoyé des petits arcs ou barbules\seeannex{ske_par_barbule}{barbules}. Il propose ensuite d'associer à chaque arc des caractéristiques qui sont utilisées afin d'effectuer une tâche de reconnaissance via le calcul d'une distance entre graphe, celle-ci permettant de comparer le squelette de deux formes entre elles.
+
+Le graphe obtenu contient une liste d'arcs $\vecteur{A_1}{A_n}$, la longueur $l$ du squelette est la somme des longueurs de chaque arcs~: $l = \sum_{i=1}^{n} l\pa{A_i}$. Les arcs $A_i$ dont la longueur vérifie $l\pa{A_i} < \alpha l$ et ne contenant aucune extrémité sont supprimés puis ajoutés aux arcs auxquels ils sont connectés. $\alpha$ est choisi égal à 5\%.
+
+Chaque arc $S$ est ensuite décrit par six caractéristiques. $S$ est défini par ses deux extrémités $\pa{x_1,y_1}$, $\pa{x_2,y_2}$ et une fonction $t \in \cro{0,1} \longrightarrow \pa{x\pa{t},y\pa{t} }$. Ces six caractéristiques sont données par la table~\ref{squelette_ruberto_carac}.
+
+
+			\begin{table}[ht]
+			$$\begin{tabular}{|l|l|} \hline
+			\begin{tabular}{l} variation de la courbure 	\\
+								moyenne, soit les valeurs  \\ extrêmes de la fonction~$c$
+								\end{tabular} & 
+								$v_1=  \underset{t \in \cro{0,1}}{\max} c(t) - 
+																	 \underset{t \in \cro{0,1}}{\min} c(t)$
+								où 
+								$ c(t) =  \frac{x'y'' - x''y'}{\pa{ (x')^2 + (y')^2} ^{\frac{3}{2}} } $
+								\\ \hline
+			\begin{tabular}{l} l'orientation de l'arc \\ par rapport à celle du squelette	
+								\end{tabular} & 
+								$v_2 = \arctan \frac{ y_2 - y_1 } { x_2 - x_1} $
+								\\ \hline
+			\begin{tabular}{l} la taille de l'arc  \\ par rapport à celle du squelette
+								\end{tabular} &
+								$v_3 = \frac{ l(S) } { l }$ 
+								\quad \begin{minipage}{8cm} où $l(S)$ est la longueur de l'arc 
+								et $l$ longueur du squelette \end{minipage}
+								\\ \hline
+			\begin{tabular}{l} la "raideur" de l'arc
+								\end{tabular} & 
+								$v_4 = \frac{ l(S) }{ \sqrt{ \pa{x_2-x_1}^2 + \pa{y_2-y_1}^2 } }$
+								\\ \hline
+			\begin{tabular}{l} la variation de l'épaisseur \\ distance le long de l'arc
+								\end{tabular} & 
+								$v_5=  \underset{t \in \cro{0,1}}{\max} e(t) - 
+																	 \underset{t \in \cro{0,1}}{\min} e(t)$
+								\quad \begin{minipage}{5.8cm} où $e(t)$ est l'épaisseur de la forme le long de l'arc, 
+								estimée par exemple à l'aide d'une carte de distance 
+								(voir paragraphe~\ref{ske_carte_distance_sec})
+								\end{minipage}
+								\\ \hline
+			\begin{tabular}{l} la taille de la région $R$ \\ par rapport à celle du squelette
+								\end{tabular} & 
+								$v_6 = \frac{ A(S) }{A}$
+								\quad \begin{minipage}{8cm} où $A(S)$ est la surface de la partie de la forme
+								dont l'arc dont $S$ est le squelette, $A$ est la surface de la forme squelettisée.
+								\end{minipage}
+								\\ \hline
+			\end{tabular}$$
+			\caption{ Six caractéristiques $\vecteur{v_1}{v_6}$ décrivant un arc extrait du squelette d'une forme, 
+								elles sont extraites de \citeindexfig{Ruberto2004}. 
+								L'arc $S$ est défini par ses deux extrémités $\pa{x_1,y_1}$, $\pa{x_2,y_2}$ 
+								et une fonction $t \in \cro{0,1} \longrightarrow \pa{x\pa{t},y\pa{t} }$.}
+			\label{squelette_ruberto_carac}
+			\indexfrr{épaisseur}{trait}
+			\end{table}
+
+
+
+\indexfrr{graphe}{attribué}
+\indexfrr{matrice}{adjacence}
+\indexfrr{adjacence}{matrice}
+
+L'auteur de l'article \citeindex{Ruberto2004} propose d'utiliser ce graphe "attribué" afin de calculer une distance entre deux formes pour lesquels ce graphe $G$ aura été préalablement estimé. Ce graphe inclut un ensemble d'arêtes décrites par les caractéristiques de la table~\ref{squelette_ruberto_carac} et $n$ n\oe uds qui sont les points singuliers du squelette. On définit $A = \pa{a_{ij}} _ { 1 \infegal i,j \infegal n } \in \cro{0,1} ^ {n^2}$ la matrice d'adjacence du graphe $G$, le graphe est donc entièrement défini par $G = \acc{ A, \vecteur{v_{i,j,1}}{v_{i,j,6}} \sac 1 \infegal i,j \infegal n}$. La distance entre deux graphes~$G_1$ et~$G_2$ est définie par~:
+
+
+		\begin{eqnarray}
+		d\pa{G_1,G_2,\alpha} &=& \inf \acc{ E\pa{G_1,G_,M = \pa{m_{ik}}_ { 
+																	\begin{subarray} \,	1 \infegal i \infegal n_1 \\ 
+																										1 \infegal k \infegal n_2 \end{subarray} }
+																				,\alpha}  \left |
+																\begin{array}{l}
+																\forall i,k, \, m_{ik} \in \acc{0,1} \\
+																\forall k, \, \sum_{i=1}^{n_1} m_{ik} \infegal 1 \\
+																\forall i, \, \sum_{k=1}^{n_2} m_{ik} \infegal 1 
+																\end{array} \right.
+																				} 
+				\label{squelettisation_graphe_distance_matching}
+																				\\
+		\text{ avec }																				
+		E\pa{G_1,G_2,M,\alpha} &=& - \frac{1}{2} \; \summy{i=1}{n_1} \; \summy{j=1}{n_1} \; 
+												 											\summy{j=1}{n_2} \; \summy{l=1}{n_2} \; 
+												 											m_{ik} \, m_{jl} \, e\pa{i \rightarrow j, \, k \rightarrow l} +
+												 											\alpha \; \summy{i=1}{n_1} \; \summy{j=1}{n_2} \;
+												 											m_{ik} \, e\pa{i,k}
+								\nonumber
+		\end{eqnarray}
+
+
+$\alpha$ est un terme permettant d'ajuster la prépondérance de l'association entre les n\oe uds par rapport à celle entre les arêtes. La fonction $e\pa{i \rightarrow j, \, k \rightarrow l}$ mesure la vraisemblance de l'association entre l'arête $i \rightarrow j$ du premier graphe et l'arête $k \rightarrow l$ du second graphe tandis que $e\pa{i,k}$ mesure la vraisemblance de l'association entre le n\oe ud $i$ de premier graphe et le n\oe ud $j$ du second graphe. La première fonction est définie comme suit~:
+
+
+		\begin{eqnarray}
+		e\pa{i \rightarrow j, \, k \rightarrow l} &=& \left \{ \begin{array}{ll}
+											0 & \text{si } a_{ij}^1 a_{kl}^2 = 0 \\
+											\summy{d=1}{6} L_d \pa{ 1 - \abs{  \frac{v_{i,j,d,1}}{L_d} - \frac{v_{k,l,d,2}}{L_d} }}
+													& \text{sinon }
+											\end{array} \right. \\
+		\text{avec } L_d &=& 	\frac{1}{2} \, \max \acc{ 
+													\summy{i=1}{n_1} \; \summy{j=1}{n_1} \; v_{i,j,d,1}, \;
+													\summy{k=1}{n_2} \; \summy{l=1}{n_2} \; v_{k,l,d,2}  }
+				\nonumber
+		\end{eqnarray}
+
+
+\indexfr{NP-complet}
+\indexfr{affectation graduée}
+
+La fonction $e\pa{i,k}$ est construite de manière analogue en prenant comme caractéristique l'épaisseur au point singulier par exemple. Le problème de minimisation est malheureusement NP-complet mais il peut être résolu selon une méthode approchée appelée "affection graduée" développée dans \citeindex{Gold1996}. En définitive, la distance~$d$ définie en~(\ref{squelettisation_graphe_distance_matching}) permet d'effectuer une classification par plus proches voisins. Etant donné son coût élevé, il est préférable d'utiliser d'éviter un trop grand nombre de calculs par le biais de méthodes comme celles développées en annexe~\ref{classification_non_supervisee}.
+
+
+
+
+
+
+%------------------------------------------------------------------------------------------------------------
+\section{Squelette d'un nuage de points}
+%------------------------------------------------------------------------------------------------------------
+\indexfrr{squelette}{nuage de points}
+\label{ske_nuage_point_squelette}
+
+\subsection{Squelettisation à partir d'un treillis de Kohonen}
+\indexfrr{Kohonen}{treillis}
+
+
+Le nettoyage des barbules peut s'avérer complexe. De plus, la squelettisation par érosion est souvent sensible aux bruits du contour. C'est pourquoi il est possible de s'inspirer de méthodes qui permettent de déterminer le squelette d'un nuage de points. La figure~\ref{squelette_nuage_points} montre la construction du squelette de la lettre "A" la méthode développée par~\citeindex{Datta1997} part d'un squelette dont la topologie est linéaire. Elle supprime des neurones si ceux-ci sont trop rapprochés et en ajoute si ceux-ci sont trop éloignés. Elle crée des points "aiguillage" ou barres de "T" lorsque l'angle entre deux segments devient trop fermé.
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=12cm, width=6cm]
+	    {\filext{../squelette/image/nuage}}\end{array}$}$$
+	    \caption{	Squelette d'un nuage de points : différentes étapes dans 
+	    					la construction du squelette de la lettre "A", figure extraite de~\citeindexfig{Datta1997}.}
+	    \label{squelette_nuage_points}
+			\end{figure}
+
+
+
+Soit $\vecteur{P_1}{P_N}$ un nuage de points, la topologie initiale est linéaire et le réseau est constitué de $n$ vecteurs (ou neurones) $W = \vecteur{W_1}{W_n}$ où $W_{i-1}$ et $W_{i+1}$ sont les voisins du vecteur $W_i$. A chaque itération~$t$, on tire aléatoirement un point $P_i$ puis on détermine le vecteur $W^t_{k^*}$ qui en est le plus proche à l'itération~$t$~:
+
+			 
+			\begin{eqnarray*}
+			W^t_{k^*} \in \underset {k \in \ensemble {1}{n} } { \arg \min } d \pa{ W_k^t, P_i }
+			\end{eqnarray*}
+
+
+$d \pa{ W_k, P_i }$ est la distance entre $W_k$ et $P_i$. On procède ensuite à la mise à jour de $W_{k^*}$ et de l'ensemble de ses voisins noté $N\pa{W_{k^*}}$~:
+
+		
+			\begin{eqnarray*}
+			\forall k \in N\pa{W_{k^*}}, \; 
+				W^{t+1}_k = W^{t}_k + \alpha_t \cro { P_i - W_k }
+			\end{eqnarray*}
+
+La suite $\pa{\alpha_t}_{t \supegal 0}$ vérifie~:
+
+		
+			\begin{eqnarray*}
+			\summyone{t \supegal 0} \alpha_t = \infty \text { and } \summyone{t \supegal 0} 
+						\alpha_t^2 \infegal \infty
+			\end{eqnarray*}
+			
+Par exemple~:
+
+			$$
+			\alpha_t = \frac{\alpha_0}{1+\beta t}
+			$$			
+
+L'algorithme s'arrête lorsque la condition suivante est vérifiée~:
+
+			\begin{eqnarray*}
+			\forall i \in \ensemble{1}{n}, \; d\pa{W_i^{t+1}, W_i^{t} } \infegal \epsilon
+			\end{eqnarray*}
+
+Il reste à gérer la suppression de deux neurones trop proches, l'insertion d'un neurone entre deux autres trop éloignés, l'insertion d'un neurone reliant trois voisins ou neurones "T". Ces opérations sont effectuées une fois que les étapes précédentes ont abouti à une configuration ayant convergé. La suppression d'un neurone est effectuée si la condition suivante est vérifiée~:
+
+
+			\begin{eqnarray}
+			\underset{ i \in \ensemble{1}{n} } 	{ min }\; \cro{ 
+			\underset{ j \in N\pa{W_i} }  			{ min }\; d\pa{W_i,W_j} } 
+							< \delta_1 
+			\label{ske_cloud_point_merge}
+			\end{eqnarray}
+
+Dans ce cas, les deux neurones permettant d'atteindre le minimum de (\ref{ske_cloud_point_merge}) sont regroupés ensemble. L'insertion d'un neurone à deux voisins est effectuée si la condition suivante est vérifiée~:
+
+			\begin{eqnarray}
+			\underset{ i \in \ensemble{1}{n} } 	{ max }\; \cro{ 
+			\underset{ j \in N\pa{W_i} }  			{ max }\; d\pa{W_i,W_j} } 
+							> \delta_2
+			\label{ske_cloud_point_insert}
+			\end{eqnarray}
+
+Dans ce cas, un neurone est insérée au milieu du segment formé par les deux voisins permettant d'obtenir le maximum de (\ref{ske_cloud_point_insert}). Un neurone "T" à trois voisins est inséré lorsque l'angle entre les deux voisins d'un neurone forme un angle fermé. La figure \ref{squelette_nuage_points}\textit{(b)} montre trois points $X$,$Y$,$Z$. Les droites $(XZ)$ et $(XY)$ forment un angle fermé, un point à trois voisins est alors ajouté entre les points $Y$ et $Z$.
+
+
+
+
+
+\subsection{Squelettisation à partir d'un treillis de Kohonen}
+\indexfrr{segmentation}{graphème}
+\indexfr{Kohonen}
+\indexfr{connexité}
+
+Cette segmentation s'inspire de l'article~\citeindex{Datta1997} (voir aussi~\citeindex{Singh2000}). Cet article permet de construire le squelette d'un nuage de points. L'indépendance par rapport à la connexité permet d'être moins sensible au bruit. Afin de simplifier l'algorithme décrit dans~\citeindex{Datta1997}, un treillis en deux dimensions est d'abord superposé à l'image du mot ainsi que le montre la figure~\ref{image_grapheme_kohonen1}.
+
+
+			\begin{figure}[ht]
+	    $$\frame{$\begin{array}[c]{c}\includegraphics[height=2cm, width=6cm]
+	    {\filext{../image/image/cloud_1}}\end{array}$}$$
+	    \caption{	Treillis de Kohonen initial superposé au mot à segmenter en graphèmes.}
+	    \label{image_grapheme_kohonen1}
+			\end{figure}
+
+\indexfrr{arbre}{poids minimal}
+\indexfr{Kruskal}
+
+Le treillis évolue puis converge vers le résultat figure~\ref{image_grapheme_kohonen2}$a$ en utilisant l'algorithme~\ref{reco_algo_carac_kohonen_____}\footnote{
+Pour mémoire~:
+		\begin{xalgorithm}{caractéristiques de Kohonen}
+		\indexfrr{caractéristiques}{Kohonen}
+		\label{reco_algo_carac_kohonen_____}
+		
+		\begin{xalgostep}{initialisation}
+			$\forall \pa{i,j} \in \ensemble{1}{I} \times \ensemble{1}{J}, \; P_{ij} = \pa{ \frac{iX}{I}, \frac{jY}{J} }'$ \\
+			$t \leftarrow 0$ \\
+			$\delta  \leftarrow \sqrt{ \pa{\frac{X}{I}}^2 + \pa{\frac{Y}{J}}^2 }$
+		\end{xalgostep}
+		
+		\begin{xalgostep}{point caractéristique le plus proche et mise à jour} \label{reco_algo_carac_kohonen_conv}
+			$\alpha \leftarrow \frac{0.2}{1 + \frac{t}{XY} }$ \\
+			On tire aléatoirement un pixel $p$ de l'image, si ce pixel $p$ est noir, alors~:\\
+			$\pa{i^*,j^*} \leftarrow \underset{i,j} {\arg \max } \; d\pa{P_{ij}, p}$  \\
+			$P_{i^*,j^*} 	\leftarrow P_{i^*,j^*} + \alpha \pa{ p - P_{i^*,j^*} }$
+		\end{xalgostep}
+		
+		\begin{xalgostep}{mise à jour des voisins} 
+			$\epsilon \leftarrow \exp \pa { \frac{1}{\delta}  \norme{P_{i^*,j^*} - p} - 1} $\\
+			\begin{xforeach}{P}{V_c\pa{i^*,j^*}} 
+				$\beta 	\leftarrow \alpha \, \epsilon \, \exp \pa{ - \frac{1}{\delta} \norme{P  - p} } $ \\
+				$P 			\leftarrow P + \beta \pa{ p - P}$
+			\end{xforeach}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{terminaison}
+			$t \leftarrow t+1$ \\
+			Tant que l'algorithme n'a pas convergé, retour à l'étape~\ref{reco_algo_carac_kohonen_conv}.
+		\end{xalgostep}
+		
+		
+		\end{xalgorithm}
+} déjà décrit au paragraphe~\ref{reco_point_caracteristique_kohonen} (page~\pageref{reco_point_caracteristique_kohonen}). Le résultat obtenu inclut le squelette recherché qui sera obtenu en utilisant un algorithme de recherche de l'arbre de poids minimal (voir \citeindex{Kruskal1956}).
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|c|} \hline
+	    \includegraphics[height=2cm, width=6cm]{\filext{../image/image/cloud_2}} &
+	    \includegraphics[height=2cm, width=6cm]{\filext{../image/image/cloud_3}} \\
+	    ($a$) & ($b$) \\ \hline
+	    \end{tabular}$$
+	    \caption{	La figure ($a$) montre le résultat obtenu après convergence de 
+	    					l'algorithme~\ref{reco_algo_carac_kohonen}. La figure ($b$) montre le même arbre 
+	    					élagué après l'application de l'algorithme de Kruskal.}
+			\indexfr{Kruskal}
+	    \label{image_grapheme_kohonen2}
+			\end{figure}
+
+
+
+
+
+\subsection{Squelettisation d'images floues}
+
+\indexfr{réseau de neurones}
+\indexfr{image floue}
+\indexfrr{pixel}{intensité}
+\indexfr{intensité}
+\indexfr{niveaux de gris}
+\indexfr{érosion}
+
+L'article \citeindex{Kalm\'ar1999} propose une squelettisation d'images floues basée sur un réseau de neurones. Sa méthode propose l'érosion d'une image en niveaux de gris. On suppose que l'image est formée d'une suite de pixels $\pa{x_i}_i$ et $f\pa{x_i} \in \cro{0,1}$ est l'intensité du pixel. Les neurones de la première couche sont notés $\pa{n_i^1}_i$, deux points $p_i, \, a_i \in \R^2$ sont associés à chacun de ces neurones, $\pa{a_i}$ est calculé comme suit~:
+
+			\begin{eqnarray}
+			\forall i, \; a_i &=&  \summyone{j} \;   x_j \; f\pa{x_j} \, \exp \cro{ \frac{ - \norme{p_i - x_j}^2} {d_0^2}} 
+			\end{eqnarray}
+
+\indexfr{paramètre d'échelle}
+\indexfr{hexagonal}
+\indexfrr{voisinage}{hexagonal}
+
+$d_0$ est un paramètre d'échelle. Les points $p_i$ sont éparpillés sur l'image et connectés entre eux selon un système de voisinage qui peut être aussi bien carré (4,~8-connexité) qu'hexagonal. La connexion entre les neurones $n_i$ et $n_j$ est notée $w_{ij} \in \cro{0,1}$. A chaque neurone est associé un paramètre d'activation qui dépend du temps $\sigma_i\pa{t} \in \cro{0,1}$. $\sigma_i\pa{0}$ est estimé à partir de $a_i$. Par exemple~:
+
+
+			\begin{eqnarray}
+			\sigma_i\pa{0} &=&  f \pa{a_i}
+			\end{eqnarray}
+
+L'évolution de $\sigma_i\pa{t}$ est définie comme suit~:
+
+			\begin{eqnarray}
+			\partialfrac{\sigma_i}{t}\pa{t} &=& \pa{1 - \sigma_i\pa{t} } \pa{
+																						\summyone{k,j} \; w_{ij} \cro{ \sigma_k\pa{t} - \sigma_i \pa{t} } }
+			\end{eqnarray}
+
+On définit le coefficient $\Sigma_i\pa{t}$ pour chaque neurone~:
+
+			\begin{eqnarray}
+		 	\Sigma_i\pa{t} &=&  \int_0^t \; \summyone{k} \; \cro { \sigma_k\pa{u} - \sigma_i\pa{u} } du
+			\end{eqnarray}
+
+			
+A partir d'un certain temps $\tau$, la fonction $\Sigma_i\pa{t}$ converge pour tous les neurones et la suite $\pa{\Sigma_i\pa{\tau}}_i$ est alors la distribution du squelette sur l'ensemble des neurones. Cette méthode peut également être appliquée sur des images binaires mais le résultat n'est plus un squelette d'un pixel d'épaisseur un (ou "fil de fer"). En contrepartie, les branches non significatives sont moins probables (voir figure~\ref{image_kalmar_squelette_hexa}).
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|c|} \hline
+	    \includegraphics[height=2cm, width=6cm]{\filext{../squelette/image/kalmar1}} &
+	    \includegraphics[height=2cm, width=6cm]{\filext{../squelette/image/kalmar2}} \\
+	    $(a)$ & $(b)$ \\ \hline
+	    \end{tabular}$$
+	    \caption{	Figure extraite de \citeindexfig{Kalm\'ar1999}, la forme $(b)$ est amputée d'un bout dans sa moitié
+	    					supérieure, les artefacts qui en résultent au niveau du squelette sont moins probables que les autres.
+	    					}
+	    \label{image_kalmar_squelette_hexa}
+			\end{figure}
+
+
+
+
+
+
+
+\subsection{Squelettisation et classification}
+\label{squelette_cem_classification}
+\indexfrr{classification}{non supervisée}
+\indexfrr{RPCL}{local based PCA}
+
+\indexfr{Competitive EM algorithm}
+\indexfrr{algorithme}{EM}
+
+La squelettisation peut être également traitée comme une classification non supervisée. L'article \citeindex{Liu2003} propose une méthode\seeannex{classification_rpcl_local_pca}{classification} qui considère chaque segment de l'image comme une classe suivant une loi normale multidimensionnelle et dégénérée, la forme de cette classe représente une ellipse dont le petit axe est très inférieur au grand axe. L'algorithme RPCL-local based PCA permet à la fois de déterminer le nombre de segments et d'estimer les paramètres de la loi qui le modélise. L'article \citeindex{ZhangB2004} présente un nouvel algorithme EM appelé Competitive~EM\seeannex{classification_CEM}{algorithme CEM} permettant d'éviter les maxima locaux lors de l'optimisation. Le résultat obtenu sur des caractères chinois est présenté par la figure~\ref{image_zhangb_cem}.
+
+
+			\begin{figure}[ht]
+	    $$\begin{tabular}{|c|c|c|} \hline
+	    \includegraphics[height=5cm, width=5cm]{\filext{../squelette/image/zhangs1}} &
+	    \includegraphics[height=5cm, width=5cm]{\filext{../squelette/image/zhangs2}} &
+	    \includegraphics[height=5cm, width=5cm]{\filext{../squelette/image/zhangs3}} \\ \hline
+	    \end{tabular}$$
+	    \caption{	Figures extraites de \citeindexfig{ZhangB2004} présentant les résultats d'une classification
+	    					effectuée par l'algorithme Competitive Expectation Maximization (CEM). 
+	    					La première image représente le caractère chinois à segmenter.
+	    					La seconde image illustre les classes obtenues après que l'image a été échantillonnée 
+	    					(environ 1500 points). La dernière traduit chaque classe par un segment égal 
+	    					au grand axe de l'ellipse.	}
+	    \label{image_zhangb_cem}
+			\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+
+
+\firstpassagedo{
+	\begin{thebibliography}{99}
+	\input{squelette_article.tex}
+	\end{thebibliography}
+}
+
+
+\input{../../common/livre_table_end.tex}
+\input{../../common/livre_end.tex}
+
+

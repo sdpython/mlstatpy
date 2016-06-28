@@ -1,0 +1,458 @@
+\input{../../common/paper_begin.tex}%
+
+\firstpassagedo{
+\title{Receiving Operator Characteristic (ROC)}
+\author{Xavier Dupré \\ \httpstyle{http://www.xavierdupre.fr/}}
+\maketitle
+\begin{abstract}
+\noindent Ce document introduit la courbe ROC (Receiving Operator Characteristic) qui est communément utilisée pour mesurer la performance d'un classifieur. Il introduit aussi des termes comme précision, rappel, AUC, qui sont présents dans la plupart des articles qui traitent de machine learning.
+\end{abstract}
+%\shorttableofcontents{Table des matières}{2}
+\setcounter{tocdepth}{1}
+\tableofcontents
+\hypersetup{
+    pdftitle={Receiving Operator Characteristic (ROC)}
+    pdfauthor={Xavier Dupré}
+    pdfsubject={Receiving Operator Characteristic (ROC), précision, rappel}
+    pdfkeywords={Receiving Operator Characteristic ROC précision rappel AUC}
+}
+
+%\chapter{Receiver Operator Characteristic (ROC)}
+\renewcommand{\thexctheorem}    {\arabic{xctheorem}}
+}
+
+
+\sloppy
+
+\label{roc_annex_annex}
+\indexfr{ROC}\indexfr{Receiver Operator Characteristic}\indexfr{score}
+
+\section{Définitions}
+
+
+Supposons que nous avons un classifieur qui classe des observations en un ensemble de classes. De plus, il donne cette réponse accompagnée d'un score de pertinence. Deux cas sont possible~: soit la réponse est bonne (1), soit la réponse est fausse (0). Pour chaque observations, on associe un couple $(r,x)$ où $r$ est égal à 0~ou~1. $x$ est le score de pertinence. On cherche à déterminer à partir de quel seuil de pertinence, la réponse du classifieuur est fiable. En faisant varier $x$, on obtient une courbe telle que celle de la figure~\ref{courbe_roc_wikipedia}.
+
+        \begin{figure}[ht]
+        \figureoneimage
+        {\caption{Courbe ROC extrait de \httpstyle{http://en.wikipedia.org/wiki/File:Roccurves.png}.}}
+        { \includegraphics[width=8cm]{../roc/image/Roccurves.png}  }
+        {\label{courbe_roc_wikipedia}}
+        \end{figure}
+
+Cette courbe sert également à comparer différents classifieurs. Plus une courbe a des valeurs élevées, plus l'aire sous la courbe est grande, moins le classifieur fait d'erreur.
+
+\subsection{Quelques termes}
+
+D'une manière simplifiée, le classifieur retourne une réponse qui est soit mauvaise (-) soit bonne (+). On peut l'évaluer car pour construire un classifier on dispose toujours d'une base contenant les réponses attendues. En fonction du score~$x$ et d'un seuil~$s$, on définit quatre cas~:
+
+\begin{center}
+\begin{tabular}{|c|c|c|} \hline
+                &  réponse prédite est +       &  réponse prédite est - \\ \hline
+$x \supegal s$  &  TP: vrai (true) positif     & FP: faux positif \\  \hline
+$x < s$         &  TN: vrai (true) négatif     & FN: faux négatif \\ \hline
+\end{tabular}
+\end{center}
+
+A partir de ces définitions, on définit~:
+\begin{itemize}
+\item la précision~: $\frac{ TP }{ TP + FP }$   \indexfr{précision}
+\item le rappel ou recall~: $\frac{ TP }{ TP + TN }$      \indexfr{rappel}\indexfr{recall}
+\end{itemize}
+
+En choisissant un seuil relatif au score de pertinence $x$, au-dessus, on valide la réponse du classifieur, en-dessous, on ne la valide pas. On peut toujours calculer la précision et le rappel pour toutes les réponses dont le score est au-dessus d'un seuil~$s$. La courbe ROC s'obtient en faisant varier~$s$.
+
+
+
+		\begin{xdefinition}{ROC}\label{def_roc_2}
+		On suppose que $Y$ est la variable aléatoire des scores des expériences qui ont réussi. 
+		$X$ est celle des scores des expériences qui ont échoué.
+		On suppose également que tous les scores sont indépendants. 
+		On note $F_X$ et $F_Y$ les fonctions de répartition de ces variables.
+		On définit en fonction d'un seuil $s \in \R$~:
+		\begin{enumerate}
+		\item $R(s) = 1 - F_Y(s)$
+		\item $E(s) = 1 - F_X(s)$
+		\end{enumerate}
+		
+		La courbe ROC est le graphe $\pa{E(s),R(s)}$ lorsque $s$ varie dans $\R$.		
+		\end{xdefinition}
+
+Avec les notations TP, FP, FN, TN, cela revient à ($TP(s)$ désigne les true positifs au-dessus du seuil~$s$)~:
+
+\begin{eqnarray*}
+E(s) &=& 1 - \frac{ TP(s) } { TP(s) + TN(s) } \\
+R(s) &=& 1 - \frac{ FN(s) } { FN(s) + FN(s) } \\
+\end{eqnarray*}
+
+On remarque que $\forall s, \; TP(s) + TN(s)$ est constant. De même pour $FN(s) + FN(s)$.
+
+\begin{xremark}{fonctions monotones}
+On remarque que les fonctions $s \longrightarrow E(s)$ et $s \longrightarrow R(s)$ sont décroissantes toutes deux. Elles sont donc inversibles.
+\end{xremark}
+
+
+
+\begin{xremark}{score aléatoire}
+Dans le cas où la variable aléatoire $\theta$ est indépendante de la variable $X$, la courbe ROC est une droite reliant les points $(0,0)$ et $(1-p,p)$ où $p = \pr{\theta=1}$. Ceci signifie que la connaissance du score $X$ n'apporte pas d'information quant à la réussite de l'expérience.\label{borne_inf_roc}
+\end{xremark}
+
+
+Il peut paraître complexe de distinguer la réponse du classifieur du score. C'est pourtant nécessaire dans le cas où le classifieur retourne un entier qui désigne une classe parmi~$n$. Un cas positif est lorsque la classe prédite est égale à la classe attendue, il est négatif dans le cas contraire. La courbe peut être adaptée pour d'autres problèmes tels que le ranking (voir \citeindex{Agarwal2005}).
+
+
+\section{Aire sous la courbe}
+
+\subsection{Expression}
+
+\indexfrr{aire}{ROC}\indexfr{AUC}\indexfr{Area Under the ROC Curb}
+L'aire sous la courbe (AUC) correspond à l'intégrale de la fonction ROC. Elle se calcule à partir du théorème suivant~:
+
+
+		\begin{xtheorem}{aire sous la courbe}\label{theorem_auc}
+		On utilise les notations de la définition~\ref{def_roc_2}. L'aire sous la courbe ROC est égale à $\pr{ Y > X}$.
+		\end{xtheorem}
+
+\begin{xdemo}{théorème}{\ref{theorem_auc}}
+On note $f_X$ la densité de la variable $X$ et $f_Y$ celle de la variable $Y$. On peut alors définir la probabilité $\pr{ Y > X}$ par une intégrale~:
+		
+		\begin{eqnarray}
+		P \pa{Y>X} &=& \int_x \int_y f_X(x) \; f_Y(y) \; \indicatrice{y > x} dx dy
+		\end{eqnarray}
+	
+On note $F_X$ la fonction de répartition de $X$\footnote{$F_X(x) = \int_{-\infty}^x f_X(u)du$}. On pose comme changement de variable~: $u = F_X(x)$. On en déduit que $du = f_X(x) dx$. La variable aléatoire $U = F_X(X)$ est uniforme et comprise dans $\cro{0,1}$\footnote{Soit $X$ une variable aléatoire de densité $f$ et de fonction de répartition $F$. Si $U = F(X)$, alors~:
+					$$\pr{ U \infegal t} = \pr{ F(X) \infegal t} = \pr{ X \infegal F^{-1}(t)} = F \pa{ F^{-1}(t) } = t$$
+La variable $U$ est de loi uniforme sur $\cro{0,1}$. De plus, soit $g$ une fonction intégrable quelconque, on pose $u = F(x)$ et~:
+					$$\int_{\R} g(x) \, f(x) \,dx = \int_{\cro{0,1}} g(F^{-1}(u)) \, du$$}.
+	
+		\begin{eqnarray}
+		P \pa{Y>X} &=& \int_x f_X(x) dx \int_y  \; f_Y(y) \; \indicatrice{y > x} dy  \nonumber \\
+							 &=& \int_u du \int_y  \; f_Y(y) \; \indicatrice{y > F_X^{-1}(u)} dy  \nonumber \\
+							 &=& \int_u du \; \pr{Y > F_X^{-1}(u)} \nonumber
+		\end{eqnarray}
+
+Or si $u = F_X(s) = E(s)$, alors $F_X^{-1}(u) = s$ et $\pr{Y > F_X^{-1}(u)} = R'(s)$. Par conséquent~:
+	
+		\begin{eqnarray}
+		P \pa{Y>X} &=& \int_u du \; \pr{Y > F_X^{-1}(u)} = \int_u du \; R'(F_X^{-1}(u))
+		\end{eqnarray}
+		
+Cette dernière expression est l'aire recherchée.
+	
+\end{xdemo}
+
+
+Ce théorème nous permet de définir un estimateur pour l'aire sous la courbe ROC à l'aide des U-statistiques de Mann-Whitney (voir \citeindex{Saporta1990}).
+\indexfr{U-statistique}\indexfr{Mann}\indexfr{Whitney}
+
+		\begin{xcorollary}{estimateur de l'aire sous la courbe ROC}\label{corollaire_roc_2}
+		On dispose des scores $\vecteur{Y_1}{Y_n}$ des expériences qui ont réussi 
+		et $\vecteur{X_1}{X_m}$ les scores des expériences qui ont échoué.
+		On suppose également que tous les scores sont indépendants. les scores $(Y_i)$ sont identiquement distribués, 
+		il en est de même pour les scores $(X_i)$. Un estimateur de l'aire $A$ sous la courbe ROC' est~:
+		\begin{eqnarray}
+		\hat{A} &=& \frac{1}{nm} \; \summy{i=1}{m}\summy{j=1}{n} \indicatrice{ Y_j > X_i} + 
+										\frac{1}{2} \indicatrice{ Y_j = X_i} \label{estimateur_roc}
+		\end{eqnarray}
+		\end{xcorollary}
+
+		\begin{xdemo}{corollaire}{\ref{corollaire_roc_2}}
+		La démonstration est évidente~: 
+		$$\esp{\hat{A}} = \frac{1}{nm} \; \summy{i=1}{m}\summy{j=1}{n} 
+										\pr{ Y_j > X_i} + \frac{1}{2} \pr{X=Y} = \pr{ Y > X} + \frac{1}{2}\pr{ Y = X}$$
+		Dans le cas où $X$ ou $Y$ sont continues, $\pr{X=Y} = 0$.
+		\end{xdemo}
+
+
+
+\subsection{Intervalles de confiance}
+\indexfrr{intervalle}{de confiance}
+
+Il est possible de déterminer un intervalle de confiance pour cet estimateur. Le théorème central limite nous permet de dire que cet estimateur tend vers une loi normale lorsque $n$ et $m$ tendent vers l'infini.
+
+
+		\begin{xcorollary}{variance de l'estimateur}\label{corollaire_roc_2_variance}
+		On note $P_X = \pr{ X < \min\acc{Y_i,Y_j }}$ et $P_Y = \pr { \max\acc{X_i,X_j} < Y}$. 
+		$X_i$ et $X_j$ sont de même loi que $X$, $Y_i$, $Y_j$ sont de même loi que $Y$.
+		La variance de l'estimateur $\hat{A}$ définie par (\ref{estimateur_roc}) est~:
+
+		\begin{eqnarray}
+		\var{\hat{A}} &=& \frac{ \hat{A} (1-\hat{A})}{nm} \; \cro{ 
+																1 + (n-1) \frac { P_Y  - \hat{A}^2 } { \hat{A} (1-\hat{A}) } +
+																(m-1) \frac { P_X - \hat{A}^2 } { \hat{A} (1-\hat{A}) }
+															}
+		\end{eqnarray}
+		\end{xcorollary}
+
+
+\begin{xdemo}{corollaire}{\ref{corollaire_roc_2_variance}}
+Cette démonstration n'est vrai que dans le cas continu. Par conséquent, $\pr{X=Y} = 0$. On calcule tout d'abord $\esp{\hat{A}^2}$ et on utilise le fait que $\var{\hat{A}} = \esp{\hat{A}^2} - \hat{A}^2$.
+	
+			\begin{eqnarray}
+			\hat{A}^2 &=& \frac{1}{n^2 \, m^2} \; \cro{ \summy{i=1}{m}\summy{j=1}{n} \indicatrice{ X_i < Y_j} } ^2 
+								= \frac{1}{n^2 \, m^2} \; \summy{i=1}{m}\summy{j=1}{n}\summy{k=1}{m}\summy{l=1}{n} 
+													\indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_l} \nonumber \\
+								&=& \frac{1}{n^2 \, m^2} \; \summy{i=1}{m}\summy{j=1}{n} \indicatrice{ X_i < Y_j} +
+										\frac{1}{n^2 \, m^2} \; \summy{i=1}{m}\summy{j=1}{n}\summyone{k \neq i} 
+													\indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_j} +\nonumber \\
+								&&		\frac{1}{n^2 \, m^2} \; \frac{1}{n^2 \, m^2} \; \summy{i=1}{m}\summy{j=1}{n}\summyone{l \neq j}
+													 \indicatrice{ X_i < Y_j}  \indicatrice{ X_i < Y_l} + 
+										\frac{1}{n^2 \, m^2} \; \summy{i=1}{m}\summy{j=1}{n}\summyone{k \neq i}\summyone{l \neq j}
+													\indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_l} 
+											\nonumber \\
+		  \end{eqnarray}
+		  
+On en déduit que~:
+
+			\begin{eqnarray}
+			\esp{\hat{A}^2} &=&	\frac{\hat{A}}{nm} + \frac{n-1 }{nm} \; \pr{ \max\acc{X_i,X_k} < Y_j}  + \nonumber \\ &&
+													\frac{m-1 }{nm} \;  \pr{ X_i < \min\acc{Y_j,Y_l}} +  \frac{nm-n-m-1 }{n m} \;  \hat{A}^2 \nonumber \\
+			\var{\hat{A}^2} &=&	\frac{1}{nm} \cro{ \hat{A} + (n-1) P_Y + (m-1) P_X - (n+m+1) \hat{A}^2 } \nonumber \\
+											&=&	\frac{1}{nm} \cro{ \hat{A} + (n-1) \pa{P_Y - \hat{A}^2}+ (m-1) \pa{P_X - \hat{A}^2} + \hat{A}^2 } \nonumber
+		  \end{eqnarray}
+
+On retrouve l'expression cherchée.		  
+		  
+		  
+\end{xdemo}
+
+
+
+\section{Intervalles de confiance pour la courbe}
+\label{roc_confiance_inter}
+
+\indexfrr{taux}{reconnaissance}
+Les systèmes de reconnaissance sont souvent ajustés de telle manière que le taux d'erreur soit constant, par exemple~1\%. C'est la proportion de documents reconnus qui détermine la performance de ce système. L'objectif ce paragraphe est de déterminer un intervalle de confiance du taux de reconnaissance pour un taux d'erreur fixé.
+
+\subsection{Construction de la courbe ROC}
+
+Ce premier paragraphe détaille la manière dont est construite une courbe ROC (voir définition~\ref{def_roc_2}).
+
+		\begin{xalgorithm}{courbe ROC}\label{algo_courb_ROC}
+		On suppose qu'on dispose d'un ensemble de points $\pa{X_i,\theta_i} 
+		\in \R \times \acc{0,1}$ pour $i \in \ensemble{1}{n}$.
+		$X_i$ est le score obtenu pour l'expérience~$i$, 
+		$\theta_i$ vaut 1 si elle a réussi et 0 si elle a échoué. 
+		On suppose également que cette liste est triée par ordre croissant~: 
+		$\forall i, \; X_i \infegal X_{i+1}$. 
+		On souhaite également tracer $k$ points sur la courbe, on détermine pour cela $k$ seuils
+		$\ensemble{s_1}{s_k}$ définis par~: $\forall j, s_k = X_{\frac{j \, k}{n}}$.
+		
+		On construit ensuite les points $\pa{R_j,E_j}$ définis par~:
+					\begin{eqnarray}
+					R_j &=& \frac{1}{n}\,  \summy{i=1}{n} \theta_i \indicatrice{X_i \supegal s_j} \text{ et } 
+					E_j = \frac{1}{n}  \, \summy{i=1}{n} \pa{1-\theta_i} \; \indicatrice{X_i \supegal s_j} 
+					\end{eqnarray}
+		La courbe ROC est composée de l'ensemble $R_{OC} = \acc{ \pa{E_j,R_j} \sac 1 \infegal j \infegal k}$.
+		\end{xalgorithm}
+		
+Les deux suites $(R_j)_j$ et $(E_j)_j$ sont toutes les deux décroissantes d'après leur définition. Une autre de ces courbe est données par la figure~\ref{roc_courbe_roc_boot}. La courbe peut être rendue continue par interpolation.
+
+		\begin{xalgorithm}{taux de classification à erreur fixe}\label{algo_courb_taux_lin}
+		On cherche un taux de reconnaissance pour un taux d'erreur donné. On dispose pour cela d'une courbe ROC obtenue par 
+		l'algorithme~\ref{algo_courb_ROC} et définie par les points 
+		$R_{OC} = \acc{ \pa{e_j,r_j} \sac 1 \infegal j \infegal k}$. 
+		On suppose ici que $\pa{e_1,r_1} = \pa{1,1}$ et $\pa{e_k,r_k} = \pa{0,}$. Si ce n'est pas le cas, on 
+		ajoute ces valeurs à l'ensemble $R_{OC}$.
+		
+		Pour un taux d'erreur donné $e^*$, on cherche $j^*$ tel que~:
+		
+					\begin{eqnarray}
+					e_{j^*+1} \infegal e^* \infegal e_{j^*}
+					\end{eqnarray}
+					
+		Le taux de reconnaissance $\rho$ cherché est donné par~:
+		
+					\begin{eqnarray}
+					\rho &=&  \frac{e^* - x_{j^*}} { x_{j^*+1} - x_{j^*} } \; \cro{ r_{j^*+1} - r_{j^*} } + r_{j^*}
+					\end{eqnarray}
+		
+		\end{xalgorithm}
+
+Il ne reste plus qu'à détailler la méthode \emph{bootstrap}. 
+
+\subsection{Méthode boostrap}
+\indexfr{bootstrap}\indexfrr{ROC}{bootstrap}
+
+Une seule courbe ROC ne permet d'obtenir qu'un seul taux. On cherche ici à construire plusieurs courbes ROC à partir de la même expérience de façon à obtenir plusieurs taux de reconnaissance pour le même taux d'erreur. De cette manière, il sera possible de déterminer un intervalle de confiance. On s'inspire pour cela des méthodes de \emph{bootstrap}.
+
+		\begin{xalgorithm}{courbe ROC, méthode boostrap}\label{roc_boostrap_algo}
+		On dispose toujours du nuage de points $E = \pa{X_i,\theta_i} \in \R \times \acc{0,1}$ avec $i \in \ensemble{1}{n}$.
+		On choisit $C \in \N$ le nombre de courbes ROC qu'on désire tracer. Pour chaque courbe $c \in \ensemble{1}{C}$~:
+		\begin{enumerate}
+		\item On construit un nouvel ensemble $\pa{X'_i,\theta'_i}_{1 \infegal i \infegal n}$ construit par un tirage
+					aléatoire dans l'ensemble $E$ avec remise. \indexfrr{tirage}{avec remise}
+		\item L'algorithme~\ref{algo_courb_ROC} permet de constuire la courbe $R_{OC}^k$.
+		\item L'algorithme~\ref{algo_courb_taux_lin} permet ensuite de déterminer un taux de reconnaissance $\rho_k$
+					 pour le taux d'erreur $e^*$.
+		\end{enumerate}
+		La liste $\vecteur{\rho_1}{\rho_C}$ est triée par ordre croissant. Les quantiles sont ensuite utilisés pour 
+		déterminer l'intervalle de confiance $\cro{\rho_1,\rho_2}$ du taux de reconnaissance 
+		pour le taux d'erreur $e^*$ de telle sorte que~:
+				\begin{eqnarray}
+				\pr{ \rho \in \cro{ \rho_1, \rho_2 } } = 1 - \alpha
+				\end{eqnarray}
+		On prend généralement $\alpha = 5\%$.
+		\end{xalgorithm}
+
+La figure~\ref{roc_courbe_roc_boot} illustre les résultats obtenus par l'algorithme~\ref{roc_boostrap_algo}.
+
+
+				\begin{figure}[ht]
+				$$\begin{array}{|c|c|c|} \hline
+    		\includegraphics[height=6cm, width=6cm]{\filext{../roc/image/roc_1}} &
+    		\includegraphics[height=6cm, width=6cm]{\filext{../roc/image/roc_3}} &
+    		\includegraphics[height=6cm, width=6cm]{\filext{../roc/image/roc_100}} 	\\ \hline
+    		\end{array}$$
+    		\caption{	La première image est celle d'une courbe ROC (l'axe des abscisses est inversé), la seconde représente toutes celles obtenues par la 
+    							méthode bootstrap pour trois courbes. La troisième image superpose cent courbes.
+    							Moins il y a de points pour estimer une partie de la courbe,
+    							plus les courbes sont espacées. Ces courbes ont été construites avec 12000 points. 
+    							Le taux de lecture pour 1\% d'erreur est égal à 68,09\%. L'intervalle de confiance à 95\% est
+    							$\cro{ \, 66,10\%, \; 70,16\% \, }$ (construit avec 500 courbes). 
+    							Moyenne (68,25) et médiane (68,12) sont sensiblement égales au taux calculé sur la première courbe
+    							construite sans tirage aléatoire. L'écart-type est $1,10$, cela donne un intervalle de confiance
+    							équivalent au précédent si on considère que la moyenne des taux suit asymptotiquement une loi normale.
+    							Cette expérience a été reproduite plusieurs fois
+    							et ces bornes sont assez stables contrairement ($\pm 0,05 \%$) aux extremas 
+    							($\pm 1\%$). 
+    							}
+    		\indexfr{ROC}
+    		\indexfr{Receiver Operating Characteristic}
+    		\label{roc_courbe_roc_boot}
+    		\end{figure}
+
+
+
+\subsection{Aire sous la courbe}
+\indexfr{AUC}
+
+La méthode bootstrap peut elle aussi être appliquée pour calculer un intervalle de confiance pour l'aire sous la courbe (AUC). 
+
+				\begin{figure}[ht]
+				$$\begin{array}{|c|} \hline
+    		\includegraphics[height=6cm, width=6cm]{\filext{../roc/image/roc_p100}} 	\\ \hline
+    		\end{array}$$
+    		\caption{	Courbe ROC (l'axe des abscisse est inversé) obtenue pour 100 tirages aléatoires.
+    							L'aire sous la courbe est égale à 0.80 et l'intervalle de confiance à 95\% 
+    							mesurée par la méthode bootsrap 
+    							est~: $\cro{0.79 , \; 0.80}$. 
+    							Les extremas sont presque identiques à ces chiffres.
+    							}
+    		\indexfr{ROC}
+    		\indexfr{Receiver Operating Characteristic}
+    		\label{roc_courbe_roc_boot_p}
+    		\end{figure}
+
+
+\section{Pour aller plus loin}
+
+
+\subsection{Distribution des scores mauvais et bons}
+
+On appelle un mauvais score un score associé à un mauvais résultat, de même, un bon score est le score d'un bon résultat. Si le score est une probabilité, on s'attend à trouver les bons scores regroupés autour de la valeur~1. Si le score est un mauvais score, il devrait être plus proche de zéro. La figure~\ref{roc_distri_butions} montre des distributions obtenues pour deux problèmes différents. Dans les deux cas, le but recherché est la détermination d'un seuil séparant le score d'un bon résultat de celui d'un mauvais résultat. Lorsque ceci n'est pas possible, le score ne peut correspondre à un quelconque critère confiance. \indexfrr{critère}{confiance}
+
+
+				\begin{figure}[ht]
+				$$\begin{array}{|c|c|} \hline
+    		\includegraphics[height=8cm, width=9cm]{\filext{../roc/image/score_dist_1}} 	&
+    		\includegraphics[height=8cm, width=9cm]{\filext{../roc/image/score_dist_2}} 	\\ \hline
+    		\end{array}$$
+    		\caption{	Distribution des bons et mauvais scores. La première courbe montre deux distributions
+    							qui se chevauchent même si les bons scores semblent plus concentrés autour des grandes valeurs.
+    							Le seconde courbe montre un problème mieux séparable. L'existence d'un seuil 
+    							entre un bon et un mauvais score est plus plausible.
+    							}
+    		\indexfr{distribution}
+    		\label{roc_distri_butions}
+    		\end{figure}
+
+
+\subsection{Taux de lecture ou de reconnaissance}
+\label{roc_lecture_erreur}
+
+Il n'existe pas une grande différence lorsque le taux d'erreur est faible. Le taux de lecture est simplement la proportion de documents pour lesquels le score est aussi d'un seuil~$s$ que la réponse du classifieur soit bonne ou mauvaise. Par exemple, pour un taux de \emph{substitution} de~1\%, si on a 70\% en taux de lecture, cela signifie que sur 100~documents, le système va en accepter~70 et parmi ces~70, 1\% seront mal traités. Le taux de substitution est un taux d'erreur \indexfrr{taux}{substitution} rapporté à un taux de lecture donné. L'inconvénient du taux de lecture rapporté au taux de substitution est que la méthode développée au paragraphe~\ref{roc_confiance_inter} ne s'applique plus aussi bien car pour un taux de substitution donné, il peut exister plusieurs taux de lecture, ce que montre la figure~\ref{roc_lecture_probleme}. Cette même figure montre les répercussions sur le calcul des intervalles de confiance.
+
+				\begin{figure}[ht]
+				$$\begin{array}{|c|c|} \hline
+    		\includegraphics[height=8cm, width=9cm]{\filext{../roc/image/lecture_5_curve}} 	&
+    		\includegraphics[height=8cm, width=9cm]{\filext{../roc/image/lecture_intervalle}} 	\\ \hline
+    		\end{array}$$
+    		\caption{	La première image montre 5 courbes taux de lecture / taux de substitutions. 
+    							Les courbes ne sont pas monotones et montre qu'il existe parfois plusieurs taux de 
+    							lecture pour un même taux de substitution. Comme le calcul des intervalles de confiance
+    							fait intervenir une interpolation linéaire, lorsque les courbes sont trop cahotiques, 
+    							le calcul retourne des valeurs fausses.
+    							}
+    		\indexfr{distribution}
+    		\label{roc_lecture_probleme}
+    		\end{figure}
+
+\indexfrr{taux}{lecture}\indexfrr{taux}{substitution}\indexfr{substitution}
+    		
+On peut démontrer que la courbe taux de lecture / taux de substitution n'est pas une courbe ni monotone ni inversible. Pour cela on dispose d'une suite de couple $\pa{X_i, \theta_i}$ croissante selon les $X_i$. $\theta_i$ vaut~1 si l'expérience a réussi, 0~sinon. Pour un seuil donné~$s$, on note $E'(s)$ le taux de substitution et $R'(s)$ le taux de lecture, on obtient~:
+
+		\begin{eqnarray*}
+		R'(s) &=& \frac{1}{n} \summy{i=1}{n} \indicatrice{X_i \supegal s} \\
+		E'(s) &=& \frac{1}{n \, R'(s)} \summy{i=1}{n} \pa{1 - \theta_i} \, \indicatrice{X_i \supegal s} 
+		\end{eqnarray*}
+		
+On écrit différemment ces expressions en supposant que $X_{i(s_1)-1} < s_1 \infegal X_{i(s_1)} $~:
+
+		\begin{eqnarray*}
+		R'(s_1) &=& \frac{n-i(s_1)}{n} \\
+		E'(s_1) &=& \frac{1}{n - i(s_1)} \summy{i=i(s_1)}{n} \pa{1 - \theta_i} 
+		\end{eqnarray*}
+		
+On suppose maintenant que $X_{i(s_2)-1} < s_2 \infegal X_{i(s_2)} $ et $i(s_1) +1 = i(s_2)$~:
+		
+		\begin{eqnarray*}
+		R'(s_2) &=& \frac{n-i(s_2)}{n} < R'(s_1) \\
+		E'(s_2) &=& \frac{1}{n - i(s_2)} \summy{i=i(s_2)}{n} \pa{1 - \theta_i} = 
+								\frac{1}{n - i(s_2)} \frac{n - i(s_1)}{n - i(s_1)} 
+								\pa{ - \pa{1 - \theta_{i(s_1)}} + \summy{i=i(s_1)}{n} \pa{1 - \theta_i} } \\
+						&=& - \frac{ \pa{1 - \theta_{i(s_1)}} } { n - i(s_2) } + 
+										\frac{  \summy{i=i(s_1)}{n} \pa{1 - \theta_i} } { n - i(s_1)} \frac{ n - i(s_1) } {n - i(s_2) }
+								= - \frac{ \pa{1 - \theta_{i(s_1)}} } { n - i(s_2) } + E'(s_1) \frac{ n - i(s_1) } {n - i(s_2) }
+		\end{eqnarray*}
+
+Si on suppose que $\theta_{i(s_1)}=1$, autrement dit, l'expérience $s_1$ a réussi, on en déduit que~:
+
+		\begin{eqnarray*}
+		E'(s_2) &=& E'(s_1) \frac{ n - i(s_1) } {n - i(s_2) } = E'(s_1) \frac{ n - i(s_2) + 1 } {n - i(s_2) } > E'(s_1)
+		\end{eqnarray*}
+		
+En revanche si $\theta_i = 0$~:
+
+		\begin{eqnarray*}
+		E'(s_2) &=&  E'(s_1) \pa{ 1 +  \frac{ 1 } {n - i(s_2) } } - \frac{1}{n - i(s_2)} =
+									E'(s_1) + \frac{ E(s_1) -1}{n - i(s_2) } < E'(s_1)
+		\end{eqnarray*}
+
+
+Il n'existe donc pas toujours une fonction $f$ reliant $R'(s)$ à $E'(s)$ à moins de construire cette courbe de telle sorte qu'elle soit monotone en ne choisissant qu'une sous-suite $\pa{E'(X_i), R'(X_i)}_i$ qui vérifie cette hypothèse.
+
+
+
+
+
+
+%\subsection{suite}
+%\citeindex{Agarwal2005}
+%l'article dans ton sac ?
+
+
+
+
+\newpage
+
+\firstpassagedo{
+	\begin{thebibliography}{99}
+	\input{roc_article.tex}
+	\end{thebibliography}
+	%\input{../xthese/nb_citations.tex}
+	\begin{flushleft}
+	\printindex
+	\end{flushleft}
+}
+
+\input{../../common/paper_end.tex}%
