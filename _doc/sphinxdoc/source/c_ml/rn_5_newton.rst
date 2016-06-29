@@ -41,10 +41,11 @@ que certaines hypothèses soient vérifiées. Une généralisation de ce théor�
 
 
 .. mathdef::
-    :title: convergence de la méthode de Newton [Bottou1991]_
+    :title: convergence de la méthode de Newton
     :tag: Théorème
     :lid: theoreme_convergence
 
+    [Bottou1991]_
 
     Soit une fonction continue :math:`g : W \in \R^M \dans \R`
     de classe :math:`C^{1}`.    
@@ -178,13 +179,136 @@ Dans le cas des réseaux de neurones, la fonction à optimiser est :
     :label: equation_fonction_erreur_g
     
     \begin{eqnarray}
-    G\pa{W}   &=&   \sum_{i=1}^{N} e\pa {Y_{i}, \widehat{Y_{i}^W}} \\
-                      &=&   \sum_{i=1}^{N} e\pa {Y_{i}, f \pa{W,X_{i}}}
+    G\pa{W}   &=&   \sum_{i=1}^{N} e\pa {Y_{i}, \widehat{Y_{i}^W}} 
+                      =   \sum_{i=1}^{N} e\pa {Y_{i}, f \pa{W,X_{i}}} \nonumber
     \end{eqnarray}
 
 Dès que les fonctions de transfert ne sont pas linéaires,
 il existe une multitude de minima locaux, ce nombre croissant avec celui des coefficients.
 
 
+Calcul du gradient ou *rétropropagation*
+++++++++++++++++++++++++++++++++++++++++
+
+
+
+Afin de minimiser la fonction :math:`G` décrite en :eq:`equation_fonction_erreur_g`, 
+l'algorithme de descente du gradient nécessite de calculer le gradient de 
+cette fonction :math:`G` qui est la somme des gradients :math:`\partialfrac{e}{W}` 
+pour chaque couple :math:`\pa{X_i,Y_i}` :
+
+.. math::
+    :nowrap:
+    :label: algo_retro_1
+
+    \begin{eqnarray}
+    \partialfrac{G}{W}\pa{W} &=& \sum_{i=1}^{N} \partialfrac{e\pa {Y_{i}, f \pa{W,X_{i}}}}{W} \nonumber\\
+                             &=& \sum_{i=1}^{N} \sum_{k=1}^{C_C}
+                                    \partialfrac{e\pa {Y_{i}, f \pa{W,X_{i}}}}{z_{C,k}}
+                                    \partialfrac{z_{C,k}}{W} \nonumber
+    \end{eqnarray}
+
+Les notations utilisées sont celles de la figure du :ref:`perceptron <figure_peceptron-fig>`. 
+Les résultats qui suivent sont pour :math:`X_i=X` donné appartenant à la suite 
+:math:`\pa{X_i}`. On remarque tout d'abord que :
+
+.. math::
+    :nowrap:
+    :label: algo_retro_3
+
+    \begin{eqnarray}
+    \partialfrac{e}{w_{c,i,j}} \pa{W,X} &=&  z_{c-1,j} \partialfrac{e}{y_{c,i}} \pa{W,X} \nonumber \\
+    \partialfrac{e}{b_{c,i}} \pa{W,X}   &=& \partialfrac{e}{y_{c,i}} \pa{W,X} \nonumber
+    \end{eqnarray}
+
+La rétropropagation du gradient consiste donc à calculer les termes : 
+:math:`\partialfrac{e}{y_{.,.}}\pa{W,X}` 
+puisque le gradient s'en déduit facilement. La dernière couche du réseau de neurones nous permet d'obtenir :
+
+.. math::
+    :nowrap:
+    :label: algo_retro_4
+
+    \begin{eqnarray}
+    \partialfrac{e}{y_{C,i}} \pa{W,X} &=& \sum_{k=1}^{C_{C}} \partialfrac{e}{z_{C,k}} \pa{W,X} \partialfrac{z_{C,k}}{y_{C,i}}
+                                            \pa{W,X} \nonumber\\
+                                      &=& \partialfrac{e}{z_{C,i}} \pa{W,X} f'_{c,i}\pa{y_{C,i}} \nonumber
+    \end{eqnarray}
+
+Pour les autres couches :math:`c` telles que :math:`1 \infegal c \infegal C-1`, on a :
+
+.. math::
+    :nowrap:
+    :label: retro_eq_nn_3
+
+    \begin{eqnarray}
+    \partialfrac{e}{y_{c,i}}    &=& \sum_{l=1}^{C_{c+1}}              \partialfrac {e}{y_{c+1,l}}
+                                                                \partialfrac{y_{c+1,l}}{y_{c,i}} \nonumber \\
+                                &=& \sum_{l=1}^{C_{c+1}}              \partialfrac {e}{y_{c+1,l}}
+                                    \cro { \sum_{l=1}^{C_{c}}   \partialfrac {y_{c+1,l}}{z_{c,l}}
+                                                                    \underset{=0\,si\,l\neq i}{\underbrace{\partialfrac{z_{c,l}}{y_{c,i}}}} } \nonumber \\
+                                &=& \sum_{l=1}^{C_{c+1}}              \partialfrac{e}{y_{c+1,l}}
+                                                                    \partialfrac{y_{c+1,l}}{z_{c,i}}
+                                                                    \partialfrac{z_{c,i}}{y_{c,i}}
+                                                                    \nonumber
+    \end{eqnarray}
+
+Par conséquent :
+
+.. math::
+    :nowrap:
+    :label: algo_retro_5
+
+    \begin{eqnarray}
+    \partialfrac{e}{y_{c,i}} &=&    \cro{ \sum_{l=1}^{C_{c+1}} \partialfrac{e}{y_{c+1,l}}w_{c+1,l,i} } \,
+                                    f_{c,i}^{\prime} \pa{y_{c,i}}  \nonumber
+    \end{eqnarray}
+    
+.. index:: rétroprogagation
+
+Cette dernière formule permet d'obtenir par récurrence les dérivées 
+:math:`\partialfrac{e}{y_{.,.}}` de la dernière couche :math:`C` à la première et ce, 
+quel que soit le nombre de couches. Cette récurrence inverse de la propagation est appelée *rétropropagation*. 
+Cet algorithme se déduit des équations :eq:`algo_retro_1`, :eq:`algo_retro_3`, :eq:`algo_retro_4` et :eq:`algo_retro_5` :
+
+.. mathdef::
+    :title: rétropropagation
+    :lid: algo_retropropagation
+    :tag: Théorème
+
+    Cet algorithme s'applique à un réseau de neurones vérifiant la définition du :ref:`perceptron <rn_definition_perpception_1>`. 
+    Il s'agit de calculer sa dérivée par rapport aux poids. Il se déduit des formules
+    :eq:`algo_retro_1`, :eq:`algo_retro_3`, :eq:`algo_retro_4` et :eq:`algo_retro_5`
+    et suppose que l'algorithme de :ref:`propagation <algo_propagation>` a été préalablement exécuté.
+    On note :math:`y'_{c,i} = \partialfrac{e}{y_{c,i}}`, :math:`w'_{c,i,j} = \partialfrac{e}{w_{c,i,j}}` et 
+    :math:`b'_{c,i} = \partialfrac{e}{b_{c,i}}`.
+    
+    *Initialisation*
+    
+    | for i in :math:`1..C_C`
+    |   :math:`y'_{C,i} \longleftarrow \partialfrac{e}{z_{C,i}} \pa{W,X} f'_{c,i}\pa{y_{C,i}}`
+
+    *Récurrence*
+    
+    | for c in :math:`1..C-1`
+    |   for i in :math:`1..C_c`
+    |       :math:`y'_{c,i} \longleftarrow 0`
+    |       for j in :math:`1..C_{c+1}`
+    |           :math:`y'_{c,i} \longleftarrow y'_{c,i} + y'_{c+1,j} \; w_{c+1,j,i}`
+    |       :math:`y'_{c,i} \longleftarrow y'_{c,i} \; f'_{c,i}\pa{y'_{c,i}}`
+    
+    *Terminaison*
+    
+    | for c in :math:`1..C`
+    |   for i in :math:`1..C_c` 
+    |       for j in :math:`1..C_{c-1}`
+    |           :math:`w'_{c,i,j} \longleftarrow z_{c-1,j} \; y'_{c,i}`
+    |           :math:`b'_{c,i,j} \longleftarrow y'_{c,i}`
+
+
+		
+		
+		
+		
 
 

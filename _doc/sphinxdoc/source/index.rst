@@ -1,10 +1,12 @@
 
-
+En construction.
 
 
 Contenu
 =======
 
+Le livre `The Elements of Statistical Learning <http://statweb.stanford.edu/~tibs/ElemStatLearn/>`_
+est considéré comme la bible en matière de machine learning. Ce site aborde des sujets connexes.
 
 .. raw:: html
 
@@ -22,11 +24,13 @@ Contenu
 
     <hr />
     
+On fait beaucoup de choses avec l'informatique mais en pratique
+on doit maintenir, on doit réécrire sans cesse.
+Faire un peu de théorie ça repose. 
+    
 Xavier Dupré    
 
-.. raw:: html
 
-    <hr />
     
 
 .. image:: https://travis-ci.org/sdpython/mlstatpy.svg?branch=master
@@ -47,9 +51,6 @@ Xavier Dupré
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT  
-
-.. image:: https://coveralls.io/repos/sdpython/mlstatpy/badge.svg?branch=master&service=github 
-    :target: https://coveralls.io/github/sdpython/mlstatpy?branch=master     
 
 .. image:: https://landscape.io/github/sdpython/mlstatpy/master/landscape.svg?style=flat
    :target: https://landscape.io/github/sdpython/mlstatpy/master

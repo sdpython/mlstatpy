@@ -54,6 +54,8 @@ custom_preamble = """\n\\newcommand{\\girafedec}[3]{ \\begin{array}{ccccc} #1 &=
             \\newcommand{\\vecteurno}[2]{#1,\\dots,#2}
             \\newcommand{\\norm}[1]{\\left\\Vert#1\\right\\Vert}
             \\newcommand{\\dans}[0]{\\rightarrow}
+            \\newcommand{\\partialfrac}[2]{\\frac{\\partial #1}{\\partial #2}}
+            \\newcommand{\\partialdfrac}[2]{\\dfrac{\\partial #1}{\\partial #2}}
             """
 
 imgmath_latex_preamble += custom_preamble
