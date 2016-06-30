@@ -7,109 +7,11 @@
 
 
 
-%-------------------------------------------------------------------------------------------------------------------
-\section{Apprentissage d'un réseau de neurones}
-%-------------------------------------------------------------------------------------------------------------------
-\label{rn_section_train_rn}
-\indexfr{apprentissage}%
-\indexfrr{apprentissage}{global}%
-\indexfr{optimisation}
-
-Le terme apprentissage est encore inspiré de la biologie et se traduit par la minimisation de la fonction
-(\ref{equation_fonction_erreur_g}) où $f$ est un réseau de neurone défini par (\ref{rn_definition_perpception_1}). Il existe plusieurs méthodes pour effectuer celle-ci. Chacune d'elles vise à minimiser la fonction d'erreur~:
-
-    $$
-        E\pa{W}   = G \pa{W}  =   \sum_{i=1}^{N} e\pa {Y_{i} - \widehat{Y_{i}^W}}
-                                            =   \sum_{i=1}^{N} e\pa {Y_{i} - f \pa{W,X_{i}}}
-    $$
-
-Dans tous les cas, les différents apprentissages utilisent la suite suivante $\pa{ \epsilon_{t}}$ vérifiant (\ref{rn_suite_epsilon_train}) et proposent une convergence vers un minimum local (figure~\ref{figure_modele_optimal}).
-
-    \begin{eqnarray}
-    \forall t>0,\quad\varepsilon_{t}\in \ensemblereel_{+}^{\ast} \text{ et }
-    \underset{t\geqslant0}{\sum}\varepsilon_{t}=+\infty,\quad
-    \underset{t\geqslant0}{\sum}\varepsilon_{t}^{2}<+\infty
-    \label{rn_suite_epsilon_train}
-    \end{eqnarray}
-
-Il est souhaitable d'apprendre plusieurs fois la même fonction en modifiant les conditions initiales de ces méthodes de manière à améliorer la robustesse de la solution.
 
 
 
 
 
-
-
-
-\subsection{Apprentissage avec gradient global}
-
-\indexfrr{gradient}{global}%
-
-L'algorithme~\ref{algo_retropropagation} permet d'obtenir la dérivée de l'erreur $e$ pour un vecteur d'entrée $X$. Or l'erreur $E\pa{W}$ à minimiser est la somme des erreurs pour chaque exemple $X_i$, le gradient global $\partialfrac{E\pa{W}}{W}$ de cette erreur globale est la somme des gradients pour chaque exemple (voir équation~\ref{algo_retro_1}). Parmi les méthodes d'optimisation basées sur le gradient global, on distingue deux catégories~:
-
-\begin{enumerate}
-\item Les méthodes du premier ordre, elles sont calquées sur la méthode de Newton et n'utilisent que le gradient.
-\item Les méthodes du second ordre ou méthodes utilisant un gradient conjugué,
-        \indexfrr{gradient}{conjugué} elles sont plus coûteuses en calcul mais plus performantes
-        puisqu'elles utilisent la dérivée seconde ou une valeur approchée.
-\end{enumerate}
-
-
-
-
-
-
-
-
-
-\subsubsection{Méthodes du premier ordre}
-\label{rn_optim_premier_ordre}
-
-
-\indexfrr{apprentissage}{premier ordre}
-\indexfrr{méthode}{premier ordre} 
-\indexfrr{ordre}{méthode du premier ordre}
-
-Les méthodes du premier ordre sont rarement utilisées. Elles sont toutes basées sur le principe de la descente de gradient de Newton présentée dans la section~\ref{optimisation_newton} page~\pageref{theoreme_convergence}~:
-
-
-		\begin{xalgorithm} {optimisation du premier ordre}
-		\label{rn_algorithme_apprentissage_1}%
-		\label{rn_apprentissage_global}
-		\indexfr{Newton}
-		
-		\begin{xalgostep}{initialisation}
-		    Le premier jeu de coefficients $W_0$ du réseau de neurones est choisi aléatoirement. \newline%
-		    $
-		    \begin{array}{rcl}
-		    t   &\longleftarrow&    0 \\
-		    E_0 &\longleftarrow&    \summy{i=1}{N} e\pa {Y_{i} - f \pa{W_0,X_{i}}}
-		    \end{array}
-		    $
-		\end{xalgostep}
-		
-		\begin{xalgostep}{calcul du gradient}\label{algo_global1_step_back}
-		    $g_t \longleftarrow \partialfrac{E_t}{W} \pa {W_t} = \summy{i=1}{N} e'\pa {Y_{i} - f \pa{W_t,X_{i}}}$
-		\end{xalgostep}
-		
-		\begin{xalgostep}{mise à jour} \label{algo_global1_step_maj}
-		    $
-		    \begin{array}{rcl}
-		    W_{t+1} &\longleftarrow& W_t - \epsilon_t g_t \\
-		    E_{t+1} &\longleftarrow& \summy{i=1}{N} e\pa {Y_i - f \pa{W_{t+1},X_i}} \\
-		    t       &\longleftarrow& t+1
-		    \end{array}
-		    $
-		\end{xalgostep}
-		
-		\begin{xalgostep}{terminaison}
-		    si $\frac{E_t}{E_{t-1}} \approx 1 $ (ou $\norme{g_t} \approx 0$) alors l'apprentissage a convergé sinon retour à
-		    l'étape~\ref{algo_global1_step_back}
-		\end{xalgostep}
-		\end{xalgorithm}
-
-
-La condition d'arrêt peut-être plus ou moins stricte selon les besoins du problème. Cet algorithme converge vers un minimum local de la fonction d'erreur (d'après le théorème~\ref{theoreme_convergence}) mais la vitesse de convergence est inconnue.
 
 
 
