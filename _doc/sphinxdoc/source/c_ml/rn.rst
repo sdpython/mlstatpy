@@ -26,6 +26,7 @@ ainsi qu'une méthode permettant de supprimer des coefficients inutiles
     rn_4_densite
     rn_5_newton
     rn_6_apprentissage
+    rn_7_clas2
     rn_biblio
 
 

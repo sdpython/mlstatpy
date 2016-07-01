@@ -1,0 +1,27 @@
+\input{../../common/figure_begin.tex}
+
+\begin{picture}(241,100)(0,-10)
+
+\put(1,1)   {\framebox(40,22){\footnotesize \begin{tabular}{c}vecteur \\ $X \in \R^N$ \end{tabular}}}
+\put(85,-9)  {\framebox(45,32){\footnotesize \begin{tabular}{c}vecteur \\ $Y \in \R^M$ \\ et $M < N$ \end{tabular}}}
+\put(200,1) {\framebox(40,22){\footnotesize \begin{tabular}{c}vecteur \\ $Z \approx X$ \end{tabular}}}
+
+\put(20,40) {\framebox(90,45){\footnotesize
+                                \begin{minipage}{30mm} première couche du réseau diabolo~:
+                                \textbf{projection (ou compression)}
+                                \end{minipage}}}
+
+\put(120,40) {\framebox(90,45){\footnotesize
+                                \begin{minipage}{30mm} seconde couche du réseau diabolo~:
+                                \textbf{reconstitution (ou décompression)}
+                                \end{minipage}}}
+\put(30,23) {\vector(1,1){17}}
+\put(130,23) {\vector(1,1){17}}
+
+\put(90,39) {\vector(1,-1){17}}
+\put(190,39) {\vector(1,-1){17}}
+
+
+\end{picture}
+
+\input{../../common/figure_end.tex}

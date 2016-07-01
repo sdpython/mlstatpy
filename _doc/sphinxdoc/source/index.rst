@@ -12,15 +12,26 @@ est considéré comme la bible en matière de machine learning. Ce site aborde d
 
     <hr />
 
+.. only:: html
 
-.. toctree::
-    :maxdepth: 2
-    
-    introduction
-    c_ml/index
-    end_index
+    .. toctree::
+        :maxdepth: 2
+        
+        introduction
+        c_ml/index
+        end_index
+
+.. only:: latex
+
+    .. toctree::
+        :maxdepth: 3
+        
+        introduction
+        c_ml/index
+        end_index
         
 .. raw:: html
+
 
     <hr />
     
