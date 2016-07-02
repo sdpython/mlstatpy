@@ -2,14 +2,18 @@
 
 
 
-Méthode d'optimisation de Newton
-================================
+Descente de gradient
+====================
 
 Lorsqu'un problème d'optimisation n'est pas soluble de manière déterministe, 
 il existe des algorithmes permettant de trouver une solution approchée 
 à condition toutefois que la fonction à maximiser ou minimiser soit dérivable, 
 ce qui est le cas des réseaux de neurones. Plusieurs variantes seront proposées 
 regroupées sous le terme de descente de gradient.
+Quelques lectures :
+
+* `An overview of gradient descent optimization algorithms <http://sebastianruder.com/optimizing-gradient-descent/>`_
+* `Implementing a Neural Network from Scratch in Python – An Introduction <http://www.wildml.com/2015/09/implementing-a-neural-network-from-scratch/>`_
 
 
 

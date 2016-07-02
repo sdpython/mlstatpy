@@ -27,6 +27,8 @@ ainsi qu'une méthode permettant de supprimer des coefficients inutiles
     rn_5_newton
     rn_6_apprentissage
     rn_7_clas2
+    rn_8_prol
+    rn_9_auto
     rn_biblio
 
 

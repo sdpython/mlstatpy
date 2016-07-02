@@ -13,6 +13,9 @@ Bibliographie
 .. [Bishop1995] Neural networks for pattern recognition (1995),
    C. M. Bishop, *Oxford University Press*
    
+.. [Cottrel1995] Neural modeling for time series: a statistical stepwise methode for weight elimination (1995),
+   M. Cottrel, B. Girard, M. Mangeas, C. Muller, *IEEE Transaction On Neural Networks*
+   
 .. [Cybenko1989] Approximation by superpositions of a sigmoidal function (1989),
    G. Cybenko, *Mathematics of Controls, Signals, and Systems*, 
    p 303-314
@@ -47,3 +50,7 @@ Bibliographie
 
 .. [Saporta1990] Probabilités, analyse des données et statistique (1990),
    Gilbert Saporta, *Editions Technip*
+
+.. [Song1997] Self-organizing algorithm of robust PCA based on single layer NN (1997)
+   Song Wang, Shaowei Xia,
+   *Proceedings of the 4th International Conference Document Analysis and Recognition*
