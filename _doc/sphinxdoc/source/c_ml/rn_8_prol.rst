@@ -69,7 +69,7 @@ C'est le cas par exemple des modèles de Markov cachés.
 Elle permet de s'assurer qu'un modèle s'adapte bien à de nouvelles données.
 
 
-.. rnn_fonction_base_radiale_rbf:
+.. _rnn_fonction_base_radiale_rbf:
 
 Fonction de transfert à base radiale
 ++++++++++++++++++++++++++++++++++++
@@ -227,7 +227,7 @@ la formule devient dans ce cas :
 
 
 
-.. rn_decay:
+.. _rn_decay:
 
 Régularisation ou Decay
 +++++++++++++++++++++++

@@ -33,6 +33,12 @@ Problèmes
 .. mathdeflist::
     :tag: Problème
 
+Propriétés
+++++++++++
+
+.. mathdeflist::
+    :tag: Problème
+
 Tables
 ++++++
 

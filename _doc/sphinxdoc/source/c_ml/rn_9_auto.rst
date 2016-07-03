@@ -218,10 +218,10 @@ afin de passer d'une optimisation sous contrainte à une optimisation sans contr
         \underset{ W \in M_{p,d}\pa{\R} } { \arg \min } \;  \cro { \sum_{i=1}^{N} \norm{WW'X_i - X_i}^2 }
         \end{eqnarray*}
 		
-		De plus :math:`S` est l'espace vectoriel engendré par les :math:`d` 
-        vecteurs propres de la matrice 
-		:math:`XX' = \sum_{i=1}^{N} X_i X_i' ` associés aux 
-        :math:`d` valeurs propres de plus grand module. 
+    De plus :math:`S` est l'espace vectoriel engendré par les :math:`d`
+    vecteurs propres de la matrice 
+    :math:`XX' = \sum_{i=1}^{N} X_i X_i'` associées aux
+    :math:`d` valeurs propres de plus grand module. 
 
 
 **Démonstration**
@@ -248,12 +248,10 @@ et il existe une matrice :math:`P \in M_p\pa{\R}:math:` telle qu :
 .. math::
     :label: acp_equation_memo_1
 
-    \begin{eqnarray*}
     \begin{array}{l}
     P'XX'P = D_X \text{ avec } D_X \text{ diagonale} \\
     P'P = I_p
     \end{array}
-    \end{eqnarray*}
 
 Soit :math:`P = \vecteur{P_1}{P_p}` les vecteurs propres de la matrice 
 :math:`XX'` associés aux valeurs propres
@@ -432,7 +430,7 @@ D'où :
     :label: acp_demo_partie_d
 
     \begin{eqnarray*}
-    \underset{Y}{\arg\min}\accolade{ tr\left(  D_{p}\left( YY^{\prime}-I_{p}\right)  ^{2}\right)}  = \left\{  Y\in
+    \underset{Y}{\arg\min}\acc{ tr\left(  D_{p}\left( YY^{\prime}-I_{p}\right)  ^{2}\right)}  = \left\{  Y\in
     M_{Nd}\left( \R\right) \left|
         YY^{\prime}=I_{d}\right.  \right\}
     \end{eqnarray*}
@@ -482,7 +480,7 @@ Les poids de la seconde couche sont définis comme suit :
 
 Par conséquent, le vecteur des sorties :math:`Z\in\R^{p}` 
 du réseau ainsi construit est :math:`Z=WW'X`.
-On veut minimiser l'erreur pour :math:`\left(  X_{i}\right)  _{1\leqslant i\leqslant N}$` :
+On veut minimiser l'erreur pour :math:`\left(  X_{i}\right)  _{1\leqslant i\leqslant N}` :
 
 .. math::
 

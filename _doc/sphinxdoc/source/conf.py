@@ -58,7 +58,8 @@ custom_preamble = """\n\\newcommand{\\girafedec}[3]{ \\begin{array}{ccccc} #1 &=
             \\newcommand{\\partialfrac}[2]{\\frac{\\partial #1}{\\partial #2}}
             \\newcommand{\\partialdfrac}[2]{\\dfrac{\\partial #1}{\\partial #2}}
             \\newcommand{\\loimultinomiale}[1]{{\\cal M}\\pa{#1}}
-            \\newcommand{\\trace}[1]{\\tr\\pa{#1}}
+            \\newcommand{\\trace}[1]{tr\\pa{#1}}
+            \\newcommand{\\abs}[1]{\\left|#1\\right|}
             """
 
 imgmath_latex_preamble += custom_preamble

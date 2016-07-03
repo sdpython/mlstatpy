@@ -56,7 +56,7 @@ Parmi les méthodes d'optimisation basées sur le gradient global, on distingue 
 
 
 
-.. rn_optim_premier_ordre:
+.. _rn_optim_premier_ordre:
 
 Méthodes du premier ordre
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -116,7 +116,7 @@ Cet algorithme converge vers un minimum local de la fonction d'erreur
 mais la vitesse de convergence est inconnue.
 
 
-.. rn_optim_second_ordre:
+.. _rn_optim_second_ordre:
 
 Méthodes du second ordre
 ^^^^^^^^^^^^^^^^^^^^^^^^
