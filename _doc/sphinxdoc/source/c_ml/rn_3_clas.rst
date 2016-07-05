@@ -1,5 +1,5 @@
 
-
+.. _nn-classification:
 
 La classification
 =================

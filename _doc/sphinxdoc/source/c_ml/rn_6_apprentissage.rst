@@ -16,7 +16,7 @@ Chacune d'elles vise à minimiser la fonction d'erreur :
 
 Dans tous les cas, les différents apprentissages utilisent la suite 
 suivante :math:`\pa{ \epsilon_{t}}` vérifiant :eq:`rn_suite_epsilon_train` 
-et proposent une convergence vers un :ref:`minimum local <figure_modele_optimal>`.
+et proposent une convergence vers un minimum local.
 
 .. math::
     :label: rn_suite_epsilon_train
@@ -30,7 +30,7 @@ les conditions initiales de ces méthodes de manière à améliorer la robustess
 
 
 
-
+.. _rn_apprentissage_global:
 
 
 
@@ -123,7 +123,7 @@ Méthodes du second ordre
 
 
 
-L'algorithme :ref:`aprentissage global <rn_apprentissage_global>` fournit le canevas des 
+L'algorithme :ref:`apprentissage global <rn_apprentissage_global>` fournit le canevas des 
 méthodes d'optimisation du second ordre. La mise à jour des coefficients est différente car 
 elle prend en compte les dernières valeurs des coefficients ainsi que les 
 derniers gradients calculés. Ce passé va être utilisé pour estimer une 
@@ -211,7 +211,7 @@ sûrement vers le minimum global.
 
 
 Ces méthodes proposent une estimation de la dérivée seconde 
-(ou de son inverse) utilisée en :ref:`rn_hessien`. 
+(ou de son inverse) utilisée en :eq:`rn_hessien`. 
 Dans les méthodes du premier ordre, une itération permet de calculer les 
 poids :math:`W_{t+1}` à partir des poids :math:`W_t` et du 
 gradient :math:`G_t`. Si ce gradient est petit, on peut supposer 

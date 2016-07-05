@@ -65,7 +65,7 @@ minimisant l'erreur de prédiction est :
 
 Le lien entre les variables :math:`X` et :math:`Y` dépend des hypothèses faites 
 sur :math:`f`. Généralement, cette fonction n'est supposée non linéaire 
-que lorsqu'une :ref:`régression linéaire <figure_regression_lineaire>` 
+que lorsqu'une `régression linéaire <https://fr.wikipedia.org/wiki/R%C3%A9gression_lin%C3%A9aire>`_
 donne de mauvais résultats.
 Cette hypothèse est toujours testée car la résolution du problème dans 
 ce cas-là est déterministe et aboutit à la résolution d'un système 

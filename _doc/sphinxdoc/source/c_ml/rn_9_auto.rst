@@ -1,8 +1,10 @@
 
-.. index: ACP
+.. _nn-acp:
 
 Analyse en composantes principales (ACP) et Auto Encoders
 =========================================================
+
+.. index:: ACP
 
 
 Cet algorithme est proposé dans [Song1997]_.
@@ -555,7 +557,7 @@ définie par le théorème de l':ref:`ACP <theorem_acp_resolution>` est le suiva
     :lid: algorithm_vecteur_propre
     :tag: Algorithme
 
-    Les notations utilisées sont celles du théorème de l':ref:`ACP <theorem_acp_resolution> `. 
+    Les notations utilisées sont celles du théorème de l':ref:`ACP <theorem_acp_resolution>`. 
     On note :math:`V^*_d` la matrice des :math:`d`
     vecteurs propres de la matrice :math:`XX'` associés aux 
     :math:`d` valeurs propres de plus grands module.

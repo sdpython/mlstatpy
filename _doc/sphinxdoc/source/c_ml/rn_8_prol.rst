@@ -307,7 +307,7 @@ Ce paragraphe présente un algorithme de sélection de l'architecture
 d'un réseau de neurones proposé par Cottrel et Al. dans [Cottrel1995]_. 
 La méthode est applicable à tout réseau de neurones mais n'a été démontrée 
 que pour la classe de réseau de neurones utilisée pour la 
-:ref:`régression <regression>`. Les propriétés qui suivent ne sont 
+:ref:`régression <nn-regression>`. Les propriétés qui suivent ne sont 
 vraies que des réseaux à une couche cachée et dont les sorties 
 sont linéaires. Soit :math:`\pa{X_k,Y_k}` un exemple de la base 
 d'apprentissage, les résidus de la régression sont supposés normaux 
@@ -349,7 +349,7 @@ On note :math:`\widehat{W}` les poids trouvés par apprentissage et
     * une couche de sortie dont les fonctions de transfert sont linéaires
     
     Ce réseau sert de modèle pour la fonction :math:`f` 
-    dans le problème de :ref:`régression <problem_regression>` 
+    dans le problème de :ref:`régression <problem-regression>` 
     avec un échantillon :math:`\vecteur{\pa{X_1,Y_1}}{\pa{X_N,Y_N}}`, 
     les résidus sont supposés normaux.
     La suite :math:`\pa{\widehat{\epsilon_k}}` définie par :eq:`rn_selection_suite` vérifie :

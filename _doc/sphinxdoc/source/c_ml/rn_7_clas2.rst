@@ -107,19 +107,19 @@ La fonction :math:`x \longrightarrow \ln x` est concave, d'où :
 
 La distance de KullBack-Leiber compare deux distributions de 
 probabilités entre elles. C'est elle qui va faire le 
-lien entre le problème de :ref:`classification discret <problem_classification>` 
+lien entre le problème de :ref:`classification discret <probleme_classification>` 
 et les réseaux de neurones pour lesquels il faut impérativement une fonction d'erreur dérivable. 
 
 
 
 
-
+.. _subsection_classifieur:
 
 Problème de classification pour les réseaux de neurones
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-Le problème de :ref:`classification <problem_classification>` 
+Le problème de :ref:`classification <probleme_classification>` 
 est un cas particulier de celui qui suit pour lequel il 
 n'est pas nécessaire de connaître la classe d'appartenance 
 de chaque exemple mais seulement les probabilités d'appartenance 

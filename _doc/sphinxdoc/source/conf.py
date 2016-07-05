@@ -20,11 +20,13 @@ sys.path.insert(
             "pyquickhelper",
             "src")))
 
-local_template = os.path.join(os.path.abspath(os.path.dirname(__file__)), "phdoc_templates")
+local_template = os.path.join(os.path.abspath(
+    os.path.dirname(__file__)), "phdoc_templates")
 
 from pyquickhelper.helpgen.default_conf import set_sphinx_variables
 set_sphinx_variables(__file__, "mlstatpy", "Xavier Dupré", 2016,
-                     sphtheme.__name__, [sphtheme.get_html_theme_path()], locals(),
+                     sphtheme.__name__, [
+                         sphtheme.get_html_theme_path()], locals(),
                      extlinks=dict(
                          issue=('https://github.com/sdpython/mlstatpy/issues/%s', 'issue')),
                      title="Machine Learning, Statistiques et Programmation", book=True)

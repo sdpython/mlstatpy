@@ -217,7 +217,7 @@ sachant ses poids est appelé *propagation*.
     :lid: algo_propagation
 
     Cet algorithme s'applique à un réseau de neurones vérifiant la 
-    définition du :ref:`perception <perceptron>`. Il s'agit
+    définition du :ref:`perceptron <rn_definition_perpception_1>`. Il s'agit
     de calculer les sorties de ce réseau connaissant ses poids 
     :math:`\pa{w_{c,i,j}}` et ses entrées :math:`\pa{x_j}`.
     

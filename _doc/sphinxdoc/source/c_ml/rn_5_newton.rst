@@ -15,7 +15,7 @@ Quelques lectures :
 * `An overview of gradient descent optimization algorithms <http://sebastianruder.com/optimizing-gradient-descent/>`_
 * `Implementing a Neural Network from Scratch in Python – An Introduction <http://www.wildml.com/2015/09/implementing-a-neural-network-from-scratch/>`_
 
-
+.. _optimisation_newton:
 
 Algorithme et convergence
 +++++++++++++++++++++++++
@@ -171,7 +171,7 @@ Si ce théorème prouve la convergence
 de la méthode de Newton, il ne précise pas à quelle vitesse cette convergence 
 s'effectue et celle-ci peut parfois être très lente. Plusieurs variantes 
 ont été développées regroupées sous le terme de méthodes de quasi-Newton dans le but 
-d'améliorer la vitesse de convergence (voir :ref:`rn_section_train_rn`).
+d'améliorer la vitesse de convergence.
 
 Ce théorème peut être étendu dans le cas où la fonction :math:`g` 
 n'a plus un seul minimum global mais plusieurs minima locaux ([Bottou1991]_), 
