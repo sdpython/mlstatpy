@@ -13,9 +13,9 @@ l'`analyse en composantes principales <https://fr.wikipedia.org/wiki/Analyse_en_
 ou :ref:`ACP <nn-ACP>`
 sans oublier les méthodes d'estimation des paramètres qui les composent, 
 à savoir optimisations du premier et second ordre 
-(:ref:`rn_optim_premier_ordre` et :ref`rn_optim_second_ordre`)
+(:ref:`rn_optim_premier_ordre` et :ref:`rn_optim_second_ordre`)
 ainsi qu'une méthode permettant de supprimer des coefficients inutiles 
-:ref`selection_connexion`.
+:ref:`selection_connexion`.
 
 .. toctree::
     :maxdepth: 2

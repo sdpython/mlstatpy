@@ -43,7 +43,6 @@ custom_preamble = """\n\\newcommand{\\girafedec}[3]{ \\begin{array}{ccccc} #1 &=
             \\newcommand{\\N}[0]{\\mathbb{N}}
             \\newcommand{\\indicatrice}[1]{\\mathbf{1\\!\\!1}_{\\acc{#1}}}
             \\usepackage[all]{xy}
-            \\usepackage{eepic}
             \\newcommand{\\infegal}[0]{\\leqslant}
             \\newcommand{\\supegal}[0]{\\geqslant}
             \\newcommand{\\ensemble}[2]{\\acc{#1,\\dots,#2}}
@@ -63,6 +62,7 @@ custom_preamble = """\n\\newcommand{\\girafedec}[3]{ \\begin{array}{ccccc} #1 &=
             \\newcommand{\\trace}[1]{tr\\pa{#1}}
             \\newcommand{\\abs}[1]{\\left|#1\\right|}
             """
+            #\\usepackage{eepic}
 
 imgmath_latex_preamble += custom_preamble
 preamble += custom_preamble
