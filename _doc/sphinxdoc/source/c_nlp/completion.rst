@@ -221,20 +221,64 @@ Il suffit de la modifier un peu. On enlève
 la requête *ab* de :math:`S`.
 
 
-====== ========= ============== ====================== 
+====== ========= ============== ================ 
 q      fréquence ordre          :math:`M(q, S)`
-====== ========= ============== ====================== 
+====== ========= ============== ================ 
 a      4         1              1
 ab     3         :math:`\infty` 2
 abc    2         2              2
 abcd   1         3              3
-====== ========= ============== ====================== 
+====== ========= ============== ================ 
 
 D'où un gain total de :math:`G(S)=2`. En conclusion,
 si j'enlève une petite requête pour laquelle le gain est nul,
 il est possible que le gain pour les suivantes soit positif.
 On en retient qu'il ne faut pas montrer trop de requêtes 
 qui se distinguent d'un caractère.
+
+
+Et si le poids de chaque requête est uniforme
++++++++++++++++++++++++++++++++++++++++++++++
+
+On suppose que les requêtes ont toutes le même poids :math:`w_i=1`.
+Dans quel ordre faut-il ranger les requêtes complétées pour économiser le
+plus de caractères. On aurait tendance à dire la plus longue d'abord
+ce qu'on peut vérifier dans le notebook qui suit :
+
+.. toctree::
+    :maxdepth: 1
+    
+    notebooks/completion_trie
+
+
+====== ========= ============== ================
+q      fréquence ordre          :math:`M(q, S)`
+====== ========= ============== ================
+a      1         4              1
+ab     1         3              2
+abc    1         2              2
+abcd   1         1              1
+====== ========= ============== ================
+
+Ajouter deux autres requêtes disjointes *edf*, *edfh*.
+Le gain maximum est 6 et il y a plusieurs ordres :
+
+::
+
+    'edf', 'edfh', 'abc', 'abcd', 'a', 'ab'
+    'abcd', 'abc', 'edfh', 'edf', 'ab', 'a'
+    ...
+    
+On a presque l'impression qu'on peut traiter chaque bloc
+séparément *a, ab, abc, abcd* d'un côté et *edf, edfh* de l'autre.
+A l'intérieur des blocs, les règles seront les mêmes.
+
+.. image:: completion_img/trieex.png
+
+En résumé, si on connaît le meilleur ordre pour toutes les mots sur les noeuds 
+temrinaux dans les bulles rouges, dans la bulle verte, le meilleur ordre
+sera une fusion des deux listes ordonnées.
+
 
 
 Nouvelle métrique
@@ -244,3 +288,6 @@ Nouvelle métrique
 Notion de trie
 ==============
 
+
+Vocabulaire
+===========

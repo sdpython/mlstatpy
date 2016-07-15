@@ -46,9 +46,9 @@ from pyquickhelper.ipythonhelper import install_python_kernel_for_unittest
 import IPython
 
 
-class TestRunNotebooks(unittest.TestCase):
+class TestRunNotebooksML(unittest.TestCase):
 
-    def test_run_notebook(self):
+    def test_run_notebook_ml(self):
         fLOG(
             __file__,
             self._testMethodName,
@@ -65,7 +65,7 @@ class TestRunNotebooks(unittest.TestCase):
         kernel_name = None if "travis" in sys.executable else install_python_kernel_for_unittest(
             "python3_module_template")
 
-        temp = get_temp_folder(__file__, "temp_run_notebooks")
+        temp = get_temp_folder(__file__, "temp_run_notebooks_ml")
 
         # selection of notebooks
         fnb = os.path.normpath(os.path.join(
