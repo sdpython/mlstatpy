@@ -185,19 +185,8 @@ sûrement vers le minimum global.
     :lid: figure_gradient_conjugue
     :tag: Figure
 
-    .. math::
-        :nowrap:
-
-        \begin{picture}(100,80)(0,0)
-        \put(30,25) {\ellipse{50}{25}}
-        \put(30,25) {\ellipse{40}{20}}
-        \put(30,25) {\ellipse{30}{15}}
-        \put(30,25) {\ellipse{20}{10}}
-        \drawline(15,35)(25,6)
-        \drawline(15,35)(50,2)
-        \put(15,2)  {\makebox(10,3){\tiny gradient}}
-        \put(50,-4)  {\makebox(10,3){\tiny gradient conjugué}}
-        \end{picture}
+    .. image:: rn_img/Conjugate_gradient_illustration.svg.png
+        :source: Wikipedia
 
     Gradient et gradient conjugué sur une ligne de niveau de la fonction :math:`G\pa{x,y} = 3x^2 + y^2`, 
     le gradient est orthogonal aux lignes de niveaux de la fonction :math:`G`, 
@@ -205,8 +194,7 @@ sûrement vers le minimum global.
     :math:`\pa{x,y}` se situe sur un des axes des ellipses, 
     le gradient conjugué agrège les derniers déplacements et propose une direction 
     de recherche plus plausible pour le minimum de la fonction.
-
-
+    Voir `Conjugate Gradient Method <https://en.wikipedia.org/wiki/Conjugate_gradient_method>`_.
 
 
 
