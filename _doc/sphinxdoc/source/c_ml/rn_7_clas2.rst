@@ -278,7 +278,7 @@ choisi pour modéliser :math:`f` aura pour sorties :
     :lid: figure_rn_classification_adequat_figure
     :tag: Figure
     
-    .. image:: rning/rn_clad.png
+    .. image:: rnimg/rn_clad.png
 
 
 On en déduit que la fonction de transert des neurones de la couche de sortie est : 

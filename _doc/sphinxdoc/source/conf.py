@@ -66,3 +66,4 @@ custom_preamble = """\n\\newcommand{\\girafedec}[3]{ \\begin{array}{ccccc} #1 &=
 
 imgmath_latex_preamble += custom_preamble
 preamble += custom_preamble
+mathdef_link_only = True

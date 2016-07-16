@@ -29,6 +29,9 @@ mais je n'aurais pas pu y mettre du code, des notebooks.
 J'ai commencé ce travail en latex lors de ma thèse,
 je me suis aperçu qu'il me restait quelques démonstrations à terminer.
 
+Et en français... J'enseigne en français et puis l'offre est tellement
+riche en anglais.
+
 
 Installation
 ============

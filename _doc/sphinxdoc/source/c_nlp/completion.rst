@@ -64,7 +64,7 @@ L'exemple précédent illustrent deux façons de saisir le terme *autocomplétio
 dans le premier cas ou 8+1=9 touches dans le second cas. 
 
 .. mathdef::
-    :title: Minimum keystroke
+    :title: Minimum Keystroke
     :tag: Définition
     :lid: def-mks
     
@@ -72,6 +72,7 @@ dans le premier cas ou 8+1=9 touches dans le second cas.
     :math:`S` comme étant le minimum obtenu :
     
     .. math::
+        :label: completion-metric1
         
         M(q,S) = \min_{0 \infegal k \infegal l(q)}  k + M(q, k, S)
         
@@ -108,7 +109,7 @@ ou :math:`\infty` si elle n'y est pas.
 
 .. math::
 
-    M(q, k, S) = \min\acc{ i | s_i \succ q[1..k]  }
+    M(q, k, S) = \min\acc{ i | s_i \succ q[1..k], s_i \in S }
     
 Trouver le meilleur système de complétion :math:`S` revient à trouver la meilleure
 fonction :math:`M(q, k, S)` et dans le cas restreint l'ordre sur :math:`S` qui minimise
@@ -213,10 +214,12 @@ est faux. Cela sera discuté à la prochaine section.
 Il faut compléter toutes les requêtes
 +++++++++++++++++++++++++++++++++++++
 
+.. index:: requête complète
+
 Le premier exemple offre aussi un contre exemple.
 Dans cet exemple, l'ensemble :math:`Q=(q_i)` des
 requêtes utilisateurs et l'ensemble :math:`S=(s_i)`
-des requêtes complétées est le même.
+des **requêtes complètes** est le même.
 Il suffit de la modifier un peu. On enlève 
 la requête *ab* de :math:`S`.
 
@@ -241,7 +244,7 @@ Et si le poids de chaque requête est uniforme
 +++++++++++++++++++++++++++++++++++++++++++++
 
 On suppose que les requêtes ont toutes le même poids :math:`w_i=1`.
-Dans quel ordre faut-il ranger les requêtes complétées pour économiser le
+Dans quel ordre faut-il ranger les requêtes complètes pour économiser le
 plus de caractères. On aurait tendance à dire la plus longue d'abord
 ce qu'on peut vérifier dans le notebook qui suit :
 
@@ -279,10 +282,126 @@ En résumé, si on connaît le meilleur ordre pour toutes les mots sur les noeud
 temrinaux dans les bulles rouges, dans la bulle verte, le meilleur ordre
 sera une fusion des deux listes ordonnées.
 
+Quelques essais sur le notebook ont tendance à montrer que l'ordre
+a peu d'impact sur le résultat final lorsque les requêtes ont le même poids.
+Avec quatre mots, la somme des gains est identique quelque soit l'ordre.
+
+::
+
+    p=poids g=gain
+
+    20.0 - actuellement p=1.0 g=11.0 | acte p=1.0 g=2.0 | actes p=1.0 g=2.0 | actualité p=1.0 g=5.0
+    20.0 - acte p=1.0 g=3.0 | actuellement p=1.0 g=10.0 | actualité p=1.0 g=6.0 | actes p=1.0 g=1.0
+    20.0 - acte p=1.0 g=3.0 | actes p=1.0 g=3.0 | actualité p=1.0 g=6.0 | actuellement p=1.0 g=8.0
+
+Mais si on change le poids de l'une d'elles, elle se retrouve en première position.
+
+::
+
+    19.2 - actes p=2.0 g=4.0 | actuellement p=1.0 g=10.0 | acte p=1.0 g=1.0 | actualité p=1.0 g=5.0
+    19.2 - actes p=2.0 g=4.0 | actuellement p=1.0 g=10.0 | actualité p=1.0 g=6.0 | acte p=1.0 g=0.0
+
+
+Intuitions
+++++++++++
+
+#. La métrique actuelle n'est pas la meilleure.
+#. Si les mots n'ont pas de long préfixes en commun, il vaut mieux
+   placer le mot le plus fréquent en première position.
+   Pour les mots de fréquence identique, l'ordre a peu d'importance.
+#. S'il existe une séquence de mots emboîtés, les gains sont minimes
+   à moins d'enlever des mots ou de poser les grandes requêtes d'abord.
+
+Les intuitions 2 et 3 seront sans doute remise en question en considérant 
+une nouvelle métrique.
 
 
 Nouvelle métrique
 =================
+
+Intuition
++++++++++
+
+On considère l'ensemble des requêtes complètes
+:math:`S` composé de deux mots *actuellement*, *actualité*.
+Le gain moyen par mots est de 9 caractères économisés.
+Si on ajoute le grand préfixe commun à la liste *actu*,
+ce gain moyen tombe à 6.33 (voir :ref:`completiontrierst`) quelque
+soit l'ordre choisi pour les requêtes. Toutefois, si on ne prend pas 
+en compte le gain sur le mot *actu* car ce n'est pas un mot 
+correct mais plus un mot qui aide la lecture de la liste, ce gain
+moyen tombe à 8 seulement. En conclusion, si l'utilisateur 
+tape la lettre **a** et qu'on lui montre ceci :
+
+::
+
+    actu
+    actualité
+    actuellement
+
+Au lieu de :
+
+::
+
+    actualité
+    actuellement
+    
+Il doit taper en moyenne un caractère de plus pour obtenir le mot qu'il cherche.
+Et la métrique ne montre pas réellement de préférence pour l'ordre d'affichage
+des requêtes. Pourtant, l'utilisateur pourrait très bien utiliser la 
+séquence de touches suivantes : 
+
+=========== =================
+touche      mot composé
+=========== =================
+a           a
+bas         actu (suggestion)
+e           actue
+bas         actuellement
+=========== =================
+
+Dans cet exemple aussi petit, on ne gagnerait pas grand-chose
+mais cela vaut le coup d'étudier cette piste pour des vocabulaires plus
+grand : se servir des préfixes commun comme tremplin pour les mots
+plus grand. L'effect position perdrait un peu de son influence.
+
+Formalisation
++++++++++++++
+
+On reprend la première mérique :eq:`completion-metric1` :
+
+.. math::
+    :nowrap:
+
+    \begin{eqnarray*}
+    M(q, k, S) &=& \min\acc{ i | s_i \succ q[1..k], s_i \in S } \\
+    M(q, S) &=& \min_{0 \infegal k \infegal l(q)}  k + M(q, k, S)
+    \end{eqnarray*}
+    
+:math:`M(q, k, S)` définit la position de la requête :math:`q`
+dans la liste affichée pour le préfixe composé des :math:`k` premières lettres
+de :math:`q`. On va juste changer :math:`k` dans la seconde en ligne.
+
+
+.. mathdef::
+    :title: Dynamic Minimum Keystroke
+    :tag: Définition
+    :lid: def-mks2
+    
+    On définit la façon optimale de saisir une requête sachant un système de complétion
+    :math:`S` comme étant le minimum obtenu :
+    
+    .. math::
+        :label: completion-metric2
+        :nowrap:
+        
+        \begin{eqnarray*}
+        M(q, k, S) &=& \min\acc{ i | s_i \succ q[1..k], s_i \in S } \\
+        M'(q, S) &=& \min_{0 \infegal k \infegal l(q)}  M'(q[1..k], S) + M(q, k, S)
+        \end{eqnarray*}
+
+De manière évidente, :math:`M'(q, S) \infegal M(q, S)`.
+    
 
 
 Notion de trie
@@ -291,3 +410,23 @@ Notion de trie
 
 Vocabulaire
 ===========
+
+Synonymes
++++++++++
+
+On utilise dabord les préfixes pour chercher les mots dans un trie 
+mails il est tout à fait possible de considérer des synonymes.
+Avec les préfixes, un noeud a au plus 27 (26 lettres + espaces) 
+caractères suivant possibles. Si le préfixe a des synonymes,
+rien n'empêche de relier ce noeud avec les successeurs de ses
+synonymes.
+
+Source
+++++++
+
+Dans le cas d'un moteur de recherche, le trie ou l'ensemble :math:`S` des requêtes complètes
+est construit à partir des requêtes des utilisateurs. Lorsque le système
+de complétion est mise en place, la distribution des requêtes changent. Les requêtes
+les plus utilisées vont être encore plus utilisées car les utilisateurs vont moins
+s'égarer en chemin comme s'égarer vers une faute d'orthographe.
+
