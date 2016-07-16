@@ -401,11 +401,28 @@ de :math:`q`. On va juste changer :math:`k` dans la seconde en ligne.
         \end{eqnarray*}
 
 De manière évidente, :math:`M'(q, S) \infegal M(q, S)`.
+Il reste à démontrer que cette métrique et bien définie puisqu'elle
+fait partie de sa définition.
+
+Si on définit la quantité :math:`M_0(q, S) = M(q, S)` et par récurrence :
+
+.. math::
+
+    M_{t+1}(q, S) = \min_{0 \infegal k \infegal l(q)}  M_t(q[1..k], S) + M(q, k, S)
+    
+La suite :math:`(M_t(q, S))_t` est décroissante et positive. Elle converge nécessaire
+vers la valeur cherchée.
+
+
     
 
 
 Notion de trie
 ==============
+
+Une implémentation des tries est décrites dans deux notebooks :
+`Arbre et Trie <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/_gs1a_A_arbre_trie.html>`_.
+
 
 
 Vocabulaire

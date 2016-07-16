@@ -6,7 +6,7 @@
 
 class CompletionTrieNode(object):
     """
-    node representation in a trie
+    node in a trie used to do completion
     """
 
     __slots__ = ["value", "children", "weight", "leave", "stat"]
@@ -27,10 +27,11 @@ class CompletionTrieNode(object):
         """
         return "{2}:{0}:{1}".format(self.value, self.weight, "#" if self.leave else "-")
 
-    def add(self, key, child):
+    def _add(self, key, child):
         """
         add a child
 
+        @param      key         one letter of the word
         @param      child       child
         @return                 self
         """
@@ -102,7 +103,7 @@ class CompletionTrieNode(object):
                 else:
                     new_node = CompletionTrieNode(
                         node.value + c, False, weight=w)
-                    node.add(c, new_node)
+                    node._add(c, new_node)
                     node = new_node
             new_node.leave = True
             new_node.weight = w
@@ -127,7 +128,7 @@ class CompletionTrieNode(object):
 
     def min_keystroke(self, word):
         """
-        return the minimum keystrokes for a word
+        returns the minimum keystrokes for a word
 
         @param      word        word
         @return                 number, length of best prefix
