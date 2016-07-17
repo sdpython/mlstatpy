@@ -58,6 +58,9 @@ class TestCompletion(unittest.TestCase):
         res = list(trie.iter_leaves())
         self.assertEqual(
             res, [(1, 'a'), (2, 'ab'), (3, 'abc'), (4, 'abcd'), (5, 'bc')])
+        lea = list(trie.leaves())
+        self.assertEqual(len(lea), 5)
+        assert all(_.leave for _ in lea)
         node = trie.find('b')
         assert node is not None
         assert not node.leave
@@ -102,6 +105,22 @@ class TestCompletion(unittest.TestCase):
             trie = CompletionTrieNode.build(per)
             gain = sum(len(w) - trie.min_keystroke(w)[0] for a, w in per)
             fLOG(gain, per)
+
+    def test_build_dynamic_trie_mks_min(self):
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
+        queries = [(None, 'a'), (None, 'ab'), (None, 'abc'), (None, 'abcd')]
+        trie = CompletionTrieNode.build(queries)
+        trie.precompute_stat()
+        for leave in trie.leaves():
+            if leave.stat is None:
+                raise Exception("None for {0}".format(leave))
+            mk = trie.min_keystroke(leave.value)
+            fLOG(leave.value, mk, leave.stat.str_mks())
+            self.assertEqual(mk, (leave.stat.mks0, leave.stat.mks0_))
 
 
 if __name__ == "__main__":

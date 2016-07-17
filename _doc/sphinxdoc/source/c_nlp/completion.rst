@@ -1,5 +1,7 @@
 
 
+.. _l-completion0:
+
 ==========
 Complétion
 ==========
@@ -32,6 +34,8 @@ La plus connue en Python est `whoosh <https://whoosh.readthedocs.io/en/latest/>`
 
 Formalisation
 =============
+
+.. _l-completion-optim:
 
 Problème d'optimisation
 +++++++++++++++++++++++
@@ -74,16 +78,16 @@ dans le premier cas ou 8+1=9 touches dans le second cas.
     .. math::
         :label: completion-metric1
         
-        M(q,S) = \min_{0 \infegal k \infegal l(q)}  k + M(q, k, S)
+        M(q,S) = \min_{0 \infegal k \infegal l(q)}  k + K(q, k, S)
         
-    La quantité :math:`M(q, k, S)` représente le nombre de touche vers le bas qu'il faut taper pour
+    La quantité :math:`K(q, k, S)` représente le nombre de touche vers le bas qu'il faut taper pour
     obtenir la chaîne :math:`q` avec le système de complétion :math:`S` et les :math:`k`
     premières lettres de :math:`q`.
 
 
-De façon évidente, :math:`S(q, l(q))=0`.
+De façon évidente, :math:`K(q, l(q), S)=0` et :math:`M(q,S) \infegal l(q)`.
 Certains systèmes proposent des requêtes avant de saisir quoique ce soit,
-c'est pourquoi on inclut la valeur :math:`S(q, 0)` qui représente ce cas.
+c'est pourquoi on inclut la valeur :math:`M(q, 0)` qui représente ce cas.
 Construire un système de complétion revient à minimiser la quantité :
 
 .. math::
@@ -94,25 +98,28 @@ Construire un système de complétion revient à minimiser la quantité :
 Ensemble des requêtes
 +++++++++++++++++++++
 
-Il n'y a pas de restriction sur la fonction :math:`M(q, k, S)` mais on se limitera
+Il n'y a pas de restriction sur la fonction :math:`K(q, k, S)` mais on se limitera
 dans un premier temps à une fonction simple. On suppose que le système d'autocomplétion
 dispose d'un ensemble de requêtes ordonnées :math:`S = (s_i)` et la fonction :
 
 .. math::
 
-    M(q, k, S) = position(q, S(q_k))
+    K(q, k, S) = position(q, S(q_k))
     
 Où :math:`S(q_k)` est le sous-ensemble ordonné de :math:`S` des requêtes
 qui commence par les :math:`k` premières lettres de :math:`q` et de longueur supérieure strictement à :math:`k`.
 :math:`position(q, S(q_k))` est la position de :math:`q` dans cet ensemble ordonné
-ou :math:`\infty` si elle n'y est pas.
+ou :math:`\infty` si elle n'y est pas. Cette position est strictement positive
+:math:`K(q, k, S) \supegal 1` sauf si :math`k=l(q)` auquel cas, elle est nulle. 
+Cela signifie que l'utilisateur doit descendre d'au moins un cran
+pour sélectionner une suggestion.
 
 .. math::
 
-    M(q, k, S) = \min\acc{ i | s_i \succ q[1..k], s_i \in S }
+    K(q, k, S) = \min\acc{ i | s_i \succ q[1..k], s_i \in S }
     
 Trouver le meilleur système de complétion :math:`S` revient à trouver la meilleure
-fonction :math:`M(q, k, S)` et dans le cas restreint l'ordre sur :math:`S` qui minimise
+fonction :math:`K(q, k, S)` et dans le cas restreint l'ordre sur :math:`S` qui minimise
 cette fonction. Le plus souvent, on se contente de trier les requêtes par ordre
 décroissant de popularité. On considérera par la suite qu'on est dans ce cas.
 
@@ -169,7 +176,7 @@ Dans cet exemple, si l'utilisateur tape ``ab``, il verra les requêtes :
     abc
     abcd
     
-Dans tous les cas, :math:`M(q, k, S) = l(q) - k`. Cela veut dire
+Dans tous les cas, :math:`K(q, k, S) = l(q) - k`. Cela veut dire
 que l'utilisateur ne gagnera rien. En revanche, avec l'ordre suivant :
 
 ====== ======
@@ -196,7 +203,7 @@ q      fréquence ordre  :math:`M(q, S)`
 a      4         4      1
 ab     3         2      2
 abc    2         3      3
-abcd   1         1      1 = :math:`M(q, 0, S)`
+abcd   1         1      1 = :math:`K(q, 0, S)`
 ====== ========= ====== ====================== 
 
 D'où un gain total de :math:`G(S)=3`.
@@ -368,14 +375,14 @@ plus grand. L'effect position perdrait un peu de son influence.
 Formalisation
 +++++++++++++
 
-On reprend la première mérique :eq:`completion-metric1` :
+On reprend la première métrique :eq:`completion-metric1` :
 
 .. math::
     :nowrap:
 
     \begin{eqnarray*}
     M(q, k, S) &=& \min\acc{ i | s_i \succ q[1..k], s_i \in S } \\
-    M(q, S) &=& \min_{0 \infegal k \infegal l(q)}  k + M(q, k, S)
+    M(q, S) &=& \min_{0 \infegal k \infegal l(q)}  k + K(q, k, S)
     \end{eqnarray*}
     
 :math:`M(q, k, S)` définit la position de la requête :math:`q`
@@ -396,25 +403,30 @@ de :math:`q`. On va juste changer :math:`k` dans la seconde en ligne.
         :nowrap:
         
         \begin{eqnarray*}
-        M(q, k, S) &=& \min\acc{ i | s_i \succ q[1..k], s_i \in S } \\
-        M'(q, S) &=& \min_{0 \infegal k \infegal l(q)}  M'(q[1..k], S) + M(q, k, S)
+        K(q, k, S) &=& \min\acc{ i | s_i \succ q[1..k], s_i \in S } \\
+        M'(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ M'(q[1..k], S) + K(q, k, S) | q[1..k] \in S }
         \end{eqnarray*}
 
 De manière évidente, :math:`M'(q, S) \infegal M(q, S)`.
 Il reste à démontrer que cette métrique et bien définie puisqu'elle
-fait partie de sa définition.
+fait partie de sa définition. La condition :math:`q[1..k] \in S` impose que
+le préfixe composé des *k* premières lettres :math:`q[1..k]` fasse partie 
+des requêtes complètes :math:`S`. Dans le cas contraire, elle n'est pas
+affichée et l'utilisateur ne pourra pas s'en servir comme tremplin.
 
 Si on définit la quantité :math:`M_0(q, S) = M(q, S)` et par récurrence :
 
 .. math::
 
-    M_{t+1}(q, S) = \min_{0 \infegal k \infegal l(q)}  M_t(q[1..k], S) + M(q, k, S)
+    M_{t+1}(q, S) = \min_{0 \infegal k \infegal l(q)} \acc{ M_t(q[1..k], S) + K(q, k, S)  | q[1..k] \in S }
     
 La suite :math:`(M_t(q, S))_t` est décroissante et positive. Elle converge nécessaire
-vers la valeur cherchée.
+vers la valeur cherchée :math:`M'(q, S)`. Cela donne aussi une idée de la façon de le calculer.
+Contrairement à la première métrique, le calcul dépend du résultat pour 
+tous les préfixes d'une requête. Il ne peut plus être calculé indépendemment.
 
 
-    
+
 
 
 Notion de trie
@@ -422,7 +434,64 @@ Notion de trie
 
 Une implémentation des tries est décrites dans deux notebooks :
 `Arbre et Trie <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/_gs1a_A_arbre_trie.html>`_.
+Les résultats de ce chapitre ont été produits avec le module :mod:`completion <mlstatpy.nlp.completion>`
+et le notebook :ref:`completiontrierst`.
 
+Remarques pour optimiser les calculs
+++++++++++++++++++++++++++++++++++++
+
+**K(q, k, S)**
+
+On reprend la première métrique :eq:`completion-metric1` :
+
+.. math::
+    :nowrap:
+
+    \begin{eqnarray*}
+    K(q, k, S) &=& \min\acc{ i | s_i \succ q[1..k], s_i \in S } \\
+    M(q, S) &=& \min_{0 \infegal k \infegal l(q)}  k + K(q, k, S)
+    \end{eqnarray*}
+
+Etant donné que le nombre minimum de caractères pour obtenir une requête dans le trie
+ne peut pas être supérieur à la longueur, si :math:`K(q, k, S) > l(q) - k`, on sait déjà que
+que le préfixe :math:`q[1..k]` ne sera pas le minimum.
+
+**suggestions**
+
+On considère les requêtes complètes suivante :
+
+::
+
+    actu
+    actualité
+    actualités
+    actuel
+    actuellement
+    
+Pour le préfixe *actue*, on suggère *actuel* at *actuellement*.
+Pour le préfixe *actua*, on suggère *actualité* at *actualités*.
+Pour le préfixe *actu*, on suggère la concaténation de ces deux listes.
+Par conséquent, pour construire les listes de suggestions associées à chaque préfixe,
+il paraît de partir des feuilles de l'arbre puis de fusionner les listes
+de suggestions jusqu'au noeud racine.
+
+**utilisation ou recherche**
+
+C'est différent de construire toutes le suggestions pour un préfixe plutôt 
+que toutes les suggestions pour tous les préfixes. Le premier cas correspond
+à un utilisateur qui cherche quelque chose. Il faut être rapide quitte à retourner un 
+résultat tronqué.
+
+Le second cas correspond à objectif de recherche des d'optimisation.
+Les enjeux sont plus de réussir à calculer toutes les suggestions
+en un temps raisonnable et avec une utilisation mémoire raisonnable également.
+
+**mémoire**
+
+D'après la remarque précédente, il n'est pas utile de conserver pour un préfixe donné
+l'intégralité des requêtes complètes qui commence par ce préfixe. Dans le pire des cas,
+cette liste a besoin de contenir autant de suggestions que le nombre de caractères de la
+plus longue requêtes.
 
 
 Vocabulaire
