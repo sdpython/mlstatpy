@@ -452,31 +452,29 @@ régression grâce à l'algorithme suivant.
     :title: validation de l'algorithme de sélection des coefficients
     :lid: nn_algorithme_valid_selection
     :tag: Algorithme
-    
+
     *Choix aléatoire d'un modèle*
-    
+
     Un réseau de neurones est choisi aléatoirement,  
     soit :math:`f : \R^p \dans \R` la fonction qu'il représente.
 	Une base d'apprentissage :math:`A` (ou échantillon) 
     de :math:`N` observations est générée aléatoirement à partir de ce modèle :
-      
+
     .. math::
-        
+
         \begin{array}{l}
         \text{soit } \pa{\epsilon_i}_{1 \infegal i \infegal N} \text{ un bruit blanc} \\
         A = \acc{ \left. \pa{X_i,Y_i}_{1 \infegal i \infegal N} \right| 
                     \forall i \in \intervalle{1}{N}, \; Y_i = f\pa{X_i} + \epsilon_i }
         \end{array}
-        
+
     *Choix aléatoire d'un modèle*
-		
+
     L'algorithme de :ref:`sélection <rn_algorithme_selection_connexion_1>` 
     à un réseau de neurones plus riche que le modèle choisi
     dans l'étape d'initilisation. Le modèle sélectionné est noté :math:`g`.
-		
+
 	*Validation*
     
 	Si :math:`\norm{f-g} \approx 0`,
     l'algorithme de :ref:`sélection <rn_algorithme_selection_connexion_1>` est validé.
-		
-		

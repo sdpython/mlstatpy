@@ -1,6 +1,9 @@
 #-*- coding: utf-8 -*-
 """
 @brief      test log(time=33s)
+
+https://dumps.wikimedia.org/frwiki/latest/frwiki-latest-all-titles.gz
+https://dumps.wikimedia.org/frwiki/latest/frwiki-latest-all-titles-in-ns0.gz
 """
 
 import sys

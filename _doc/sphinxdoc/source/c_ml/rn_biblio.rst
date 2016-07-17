@@ -29,7 +29,7 @@ Bibliographie
    *Thèse de l'Université de Paris Sud, Centre d'Orsay*.
    
 .. [Fletcher1963] A rapidly convergent descent method for minimization (1963),
-   R. Fletcher, M. J. D. Powell, *Computer Journal 6, pages 163-168
+   R. Fletcher, M. J. D. Powell, *Computer Journal 6, pages 163-168*
 
 .. [Fletcher1993] An overview of Unconstrained Optimization (1993),
    R. Fletcher, *Numerical Analysis Report NA/149*

@@ -51,6 +51,7 @@ custom_preamble = """\n\\newcommand{\\girafedec}[3]{ \\begin{array}{ccccc} #1 &=
             \\newcommand{\\loinormale}[2]{{\\cal N}\\pa{#1,#2}}
             \\newcommand{\\independant}[0]{\\;\\makebox[3ex]{\\makebox[0ex]{\\rule[-0.2ex]{3ex}{.1ex}}\\!\\!\\!\\!\\makebox[.5ex][l]{\\rule[-.2ex]{.1ex}{2ex}}\\makebox[.5ex][l]{\\rule[-.2ex]{.1ex}{2ex}}} \\,\\,}
             \\newcommand{\\esp}{\\mathbb{E}}
+            \\newcommand{\\var}{\\mathbb{V}}
             \\newcommand{\\pr}[1]{\\mathbb{P}\\pa{#1}}
             \\newcommand{\\loi}[0]{{\\cal L}}
             \\newcommand{\\vecteurno}[2]{#1,\\dots,#2}
