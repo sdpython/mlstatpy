@@ -1,12 +1,13 @@
 #-*- coding: utf-8 -*-
 """
-@brief      test log(time=33s)
+@brief      test log(time=38s)
 """
 
 import sys
 import os
 import unittest
 import random
+import matplotlib.pyplot as plt
 
 
 try:
@@ -40,6 +41,7 @@ except ImportError:
     import src
 
 from pyquickhelper.loghelper import fLOG
+from pyquickhelper.pycode import get_temp_folder
 from src.mlstatpy.ml.roc import ROC
 
 
@@ -51,36 +53,44 @@ class TestROC(unittest.TestCase):
             self._testMethodName,
             OutputPrint=__name__ == "__main__")
 
+        temp = get_temp_folder(__file__, "temp_roc")
+
         data = [random.random() for a in range(0, 1000)]
-        data = [(x, 1 if x + random.random() / 50 > 0.7 else 0) for x in data]
+        data = [(x, 1 if x + random.random() / 3 > 0.7 else 0) for x in data]
 
         test = ROC(data)
         fLOG(test.__str__())
+        roc = test.compute_roc_curve()
+        t = test.roc_intersect(roc, 0.2)
+        assert 1 >= t >= 0
 
-        ax = test.plot([1000])
+        fig, ax = plt.subplots()
+        ax = test.plot(10, ax=ax, label="r10")
         assert ax
-        ax = test.plot([10, 100, 1000, 5000])
+        fig.savefig(os.path.join(temp, "roc10.png"))
+        test.plot(100, ax=ax, label="r100")
         assert ax
-        return
+        fig.savefig(os.path.join(temp, "roc100.png"))
+        ax = test.plot(100, ax=ax, bootstrap=10)
+        assert ax
+        fig.savefig(os.path.join(temp, "roc100b.png"))
+
         fLOG("computing rate..............................")
-        rate, inte, mmm = test.ROC_point_intervalle(
-            0.1, 100, read=True, bootstrap=50)
-        fLOG("rate = \t", "%3.2f" % (rate * 100), "%")
-        fLOG("intervalle à 95% = \t", "[%3.2f, %3.2f]" % (
-            inte[0] * 100, inte[1] * 100))
-        fLOG("intervalle min,max = \t", "[%3.2f, %3.2f]" % (
-            mmm[0] * 100, mmm[1] * 100))
-        fLOG("moyenne = %3.2f, écart-type = %3.2f, médiance = %3.2f" %
-             (mmm[2] * 100, mmm[3] * 100, mmm[4] * 100))
+        values = test.auc_interval(alpha=0.1, bootstrap=20)
+        for k, v in sorted(values.items()):
+            fLOG("{0}={1}".format(k, v))
+        self.assertEqual(list(sorted(values.keys())), [
+                         'auc', 'interval', 'max', 'mean', 'mediane', 'min', 'var'])
+        assert values["min"] <= values["auc"] <= values["max"]
 
-        rate, inte, mmm = test.ROC_AUC(0.1, 100, bootstrap=200)
-        fLOG("AUC= \t", "%3.2f" % (rate))
-        fLOG("intervalle à 95% = \t", "[%3.2f, %3.2f]" % (inte[0], inte[1]))
-        fLOG("intervalle min,max = \t", "[%3.2f, %3.2f]" % (mmm[0], mmm[1]))
-        fLOG("moyenne = %3.2f, écart-type = %3.2f, médiance = %3.2f" %
-             (mmm[2] * 100, mmm[3] * 100, mmm[4] * 100))
-
-        test.DrawROC([100], read=True, bootstrap=100)
+        fLOG("computing rate..............................")
+        values = test.roc_intersect_interval(
+            0.1, 100, True, bootstrap=50)
+        for k, v in sorted(values.items()):
+            fLOG("{0}={1}".format(k, v))
+        self.assertEqual(list(sorted(values.keys())), [
+                         'interval', 'max', 'mean', 'mediane', 'min', 'var', 'y'])
+        assert values["min"] <= values["y"] <= values["max"]
 
 if __name__ == "__main__":
     unittest.main()

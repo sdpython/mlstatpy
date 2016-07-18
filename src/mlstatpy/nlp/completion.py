@@ -159,10 +159,10 @@ class CompletionTrieNode(object):
         .. math::
             :nowrap:
 
-            \begin{eqnarray*}
-            K(q, k, S) &=& \min\acc{ i | s_i \succ q[1..k], s_i \in S } \\
-            M(q, S) &=& \min_{0 \infegal k \infegal l(q)}  k + K(q, k, S)
-            \end{eqnarray*}
+            \\begin{eqnarray*}
+            K(q, k, S) &=& \\min\\acc{ i | s_i \\succ q[1..k], s_i \\in S } \\\\
+            M(q, S) &=& \\min_{0 \\infegal k \\infegal l(q)}  k + K(q, k, S)
+            \\end{eqnarray*}
         """
         nodes = [self]
         node = self

@@ -27,6 +27,16 @@ moteurs de recherches, sites de ventes en ligne, journaux...
 Il existe de nombreuses librairies qui les implémentent.
 La plus connue en Python est `whoosh <https://whoosh.readthedocs.io/en/latest/>`_.
 
+Quelques éléments de codes sont disponibles dans le module
+:mod:`completion <mlstatpy.nlp.completion>` et le notebook :
+
+.. toctree::
+    :maxdepth: 1
+    
+    notebooks/completion_trie
+
+
+
 
 .. contents::
     :local:
@@ -253,12 +263,7 @@ Et si le poids de chaque requête est uniforme
 On suppose que les requêtes ont toutes le même poids :math:`w_i=1`.
 Dans quel ordre faut-il ranger les requêtes complètes pour économiser le
 plus de caractères. On aurait tendance à dire la plus longue d'abord
-ce qu'on peut vérifier dans le notebook qui suit :
-
-.. toctree::
-    :maxdepth: 1
-    
-    notebooks/completion_trie
+ce qu'on peut vérifier dans le notebook :ref:`completiontrierst`.
 
 
 ====== ========= ============== ================

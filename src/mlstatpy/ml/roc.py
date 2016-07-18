@@ -6,19 +6,14 @@
 import copy
 import random
 import pandas
+import numpy
 import math
+import itertools
 
 
 class ROC:
     """
     Helper to draw a ROC curve
-
-    .. todoext::
-        :title: refactor ROC
-        :tag: enhancement
-
-        This code is very old (before pandas).
-        It should be updated to be more efficient.
     """
 
     def __init__(self, df):
@@ -28,20 +23,37 @@ class ROC:
         * column 1: score
         * column 2: expected answer (boolean)
         * column 3: weight (optional)
+
+        @param  df      dataframe or array or list, it must contains 2 or 3 columns always in the same order
         """
         if isinstance(df, list):
             if len(df[0]) == 2:
                 self.data = pandas.DataFrame(df, columns=["score", "label"])
             else:
-                self.data = pandas.DataFrame(df, columns=["score", "label", "weight"])
+                self.data = pandas.DataFrame(
+                    df, columns=["score", "label", "weight"])
+        elif isinstance(df, numpy.ndarray):
+            if df.shape[1] == 2:
+                self.data = pandas.DataFrame(df, columns=["score", "label"])
+            else:
+                self.data = pandas.DataFrame(
+                    df, columns=["score", "label", "weight"])
         elif not isinstance(df, pandas.DataFrame):
             raise TypeError(
                 "df should be a DataFrame, not {0}".format(type(df)))
         else:
             self.data = df.copy()
         self.data.sort_values(self.data.columns[0], inplace=True)
+        self.data.reset_index(drop=True, inplace=True)
         if self.data.shape[1] == 2:
             self.data["weight"] = 1.0
+
+    @property
+    def Data(self):
+        """
+        returns the underlying dataframe
+        """
+        return self.data
 
     def __len__(self):
         """
@@ -49,252 +61,198 @@ class ROC:
         """
         return len(self.data)
 
+    def __repr__(self):
+        """
+        show first elements, precision rate
+        """
+        return self.__str__()
+
     def __str__(self):
         """
-        show first elements
+        show first elements, precision rate
         """
-        s = "TestROC reco rate : " + \
-            (("%3.2f") % (self.reco_rate() * 100)) + "%\n"
-        for i in range(0, min(5, len(self))):
-            s += "      " + \
-                str(i) + "\t" + str(self.data.ix[i][0]) + \
-                "\t" + str(self.data.ix[i][1]) + "\n"
-        for i in range(max(len(self) - 5, 0), len(self)):
-            s += "      " + \
-                str(i) + "\t" + str(self.data.ix[i][0]) + \
-                "\t" + str(self.data.ix[i][1]) + "\n"
-        s += "      ----------------------------------------------\n"
-        roc = self.ROC(10, True)
-        s += "      read rate\terror rate\n"
-        for r in roc:
-            s += "      " + ("%3.2f" % (r[0] * 100)) + \
-                " %\t" + ("%3.2f" % (r[1] * 100)) + " %\n"
-        s += "      ----------------------------------------------\n"
-        roc = self.ROC(10, False)
-        s += "      reco rate\t error rate\n"
-        for r in roc:
-            s += "      " + ("%3.2f" % (r[0] * 100)) + \
-                " %\t" + ("%3.2f" % (r[1] * 100)) + " %\n"
+        rows = []
+        rows.append("Overall precision: %3.2f - AUC=%f" %
+                    (self.precision(), self.auc()))
+        rows.append("--------------")
+        rows.append(str(self.data.head(min(5, len(self)))))
+        rows.append("--------------")
+        rows.append(str(self.data.tail(min(5, len(self)))))
+        rows.append("--------------")
+        roc = self.compute_roc_curve(10, False)
+        rows.append(str(roc))
+        rows.append("--------------")
+        roc = self.compute_roc_curve(10, True)
+        rows.append(str(roc))
+        return "\n".join(rows)
 
-        return s
-
-    def reco_rate(self):
-        """calcule le taux de reconnaissance"""
-        nb = self.data[self.data.columns[1]].sum()
-        return float(nb) / len(self)
-
-    def ROC(self, nb=100, read=True, bootstrap=False):
+    def precision(self):
         """
-        calcule une courbe ROC avec nb points seuils, si nb == -1, autant de points de seuil que d'observations,
-        si bootstrap == True, tire aléatoire des nombres pour créer une zone d'intervalle de confiance
+        Compute precision
+        """
+        score, weight = self.data.columns[0], self.data.columns[2]
+        return (self.data[score] * self.data[weight] * 1.0).sum() / self.data[weight].sum()
+
+    def compute_roc_curve(self, nb=100, recprec=True, bootstrap=False):
+        """
+        Compute a ROC curve with *nb* points avec nb,
+        if *nb == -1*, there are as many as points as the data contains,
+        if *bootstrap == True*, it draws random number to create confidence interval based on bootstrap method.
+
+        @param      nb          number of points for the curve
+        @param      recprec     precision/recall or true ROC curve
+        @param      boostrap    builds the curve after resampling
         """
         if not bootstrap:
-            cloud = self.data
+            cloud = self.data.copy()
         else:
             cloud = self.random_cloud()
 
-        # sélection des seuils
+        sum_weights = cloud[cloud.columns[2]].sum()
         nb = min(nb, len(cloud))
-        seuil = []
-        for i in range(0, nb):
-            j = len(cloud) * i // nb
-            seuil.append(cloud.iloc[j, 0])
+        seuil = numpy.arange(nb + 1) * sum_weights / nb
 
-        # on trace la courbe
-        roc = []
-        s = len(seuil) - 1
-        current = [0, 0]
-        for ind in range(len(cloud) - 1, -1, -1):
-            l = (cloud.iloc[ind, 0], cloud.iloc[ind, 1])
-            if (l[0] < seuil[s]) and s > 0:
-                roc.append(copy.copy(current))
-                s -= 1
-            current[0] += 1
-            if not l[1]:
-                current[1] += 1
-        if current[0] != 0:
-            roc.append(copy.copy(current))
-        roc.reverse()
+        cloud = cloud.iloc[::-1].copy()
+        cloud["lw"] = cloud[cloud.columns[2]] * cloud[cloud.columns[1]]
+        cloud["cw"] = cloud[cloud.columns[2]].cumsum()
+        cloud["clw"] = cloud["lw"].cumsum()
 
-        # stat
-        if read:
-            for l in roc:
-                if l[0] > 0:
-                    l[1] = float(l[1]) / float(l[0])
-                    l[0] = float(l[0]) / float(len(cloud))
+        roc = pandas.DataFrame(0, index=numpy.arange(
+            nb + 1), columns=["recall", "precision"])
+        pos_roc = 0
+        pos_seuil = 0
+
+        if recprec:
+            for i in range(len(cloud)):
+                if cloud.iloc[i, 4] > seuil[pos_seuil]:
+                    roc.iloc[pos_roc, 0] = cloud.iloc[i, 4] / sum_weights
+                    roc.iloc[pos_roc, 1] = cloud.iloc[i, 5] / cloud.iloc[i, 4]
+                    pos_roc += 1
+                    pos_seuil += 1
+            while pos_roc < len(roc):
+                roc.iloc[pos_roc, 0] = cloud.iloc[-1, 4] / sum_weights
+                roc.iloc[pos_roc, 0] = cloud.iloc[-1, 5] / cloud.iloc[-1, 4]
+                pos_roc += 1
         else:
-            good, wrong = 0, 0
-            for l in cloud:
-                if l[1]:
-                    good += 1
-                else:
-                    wrong += 1
-
-            for l in roc:
-                l[0] -= l[1]
-                if good > 0:
-                    l[0] = float(l[0]) / good
-                if wrong > 0:
-                    l[1] = float(l[1]) / wrong
+            roc.columns = ["Error Rate", "Recognition Rate"]
+            sum_good_weights = cloud.iloc[-1, 5]
+            sum_bad_weights = sum_weights - sum_good_weights
+            for i in range(len(cloud)):
+                if cloud.iloc[i, 4] > seuil[pos_seuil]:
+                    roc.iloc[pos_roc, 0] = (
+                        cloud.iloc[i, 4] - cloud.iloc[i, 5]) / sum_bad_weights
+                    roc.iloc[pos_roc, 1] = cloud.iloc[i, 5] / sum_good_weights
+                    pos_roc += 1
+                    pos_seuil += 1
+            while pos_roc < len(roc):
+                roc.iloc[pos_roc, 0] = (
+                    cloud.iloc[-1, 4] - cloud.iloc[-1, 5]) / sum_bad_weights
+                roc.iloc[pos_roc, 1] = cloud.iloc[-1, 5] / sum_good_weights
+                pos_roc += 1
         return roc
-
-    def plot(self, nblist=[100], read=False, bootstrap=0, ax=None):
-        """
-        trace plusieurs courbes ROC sur le même dessin
-
-        @param      nblist      number of points
-        @param      read        if True, plot the reading rate, False, precision / recall
-        @param      boostrap    number of curve for the boostrap (0 for None)
-        @param      ax          axis
-        @return                 ax
-        """
-        if ax is None:
-            import matplotlib.pyplot as plt
-            ax = plt.gca()
-
-        ncolor = ["red", "blue", "green", "black", "orange"]
-
-        ax.set_xlabel("error rate")
-        if read:
-            ax.set_ylabel("read rate")
-        else:
-            ax.set_ylabel("reco rate")
-        n = 0
-
-        if bootstrap <= 0:
-            for s in nblist:
-                roc = self.ROC(s, read)
-                x = [r[1] for r in roc]
-                y = [r[0] for r in roc]
-                c = ncolor[n % len(ncolor)]
-                ax.plot(x, y, linewidth=1.0, color=c)
-                n = n + 1
-        else:
-            for s in nblist:
-                c = ncolor[n % len(ncolor)]
-                for l in range(0, bootstrap):
-                    roc = self.ROC(s, read, bootstrap=True)
-                    x = [r[1] for r in roc]
-                    y = [r[0] for r in roc]
-                    ax.plot(x, y, linewidth=0.15, color=c)
-                    n = n + 1
-        return ax
-
-    def ROC_point(self, roc, error):
-        """
-        détermine un point de la courbe passant par (error, y), y étant à détermine,
-        la réponse est retourné par interpolation linéaire
-        """
-        for i in range(0, len(roc)):
-            if roc[i][1] <= error:
-                break
-
-        if i == len(roc):
-            return 0
-
-        p2 = roc[i]
-        if i - 1 > 0:
-            p1 = [1, 1]
-        else:
-            p1 = roc[i - 1]
-
-        rate = (error - p1[1]) / (p2[1] - p1[1]) * (p2[0] - p1[0]) + p1[0]
-        return rate
-
-    def ROC_point_intervalle(self, error, nb, read=True, bootstrap=10, alpha=0.05):
-        """
-        détermine un intervalle de confiance pour un taux de lecture pour un taux d'erreur donné,
-        retourne un taux d'erreur et un intervalle de confiance, retourne aussi le couple min,max,
-        cette troisème liste contient aussi moyenne, écart-type, médiance
-        """
-
-        rate = []
-        for i in range(0, bootstrap):
-            roc = self.ROC(nb, read, bootstrap=True)
-            r = self.ROC_point(roc, error)
-            rate.append(r)
-
-        rate.sort()
-
-        roc = self.ROC(nb, read)
-        ra = self.ROC_point(roc, error)
-
-        i1 = int(alpha * len(rate) / 2)
-        i2 = int(min(1.0 - alpha / 2 * len(rate) + 0.5, len(rate) - 1))
-        med = rate[len(rate) // 2]
-        moy = float(sum(rate)) / len(rate)
-        var = 0
-        for r in rate:
-            var += r * r
-        var = float(var) / len(rate)
-        var = var - moy * moy
-        return ra, [rate[i1], rate[i2]], [rate[0], rate[len(rate) - 1], moy, math.sqrt(var), med]
 
     def random_cloud(self):
         """
-        tire un nuage aléatoirement
-        """
-        cloud = []
-        for i in range(0, len(self)):
-            k = random.randint(0, len(self) - 1)
-            cloud.append(self.data.ix[k, :])
-        cloud = pandas.DataFrame(cloud, columns=["score", "label"])
-        return cloud.sort_values(list(cloud.columns))
+        resample among the data
 
-    def split_good_wrong(self, cloud):
+        @return      DataFrame
         """
-        retourne deux listes, bon et mauvais scores
-        """
-        good = []
-        wrong = []
-        for c in cloud:
-            if c[1]:
-                good.append(c[0])
-            else:
-                wrong.append(c[0])
-        return good, wrong
+        res = self.data.sample(len(self.data), weights=self.data[
+                               self.data.columns[2]], replace=True)
+        return res.sort_values(res.columns[0])
 
-    def compute_AUC(self, cloud):
+    def plot(self, nb=100, recprec=False, bootstrap=0, ax=None, label=None, **kwargs):
         """
-        calcule l'aire en-dessous de la courbe
+        plot a ROC curve
+
+        @param      nb          number of points
+        @param      read        if True, plot the reading rate, False, precision / recall
+        @param      boostrap    number of curves for the boostrap (0 for None)
+        @param      label       label of the curve
+        @param      ax          axis
+        @param      kwargs      sent to `pandas.plot <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.plot.html>`_
+        @return                 ax
+
+        If *label* is None, it only plots bootstrapped curves to represent the confidence
+        inteval. If *label* is not None, the main curve is plotted in all cases.
         """
-        good, wrong = self.split_good_wrong(cloud)
-        good.sort()
-        wrong.sort()
+        if bootstrap > 0:
+            ckwargs = kwargs.copy()
+            if 'color' not in ckwargs:
+                ckwargs['color'] = 'r'
+            if 'linewidth' not in kwargs:
+                ckwargs['linewidth'] = 0.2
+            ckwargs['legend'] = False
+            if 'label' in ckwargs:
+                del ckwargs['label']
+            for l in range(0, bootstrap):
+                roc = self.compute_roc_curve(
+                    nb, recprec=recprec, bootstrap=True)
+                ax = roc.plot(x=roc.columns[0], y=roc.columns[
+                              1], ax=ax, **ckwargs)
+
+        if bootstrap <= 0 or label is not None:
+            if 'legend' not in kwargs:
+                kwargs['legend'] = False
+            roc = self.compute_roc_curve(nb, recprec=recprec)
+            if label is not None:
+                memo = roc.columns[1]
+                roc.columns = [roc.columns[0], label]
+            ax = roc.plot(x=roc.columns[0], y=roc.columns[1], ax=ax, **kwargs)
+            handles, labels = ax.get_legend_handles_labels()
+            ax.legend(handles[-1:], labels[-1:])
+            if label is not None:
+                ax.set_ylabel(memo)
+
+        return ax
+
+    def auc(self, cloud=None):
+        """
+        computes the area under the curve
+
+        @param      cloud       data or None to use ``self.data``, the function
+                                assumes the data is sorted
+        @return                 AUC
+        """
+        if cloud is None:
+            cloud = self.data
+        good = cloud[cloud[cloud.columns[1]] == 1]
+        wrong = cloud[cloud[cloud.columns[1]] == 0]
         auc = 0.0
-        for b in wrong:
-            for a in good:
-                if a > b:
-                    auc += 1.0
-                elif a >= b:
-                    auc += 0.5
+        for a, b in itertools.product(good.itertuples(False), wrong.itertuples(False)):
+            if a[0] > b[0]:
+                auc += a[2] * b[2]
+            elif a[0] >= b[0]:
+                auc += a[2] * b[2] / 2
+        if auc == 0 and good.shape[0] + wrong.shape[0] < self.data.shape[0]:
+            raise ValueError("Label are not right, expect 0 and 1 not {0}".format(
+                set(cloud[cloud.columns[1]])))
         n = len(wrong) * len(good)
         if n > 0:
             auc /= float(n)
         return auc
 
-    def ROC_AUC(self, error, nb, bootstrap=10, alpha=0.95):
+    def auc_interval(self, bootstrap=10, alpha=0.95):
         """
-        détermine un intervalle de confiance pour l'aire en dessous de la courbe ROC' par la méthode bootstrap
-        retourne un taux d'erreur et un intervalle de confiance, retourne aussi le couple min,max
-        """
+        Determines a confidence interval for the AUC with bootstrap.
 
+        @param      bootstrap       number of random estimation
+        @param      alpha           define the confidence interval
+        @return                     dictionary of values
+        """
+        if bootstrap <= 1:
+            raise ValueError("Use auc instead, bootstrap < 2")
         rate = []
         for i in range(0, bootstrap):
-
-            if bootstrap <= 0:
-                cloud = self._log
-            else:
-                cloud = self.random_cloud()
-            auc = self.compute_AUC(cloud)
+            cloud = self.random_cloud()
+            auc = self.auc(cloud)
             rate.append(auc)
 
         rate.sort()
-
-        ra = self.compute_AUC(self._log)
+        ra = self.auc(self.data)
 
         i1 = int(alpha * len(rate) / 2)
-        i2 = int(min(1.0 - alpha / 2 * len(rate) + 0.5, len(rate) - 1))
+        i2 = max(i1, len(rate) - i1 - 1)
         med = rate[len(rate) // 2]
         moy = float(sum(rate)) / len(rate)
         var = 0
@@ -302,4 +260,66 @@ class ROC:
             var += r * r
         var = float(var) / len(rate)
         var = var - moy * moy
-        return ra, [rate[i1], rate[i2]], [rate[0], rate[len(rate) - 1], moy, math.sqrt(var), med]
+        return dict(auc=ra, interval=(rate[i1], rate[i2]),
+                    min=rate[0], max=rate[len(rate) - 1],
+                    mean=moy, var=math.sqrt(var), mediane=med)
+
+    def roc_intersect(self, roc, x):
+        """
+        ROC curve is defined by a set of points.
+        This function interpolates those points to determine
+        *y* for any *x*.
+
+        @param      roc     ROC curve
+        @param      x       x
+        @return             y
+        """
+        below = roc[roc[roc.columns[0]] <= x]
+        i = len(below)
+        if i == len(roc):
+            return 0.0
+
+        p2 = tuple(roc.iloc[i, :])
+        if i - 1 <= 0:
+            p1 = (1, 1)
+        else:
+            p1 = tuple(roc.iloc[i - 1, :])
+
+        if p1[0] == p2[0]:
+            return (p1[1] + p2[0]) / 2
+        else:
+            return (x - p1[0]) / (p2[0] - p1[0]) * (p2[1] - p1[1]) + p1[1]
+
+    def roc_intersect_interval(self, x, nb, recprec=True, bootstrap=10, alpha=0.05):
+        """
+        computes a confidence interval for the value returned by
+        @see me roc_intersect.
+
+        @param      roc     ROC curve
+        @param      x       x
+        @return             dictionary
+        """
+
+        rate = []
+        for i in range(0, bootstrap):
+            roc = self.compute_roc_curve(nb, recprec, bootstrap=True)
+            r = self.roc_intersect(roc, x)
+            rate.append(r)
+
+        rate.sort()
+
+        roc = self.compute_roc_curve(nb, recprec)
+        ra = self.roc_intersect(roc, x)
+
+        i1 = int(alpha * len(rate) / 2)
+        i2 = max(i1, len(rate) - i1 - 1)
+        med = rate[len(rate) // 2]
+        moy = float(sum(rate)) / len(rate)
+        var = 0
+        for r in rate:
+            var += r * r
+        var = float(var) / len(rate)
+        var = var - moy * moy
+        return dict(y=ra, interval=(rate[i1], rate[i2]),
+                    min=rate[0], max=rate[len(rate) - 1],
+                    mean=moy, var=math.sqrt(var), mediane=med)

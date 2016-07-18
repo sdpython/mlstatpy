@@ -10,7 +10,14 @@ Ce document introduit la `courbe ROC <https://en.wikipedia.org/wiki/Receiver_ope
 la performance d'un classifieur. Il introduit aussi des termes comme précision, 
 rappel, `AUC <https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve>`_, 
 qui sont présents dans la plupart des articles qui traitent de machine learning.
+Le module :mod:`roc <mlstatpy.ml.roc>` implémente les calculs ci-dessous
+qu'on peut tester avec le notebook :
 
+
+.. toctree::
+    :maxdepth: 1
+    
+    notebooks/roc_example
 
 
 Définitions
