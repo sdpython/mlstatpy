@@ -3,8 +3,6 @@
 @file
 @brief About ROC
 """
-import copy
-import random
 import pandas
 import numpy
 import math
