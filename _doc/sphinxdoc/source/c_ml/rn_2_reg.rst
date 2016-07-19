@@ -45,7 +45,7 @@ Une régression consiste à résoudre le problème suivant~:
             \forall i \in \intervalle{1}{N}, \; Y_{i} = f \pa{\theta,X_{i}} + \epsilon_{i}
             
     avec :math:`n \in \N`, 
-    :math:`\pa{\epsilon_{i}}_{1 \infegal i \infegal N}` :req:`bruit blanc <def-bruit-blanc>`,
+    :math:`\pa{\epsilon_{i}}_{1 \infegal i \infegal N}` :ref:`bruit blanc <def-bruit-blanc>`,
     :math:`f` est une fonction de paramètre :math:`\theta`.
 		
 

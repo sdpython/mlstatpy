@@ -199,7 +199,8 @@ Dérivée par rapport aux entrées
 On note :math:`\left(  X_k,Y_k\right)` un exemple de la base d'apprentissage. 
 Le réseau de neurones est composé de :math:`C` couches, :math:`C_i` est le 
 nombre de neurones sur la ième couche, :math:`C_0` est le nombre d'entrées. 
-Les entrées sont appelées :math:`\left( z_{0,i}\right) _{1\leqslant i\leqslant C_{0}}$, $\left(  y_{1,i}\right)  _{1\leqslant i\leqslant C_{1}}` 
+Les entrées sont appelées :math:`\left( z_{0,i}\right) _{1\leqslant i\leqslant C_{0}}`, 
+:math:`\left(  y_{1,i}\right)  _{1\leqslant i\leqslant C_{1}}` 
 sont les potentiels des neurones de la première couche, on en déduit que, dans le cas d'un neurone classique (non distance) :
 
 .. math:: 
@@ -457,7 +458,7 @@ régression grâce à l'algorithme suivant.
 
     Un réseau de neurones est choisi aléatoirement,  
     soit :math:`f : \R^p \dans \R` la fonction qu'il représente.
-	Une base d'apprentissage :math:`A` (ou échantillon) 
+    Une base d'apprentissage :math:`A` (ou échantillon) 
     de :math:`N` observations est générée aléatoirement à partir de ce modèle :
 
     .. math::
@@ -478,3 +479,4 @@ régression grâce à l'algorithme suivant.
     
 	Si :math:`\norm{f-g} \approx 0`,
     l'algorithme de :ref:`sélection <rn_algorithme_selection_connexion_1>` est validé.
+

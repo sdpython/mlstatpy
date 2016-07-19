@@ -11,13 +11,7 @@ la performance d'un classifieur. Il introduit aussi des termes comme précision,
 rappel, `AUC <https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve>`_, 
 qui sont présents dans la plupart des articles qui traitent de machine learning.
 Le module :mod:`roc <mlstatpy.ml.roc>` implémente les calculs ci-dessous
-qu'on peut tester avec le notebook :
-
-
-.. toctree::
-    :maxdepth: 1
-    
-    notebooks/roc_example
+qu'on peut tester avec le notebook :ref:`rocexamplerst`.
 
 
 Définitions
@@ -250,21 +244,20 @@ Par conséquent, :math:`\pr{X=Y} = 0`. On calcule tout d'abord :math:`\esp{\hat{
 et on utilise le fait que :math:`\var{\hat{A}} = \esp\pa{\hat{A}^2} - \hat{A}^2`.
 
 .. math::
-    :nowrap:
-    
-    \begin{eqnarray*}
-    \hat{A}^2 &=& \frac{1}{n^2 m^2} \; \cro{ \sum_{i=1}^{m}\sum_{j=1}^{n} \indicatrice{ X_i < Y_j} } ^2 
-                        = \frac{1}{n^2 m^2} \; \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k=1}^{m}\sum_{l=1}^{n} 
-                                            \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_l} \\
-                        &=& \frac{1}{n^2 m^2} \; \sum_{i=1}^{m}\sum_{j=1}^{n} \indicatrice{ X_i < Y_j} +
-                                \frac{1}{n^2 m^2} \; \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i} 
-                                            \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_j} + \\
-                        &&		\frac{1}{n^2  m^2} \; \frac{1}{n^2 \, m^2} \; \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{l \neq j}
-                                             \indicatrice{ X_i < Y_j}  \indicatrice{ X_i < Y_l} + 
-                                \frac{1}{n^2  m^2} \; \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i}\sum_{l \neq j}
-                                            \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_l} 
-                                    \\
-  \end{eqnarray*}
+
+    \hat{A}^2 = \frac{1}{n^2 m^2}  \cro{ \sum_{i=1}^{m}\sum_{j=1}^{n} \indicatrice{ X_i < Y_j} } ^2 
+    = \frac{1}{n^2 m^2} \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k=1}^{m}\sum_{l=1}^{n} 
+    \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_l} 
+
+.. math::
+
+    \hat{A}^2 = \frac{1}{n^2 m^2} \sum_{i=1}^{m}\sum_{j=1}^{n} \indicatrice{ X_i < Y_j} +
+    \frac{1}{n^2 m^2}  \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i} 
+    \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_j} + 
+    \frac{1}{n^2  m^2}  \frac{1}{n^2 m^2}  \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{l \neq j}
+    \indicatrice{ X_i < Y_j}  \indicatrice{ X_i < Y_l} + 
+    \frac{1}{n^2  m^2} \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i}\sum_{l \neq j}
+    \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_l} 
 		  
 On en déduit que :
 

@@ -8,3 +8,4 @@ Setup
     installation
     generatedoc
     generatesetup
+    doctestunit

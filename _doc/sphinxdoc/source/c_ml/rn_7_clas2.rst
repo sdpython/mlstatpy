@@ -304,7 +304,7 @@ On note :math:`C_{rn}` le nombre de couches du réseau de neurones,
 :math:`z_{C_{rn}}^k` est la sortie :math:`k` avec 
 :math:`k \in \intervalle{1}{C}`, 
 :math:`g_k\pa{W,x} = z_{C_{rn}}^k = e^{y_{C_{rn}}^k}` où 
-:math:`y_{C_{rn}}^k` est le potentiel du neurone $k$ de la couche de sortie.
+:math:`y_{C_{rn}}^k` est le potentiel du neurone :math:`k` de la couche de sortie.
 
 On calcule :
 

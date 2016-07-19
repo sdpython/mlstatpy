@@ -61,11 +61,6 @@ Parmi les méthodes d'optimisation basées sur le gradient global, on distingue 
 Méthodes du premier ordre
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-
-\indexfrr{apprentissage}{premier ordre}
-\indexfrr{méthode}{premier ordre} 
-\indexfrr{ordre}{méthode du premier ordre}
-
 Les méthodes du premier ordre sont rarement utilisées. 
 Elles sont toutes basées sur le principe 
 de la descente de gradient de Newton présentée dans 
@@ -131,7 +126,7 @@ direction de recherche pour le minimum différente de celle du gradient,
 cette direction est appelée gradient conjugué (voir [Moré1977]_).
 
 Ces techniques sont basées sur une approximation du second degré de la fonction à minimiser. 
-On note :amth:`M` le nombre de coefficients du réseau de neurones (biais compris). 
+On note :math:`M` le nombre de coefficients du réseau de neurones (biais compris). 
 Soit :math:`h: \R^{M} \dans \R` la fonction d'erreur associée au réseau de neurones :
 :math:`h \pa {W} = \sum_{i} e \pa{Y_i,f \pa{ W,X_i} }`.
 Au voisinage de :math:`W_{0}`, un développement limité donne :
@@ -185,8 +180,8 @@ sûrement vers le minimum global.
     :lid: figure_gradient_conjugue
     :tag: Figure
 
-    .. image:: rn_img/Conjugate_gradient_illustration.svg.png
-        :source: Wikipedia
+    .. image:: rnimg/Conjugate_gradient_illustration.png
+        :alt: Wikipedia
 
     Gradient et gradient conjugué sur une ligne de niveau de la fonction :math:`G\pa{x,y} = 3x^2 + y^2`, 
     le gradient est orthogonal aux lignes de niveaux de la fonction :math:`G`, 
@@ -305,12 +300,12 @@ par celle-ci :
     *Recherche de :math:`\epsilon^*`*
     
     | :math:`\epsilon^*  \longleftarrow    \epsilon_0`
-    | while :math:`E_{t+1} \supegal E_t$ et $\epsilon^* \gg 0`
+    | while :math:`E_{t+1} \supegal E_t` et :math:`\epsilon^* \gg 0`
     |   :math:`\epsilon^*  \longleftarrow   \frac{\epsilon^*}{2}`
     |   :math:`W_{t+1}     \longleftarrow    W_t - \epsilon^* c_t`
     |   :math:`E_{t+1}     \longleftarrow    \sum_{i=1}^{N} e\pa {Y_i - f \pa{W_{t+1},X_i}}`
     |
-    | if :math:`\epsilon_* \approx 0$ et $B_t \neq I_M`
+    | if :math:`\epsilon_* \approx 0` et :math:`B_t \neq I_M`
     |   :math:`B_{t}       \longleftarrow   I_M`
     |   :math:`i           \longleftarrow    t`
     |   Retour au calcul du gradient.

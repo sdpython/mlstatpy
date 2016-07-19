@@ -33,8 +33,7 @@ Et en français... J'enseigne en français et puis l'offre est tellement
 riche en anglais.
 
 
-Installation
-============
+**Installation**
 
 Les exemples de codes sont disponibles sous la forme d'un module python
 et des :ref:`notebooks <l-notebooks>` accessibles sur le site.

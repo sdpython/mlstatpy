@@ -692,9 +692,9 @@ Donc :
     :nowrap:
     :label: rn_coro_eq_5
  
-    \begin{eqnarray}
-    M_* \Lambda_* -    \pa{  \sum_{j=2}^{N} \lambda_j   }   V_*   &   = &  0 \nonumber
-    \end{eqnarray}
+    \begin{eqnarray*}
+    M_* \Lambda_* -    \pa{  \sum_{j=2}^{N} \lambda_j   }   V_*   &=&  0
+    \end{eqnarray*}
     
 D'après l'hypothèse de récurrence, :eq:`rn_coro_eq_5` implique que : 
 :math:`\forall i \in \ensemble{2}{N}, \; \lambda_i = 0`. 

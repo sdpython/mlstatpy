@@ -160,7 +160,7 @@ L'analyse en composantes principales ou ACP est définie de la manière suivante
     Soit :math:`W \in M_{p,d}\pa{\R}`, :math:`W = \vecteur{C_1}{C_d}`
     où les vecteurs :math:`\pa{C_i}` 
     sont les colonnes de :math:`W` et :math:`d < p`.
-    On suppose également que les $\pa{C_i}$ forment une base othonormée.
+    On suppose également que les :math:`\pa{C_i}` forment une base othonormée.
     Par conséquent :
     
     .. math::
@@ -299,9 +299,8 @@ Donc :
 *Partie 2*
 
 
-Soit :math:`Y \in \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \max }\;
-\trace{X'WW'X}$, $Y = \vecteur{Y_1}{Y_d} = \pa{y_i^k}_{ \begin{subarray}{c} 1 \infegal i \infegal d \\ 1 \infegal k
-\infegal p \end{subarray} }`.
+Soit :math:`Y \in \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \max }\; \trace{X'WW'X}`, 
+:math:`Y = \vecteur{Y_1}{Y_d} = \pa{y_i^k}_{ \begin{subarray}{c} 1 \infegal i \infegal d \\ 1 \infegal k \infegal p \end{subarray} }`.
 
 Chaque vecteur :math:`Y_i` est écrit dans la base 
 :math:`\vecteur{P_1}{P_p}` définie en :eq:`acp_equation_memo_1` :
