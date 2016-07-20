@@ -1,0 +1,3433 @@
+\input{../../common/livre_begin.tex}
+\firstpassagedo{\input{hmm_titre.tex}}
+\input{../../common/livre_table_begin.tex}
+\firstpassagedo{\input{hmm_chapter.tex}}
+
+
+
+
+\indexsee{modèle de Markov caché}{MMC}
+\indexfr{MMC}
+\indexsee{chaîne de Markov cachée}{MMC}
+\indexsee{Hidden Markov Model}{MMC}
+\indexfr{HMM}
+
+
+
+\label{annexe_hmm_def}
+
+
+
+
+Cette annexe détaille les concepts et les propriétés des modèles de Markov cachés en évitant aussi souvent que possible les références à la reconnaissance de l'écriture manuscrite.
+
+
+
+
+
+%------------------------------------------------------------------------------------------------------------------
+\section{Chaîne de Markov}
+%------------------------------------------------------------------------------------------------------------------
+\indexfr{chaîne de Markov}
+
+\subsection{Définition}
+
+\indexfr{séquence}
+\indexfr{état}
+
+Une chaîne de Markov est un modèle probabiliste modélisant des séquences de symboles appartenant à un ensemble fini. Ces séquences peuvent être considérées également comme des suites entières finies.
+
+		\begin{xdefinition}{chaîne de Markov}
+		\label{markov_chaine_definition}%
+		Soit $M$ une chaîne de Markov.\newline
+		Soit $Q = \intervalle{1}{N}$ l'ensemble des états.\newline
+		Soit $S=\underset{T=1} {\overset{+\infty}{\cup}} Q^T$ l'espace des séquences.\newline
+		On note $s = \pa{q_1,\dots,q_{T_s}} \in S$ une séquence de longueur $T_s$.\newline
+		\indexfrr{modèle}{probabiliste}
+		Une chaîne de Markov est un modèle probabiliste sur $S$ vérifiant les deux hypothèses suivantes~:
+		        \begin{enumerate}
+		        \item L'état à l'instant $t$ ne dépend que de l'état à l'instant $t-1$~:
+		            $$
+		            \forall s \in S, \; \forall t \in \intervalle{2}{T_s}, \; 
+		            			\pr{q_t \sachant \vecteurno{q_1}{q_{t-1}},M} = \pr{q_t \sachant q_{t-1},M}
+		            $$
+		            On appelle $\pr{q_t \sachant q_{t-1},M}$ la \emph{probabilité de transition}
+		            \indexfrr{probabilité}{transition}
+		            de l'état $q_{t-1}$ à l'état $q_t$ à l'instant $t$.
+		        \item Les probabilités de transition ne dépendent pas du temps~:
+		            $$
+		            \forall s \in S, \; \forall \pa{t,t'} \in \intervalle{2}{T_s}, \; 
+		            			\pr{q_t \sachant q_{t-1},M} = \pr{q_{t'} \sachant q_{t'-1},M}
+		            $$
+		        \end{enumerate}
+		\end{xdefinition}
+
+
+
+Afin de simplifier les notations ultérieurement, on définit pour la chaîne de Markov $M$, la matrice des probabilités de transition $A_M \in M_N\pa{\R}$~: \indexfrr{notation}{probabilité de transition}
+
+        \begin{eqnarray}
+        A_{M}=  \pa {  a_{M,ij} }                              _{\substack{1\leqslant i\leqslant N\\1\leqslant j\leqslant N}} =
+                \pa{  \pr{  q_{t}=j \sachant q_{t-1} =i,M } }  _{\substack{1\leqslant i\leqslant N\\1\leqslant j\leqslant N}}
+        \label{hmm_eq_1}
+        \end{eqnarray}
+
+On définit également le vecteur des probabilités d'entrées $\pi_M \in \R^N$ :
+
+        \begin{eqnarray}
+        \forall i\in \ensemble{1}{N} ,\, \pi_{M,i}=\pa { q_{1}=i \sachant  M }
+        \label{hmm_eq_2}
+        \end{eqnarray}
+
+			\begin{xproperty}{contrainte}
+			\label{propriete_mmc_contrainte_1}%
+			La définition~\ref{markov_chaine_definition} d'une chaîne de Markov et ses paramètres définis en 
+			(\ref{hmm_eq_1}) et (\ref{hmm_eq_2}) implique que~:
+			        \begin{eqnarray*}
+			        \forall i \in \ensemble{1}{N} , \,\summy{j=1}{N}a_{M,ij}&=&1 \text{ et } \summy{j=1}{N} \,\pi_{M,j} = 1
+			        \end{eqnarray*}
+			Par abus de notation, on écrira $a_{ij}=a_{M,ij}$, et $\pi_{i}=\pi_{M,i}$
+			\end{xproperty}
+
+
+La définition d'une chaîne de Markov simplifie l'écriture de la probabilité d'une séquence~:
+
+		\begin{xproperty}{probabilité d'une séquence}
+		La définition~\ref{markov_chaine_definition} d'une chaîne de Markov et ses paramètres définis en (\ref{hmm_eq_1}) et
+			 (\ref{hmm_eq_2}) implique que~:
+		        \begin{eqnarray*}
+		        \pr{s|M}        &=& \pr{q_1,\dots,q_T \sachant M} = \pr{q_1 \sachant M}\prody{t=2}{T}
+		        												 \pr{q_t \sachant \overline{q_{t-1}},M} 
+		                        = \pi_{q_1} \prody{t=2}{T_s} a_{q_{t-1},q_t}
+		        \end{eqnarray*}
+		\end{xproperty}
+
+
+
+
+
+
+
+
+
+\subsection{Exemple : pièce de monnaie truquée} \label{chaine_markov_exemple}
+
+\indexfrr{chaîne de Markov}{exemple}%
+\indexfrr{exemple}{pièce de monnaie}
+
+\para{Enoncé}
+
+On considère une pièce truquée qui a $7$ chances sur $10$ de retomber sur pile (état $1$), et $3$ chances sur $10$ de retomber sur face (état $2$), et une vraie pièce. Si la face pile tombe, c'est la vraie pièce qui sera jouée, sinon, ce sera la pièce truquée. La première jouée est tirée au hasard. La chaîne de Markov correspondant à ce problème est définie par les probabilités suivantes~:
+
+        $$
+        \begin{array}
+        [c]{ccccc}%
+        \pr{  q_{1}=1 }  =0,5 &  & \pr{  q_{t}=1 \sac  q_{t-1}=1 }  =0,5 &  & \pr{ q_{t}=1 \sac q_{t-1}=2 }  =0,7\\
+        \pr{  q_{1}=2 }  =0,5 &  & \pr{  q_{t}=2 \sac  q_{t-1}=1 }  =0,5 &  & \pr{ q_{t}=2 \sac q_{t-1}=2 }  =0,3
+        \end{array}
+        $$
+
+Par conséquent :
+
+        $$
+        \begin{array}{ccc}
+                A=\pa{
+                    \begin{array}{cc}%
+                    0,5 & 0,5\\
+                    0,7 & 0,3
+                    \end{array}
+                }
+            &
+            \text{ et }
+            &
+                \pi=\pa{
+                    \begin{array}{c}
+                    0,5\\
+                    0,5
+                    \end{array}
+                }
+        \end{array}
+        $$
+
+Ce modèle peut être représenté graphiquement par un schéma utilisant des graphes où chaque n\oe ud est un état du modèle et chaque probabilité de transition positive un arc du graphe (voir figure~\ref{figure_chaine_markov_exemple-fig}). Plus de détails sont donnés dans le paragraphe~\ref{hmm_representation_graphe}.
+
+
+        \begin{figure}[ht]
+        $$
+        \frame{
+        \filefig{../hmm/fig_markov}
+        }
+        $$
+        \caption{Représentation d'une chaîne de Markov sous forme de graphe.}
+        \label{figure_chaine_markov_exemple-fig}
+        \indexfrr{chaîne de Markov}{graphe}%
+        \end{figure}
+
+
+\para{Résultats intéressants}
+
+Cette modélisation simple permet d'obtenir la probabilité que la face pile apparaisse à un instant donné, et de définir le gain que peut espérer un tricheur en utilisant sa pièce truquée. On s'intéresse d'abord à~:
+
+        $$
+        \pr{  q_{t}=j \sac  q_{t-2}=i,M  }  = \summy{k=1}{N} \pr{ q_{t}=j \sac  q_{t-1}=k,M }
+        \pr{  q_{t-1}=k \sac  q_{t-2}=i,M }   = \pa {  A_{M} ^{2} }  _{i,j}
+        $$
+
+Par récurrence, on en déduit que :
+
+        $$
+        \pr{  q_{t}=j \sac q_{t-d}=i,M } = \pa {  A_{M}^{d} }  _{i,j}
+        $$
+
+On note $\pi'_M$ la transposée de la matrice $\pi_M$, on obtient alors que :
+
+        $$
+        \pi'_M \pa {  A_{M}^{t} } = \pa {  \pr {   q_{t}=i \sac   M } } _{1\leqslant i\leqslant N}
+        $$
+
+Finalement, cette formule appliquée à l'exemple précédent donne :
+
+        $$
+        \underset{t\rightarrow+\infty}{\lim}    \pr{   q_{t}=1 }  =\frac{7}{12} \text{ et }
+        \underset{t\rightarrow+\infty}{\lim}    \pr{   q_{t}=2 }  =\frac{5}{12}%
+        $$
+
+Les lois limites des états sont utiles pour calculer une espérence de gain. Si le joueur gagne un franc lorsque la face pile sort et perd un franc dans l'autre cas, sur une suite de douze coups, il gagne en moyenne deux francs. On peut également calculer la probabilité d'une séquence de quatre gain consécutifs~:
+
+        $$
+        \pr {  1111 \sac M }  =0,5\ast0,3\ast0,3\ast0,3=0,0135
+        $$
+
+
+
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------------------------
+\section{Chaîne de Markov cachée}
+%----------------------------------------------------------------------------------------------------------------------
+\label{interdoc_mmc}
+
+Il n'est pas évident qu'un processus (ou séquence de variables aléatoires) suive la loi d'une chaîne de Markov, néanmoins, ce processus peut parfois être expliqué par un autre caché qui suit la loi d'une chaîne de Markov. Ce second processus est dit caché car le premier, celui qu'il explique, est le seul observé. Afin de comprendre ce concept, l'exemple précédent (paragraphe~\ref{chaine_markov_exemple}) sera légèrement modifié de manière à présenter les chaînes de Markov cachées.
+
+\subsection{Exemple : pièce de monnaie truquée}
+
+\indexfrr{exemple}{pièce de monnaie}
+\label{chaine_markov_cachee_exemple}
+
+Dans l'exemple des deux pièces truquée et non truquée (paragraphe~\ref{chaine_markov_exemple}), les états de la chaîne de Markov et faces des pièces étaient identiques. Les états correspondent maintenant aux pièces (information cachée) et les observations correspondent aux faces (information observée). L'état $1$ sera la pièce non truquée et l'état $2$ sera la pièce truquée. On suppose que la décision du joueur concernant le choix de la pièce ne dépend plus de la face qui apparaît après le lancer mais dépend du choix de la pièce au lancer précédent. Les probabilités de transition sont définies ainsi~:
+
+        $$
+        \begin{array}[c]{ccccc}%
+        \pr {  q_{1}=1 }  =0,5 &  & \pr {  q_{t}=1 \sac  q_{t-1}=1 }  =0,5 &  & \pr{  q_{t}=1 \sac  q_{t-1}=2 }=0,7\\
+        \pr {  q_{1}=2 }  =0,5 &  & \pr {  q_{t}=2 \sac  q_{t-1}=1 }  =0,5 &  & \pr{  q_{t}=2 \sac  q_{t-1}=2 }=0,3
+        \end{array}
+        $$
+
+De chaque état dépendent les probabilités de voir apparaître pile ou face. On note $O_t$ la face qui apparaît à l'instant $t$,
+les probabilités qui suivent sont appelées \emph{probabilités d'émission}.\indexfrr{probabilité}{émission}
+
+        $$
+        \begin{array}[c]{ccc}%
+        \pr {  O_{t}=1 \sac  q_{t}=1 }  =0,5 &  & \pr {O_{t}=1 \sac  q_{t}=2 }  =0,7\\
+        \pr {  O_{t}=2 \sac  q_{t}=1 }  =0,5 &  & \pr {O_{t}=2 \sac  q_{t}=2 }  =0,3
+        \end{array}
+        $$
+
+\indexfrr{MMC}{graphe}
+
+Ce modèle peut toujours être représenté graphiquement par un schéma utilisant des graphes (figure~\ref{figure_chaine_markov_cachee_exemple-fig}). Plus de détails seront donnés au paragraphe~\ref{hmm_representation_graphe}.
+
+
+        \begin{figure}[ht]
+        $$
+        \frame{
+        \filefig{../hmm/fig_hmarkov}
+        }
+        $$
+        \caption{Représentation d'une chaîne de Markov sous forme de graphe.}
+        \label{figure_chaine_markov_cachee_exemple-fig}
+        \indexfrr{chaîne de Markov}{graphe}%
+        \end{figure}
+
+
+On cherche alors à calculer probabilité de la séquence $1111$ qui correspond à une série de quatre "face". Si la séquence d'observations est connue, il n'en est pas de même pour la séquence d'états (ou pièces) : il faut les envisager toutes et connaître la probabilité d'émettre une série de quatre "face" pour chacune d'elles. La réponse nécessite d'abord de définir ce qu'est mathématiquement une chaîne de Markov cachée car le calcul n'est plus aussi évident que pour celui des chaînes de Markov non cachées.
+
+
+
+
+
+
+
+
+\subsection{Définition d'une chaîne de Markov cachée}
+
+Une chaîne de Markov cachée part de l'idée que le processus stochatisque observé (la séquence d'observations) est expliqué par un autre processus (la séquence d'états) qui est inconnu.
+
+
+
+		\begin{xdefinition} {chaîne de Markov cachée}
+		\label{markov_chaine_cachee_definition}%
+		Soit $M$ une chaîne de Markov cachée,\newline%
+		Soit $Q = \intervalle{1}{N}$ l'ensemble des états,\newline%
+		Soit $S=\underset{T=1} {\overset{+\infty}{\cup}} Q^T$ l'espace des séquences d'états,\newline%
+		Soit $\mathcal{O} = \intervalle{1}{D}$ l'ensemble des observations,\newline%
+		Soit $\mathbf{O}=\underset{T=1} {\overset{+\infty}{\cup}} \mathcal{O}^T$ l'espace des séquences d'observations,\newline%
+		On note $s = \pa{q_1,\dots,q_{T_s}} \in S$ une séquence de longueur $T_s$,\newline%
+		Soit $O = \pa{O_1,\dots,O_{T_O}} \in \mathbf{O}$ une séquence de longueur $T_O$,\newline%
+		Alors une chaîne de Markov cachée est un modèle probabiliste vérifiant les quatre conditions suivantes~:
+		
+		        \begin{enumerate}
+		        \item L'observation à l'instant $t$ ne dépend que de l'état à l'instant $t$~:
+		        
+		        \indexfrr{probabilité}{transition}
+						\indexfrr{probabilité}{émission}
+						\indexfrr{probabilité}{entrée}
+						
+		            $$
+		            \forall s \in S \text{ telle que } T_s = T_O, \; \forall t \in \intervalle{1}{T_O}, \;
+		            \pr{O_t|\overline{q_t},\overline{O_{t-1}},M} = \pr{O_t|q_t,M}
+		            $$
+		            On appelle $\pr{O_t|q_t,M}$ la \emph{probabilité d'émission} de l'observation $O_t$ 
+		            			sachant l'état $q_t$ à l'instant $t$.
+		        \item Les probabilités d'émissions ne dépendent pas du temps :
+		            $$
+		            \forall s \in S \text{ telle que } T_s = T_O, \; 
+		            		\forall \pa{t,t'} \in \intervalle{2}{T_s}, \; \pr{O_t|q_t,M} = \pr{O_{t'}|q_{t'},M}
+		            $$
+		        \item L'état à l'instant $t$ ne dépend que de l'état à l'instant $t-1$~:
+		            $$
+		            \forall s \in S \text{ telle que } T_s = T_O, \; \forall t \in \intervalle{2}{T_s}, \;
+		            \pr{q_t| \overline{q_{t-1}},\overline{O_{t-1}},M} = \pr{q_t|q_{t-1},M}
+		            $$
+		            On appelle $\pr{q_t|q_{t-1},M}$ la \emph{probabilité de transition} de l'état $q_{t-1}$ à l'état $q_t$ à l'instant $t$.
+		        \item Les probabilités de transition ne dépendent pas du temps~:
+		            $$
+		            \forall s \in S \text{ telle que } T_s = T_O, \; \forall \pa{t,t'} 
+		            		\in \intervalle{2}{T_s}, \; \pr{q_t|q_{t-1},M} = \pr{q_{t'}|q_{t'-1},M}
+		            $$
+		        \end{enumerate}
+		\end{xdefinition}
+
+
+
+Etant donné que ni les probabilités de transitions ni les probabilités d'émissions ne dépendent du temps, on définit pour le modèle $M$ à $N$ états, les matrices $A_M$, $B_M$ et le vecteur $\Pi_M$ par ~:
+
+\indexfrr{probabilité}{transition}
+\indexfrr{probabilité}{émission}
+\indexfrr{probabilité}{entrée}
+
+        \begin{eqnarray*}
+        A_M    &=& \pa {  a_{M,ij} } _ {\substack{ 1\leqslant i\leqslant N\\1\leqslant j\leqslant N}} =
+                   \pa{ \pr {  q_{t}=j \sac  q_{t-1} =i,M } } _{\substack{1\leqslant i\leqslant N\\1\leqslant j\leqslant N}}
+                    \label{hmm_contrainte_1}\\
+        B_M    &=& \pa{   b_{M,ij} } _ {\substack{1\leqslant i\leqslant N\\1\leqslant j\leqslant D}}=
+                   \pa { \pr{ O_{t}=j \sac  q_{t}=i,M } }     _ {\substack{1\leqslant i\leqslant N\\1\leqslant j\leqslant D}}
+                    \label{hmm_contrainte_2}\\
+        \Pi_M  &=& \pa { \pi_{M,i} } _ { 1 \infegal i \infegal N } = \pa { \pr {  q_1 = i \sac M} } _ { 1 \infegal i \infegal N }
+        					 \label{hmm_contrainte_3}
+        \end{eqnarray*}
+
+
+La définition d'une chaîne de Markov cachée implique les contraintes suivantes sur les paramètres $A_M$, $B_M$, $\Pi_M$
+résumées par la propriété suivante~:
+
+
+		\begin{xproperty}{contrainte}
+		\label{propriete_mmc_contrainte}%
+		La définition~\ref{markov_chaine_cachee_definition} et les notations définies en (\ref{hmm_contrainte_1}),
+		(\ref{hmm_contrainte_2}) et (\ref{hmm_contrainte_3}) impliquent que~:
+		
+		        \begin{eqnarray*}
+		        \forall i\in \ensemble{1}{N}, \; &&\summy{j=1}{N} \; a_{M,ij}=1 \text{ et }
+		        																	\summy{j=1}{N} \; b_{M,ij}=1 \\
+		                                         &&\summy{i=1}{N} \; \Pi_{M,i} = 1
+		        \end{eqnarray*}
+		\end{xproperty}
+
+
+Par abus de notation, lorsqu'il n'y a aucune ambiguïté, on note $A=A_M$, $B=B_M$, $\Pi=\Pi_M$. On cherche maintenant à exprimer la probabilité d'une séquence d'observations, soit $O \in \mathbf{O}$, on peut dorénavant définir~:
+
+\indexfrr{probabilité}{séquence}
+\indexfrr{séquence}{observation}
+
+        \begin{eqnarray*}
+        \pr{O \sac M} &=&   \summyone{\begin{subarray}{c}s \in S \\ T_s = T_O \end{subarray}}
+                            \pr{O,s|M} \\
+        \pr{O \sac M} &=&   \summyone{\begin{subarray}{c}s \in S \\ T_s = T_O \end{subarray}}
+                            \pr{\vecteurno{O_1}{O_{T_O}},\vecteurno{s_1}{s_{T_s}}|M}
+        \end{eqnarray*}
+
+En utilisant les hypothèses de la définition~\ref{markov_chaine_cachee_definition}, on cherche à exprimer cette probabilité
+à l'aide des paramètres $A$, $B$, $\Pi$ du modèle $M$~:
+
+        \begin{eqnarray}
+        \pr{O|M} &=&   \summyone{\begin{subarray}{c}s \in S \\ T_s = T_O \end{subarray}}
+                        \pr{O,s|M} \nonumber\\
+        \pr{O|M} &=&   \summyone{\begin{subarray}{c}s \in S \\ T_s = T_O \end{subarray}}
+                        \pr{O_{T_O}|s_{T_s},M}
+                        \pr{s_{T_s}|s_{T_s-1},M}
+                        \pr{\vecteurno{O_1}{O_{T_O-1}},\vecteurno{s_1}{s_{T_s-1}}|M} \nonumber\\
+        \pr{O|M} &=&   \summyone{\begin{subarray}{c}s \in S \\ T_s = T_O \end{subarray}}
+                        \crochet{ \pr{s_1|M} \prody{t=2}{T_O}\pr{s_t|s_{t-1},M} \prody{t=1}{T_O} \pr{O_t|s_t,M} } \nonumber\\
+        \pr{O|M} &=&   \summyone{\begin{subarray}{c}s \in S \\ T_s = T_O \end{subarray}}
+                        \crochet{ \pi_{s_1} \prody{t=2}{T_O}a_{s_{t-1},s_t} \prody{t=1}{T_O} b_{q_t}\pa{O_t} }
+                         \label{mmc_expression_proba_seq}
+        \end{eqnarray}
+
+Néanmoins, cette expression (\ref{mmc_expression_proba_seq}) suppose un calcul coûteux en temps,
+il est nécessaire de factoriser certaines opérations.
+
+\indexfr{factoriser}
+
+
+
+
+
+
+
+\subsection{Calcul factorisé de la probabilité d'une séquence}
+
+\label{hmm_alpha_definition_forward}
+
+Soit $O=\vecteur{O_1}{O_T}$ une séquence d'observations, les séquences d'états seront notées $s=\vecteur{q_1}{q_T}$. On pose pour $1\leqslant i\leqslant N$ et $1\leqslant t\leqslant T$ :
+
+        \begin{eqnarray}
+        \alpha_{t} \pa{i}  = \alpha_{M,t} \pa{i}  = \pr{  q_{t}=i,O_{1},...,O_{t} \sac  M } \label{hmm_eq_alpha_1}
+        \end{eqnarray}
+
+Pour $t=1$, on obtient pour tout $i \in \ensemble{1}{N}$~:
+
+        \begin{eqnarray}
+        \alpha_{1} \pa{i} &=& \pr{ q_{1}=i,O_{1} \sac M }  = \pr{   O_{1} \sac  q_{1}=i,M}
+                              \pr{ q_{1}=i       \sac M } \nonumber \\
+                          &=& \pi_{i}b_{i,O_{1}} \label{mmc_alpha_forward_1} \label{hmm_eq_alpha_2}
+        \end{eqnarray}
+
+\indexfr{forward}
+\indexfr{$\alpha_t\pa{.}$}
+
+On établit la récurrence suivante sur $t$ et pour tout $j \in \ensemble{1}{N}$~:
+
+        \begin{eqnarray}
+        \alpha_{t+1}\pa{j}  &=& \pr{ q_{t+1}=j,O_{1},...,O_{t+1} \sac M } \nonumber\\
+        \alpha_{t+1}\pa{j}  &=& \pr{ O_{t+1} \sac  q_{t+1}=j,O_{1},...,O_{t},M }
+                                \pr{ q_{t+1}=j,O_{1},...,O_{t} \sac M } \nonumber\\
+        \alpha_{t+1}\pa{j}  &=& \pr{ O_{t+1} \sac  q_{t+1}=j,M } \;
+                                \summy{i=1}{N} \; \pr{ q_{t+1}=j,q_{t}=i,O_{1},...,O_{t} \sac  M} \nonumber\\
+        \alpha_{t+1}\pa{j}  &=& b_{j}\pa{O_{t+1}} \; \summy{i=1}{N} \; \pr {  q_{t+1}=j \sac  q_{t}=i,O_{1},...,O_{t},M }
+                                                                       \pr {  q_{t}=i,O_{1},...,O_{t} \sac  M } \nonumber\\
+        \alpha_{t+1}\pa{j}  &=& b_{j}\pa{O_{t+1}} \; \summy{i=1}{N} \; a_{ij} \, \alpha_{t} \pa{i}
+        	 \label{mmc_alpha_forward_2}\label{hmm_eq_alpha_3}
+        \end{eqnarray}
+
+Finalement, la probabilité de la séquence est obtenue grâce à la suite $\alpha_t\pa{.}$ par un calcul appelé \emph{forward}~:
+
+\indexfr{forward}
+        
+        \begin{eqnarray}
+        \pr {O_{1},...,O_{T} \sac M}  = \summy{i=1}{N} \alpha_{T}\pa{i}\label{hmm_eq_alpha_4}
+        \end{eqnarray}
+
+De ces formules, on tire l'algorithme suivant permettant de calculer la probabilité d'une séquence d'observations.
+
+		\begin{xalgorithm}{forward} \label{hmm_algo_forward}
+		Les notations utilisées sont celles des formules (\ref{hmm_eq_alpha_1}), (\ref{hmm_eq_alpha_2}),
+		(\ref{hmm_eq_alpha_3}), (\ref{hmm_eq_alpha_4}).
+		
+		\begin{xalgostep}{initialisation}
+		        \begin{xfor}{i}{1}{N}
+		        $\alpha_1\pa{i} \longleftarrow \pi_{i}b_{i,O_{1}}$
+		        \end{xfor}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{récurrence}
+		        \begin{xfor}{t}{2}{T}
+		                \begin{xfor}{j}{1}{N}
+		                        $\alpha_{t}\pa{j} \longleftarrow 0$ \\
+		                        \begin{xfor}{i}{1}{N}
+		                                $\alpha_{t}\pa{j} \longleftarrow \alpha_{t}\pa{j} + a_{ij} \, \alpha_{t-1} \pa{i}$
+		                        \end{xfor} \\
+		                        $\alpha_{t}\pa{j} \longleftarrow \alpha_{t}\pa{j} \; b_{j}\pa{O_{t+1}}$
+		                \end{xfor}
+		        \end{xfor}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{terminaison}
+		        $p \longleftarrow 0$ \\
+		        \begin{xfor}{i}{1}{N}
+		                $p \longleftarrow p + \alpha_{T}\pa{i}$
+		        \end{xfor}
+		\end{xalgostep}
+		
+		La probabilité de la séquence $\vecteur{O_1}{O_T}$ est $p$ obtenue à la dernière étape.
+		
+		\end{xalgorithm}
+		
+		
+
+
+
+
+
+
+De la même manière, on définit pour $1\leqslant i\leqslant N$ et $1\leqslant t\leqslant T$ la suite~:
+
+\indexfr{$\beta_t\pa{.}$}
+\indexfr{backward}
+
+        \begin{eqnarray}
+        \beta_{t}\pa{i}  = \beta_{M,t}\pa{i}  = \pr{   O_{t+1} ,...,O_{T} \sac q_{t}=i,M} \label{hmm_eq_beta_1}
+        \end{eqnarray}
+
+Par un calcul analogue à (\ref{mmc_alpha_forward_1}) et (\ref{mmc_alpha_forward_2}), on obtient pour tout $i \in \ensemble{1}{N}$~:
+
+        \begin{eqnarray}
+        \beta_{T}\pa{i}  &=& \pr{   \emptyset \sac q_{T}=i,M } = 1 \label{hmm_eq_beta_2}\\
+        \beta_{t}\pa{i}  &=& \summy{j=1}{N} b_{j} \pa{O_{t+1}}\,a_{ij}\,\beta_{t+1}\pa{j} \label{hmm_eq_beta_3}
+        \end{eqnarray}
+
+Finalement, la probabilité de la séquence est également obtenue grâce à la suite $\beta_t\pa{.}$ par un calcul appelé \emph{backward}~:
+
+\indexfr{backward}
+
+        \begin{eqnarray}
+        \pr { O_{1},...,O_{T} \sac  M }  = \summy{i=1}{N} \pi_{i}\,\beta_{1} \pa{i} \,b_{i}\pa{O_{1}} \label{hmm_eq_beta_4}
+        \end{eqnarray}
+
+\indexfr{backward}
+\indexfr{forward}
+\indexfr{$\beta_t\pa{.}$}
+\indexfr{$\alpha_t\pa{.}$}
+\indexfr{coût}
+
+Les fonctions $\alpha_t\pa{.}$ et $\beta_t\pa{.}$ permettent de calculer la probabilité d'une séquence avec un coût en $O\pa{TN^2}$ opérations. Ces calculs sont semblables à des algorithmes de programmation dynamique et parfois appelés algorithmes \emph{forward} ($\alpha_t\pa{.}$) et \emph{backward} ($\beta_t\pa{.}$) (\citeindex{Rabiner1986}). De ces formules, on tire l'algorithme suivant permettant de calculer la probabilité d'une séquence d'observations.
+
+
+			\begin{xalgorithm}{backward} \label{hmm_algo_backward}
+			Les notations utilisées sont celles des formules (\ref{hmm_eq_beta_1}), (\ref{hmm_eq_beta_2}), (\ref{hmm_eq_beta_3}),
+			(\ref{hmm_eq_beta_4}).
+			
+			\begin{xalgostep}{initialisation}
+			        \begin{xfor}{i}{1}{N}
+			        $\beta_T\pa{i} \longleftarrow 1$
+			        \end{xfor}
+			\end{xalgostep}
+			
+			\begin{xalgostep}{récurrence}
+			        \begin{xfor}{t}{T-1}{1}
+			                \begin{xfor}{i}{1}{N}
+			                        $\beta_{t}\pa{j} \longleftarrow 0$ \\
+			                        \begin{xfor}{j}{1}{N}
+			                                $\beta_{t}\pa{i} \longleftarrow \beta_{t}\pa{i} + a_{ij}
+			                                 \, b_{j}\pa{O_{t+1}} \, \beta_{t+1} \pa{j}$
+			                        \end{xfor} \\
+			                \end{xfor}
+			        \end{xfor}
+			\end{xalgostep}
+			
+			\begin{xalgostep}{terminaison}
+			        $p \longleftarrow 0$ \\
+			        \begin{xfor}{i}{1}{N}
+			                $p \longleftarrow p + \beta_{1}\pa{i} \, b_i\pa{O_1} \, \pi_i$
+			        \end{xfor}
+			\end{xalgostep}
+			
+			La probabilité de la séquence $\vecteur{O_1}{O_T}$ est $p$ obtenue à la dernière étape.
+			
+			\end{xalgorithm}
+			
+			
+
+
+
+
+
+
+
+
+
+
+\subsection{Autres résultats intéressants}
+
+
+Trois autres résultats intéressants utilisés lors de l'apprentissage (paragraphe~\ref{par_apprentissage_hmm})
+peuvent être obtenus de manière similaire~:
+
+\label{hmm_probabilite_etat_transition_posteriori}%
+
+        \begin{eqnarray}
+        \pr{ O_1,...,O_T,q_t=i \sac  M }  &=& \alpha_t\pa {i}  \beta_t\pa{i} \label{hmm_proba_state}\\
+        \forall t\in \ensemble{1}{T}, \; \pr{  O_{1},...,O_{T} \sac M }  &=& \summy{i=1}{N} \alpha_{t}\pa{i} \beta_{t} \pa{i}\\
+        \pr{O_{1},...,O_{T},q_{t}=i,q_{t+1}=j \sac M} &=& \alpha_{t}\pa{i} \, a_{ij} \, b_{j}\pa{O_{t+1}}\beta_{t+1}\pa{j}
+         \label{hmm_proba_transition}
+        \end{eqnarray}
+
+
+
+
+
+
+
+
+
+\subsection{Retour à l'exemple}
+\indexfrr{exemple}{pièce de monnaie}
+
+Rappel des probabilités de transitions et d'émission~:%
+
+        $$
+        \begin{array}[c]{ccccc}%
+        \pr{q_{1}=1}  =0,5 &  & \pr{q_{t}=1 \sac q_{t-1}=1}  =0,5 &  & \pa{q_{t}=1 \sac  q_{t-1}=2}  =0,7\\
+        \pr{q_{1}=2}  =0,5 &  & \pr{q_{t}=2 \sac q_{t-1}=1}  =0,5 &  & \pr{q_{t}=2 \sac  q_{t-1}=2}  =0,3
+        \end{array}
+        $$
+        
+        $$
+        \begin{array}[c]{ccc}%
+        \pr{O_{t}=1 \sac q_{t}=1 }  =0,7 &  & \pr{O_{t}=1 \sac q_{t}=2 }  =0,5\\
+        \pr{O_{t}=2 \sac q_{t}=1 }  =0,3 &  & \pr{O_{t}=2 \sac q_{t}=2 }  =0,5
+        \end{array}
+        $$
+
+On cherche à calculer la probabilitée de la séquence 1111 :%
+
+        $$
+        \begin{array}[c]{c}%
+            \frame{$
+            \begin{array}[c]{ccccc}%
+            & \alpha_{1}\left(  .\right)  & \alpha_{2}\left(  .\right)  & \alpha_{3}\left(  .\right)  & \alpha_{4}\left(  .\right) \\
+            \text{état}\,1 & 0,15 & 0,094 & 0,04099 & 0,0174454\\
+            \text{état}\,2 & 0,25 & 0,085 & 0,03535 & 0,014986
+            \end{array}
+            $}
+            \\
+            \\
+            \begin{array}[c]{c}%
+            P\left(  1111\right)  =0,0174454+0,014986=0,0324314
+            \end{array}
+        \end{array}
+        $$
+
+Les lois limites des observations peuvent également être obtenus :
+
+        \begin{eqnarray*}
+        \pr{O=k|t} &=& \pr{O=k|q=1,t}\pr{q=1|t} + \pr{O=k|q=2,t}\pr{q=2|t} \\
+        \underset{t \rightarrow \infty}{\lim} \pr{O=k|t} &=& \underset{t \rightarrow \infty}{\lim} \crochet{\pr{O=k|q=1,t}\pr{q=1|t} +
+        \pr{O=k|q=2,t}\pr{q=2|t}}\\
+        \underset{t \rightarrow \infty}{\lim} \pr{O=k|t} &=& \pr{O=k|q=1,t}\underset{t \rightarrow \infty}{\lim}\pr{q=1|t} +
+        \pr{O=k|q=2,t}\underset{t \rightarrow \infty}{\lim}\pr{q=2|t}\\
+        \end{eqnarray*}
+
+Comme :
+
+        $$
+        \begin{array}[c]{c}%
+        \underset{t\rightarrow+\infty}{\lim}P\left(  q_{t}=1\right)  =\frac{7}{12}\\
+        \underset{t\rightarrow+\infty}{\lim}P\left(  q_{t}=2\right)  =\frac{5}{12}%
+        \end{array}
+        $$
+
+On en déduit que :
+
+        $$
+        \begin{array}[c]{c}%
+        \underset{t\rightarrow+\infty}{\lim}P\left(  O_{t}=1\right)  = 0,7 * \frac{7}{12} + 0,5 * \frac{5}{12} = \frac{37}{60}\\
+        \underset{t\rightarrow+\infty}{\lim}P\left(  O_{t}=2\right)  = 0,3 * \frac{7}{12} + 0,5 * \frac{5}{12} = \frac{23}{60}
+        \end{array}
+        $$
+
+
+
+
+
+
+
+\subsection{Introduction d'un état d'entrée et d'un état de sortie}
+
+\label{hmm_intro_entree_sortie}
+
+En reconnaissance de l'écriture, les séquences d'observations ne dépassent pas quelques graphèmes par lettres~: toutes les séquences d'observations sont finies, or cette information supplémentaire n'est pas prise en compte dans les chaînes de Markov cachées présentées jusqu'à présent. L'introduction d'un état d'entrée et d'un état de sortie va y remédier afin de signifier la fin de la séquence (voir \citeindex{Chen1994}). La figure~\ref{figure_model_optimaux_M-fig} montre les deux modèles optimaux (avec ou sans état de sortie) pour la lettre "M". Le dessin de cette lettre fait intervenir trois graphèmes identiques. Le premier modèle (1) sans état de sortie ne peut prendre en compte la "durée" de la lettre "M", des séquences de deux, trois, cent graphèmes auront toutes la même probabilité. Le second modèle (2) ne permet qu'une seule écriture de la lettre "M" en trois graphèmes. Tous les états de la chaîne de Markov sont des états \emph{émetteurs} (voir définition~\ref{definition_etat_emetteur}) car chaque observation est associé un état, les états d'entrées et de sortie sont \emph{non émetteurs} (voir définition~\ref{definition_etat_non_emetteur}).
+
+		\begin{figure}[t]
+    $$\frame{$\begin{array}[c|c]{c}\includegraphics[height=9cm, width=15cm] 
+    {\filext{../dessin2/chaine_markov_etat_sortie}}\end{array}$}$$
+    \caption{Modèles optimaux pour la lettre "M" avec et sans état de sortie}
+    \label{figure_model_optimaux_M-fig}
+		\end{figure}
+
+\indexfrr{état}{émetteur}
+\indexfrr{état}{non émetteur}
+\indexfrr{état}{muet}
+\indexfrr{état}{entrée}
+\indexfrr{état}{sortie}
+
+
+
+		\begin{xdefinition}{état émetteur}
+		\label{definition_etat_emetteur}%
+		\indexfrr{état}{émetteur}%
+		Un état d'une chaîne de Markov cachée est dit \emph{émetteur} si le passage par cet état implique 
+		l'émission d'une observation. Par définition, pour une séquence d'observations $O$ de longueur $T$, 
+		toutes les séquences d'états cachés permises pour cette séquence $O$ contiennent exactement $T$ états émetteurs.
+		\end{xdefinition}
+
+
+		\begin{xdefinition}{état non émetteur}
+		\label{definition_etat_non_emetteur}%
+		\indexfrr{état}{non émetteur}
+		\indexsee{état}{muet}
+		Un état d'une chaîne de Markov cachée est dit \emph{non émetteur} (ou \emph{muet}) 
+		si le passage par cet état n'implique 
+		aucune émission d'observation. Par définition, pour toute séquence d'observations, 
+		une séquence d'états cachés peut 
+		contenir une infinité d'états non émetteurs.
+		\end{xdefinition}
+
+
+
+		\begin{xdefinition}{chaîne de Markov cachée, entrée et sortie (ES)}
+		\label{markov_chaine_cachee_definition_es}%
+		Soit $M$ une chaîne de Markov cachée (ES),\newline%
+		Soit $Q = \intervalle{1}{N}$ l'ensemble des états,\newline%
+		Soit $S=\underset{T=1} {\overset{+\infty}{\cup}} Q^T$ l'espace des séquences d'états,\newline%
+		Soit $\mathcal{O} = \intervalle{1}{D}$ l'ensemble des observations,\newline%
+		Soit $\mathbf{O}=\underset{T=1} {\overset{+\infty}{\cup}} \mathcal{O}^T$ l'espace des séquences d'observations,\newline%
+		On note $s = \pa{q_1,\dots,q_{T_s}} \in S$ une séquence de longueur $T_s$,\newline%
+		Soit $O = \pa{O_1,\dots,O_{T_O}} \in \mathbf{O}$ une séquence de longueur $T_O$,\newline%
+		Alors une chaîne de Markov cachée est un modèle probabiliste vérifiant les quatre conditions suivantes~:
+		        \begin{enumerate}
+		        \indexfrr{probabilité}{transition}
+            \indexfrr{probabilité}{émission}
+            \indexfrr{probabilité}{entrée}
+            \indexfrr{probabilité}{sortie}
+		        \item L'observation à l'instant $t$ ne dépend que de l'état à l'instant $t$~:
+		            $$
+		            \forall s \in S \text{ telle que } T_s = T_O, \; \forall t \in \intervalle{1}{T_O}, \;
+		            \pr{O_t|\overline{q_t},\overline{O_{t-1}},M} = \pr{O_t|q_t,M}
+		            $$
+		            On appelle $\pr{O_t|q_t,M}$ la \emph{probabilité d'émission} de l'observation $O_t$ 
+		            sachant l'état $q_t$ à l'instant $t$.
+		            
+		        \item Les probabilités d'émissions ne dépendent pas du temps :
+		            $$
+		            \forall s \in S \text{ telle que } T_s = T_O, \; 
+		            \forall \pa{t,t'} \in \intervalle{2}{T_s}, \; \pr{O_t|q_t,M} = \pr{O_{t'}|q_{t'},M}
+		            $$
+		            
+		        \item L'état à l'instant $t$ ou la sortie ne dépend que de l'état à l'instant $t-1$~:
+		            \begin{eqnarray*}
+		            \forall s \in S \text{ telle que } T_s = T_O, \; \forall t \in \intervalle{2}{T_s}, \; &&
+		                        \pr{q_t| \overline{q_{t-1}},\overline{O_{t-1}},M} = \pr{q_t|q_{t-1},M} \\
+		            \forall s \in S \text{ telle que } T_s = T_O, \forall t \in \intervalle{2}{T_s}, \; &&
+		                        \pr{ sortie | \overline{q_{t-1}},\overline{O_{t-1}},M} = \pr{sortie |q_{t-1},M}
+		            \end{eqnarray*}
+		            
+		            On appelle $\pr{q_t|q_{t-1},M}$ la probabilité de transition de l'état $q_{t-1}$ à l'état $q_t$ à l'instant $t$ et
+		            $\pr{sortie|q_{t-1},M} = \pr{s|q_{t-1},M}$ la \emph{probabilité de sortie} à l'instant $t-1$.
+		            
+		        \item Les probabilités de transition et de sortie ne dépendent pas du temps~:
+		            \begin{eqnarray*}
+		            \forall s \in S \text{ telle que } T_s = T_O, \; \forall \pa{t,t'} \in \intervalle{2}{T_s}, && 
+		            					\pr{q_t|q_{t-1},M} = \pr{q_{t'}|q_{t'-1},M} \\
+		            \forall s \in S \text{ telle que } T_s = T_O, \; \forall \pa{t,t'} \in \intervalle{2}{T_s}, && 
+		            					\pr{sortie|q_{t-1},M} = \pr{sortie|q_{t'-1},M}
+		            \end{eqnarray*}
+		            
+		        \end{enumerate}
+		
+		\end{xdefinition}
+
+
+
+La chaîne de Markov cachée (ES) $M$ à $N$ états est définie par les paramètres $A_M$, $B_M$, $\Pi_M$, $\Theta_M$~:
+
+        \begin{eqnarray}
+        A_M    &=& \pa {  a_{M,ij} } _ {\substack{ 1\leqslant i\leqslant N\\1\leqslant j\leqslant N}} =
+                   \pa{ \pr {  q_{t}=j \sac  q_{t-1} =i,M } } _{\substack{1\leqslant i\leqslant N\\
+                   															1\leqslant j\leqslant N}} \label{hmm_contrainte_es_1}\\
+        B_M    &=& \pa{   b_{M,ij} } _ {\substack{1\leqslant i\leqslant N\\1\leqslant j\leqslant D}}=
+                   \pa { \pr{ O_{t}=j \sac  q_{t}=i,M } }     _ {\substack{1\leqslant i\leqslant N
+                   															\\1\leqslant j\leqslant D}} \label{hmm_contrainte_es_2}\\
+        \Pi_M  &=& \pa { \pi_{M,i} } _ { 1 \infegal i \infegal N } = \pa { \pr {  q_1 = i \sac M} } _ 
+        																{ 1 \infegal i \infegal N } \label{hmm_contrainte_es_3} \\
+        \Theta_M  &=& \pa { \theta_{M,i} } _ { 1 \infegal i \infegal N } = \pa { \pr {  s \sac q_{t}, M} } _ 
+        																		{ 1 \infegal i \infegal N } \label{hmm_contrainte_es_4}
+        \end{eqnarray}
+
+
+La définition d'une chaîne de Markov cachée (ES) implique les contraintes suivantes sur les paramètres $A_M$, $B_M$, $\Pi_M$, $\Theta_M$
+résumées par la propriété suivante~:
+
+
+		\begin{xproperty}{contrainte}
+		\label{propriete_mmc_contrainte_es}%
+		La défintion~\ref{markov_chaine_cachee_definition_es} et les notations définies en (\ref{hmm_contrainte_es_1}),
+		(\ref{hmm_contrainte_es_2}), (\ref{hmm_contrainte_es_3}) et (\ref{hmm_contrainte_es_4}) impliquent que~:
+		
+		        \begin{eqnarray}
+		        \forall i\in \ensemble{1}{N}, \; && \summy{j=1}{N} \; a_{M,ij} + \theta_{M,i} =1 \\
+		        \forall i\in \ensemble{1}{N}, \; &&\summy{j=1}{N} \; b_{M,ij}=1 \\
+		                                         &&\summy{i=1}{N} \; \Pi_{M,i} = 1
+		        \end{eqnarray}
+		\end{xproperty}
+		
+		
+
+En utilisant les hypothèses de la définition~\ref{markov_chaine_cachee_definition}, on cherche à exprimer la probabilité d'une séquence
+d'observations à l'aide des paramètres $A=A_M$, $B=B_M$, $\Pi=\pi_M$, $\Theta=\Theta_M$ du modèle $M$~:
+
+        \begin{eqnarray}
+        \pr{O|M} &=&   \summyone{\begin{subarray}{c}s \in S \\ T_s = T_O \end{subarray}}
+                        \pr{O,s|M} \nonumber\\
+        \pr{O|M} &=&   \summyone{\begin{subarray}{c}s \in S \\ T_s = T_O \end{subarray}}
+                        \crochet{ \pi_{s_1} \theta_{s_T} \prody{t=2}{T_O}a_{s_{t-1},s_t}
+                        	 \prody{t=1}{T_O} b_{q_t}\pa{O_t} } \label{mmc_expression_proba_seq_es}
+        \end{eqnarray}
+
+
+
+
+Le calcul factorisé de cette probabilité est aussi modifié, les suites $\alpha_t\pa{.}$ et $\beta_t\pa{.}$ deviennent~:
+
+\indexfr{factoriser}
+\indexfr{$\alpha_t\pa{.}$}
+\indexfr{$\beta_t\pa{.}$}
+\indexfr{forward}
+\indexfr{backward}
+
+
+
+\para{Calcul de la suite }$\alpha_{t}\left(  .\right)  $
+
+\label{hmm_calcul_alpha}
+\indexfr{$\alpha_t\pa{.}$}%
+\label{hmm_calcul_alpha}%
+
+Pour $1\leqslant i\leqslant N$ et $1\leqslant t\leqslant T$,
+
+        \begin{eqnarray}
+        \alpha _{t} \pa{i}  = \pr{ q_{t}=i,O_{1},...,O_{t} \sac  M} \label{hmm_eq_alpha_es_1}
+        \end{eqnarray}
+
+L'initialisation ne change pas :
+
+        \begin{eqnarray}
+        \alpha_{1}\pa{i}  = \pr{   q_{1}=i,O_{1} \sac  M } = \pr { O_{1} \sac q_{1}=i,M} \pr { q_{1}=i \sac M}  = \pi_{i}b_{i}\pa{O_{1}}
+        \label{hmm_eq_alpha_es_2}
+        \end{eqnarray}
+
+Par récurrence :
+
+        \begin{eqnarray}
+        \alpha_{t+1} \pa{j}  = b_{j,O_{t+1}} \summy{i=1}{N} a_{ij}\alpha_{t}\pa{i} \label{hmm_eq_alpha_es_3}
+        \end{eqnarray}
+
+Seule change la probabilité de la séquence~:
+
+        \begin{eqnarray}
+        \pr{  O_{1},...,O_{T} \sac  M}  = \summy{i=1}{N} \; \alpha_{T} \pa{i} \,\theta_{i} \label{hmm_eq_alpha_es_4}
+        \end{eqnarray}
+
+
+L'algorithme~\ref{hmm_algo_forward} devient le suivant~:
+
+		\begin{xalgorithm}{forward} \label{hmm_algo_forward_es}
+		Les notations utilisées sont celles des formules (\ref{hmm_eq_alpha_es_1}), (\ref{hmm_eq_alpha_es_2}),
+		(\ref{hmm_eq_alpha_es_3}), (\ref{hmm_eq_alpha_es_4}).
+		
+		\begin{xalgostep}{initialisation}
+		        \begin{xfor}{i}{1}{N}
+		        $\alpha_1\pa{i} \longleftarrow \pi_{i}b_{i,O_{1}}$
+		        \end{xfor}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{récurrence}
+		        \begin{xfor}{t}{2}{T}
+		                \begin{xfor}{j}{1}{N}
+		                        $\alpha_{t}\pa{j} \longleftarrow 0$ \\
+		                        \begin{xfor}{i}{1}{N}
+		                                $\alpha_{t}\pa{j} \longleftarrow \alpha_{t}\pa{j} + a_{ij} \, \alpha_{t-1} \pa{i}$
+		                        \end{xfor} \\
+		                        $\alpha_{t}\pa{j} \longleftarrow \alpha_{t}\pa{j} \; b_{j}\pa{O_{t+1}}$
+		                \end{xfor}
+		        \end{xfor}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{terminaison}
+		        $p \longleftarrow 0$ \\
+		        \begin{xfor}{i}{1}{N}
+		                $p \longleftarrow p + \alpha_{T}\pa{i} \; \theta_i$
+		        \end{xfor}
+		\end{xalgostep}
+		
+		La probabilité de la séquence $\vecteur{O_1}{O_T}$ est $p$ obtenue à la dernière étape.
+		
+		\end{xalgorithm}
+		
+		
+		
+
+
+
+
+
+
+
+\para{Calcul de la suite }$\beta_{t}\left(  .\right)  $
+\label{hmm_calcul_beta}%
+
+\indexfr{$\beta_t\pa{.}$}%
+
+Pour $1\leqslant i\leqslant N$ et $1\leqslant t\leqslant T$,
+
+        \begin{eqnarray}
+        \beta _{t}\pa{i}  = \pr{ O_{t+1},...,O_{T} \sac  q_{t}=i,M} \label{hmm_eq_beta_es_1}
+        \end{eqnarray}
+
+L'initialisation change :
+
+        \begin{eqnarray}
+        \begin{array}{l}
+        \beta_{T}\pa{i}  = \pr{  \emptyset \sac  q_{T}=i,M}  = \theta_{i} \\
+        \qquad(=\text{probabilité que la séquence soit finie sachant que }q_{T}=i)
+        \end{array} \label{hmm_eq_beta_es_2}
+        \end{eqnarray}
+
+Par récurrence :
+
+        \begin{eqnarray}
+        \beta_{t} \pa{i}  = \summy{j=1}{N} \, b_{j}\pa{O_{t+1}} \, a_{ij} \, \beta_{t+1}\pa{j} \label{hmm_eq_beta_es_3}
+        \end{eqnarray}
+
+Finalement :
+
+        \begin{eqnarray}
+        \pr{  O_{1},...,O_{T} \sac  M }  = \summy{i=1}{N} \pi_{i}\,\beta_{1}\pa{i}\,b_{i,O_{1}} \label{hmm_eq_beta_es_4}
+        \end{eqnarray}
+
+L'algorithme~\ref{hmm_algo_backward} devient le suivant~:
+
+
+		\begin{xalgorithm}{backward} \label{hmm_algo_backward_es}
+		Les notations utilisées sont celles des formules (\ref{hmm_eq_beta_es_1}), (\ref{hmm_eq_beta_es_2}), (\ref{hmm_eq_beta_es_3}),
+		(\ref{hmm_eq_beta_es_4}).
+		
+		\begin{xalgostep}{initialisation}
+		        \begin{xfor}{i}{1}{N}
+		        $\beta_T\pa{i} \longleftarrow \theta_i$
+		        \end{xfor}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{récurrence}
+		        \begin{xfor}{t}{T-1}{1}
+		                \begin{xfor}{i}{1}{N}
+		                        $\beta_{t}\pa{j} \longleftarrow 0$ \\
+		                        \begin{xfor}{j}{1}{N}
+		                                $\beta_{t}\pa{i} \longleftarrow \beta_{t}\pa{i} + a_{ij} \, b_{j}\pa{O_{t+1}} \, \beta_{t+1} \pa{j}$
+		                        \end{xfor} \\
+		                \end{xfor}
+		        \end{xfor}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{terminaison}
+		        $p \longleftarrow 0$ \\
+		        \begin{xfor}{i}{1}{N}
+		                $p \longleftarrow p + \beta_{1}\pa{i} \, b_i\pa{O_1} \, \pi_i $
+		        \end{xfor}
+		\end{xalgostep}
+		
+		La probabilité de la séquence $\vecteur{O_1}{O_T}$ est $p$ obtenue à la dernière étape.
+		
+		\end{xalgorithm}
+		
+
+		
+Par la suite, toutes les chaînes de Markov seront supposées posséder un état d'entrée et un état de sortie.
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Représentation d'une chaîne de Markov sous forme de graphe}
+
+\indexfr{graphe}%
+\indexfrr{transition}{nulles}%
+\indexfrr{connexion}{transition}
+\label{hmm_representation_graphe}%
+
+Les paragraphes précédents ont déjà montré qu'il était possible de modéliser une chaîne de Markov sous forme de graphe où les noeuds sont les états et les transitions les arcs. Une probabilité non nulle de passer d'un état $i$ à un autre état $j$ peut être envisagée comme un lien unidirectionnel entre ces deux états dont le poids est la probabilité de transition de l'état $i$ vers l'état $j$. L'ensemble des probabilités non nulles d'un modèle définit un ensemble de liens entre les états qui peut être décrit par un graphe. Un modèle entièrement connecté de $N$ états contient $N^{2}+2N$ connexions. Une structure de graphe permet de diminuer ce nombre de connexions en ne tenant compte que des connexions non nulles (les modèles utilisés pour la reconnaissance de l'écriture contiennent en général une grande part de connexions nulles.), voir figures~\ref{figure_rn_graphe_trans_un-fig}, \ref{figure_rn_graphe_trans_deux-fig}.
+
+
+                \begin{figure}[ht]
+                    $$
+                    \begin{tabular}[c]{|ccc|} \hline
+                        \begin{tabular}{c} \; \\
+                        \begin{tabular}{|c|c|c|} \hline
+                        A & 0   & 1   \\ \hline
+                        0 & 0,7 & 0,3 \\ \hline
+                        1 & 0,5 & 0,5 \\ \hline
+                        \end{tabular} \\ \;
+                        \end{tabular}
+                    & $\longleftrightarrow$ &
+                    %
+                    \filefig{../hmm/fig_grmat}
+                    %
+                        \\ \hline
+                    \small Matrice de transition & $\longleftrightarrow$ & Graphe de transition \\ \hline
+                    \end{tabular}
+                    $$
+                    \caption{Equivalence entre matrice de transition et graphe de transition pour une chaîne de Markov.}
+                    \label{figure_rn_graphe_trans_un-fig}
+                \end{figure}
+
+
+                \begin{figure}[ht]
+                    $$
+                    \begin{tabular}[c]{|ccc|} \hline
+                        \begin{tabular}{c} \; \\
+                        \begin{tabular}{|c|c|c|c|c|} \hline
+                        A & E   & 0   & 1   & S \\ \hline
+                        E &     & 0,5 & 0,5 &   \\ \hline
+                        0 &     & 0,6 & 0,3 & 0,1  \\ \hline
+                        1 &     & 0,4 & 0,4 & 0,2  \\ \hline
+                        S &     &     &     &      \\ \hline
+                        \end{tabular} \\ \;
+                        \end{tabular}
+                    & $\longleftrightarrow$ &
+                    %
+                    \filefig{../hmm/fig_grmat2}
+                    %
+                        \\ \hline
+                    \small Matrice de transition & $\longleftrightarrow$ & Graphe de transition \\ \hline
+                    \end{tabular}
+                    $$
+                    \caption{Equivalence entre matrice de transition et graphe de transition 
+                    					pour une chaîne de Markov ES.}
+                    \indexfrr{graphe}{transition}
+                    \indexfrr{matrice}{transition}
+                    \label{figure_rn_graphe_trans_deux-fig}
+                \end{figure}
+
+
+
+
+La reconnaissance de l'écriture utilise peu de modèles ergodiques (ou entièrement connectés) car le sens de la lecture interdit de revenir à un état déjà visité. Par conséquent, les matrices de connexions sont triangulaires supérieures avec des zéros sur la diagonale. En définitive, il existe peu de connexions non nulles par rapport à toutes celles qui sont possibles. Le tableau~\ref{table_connexion_nulle-tab} (page~\pageref{table_connexion_nulle-tab}) montre que, en général, seules 10\% des connexions possibles sont non nulles~: la description sous forme de graphe de ces chaînes de Markov cachée est plus avantagueuse qu'une description matricielle. Ce résultat est bien sûr propre à la reconnaissance de l'écriture manuscrite.
+
+		\begin{table}[t]
+    $$\fbox{$\small
+    \begin{array}{ccccc}
+    \textbf{lettre} & \begin{array}{c} \textbf{nombre} \\ \textbf{d'états} \end{array}
+                    & \begin{array}{c} \textbf{connexions} \\ \textbf{possibles} \end{array}
+                    & \begin{array}{c} \textbf{connexions} \\ \textbf{non nulles} \end{array}
+                    &  \textbf{rapport}\\
+    A  & 42 & 1848  &  150 &8,1\%\\
+    B  & 36 & 1368  &  112 &8,2\%\\
+    C  & 27 & 783   &  76  &9,7\%\\
+    D  & 30 & 960   &  97  &10,1\%\\
+    E  & 23 & 575   &  73  &12,7\%\\
+    F  & 34 & 1224  &  96  &7,8\%\\
+    G  & 38 & 1520  &  126 &8,3\%\\
+    H  & 36 & 1368  &  97  &7,1\%\\
+    I  & 24 & 624   &  70  &11,2\%\\
+    J  & 10 & 120   &  21  &17,5\%\\
+    K  & 32 & 1088  &  80  &7,4\%\\
+    L  & 30 & 960   &  36  &3,8\%\\
+    M  & 42 & 1848  &  126 &6,8\%\\
+    N  & 36 & 1368  &  103 &7,5\%\\
+    O  & 27 & 783   &  71  &9,1\%\\
+    P  & 35 & 1295  &  100 &7,7\%\\
+    Q  & 34 & 1224  &  85  &6,9\%\\
+    R  & 33 & 1155  &  108 &9,4\%\\
+    S  & 29 & 899   &  92  &10,2\%\\
+    T  & 31 & 1023  &  80  &7,8\%\\
+    U  & 27 & 783   &  62  &7,9\%\\
+    V  & 29 & 899   &  77  &8,6\%\\
+    W  & 36 & 1368  &  78  &5,7\%\\
+    X  & 36 & 1368  &  97  &7,1\%\\
+    Y  & 40 & 1680  &  114 &6,8\%\\
+    Z  & 38 & 1520  &  90  &5,9\%
+    \end{array}
+    $}$$
+    \caption{Connexions non nulles dans les modèles de reconnaissance de lettres.}
+    \label{table_connexion_nulle-tab}
+		\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------------------------
+\section{Algorithme du meilleur chemin : algorithme de Viterbi}
+%----------------------------------------------------------------------------------------------------------------------
+\label{paragraphe_viterbi_principe}
+
+
+\indexfr{Viterbi}%
+\indexfrr{meilleur(e)}{chemin}%
+\indexfrr{séquence}{état}
+\indexfrr{séquence}{observation}
+
+Nous avons vu que le calcul des suites $\alpha_{t}\pa{.}$ et $\beta _{t}\pa{.}$ permet de calculer la probabilité d'une séquence d'observations, qui est une somme de probabilités sur l'ensemble des séquences d'états possibles. L'algorithme de Viterbi permet de trouver parmi toutes ces séquences d'états, celle dont la probabilité d'émettre la séquence d'observations est la plus forte. On appelle aussi cette séquence d'états ou meilleur chemin la séquence d'états la plus probable ayant émis la séquence d'observations. Soit une séquence d'observations $O=\left(  O_{1},...,O_{T}\right)$, et le modèle $M$, cet algorithme permet de trouver la séquence $s^{\ast }\left(  O_{1},...,O_{T},M\right)$~:%
+
+        \begin{eqnarray}
+        s^* \pa{ O_{1},...,O_{T},M }    =\underset{s}{\arg\max} \, \pr{  s \sac O_{1},...,O_{T},M }
+                                        =\underset{s}{\arg\max} \, \pr{ s,O_{1},...,O_{T} \sac M }
+                                        \label{hmm_viterbi_eq_1}
+        \end{eqnarray}
+
+On note $\pa{ \delta_{t} \pa{i}} _{\substack{1\leqslant t\leqslant T\\1\leqslant i\leqslant N}}$ la probabilité de la séquence d'états $\left(  q_{1},...,q_{t}\right)  $ la plus probable telle que $q_{t}=i$ ayant émis la séquence $\left( O_{1},...,O_{t}\right)$~:
+
+        \begin{eqnarray}
+        \delta_t\pa{i} = \underset{\vecteur{q_1}{q_{t-1}}}{\arg \max} \, \pr{ \vecteurno{O_1}{O_t}, \vecteurno{q_1}{q_{t-1}},q_t=i | M}
+        \label{hmm_viterbi_eq_2}
+        \end{eqnarray}
+
+alors $\delta_t\pa{i}$ vérifie :
+
+        \begin{eqnarray}
+        \begin{array}{rl}
+        \text{pour }t=1 \text{ et } 1\leqslant i\leqslant N, & \delta_{1}\left(  i\right) =\pi_{1}b_{i}\left(  O_{1}\right)\\
+        \text{pour }2\leqslant t\leqslant T \text{ et } 1\leqslant j\leqslant N, &
+                    \delta _{t}\left(  j\right)  =\underset{1\leqslant i\leqslant N}{\max}\left\{ \delta_{t-1}\left(  i\right)  a_{ij}
+                    \; b_{i}\left(  O_{t}\right)  \right\}  \\
+        \end{array}
+        \label{hmm_viterbi_eq_3}
+        \end{eqnarray}
+
+On définit également la suite $\pa{ \lambda_{t}}_{1\leqslant t\leqslant T}$ par :
+
+        \begin{eqnarray}
+        \begin{array}{rl}
+        \text{pour }1\leqslant t\leqslant T-1, \; & \lambda _{t} =\underset{1\leqslant i\leqslant
+            N}{\arg\max} \left\{ \delta_{t}\left(  \lambda_{t+1}\right)  \right\} \\
+        \text{pour }t=T, \; & \lambda_{T} =\underset{1\leqslant i\leqslant N}{\arg\max}\left\{ \delta_{T}\left( i\right)\theta_i \right\}
+        \end{array}
+        \label{hmm_viterbi_eq_4}
+        \end{eqnarray}
+
+Par conséquent, le meilleur chemin est la séquence d'états $\left(  \lambda_{1},...,\lambda_{T}\right)  $ et a pour probabilité
+$\delta_T\pa{\lambda_T}\theta_{\lambda_T}$.
+
+On en déduit l'algorithme suivant~:
+
+		\begin{xalgorithm}{Viterbi}\label{hmm_algo_viterbi_etat}
+		\indexfr{Viterbi}
+		Les notations utilisées sont celles des équations (\ref{hmm_viterbi_eq_1}), (\ref{hmm_viterbi_eq_2}),
+		(\ref{hmm_viterbi_eq_3}), (\ref{hmm_viterbi_eq_4}).
+		
+		\begin{xalgostep}{initialisation}\label{hmm_viterbi_step_a}
+		        \begin{xfor}{i}{1}{N}
+		        $
+		        \begin{array}{lll}
+		        \delta_1\pa{i}  &\longleftarrow& \pi_i \, b_i\pa{O_1} \\
+		        \lambda_1\pa{i} &\longleftarrow& -1
+		        \end{array}
+		        $
+		        \end{xfor}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{récurrence}\label{hmm_viterbi_step_b}
+		        \begin{xfor}{t}{2}{T}
+		                \begin{xfor}{j}{1}{N}
+		                        $
+		                        \begin{array}{lll}
+		                        \delta_t\pa{j}  &\longleftarrow& \delta_{t-1}\pa{1} \; a_{1j} \, b_j\pa{O_t} \\
+		                        \lambda_t\pa{j} &\longleftarrow& 1
+		                        \end{array}
+		                        $ \\
+		                        \begin{xfor}{i}{2}{N}
+		                                $x \longleftarrow \delta_{t-1}\pa{i} \, a_{ij} \, b_j\pa{O_t}$ \\
+		                                \begin{xif}{$x < \delta_t\pa{j}$}
+		                                        $
+		                                        \begin{array}{lll}
+		                                        \delta_t\pa{j}  &\longleftarrow& x \\
+		                                        \lambda_t\pa{j} &\longleftarrow& i
+		                                        \end{array}
+		                                        $
+		                                \end{xif}
+		                        \end{xfor}
+		                \end{xfor}
+		        \end{xfor}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{terminaison}\label{hmm_viterbi_step_c}
+		        $
+		        \begin{array}{lll}
+		        \delta_{T+1}        &\longleftarrow& \delta_{T}\pa{1} \, \theta_{1} \\
+		        \lambda_{T+1}       &\longleftarrow& 1
+		        \end{array}
+		        $ \\
+		        \begin{xfor}{i}{2}{N}
+		                $x \longleftarrow \delta_{T}\pa{i} \, \theta_i$ \\
+		                \begin{xif}{$x < \delta_{T+1}$}
+		                        $
+		                        \begin{array}{lll}
+		                        \delta_{T+1}  &\longleftarrow& x \\
+		                        \lambda_{T+1} &\longleftarrow& i
+		                        \end{array}
+		                        $
+		                \end{xif}
+		        \end{xfor}
+		\end{xalgostep}
+		
+		\begin{xalgostep}{séquence d'états la plus probable}\label{hmm_viterbi_step_d}
+		        $q^*_T  \longleftarrow \lambda_{T+1}$ \\
+		        \begin{xfor}{t}{T-1}{1}
+		                $q^*_t  \longleftarrow \lambda_{t+1}\pa{ q^*_{t+1}}$
+		        \end{xfor}
+		\end{xalgostep}
+		
+		La séquence d'états la plus probable est $\vecteur{q^*_1}{q^*_T}$ et a pour probabilité $\delta_{T+1}$.
+		
+		\end{xalgorithm}
+		
+
+
+
+
+\begin{xremark}{forward et backward}
+L'obtention du meilleur chemin nécessite deux passages, le premier pour le calcul des matrices $\delta_t\pa{i}$ et $\lambda_t\pa{i}$ \indexfr{forward} \indexfr{backward} lors des étapes~\ref{hmm_viterbi_step_a}, \ref{hmm_viterbi_step_b}, \ref{hmm_viterbi_step_c}. Ce calcul est semblable à celui de l'algorithme forward~\ref{hmm_algo_forward_es}. Le second passage de l'étape~\ref{hmm_viterbi_step_d} dans l'autre sens (indice décroissant) permet de retrouver le meilleur chemin. Cette étape n'est pas nécessaire pour obtenir seulement la probabilité de la meilleur séquence d'états.
+\end{xremark}
+
+
+
+
+\begin{xremark}{meilleure séquence, plus court chemin}
+Cet algorithme est à rapprocher d'un algorithme de recherche du plus court chemin dans un graphe. En effet, la probabilité d'un chemin s'exprime comme un produit de probabilités :%
+
+\indexfrr{meilleur(e)}{séquence}
+\indexfrr{meilleur(e)}{chemin}
+\indexfr{graphe}
+
+
+        $$
+        \pr {  q_{1},...,q_{T},O_{1},...,O_{T} \sac  M}  =\pi_{q_{1}}b_{q_{1}}
+        		\left(  O_{1}\right)  \underset{t=2}{\overset{T}{\prod}
+        }a_{q_{t-1},q_{t}}b_{q_{t}}\left(  O_{t}\right)
+        $$
+
+En passant au logarithme, on obtient une somme de termes qui peuvent être considérés comme des distances entre deux états. L'algorithme de Viterbi n'est autre qu'un algorithme de recherche du meilleur chemin de type Dijkstra (\citeindex{Dijkstra1971}).
+\end{xremark}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------------------------
+\section{Apprentissage d'une chaîne de Markov cachée}
+%----------------------------------------------------------------------------------------------------------------------
+\label{hmm_apprentissage_chapter}
+
+\subsection{Principe}
+
+\indexfr{apprentissage}%
+\label{par_apprentissage_hmm}
+
+Dans l'exemple paragraphe~\ref{chaine_markov_cachee_exemple}, la chaîne de Markov cachée adaptée au problème se déduisait de l'énoncé : les probabilités de transitions et d'émissions étaient fixées par la définition des deux pièces truquée et non truquée. Les questions que l'on cherche à résoudre dans ces problèmes sont en général des espérances de gain, des durées, des informations sur le comportement du jeu sur une longue période, sur de longues séquences d'observations. A partir du modèle, on cherche donc à déduire des propriétés sur les observations. 
+
+L'apprentissage d'une chaîne de Markov cachée est exactement la tâche inverse. On dispose de séquences d'observations dont il faut déduire le modèle qui les a générées. Une fois la topologie du modèle choisie, l'apprentissage revient donc à estimer les probabilités d'entrées, de transitions, d'émissions qui modélisent au mieux la base d'échantillons.
+
+
+
+		\begin{figure}[ht]
+  	$$\frame{$\begin{array}[c]{c}\includegraphics[height=1cm, width=3cm] 
+  	{\filext{../dessin2/imagemg}}\end{array}$}$$
+    \caption{Un mot segmenté en graphèmes.}
+    \label{figure_exemple_grapheme}
+		\end{figure}
+
+La figure~\ref{figure_exemple_grapheme} est un exemple de mot à reconnaître, la reconnaissance avec dictionnaire (deux mots pour cet exemple) consiste à reconnaître que c'est le mot "CHARLES" plutôt que "JEROME" qui est écrit sur cette image.
+
+\indexfrr{reconnaissance}{dictionnaire}
+
+Pour répondre à cette question, deux modèles de Markov cachés sont construits, l'un pour le mot "CHARLES", $M_{CHARLES}$, et l'autre pour le mot "JEROME", $M_{JEROME}$. Le prétraitement de l'image aboutit à la séquence d'observations $O = \vecteur{O_1}{O_T}$. On dit que~:
+
+        $$
+        \text{si } \pr{O|M_{CHARLES}} > \pr{O|M_{JEROME}} \text{ alors l'image contient le mot "CHARLES"}
+        $$
+
+Il reste à construire les modèles $M_{CHARLES}$ et $M_{JEROME}$ et pour cela on dispose d'une base d'images annotées\indexfr{annotation} qui contiennent des images des mots "CHARLES" et "JEROME". Le mot $M_{CHARLES}$ va apprendre toutes les séquences issues des images annotées "CHARLES", il en sera de même pour le mot "JEROME". Si on note $\vecteur{O_1^C}{O_K^C}$ les séquences d'observations annotées "CHARLES" et $\vecteur{O_1^J}{O_L^J}$ celles annotées "JEROME", l'apprentissage consiste à maximiser la vraisemblance~:
+
+\indexfr{vraisemblance}
+
+        \begin{eqnarray}
+        L\pa{\theta_C, \theta_J, \vecteurno{O_1^C}{O_K^C},\vecteurno{O_1^J}{O_K^J}} &=&
+                                \prody{n=1}{K} \pr{O_n^C | M_{CHARLES}} \; \prody{n=1}{L} \pr{O_n^L | M_{JEROME}}
+                                		 \nonumber \\
+                &=& \prody{n=1}{K} \pr{O_n^C | \theta_C} \; \prody{n=1}{L} \pr{O_n^L | \theta_J} \nonumber \\
+                &=& L\pa{\theta_C, \vecteurno{O_1^C}{O_K^C}} L\pa{\theta_J, \vecteurno{O_1^J}{O_K^J}}
+                			 \label{hmm_eq_vraisemblance} \\
+                && \text{où } \theta_C \text{ et } \theta_J \text{ sont les paramètres} \nonumber  \\
+                && \text{des modèles } M_{CHARLES} \text{ et } M_{JEROME} \nonumber
+        \end{eqnarray}
+
+L'apprentissage soulève deux questions :
+
+\begin{enumerate}
+\item Le choix des modèles pour les mots "CHARLES" et "JEROME", ce point sera étudié dans la partie~\ref{selection_architecture_chaine_MMC}. \item L'apprentissage de ces modèles, ce point est détaillé dans les paragraphes qui suivent (algorithme, convergence, démonstration).
+\end{enumerate}
+
+
+L'équation (\ref{hmm_eq_vraisemblance}) suggère que l'apprentissage des modèles "CHARLES" et "JEROME" peut s'effectuer de manière indépendante à condition que les vraisemblances associées à ces deux modèles dépendent de paramètres différents. Dans le cas contraire, la résolution du problème se déduit du cas où on suppose qu'un seul modèle $M$ doit apprendre les séquences d'observations~:
+
+        $$
+        \left( O^{k}=\left( O_{1}^{k},..., O_{T_{k}}^{k} \right) \right) _{1\leqslant k\leqslant K}
+        $$
+
+		\begin{xproblem}{apprentissage d'une chaîne de Markov cachée}
+		\label{hmm_problem_apprentissage_hmm}
+		\indexfr{apprentissage}
+		Les notations utilisées sont celles de la définition~\ref{markov_chaine_cachee_definition}, l'équation
+		 (\ref{hmm_eq_vraisemblance})
+		permet de définir l'apprentissage d'une chaîne de Markov cachée comme étant la solution du problème 
+		d'optimisation suivant~:
+		
+		\indexfr{vraisemblance}
+		\indexfr{optimisation}%
+		
+		        $$
+		        \begin{array}{l}
+		        \left(  A_{M},\pi_{M},\theta_{M},B_{M}\right)  =\underset{A,\pi,\theta,B } {\arg\max} \; 
+		        				\underset{\text{vraisemblance du modèle}} {\underbrace
+		        {\prody{k=1}{K}  \pr{  O_{1}^{k},...,O_{T_{k}}^{k}\left| M\right. }}} \\ \\
+		        \begin{array}{rcl}
+		        \text{ avec les contraintes } & &
+		                \left\{
+		                \begin{subarray}{l}
+		                \summyone{i}\pi_i=1 \\
+		                \forall j, \; \summyone{i}a_{ij} = 1 \\
+		                \forall j, \; \summyone{o}b_j\pa{o} = 1 \\
+		                \forall i, \; \pi_i \supegal 0 \\
+		                \forall i, \; \theta_i \supegal 0 \\
+		                \forall \pa{i,j} \; a_{ij} \supegal 0 \\
+		                \forall \pa{i,o} \; b_j\pa{o} \supegal 0
+		                \end{subarray}
+		                \right.
+		        \end{array}
+		        \end{array}
+		        $$
+		\end{xproblem}
+		
+		
+
+\indexfr{Baum-Welch}
+
+L'algorithme d'optimisation ou apprentissage des modèles de Markov cachés est basé sur les formules de Baum-Welch qui prennent en compte les contraintes du problème (voir \citeindex{Baum1972} ou \citeindex{Rabiner1986}), utilisées comme un cas particulier de l'algorithme EM
+(Expectation-Maximisation, voir \citeindex{Dempster1977}). Trois étapes composent cet algorithme itératif~:
+
+
+
+
+		\begin{xalgorithm} {apprentissage d'une chaîne de Markov cachée}
+		\indexfr{réestimation}
+		\indexfr{optimisation}\label{hmm_algorithme_baumwelch}
+		Cet algorithme permet d'obtenir une solution au problème~\ref{hmm_problem_apprentissage_hmm} 
+		correspondant à un minimum local
+		\indexfr{minimum local} de la vraisemblance\indexfr{vraisemblance} (\ref{hmm_eq_vraisemblance}) comme le
+		montre le théorème~\ref{theoreme_hmm_baum_welch_1})~:
+		
+		\begin{xalgostep}{initialisation}
+		        Les paramètres $A_0, \Pi_0, \Theta_0, B_0$ reçoivent des valeurs aléatoires.\\
+		        $t \longleftarrow 0$ \\
+		        calcul de la vraisemblance du modèle $L_0$
+		\end{xalgostep}
+		
+		\begin{xalgostep}{récurrence} \label{hmm_algo_apprentissage_step_recurrence}
+		        \begin{xwhile}{$L_{t} > L_{t-1}$}
+		                $t \longleftarrow t+1$ \\
+		                Les paramètres $\overline{A_{t}}, \overline{\Pi_{t}}, \overline{\Theta_{t}},
+		                 \overline{B_{t}}$ sont estimés en fonction des formules de Baum-Welch
+		                (voir table~\ref{figure_formule_baumwelch-fig}).\\
+		                $
+		                \begin{array}{lll}
+		                A_t             & \longleftarrow & \overline{A_{t}} \\
+		                \Pi_t           & \longleftarrow & \overline{\Pi_{t}} \\
+		                \Theta_t        & \longleftarrow & \overline{\Theta_{t}} \\
+		                B_t             & \longleftarrow & \overline{B_{t}}
+		                \end{array}
+		                $ \\
+		                calcul de la vraisemblance du modèle $L_t$
+		        \end{xwhile}
+		\end{xalgostep}
+		
+		\end{xalgorithm}
+		
+
+                \begin{table}[t]
+                    \[
+                    \fbox{$%
+                    \begin{array}[c]{rclcrcl}%
+                    \overline{a_{i,j}}& = & \dfrac{\underset{k=1}{\overset{K}{{\displaystyle\sum}}}
+                    \dfrac{1}{P_{k}}\left[  \underset{t=1}{\overset{T_{k}-1}
+                    {{\displaystyle\sum}}}\alpha_{t}^{k}\left(  i\right)  \,a_{i,j}\,b_{j}\pa{O^k_{t+1}}
+                    \,\beta_{t+1}^{k}\left(  j\right)  \right]  }
+                    {\underset{k=1}{\overset{K}{{\displaystyle\sum}}}\dfrac{1}{P_{k}}\left[ 
+                     \underset{t=1}{\overset{T_{k}}{{\displaystyle\sum}
+                    }}\alpha_{t}^{k}\left(  i\right)  \beta_{t}^{k}\left(  i\right)  \right]  }
+                    &
+                    &
+                    \overline{b_{i}\pa{o}}
+                    &
+                    =
+                    &
+                    \dfrac{\underset{k=1}{\overset{K}{{\displaystyle\sum}}}\dfrac{1}{P_{k}}\left[ 
+                     \underset{t=1}{\overset{T_{k}}{{\displaystyle\sum}
+                    }}\alpha_{t}^{k}\left(  i\right)  \beta_{t}^{k}\left(  i\right) 
+                    		\,\indicatrice{O_{t}^{k}=o}\right]  }
+                    {\underset {k=1}{\overset{K}{
+                    {\displaystyle\sum}}}\dfrac{1}{P_{k}}\left[  \underset{t=1}{\overset{T_{k}}{{\displaystyle\sum}
+                    }}\alpha_{t}^{k}\left(  i\right)  \beta_{t}^{k}\left(  i\right)  \right]  }
+                    \\%
+                    & & & & & & \\%
+                    \overline{\theta_{i}} & = & \dfrac{\underset{k=1}{\overset{K}{ {\displaystyle\sum}
+                     }}\dfrac{1}{P_{k}}\alpha_{T_{k}}^{k}
+                    \left(  i\right)  \,\overset{=\theta_{i} }{\overbrace{\beta_{T_{k}}^{k}\left(  i\right) 
+                     }}}{\underset{k=1}{\overset{K}{
+                    {\displaystyle\sum}}}\dfrac{1}{P_{k}}\left[  \underset{t=1}{\overset{T_{k}}{ {\displaystyle\sum}
+                     }}\alpha_{t}^{k}\left(  i\right)
+                    \beta_{t}^{k}\left(  i\right)  \right]  }
+                    &
+                    &
+                    \overline{\pi_{i}}
+                    &
+                    =
+                    &
+                    \dfrac{1}{K}\underset{k=1}{\overset{K}{ {\displaystyle\sum}
+                     }}\dfrac{1}{P_{k}}\overset{=\pi_{i}}{\overbrace{\alpha_{1}^{k}
+                    \left( i\right)  }}\beta_{1}^{k}\left(  i\right)
+                    \\ & & & & & &  \\
+                    & & \text{avec } P_k = P\vecteur{O_1^k}{O_{T_k}^k} & & \text{et} & &
+                                \alpha_t^k\pa{i} = \pr{\vecteurno{O_1^k}{O_t^k}, q_t = i | M} \\
+                    & & & & & & \beta_t^k\pa{i} =  \pr{\vecteurno{O_{t+1}^k}{O_{T_k}^k} | q_t = i, M}
+                    \end{array}
+                    $}
+                    \]
+                    \caption{Formules de réestimation de Baum-Welch.}
+                    \label{figure_formule_baumwelch-fig}
+                    \indexfr{Baum-Welch}
+                    \indexfr{réestimation}
+		                \label{formule_baumwelch}
+                \end{table}
+
+
+
+			\begin{xtheorem} {convergence de l'algorithme~\ref{hmm_algorithme_baumwelch}}
+			\label{theoreme_hmm_baum_welch_1}%
+			\indexfr{Baum-Welch}
+			Soit $M =\pa{A,B,\Theta,\Pi}$ une chaîne de Markov et $\left( O^{k}=\left( O_{1}^{k},..., O_{T_{k}}^{k} \right) 
+			\right) _{1\leqslant k\leqslant K}$
+			une suite de séquences d'observations, l'algorithme~\ref{hmm_algorithme_baumwelch} 
+			implique la convergence croissante de la vraisemblance~:
+			\indexfrr{séquence}{observation}
+			        \begin{eqnarray}
+			        \underset{k=1}{\overset{K}{\prod}} \pr{ O_{1}^{k},...,O_{T_{k}}^{k}\left|  M\right.  }
+			         \label{hmm_eq_vraisemblance_theo}
+			        \end{eqnarray}
+			\end{xtheorem}
+
+
+\begin{xremark}{convergence vers un minimum local}
+Le théorème~\ref{theoreme_hmm_baum_welch_1} démontre de la suite $\pa{L_t}_{t \infegal 0}$ construite par l'algorithme~\ref{hmm_algorithme_baumwelch}, la valeur atteinte correspond à un minimum local et non global de la vraisemblance (\ref{hmm_eq_vraisemblance_theo}).
+\indexfr{minimum local}
+\end{xremark}
+
+
+
+
+Les paragraphes qui suivent (\ref{hmm_apprentissage_chapter}...) donnent différentes démonstrations de ce théorème. 
+
+
+
+
+
+
+
+
+\subsection{Démonstration intuitive}
+\label{baumwelch_sens}
+
+
+\begin{xdemo}{théorème}{\ref{theoreme_hmm_baum_welch_1}}
+
+L'étape~\ref{hmm_algo_apprentissage_step_recurrence} de l'algorithme d'apprentissage~\ref{hmm_algorithme_baumwelch} consiste à réestimer les paramètres $A,\pi,\theta,B$ de manière à accroître la vraisemblance $L\pa{A,\pi,\theta,B}$ :%
+
+		\begin{eqnarray*}
+		L\pa{A,\pi,\theta,B} &=& \underset{k=1}{\overset{K}{\prod}}
+				\pr{   O_{1}^{k},...,O_{T_{k}}^{k}\left| M\right.  }\\
+		L\pa{A,\pi,\theta,B} &=& \underset{k=1}{\overset{K}{\prod}} \crochet 
+					{\summyone{s \in S} _pr{   O_{1}^{k},...,O_{T_{k}}^{k},s\left| M\right.  } }\\
+		&& \text{où } s \text { est l'ensemble des séquences d'états} \\
+		&& \text{de la chaîne de Markov cachée } M
+		\end{eqnarray*}
+
+Le principe des formules de Baum-Welch consiste à augmenter la valeur des paramètres très probables et à diminuer celle de ceux peu probables. On note~:
+
+\begin{itemize}
+\item $l_{i,t}$ le nombre de chemins (ou séquences) partant de l'état $i$ à l'instant $t$ (voir figure ~\ref{figure_baumwelch_idee-fig})
+\item $l_{i,j,t}$ le nombre de chemins partant de l'état $i$ à l'instant $t$ et passant à l'état $j$ à l'instant $t+1$
+        (voir figure~\ref{figure_baumwelch_idee-fig})
+\end{itemize}
+
+                        \begin{figure}[t]
+                            $$\frame{$\begin{array}[c|c]{c}\includegraphics[height=6cm, width=15cm] 
+                            {\filext{../dessin2/hmm_baumwelch_idee}}\end{array}$}$$
+                            \caption{	Idée des formules de Baum-Welch~: donner une nouvelle valeur
+                            					à un coefficient tenant compte du nombre de chemins
+                            					qui l'empruntent.}
+                            \label{figure_baumwelch_idee-fig}
+                        \end{figure}
+
+La nouvelle valeur $\overline{a_{ij}}$ sera : $\overline{a_{ij}} = \dfrac{\summyone{t}l_{i,j,t}}{\summyone{t}l_{i,t}}$. Il reste à exprimer cette expression en termes de probabilités~:
+
+        $$
+        \begin{array}{l}
+        \overline{a_{i,j}} = \dfrac{\overset{K}{\underset{k=1}{\sum}}\dfrac{1}{P_{k} }
+        				\overset{T_{k}-1}{\underset{t=1}{\sum}}
+        						\pr{  q_{t+1}=j,q_{t} =i,O^{k}}  }
+        						{\overset{K}{\underset{k=1}{\sum}}\dfrac{1}{P_{k}} 
+                    	\overset{T_{k}}{\underset{t=1}{\sum}}
+                    \pr{   q_{t}=i,O^{k}}  }%
+        =\dfrac{\underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k}}\left[ \underset{t=1}
+        				{\overset{T_{k}-1}{\sum}}\alpha_{t}^{k}\left(  i\right)
+        \,a_{i,j}\,b_{j,O_{t+1}\,}\beta_{t+1}^{k}\left(  j\right)  \right] }
+        			{\underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k}}\left[  \underset
+        {t=1}{\overset{T_{k}}{\sum}}\alpha_{t}^{k}\left(  i\right)  \beta_{t}^{k}\left(  i\right)  \right]  } \\
+        \text{d'après l'expression (\ref{hmm_proba_transition}), page~\pageref{hmm_proba_transition}}
+        \end{array}
+        $$
+
+La réestimation des probabilités d'émission suit le même raisonnement, pour alléger les notations, on note $O=O^{k}$ et $C_{o}^{t}=\indicatrice{O_{t}=o}$ :
+
+        \begin{eqnarray*}
+        \pr{  O_{t}=o,q_{t},O}  &=& \pr{  C_{o}^{t},q_{t},O} = \pr{  O_{t+1},..,O_{T}\left| 
+        				 C_{o}^{t},q_{t},O_{1},...,O_{t}\right.
+                }  \pr{  C_{o}^{t},q_{t},O_{1},...,O_{t}}\\
+        \pr{C_o^t,q_t,O} &=& \pr{\vecteurno{O_1}{O_T} |q_t} \pr{C_o^t | q_t, \vecteurno{O_1}{O_t}}
+        				 \pr{q_t, \vecteurno{O_1}{O_t}} \\
+        \pr{C_o^t,q_t,O} &=& \beta_t \pa{q_t} \indicatrice{O_t=o} \alpha_t \pa{q_t}
+        \end{eqnarray*}
+
+D'où :%
+
+        $$
+        \overline{b_i\pa{o}}=\dfrac{\underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k} }
+        				\left[  P\left(  O_{t}=o,q_{t}=i,O\right)  \right]  }{\underset{k=1}
+        {\overset{K}{\sum}}\dfrac{1}{P_{k}}\left[  \underset{t=1}
+        				{\overset{T_{k}}{\sum}}P\left(  q_{t}=i,O\right)  \right]}=\dfrac{\underset{k=1}{\overset
+        {K}{\sum}}\dfrac{1}{P_{k}}\underset{t=1}{\overset{T_{k}}{\sum}}
+        				\alpha_{t} ^{k}\left(  i\right)  \beta_{t}^{k}\left(  i\right)  \,\indicatrice{
+        O_{t}^{k}=o}}{\underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k} }
+        		\underset{t=1}{\overset{T_{k}}{\sum}}\alpha_{t}^{k}\left(  i\right)
+        \beta_{t}^{k}\left(  i\right)  }
+        $$
+
+On peut calculer de même~:
+
+        $$
+        \overline{\theta_{i}}=\dfrac{\underset {k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k}} \pr{  q_{T_{k}}=i,O}
+        }{\underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k}}\underset{t=1}
+         {\overset{T_{k}}{\sum}} \pr{  q_{t}=i,O^{k}}  } \text{ et }\overline{\pi
+        _{i}}=\underset{k=1}{\overset{K}{ {\displaystyle\sum} }}\dfrac{1}{P_{k}} \pr{  q_{1}=i,O^{k}}
+        $$
+
+\end{xdemo}
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Lemmes et théorèmes intermédiaires}
+
+Ces lemmes servent des démonstrations plus rigoureuses exposées au paragraphe suivant (\ref{hmm_demo_gradient_par}).
+
+
+			\begin{xlemma}{Levinson1983 (1)}\label{hmm_lemme_baumwelch_1_un} (voir \citeindex{Levinson1983})
+			
+			Soit $\left(  u_{1},...,u_{N}\right)  \in\left( \R_{+}^{\ast}\right)  ^{N}$ et
+			 $\left(  v_{1},...,v_{N}\right) \in\left( \R_{+}\right) ^{N}$ tels que $\overset{N}{\underset {i=1}{\sum}}v_{i}>0$ alors :
+			
+			        $$
+			        \ln\left[  \frac{\overset{N}{\underset{i=1}{\sum}}v_{i}}{\overset{N}{\underset{i=1}{\sum}}
+			        			u_{i}}\right]  \geqslant\dfrac{\overset
+			        {N}{\underset{i=1}{\sum}}u_{i}\ln v_{i}-u_{i}\ln u_{i}}{\overset{N} {\underset{i=1}{\sum}}u_{i}}
+			        $$
+			        
+			\end{xlemma}
+
+\begin{xdemo}{lemme}{\ref{hmm_lemme_baumwelch_1_un}}
+On utilise la concavité de la fonction logarithme :
+        $$
+        \ln\left[  \frac{\overset{N}{\underset{i=1}{\sum}}v_{i}}{\overset
+        {N}{\underset{i=1}{\sum}}u_{i}}\right]  =\ln\left[  \overset{\text{moyenne
+        pondérée}}{\overbrace{\overset{N}{\underset{i=1}{\sum}}\frac{u_{i}%
+        }{\overset{N}{\underset{k=1}{\sum}}u_{k}}\dfrac{v_{i}}{u_{i}}}}\right]
+        \geqslant\overset{N}{\underset{i=1}{\sum}}\frac{u_{i}}{\overset{N}%
+        {\underset{k=1}{\sum}}u_{k}}\ln\dfrac{v_{i}}{u_{i}}=\frac{1}{\overset
+         {N}{\underset{k=1}{\sum}}u_{k}}\overset{N}{\underset{i=1}{\sum}}u_{i}\ln
+        v_{i}-u_{i}\ln u_{i}
+        $$
+\end{xdemo}
+
+
+
+
+
+
+
+
+
+		\begin{xlemma}{Levinson1983 (2)}\label{hmm_lemme_baumwelch_2_deux} (voir \citeindex{Levinson1983})
+		Soit $\left(  u_{1},...,u_{N}\right)  \in\left( \R_{+}^{\ast}\right)  ^{N}$, 
+		la solution unique de la maximisation sous contrainte suivante~:
+		        $$
+		        \left|
+		        \begin{array}{l}%
+		        \underset{\left(  x_{1},...,x_{N}\right)  }{\max}\,\overset{N}{\underset
+		        {i=1}{\sum}}u_{i}\ln x_{i}\\
+		        \overset{N}{\underset{i=1}{\sum}}x_{i}=1
+		        \end{array}
+		        \right.
+		        $$
+		est obtenue pour $\forall i\in\left\{  1,...,N\right\}  ,\; x_{i}=\dfrac{u_{i}}{\overset{N}{\underset{i=1}{\sum}}u_{i}}$
+		\end{xlemma}
+
+
+
+\begin{xdemo}{lemme}{\ref{hmm_lemme_baumwelch_2_deux}}
+On utilise les multiplicateurs de Lagrange, on pose : $F\left(  x_{1} ,...,x_{N},\lambda\right)
+=\overset{N}{\underset{i=1}{\sum}}u_{i}\ln x_{i}+\lambda\left(  \overset{N}{\underset{i=1}{\sum}}x_{i}-1\right)  $
+
+Lorsque $F$ est maximum, ses dérivées partielles vérifient :
+        \begin{eqnarray*}
+        \dfrac{\partial F\left(  x_{1},...,x_{N},\lambda\right)  }{\partial x_{k} }=\dfrac{u_{k}}{x_{k}}+\lambda=0 &\Longleftrightarrow&
+            x_{k}=-\dfrac{u_{k} }{\lambda}\\
+        &\Longrightarrow& -\overset{N}{\underset{k=1}{\sum}}\dfrac{u_{k}
+         }{\lambda}=-1\Longrightarrow\lambda=-\overset{N}{\underset{k=1}{\sum}}
+        u_{k}\Longrightarrow x_{k}=\dfrac{u_{k}}{\overset{N}{\underset{k=1}{\sum} }u_{k}}
+        \end{eqnarray*}
+\end{xdemo}
+
+
+
+
+
+
+
+
+
+
+			\begin{xlemma}{multiplicateurs de Lagrange}\label{hmm_lemme_baumwelch_3_trois}
+			La solution du problème de maximisation suivant :
+			        $$
+			        \left|\begin{array}{l}%
+			        \underset{\left(  x_{1},...,x_{N}\right)  }{\max}f\left(  x_{1},...,x_{N}%
+			        \right) \\
+			        \overset{N}{\underset{i=1}{\sum}}x_{i}=1
+			        \end{array}
+			        \right.
+			        $$
+			        $$
+			        \text{ vérifie }\quad \underset{k=1}{\overset{N}{%
+			        {\displaystyle\sum} }}x_{k}\dfrac{\partial f}{\partial x_{k}}
+			        \left(  x_{1},...,x_{N}\right) \neq0\Longrightarrow\forall i \in \intervalle{1}{N},
+			        \; x_{i}=\dfrac{x_{i}\dfrac{\partial f}{\partial x_{i}}\left(  x_{1},...,x_{N}\right)  }{\underset{k=1}{\overset
+			        {N}{%
+			        {\displaystyle\sum} }}x_{k}\dfrac{\partial f}{\partial x_{k}}\left(  x_{1},...,x_{N}\right)  }
+			        $$
+			\end{xlemma}
+
+
+
+\begin{xdemo}{lemme}{\ref{hmm_lemme_baumwelch_3_trois}}
+On utilise les multiplicateurs de Lagrange, on pose : $F\left(  x_{1},...,x_{N},\lambda\right)  =f\left(  x_{1},...,x_{N}\right)  +\lambda\left( \overset{N}{\underset{i=1}{\sum}}x_{i}-1\right)  $ Lorsque $F$ est
+maximum, ses dérivées partielles vérifient (on pose $X=\vecteur{x_1}{x_N}$~:
+
+        \begin{eqnarray*}
+        \dfrac{\partial F\left( X,\lambda\right)  }{\partial x_{k} }=\dfrac{\partial f}{\partial x_{k}}\left(X\right)
+            +\lambda=0 &\Longrightarrow&  x_{k}\dfrac{\partial f}{\partial x_{k}}\left(X\right)  +\lambda x_{k}=0 \\
+        &\Longrightarrow& \underset{k=1}{\overset{N}{{\displaystyle\sum} }}\left[  x_{k}\dfrac{\partial f}{\partial x_{k}}\left(X\right)
+            +\lambda x_{k}\right]  =0\\
+        &\Longrightarrow& \underset{k=1}{\overset{N}{{\displaystyle\sum}}}x_{k}
+        		\dfrac{\partial f}{\partial x_{k}}\left(X\right)  =-\lambda
+        \end{eqnarray*}
+
+En remplaçant $\lambda$ par $-\underset{k=1}{\overset{N}{ {\displaystyle\sum} }}x_{k}\dfrac{\partial f}{\partial x_{k}}\left(  ...\right)  $ dans chacune des équations aux dérivées partielles, on démontre le lemme ~\ref{hmm_lemme_baumwelch_3_trois}. Cette optimisation revient à chercher le maximum de la fonction $f$ sur l'hyperplan d'équation $\overset{N}{\underset{i=1}{\sum}}x_{i}=1$.
+\end{xdemo}
+
+
+C'est ce lemme qui est à la source du théorème~\ref{theorem_loglogconvexe} mais au préalable suivent une définition et un lemme.
+
+
+
+
+
+
+
+
+			\begin{xdefinition}{fonction log-log-convexe}
+			\label{definition_log_log_convexe}
+			\indexfr{log-log-convexe}%
+			Soit une fonction :
+			        $$
+			        \begin{array}{rccl}
+			        f : & \pa{\R^*_+}^n &\longrightarrow& \R+^* \\
+			        & \vecteur{x_1}{x_n} &\longrightarrow& f \vecteur{x_1}{x_n}
+			        \end{array}
+			        $$
+			$f$ est une fonction \emph{log-log-convexe} si et seulement si la fonction :
+			        $$
+			        \begin{array}{rccl}
+			        g : & \pa{\R}^n &\longrightarrow& \R+^* \\
+			        & \vecteur{u_1}{u_n} &\longrightarrow& g\vecteur{u_1}{u_n} = \ln \crochet{ f \vecteur{e^{u_1}}{e^{u_n}}}
+			        \end{array}
+			        $$
+			est une fonction convexe.
+			\end{xdefinition}
+
+
+
+
+
+
+
+			\begin{xlemma}{distance de Kullback-Leiber}
+			\label{lemme_loglogconvexe}%
+			\indexfrr{distance}{Kullback-Leiber}%
+			On pose $D = \accolade{x=\vecteur{x_1}{x_n} \in \R^n \left| \summy{i=1}{n} x_i = 1 \text{ et } 
+							\forall i \in \intervalle{1}{n}, x_i > 0 \right.} $.\newline%
+			Soit $\pa{x,y} \in D^2$ alors :
+			        $$
+			        \summy{i=1}{n} y_i \ln \crochet{\dfrac{x_i}{y_i}} \infegal 0
+			        $$
+			\end{xlemma}
+
+
+\begin{xdemo}{lemme}{\ref{lemme_loglogconvexe}}
+La fonction $x \longrightarrow \ln x$ est concave, donc :
+        \begin{eqnarray*}
+        \summy{i=1}{n} y_i \ln \crochet{\dfrac{x_i}{y_i}} &=&  \summy{i=1}{n} \;  \dfrac{y_i}{\summy{k=0}{n}y_k} \; 
+        			\ln \crochet{\dfrac{x_i}{y_i}} \text{ car } y \in D\\
+        &\infegal&  \ln \crochet { \summy{i=1}{n} \dfrac{y_i}{\summy{k=0}{n}y_k}  \dfrac{x_i}{y_i} } \\
+        &\infegal&  \ln \crochet {  \dfrac{\summy{i=1}{n}x_i}{\summy{i=0}{n}y_i}  }  = 
+        \ln \dfrac{1}{1} \text{ car } \pa{x,y} \in D^2 \\
+        &\infegal& 0
+        \end{eqnarray*}
+\end{xdemo}
+
+
+
+
+
+
+
+
+
+
+
+			\begin{xtheorem}{fonction log-log-convexe}
+			\label{theorem_loglogconvexe}%
+			\indexfr{log-log-convexe}%
+			On pose $D = \accolade{x=\vecteur{x_1}{x_n} \in \R^n \left| \summy{i=1}{n} x_i = 1 \text{ et } \forall i 
+			\in \intervalle{1}{n}, x_i > 0 \right.} $.\newline%
+			Soit $f : \pa{\R^*_+}^n \longrightarrow \R+^*$ une fonction log-log-convexe dérivable.\newline%
+			Soit $x \in D$, on définit $y \pa{x} = \vecteur{y_1\pa{x}}{y_n\pa{x}} \in D$ tel que :
+			        $$
+			        \forall i \in \intervalle{1}{n}, \; y_i \pa{x} = \frac{x_i \partialfrac{f}{x_i}\pa{x}}
+			        			{\summy{k=1}{n}x_k \partialfrac{f}{x_k}\pa{x}}
+			        $$
+			alors $f$ vérifie :
+			        $$
+			        \forall x \in D, \; f\pa{ y \pa{x}} \supegal f\pa{x}
+			        $$
+			\end{xtheorem}
+			
+			
+			
+			
+\begin{xdemo}{théorème}{\ref{theorem_loglogconvexe}}
+
+Soit $\pa{x,x'} \in D^2$, on définit $\pa{u,u'} \in \pa{\R^n}^2$ tel que :
+
+        $$
+        \forall i \in \intervalle{1}{n}, \; u_i = \ln x_i \text{ et } u'_i = \ln x'_i
+        $$
+        
+$u$ et $u'$ vérifient :
+
+        $$
+        \summy{i=1}{n} e^{u_i} = 1  \text{ et } \summy{i=1}{n} e^{u'_i} = 1
+        $$
+        
+On pose $h\pa{u} = \ln f\vecteur{e^{u_1}}{e^{u_n}}$, $f$ est log-log-convexe, donc :
+
+        \begin{eqnarray*}
+        h \pa{u'}  - h \pa{u} &\supegal& \summy{i=1}{n}  \partialfrac{h}{u_i}\pa{u} \pa{u'_i - u_i} \\
+        \ln f \pa{x'}  - \ln f \pa{x} &\supegal& \summy{i=1}{n}  \dfrac{e^{u_i}}{f\pa{x}} \partialfrac{f}{x_i} 
+        			\pa{x}\pa{\ln x'_i - \ln x_i} \\
+        \ln \crochet{\dfrac{f \pa{x'}}{f \pa{x}}} &\supegal& \summy{i=1}{n} \dfrac{x_i}{f\pa{x}} \partialfrac{f}{x_i} 
+        		\pa{x}\ln \crochet {
+            \dfrac{x'_i}{x_i}}
+        \end{eqnarray*}
+
+Si $x' = y\pa{x} = \pa{y_i \pa{x} = \frac{x_i \partialfrac{f}{x_i}\pa{x}}{\summy{k=1}{n}x_k \partialfrac{f}{x_k}\pa{x}}}_{1 \infegal i \infegal n}$, alors~:
+
+        $$
+        \begin{array}{rrcl}
+        & - \ln \crochet{\dfrac{f \pa{y\pa{x}}}{f \pa{x}}} &\infegal&
+                        \summy{i=1}{n} \dfrac{x_i}{f\pa{x}} \partialfrac{f}{x_i} \pa{x}\ln \crochet {\dfrac{x_i}{y_i\pa{x}}} \\
+        \Longrightarrow & - \ln \crochet{\dfrac{f \pa{y\pa{x}}}{f \pa{x}}} &\infegal&
+                        \crochet{\summy{i=1}{n}  \dfrac{ x_i\partialfrac{f}{x_i} \pa{x} } {f\pa{x}}}
+                        \underset{\infegal 0 \text{ d'après le lemme ~\ref{lemme_loglogconvexe}}}{\underbrace{\crochet{\summy{i=1}{n}
+                                          y_i\pa{x} \ln \crochet {\dfrac{x_i}{y_i\pa{x}}}}}} \\
+        \Longrightarrow & \ln \crochet{\dfrac{f \pa{y\pa{x}}}{f \pa{x}}} &\supegal& 0 \\ \\
+        \Longrightarrow &  f \pa{y\pa{x}} &\supegal& f \pa{x}
+        \end{array}
+        $$
+        
+\end{xdemo}
+
+
+
+
+
+
+
+
+		\begin{xcorollary}{polynôme à coefficients positifs (Baum1968)} \label{hmm_theorem_baumwelch_un} (voir \citeindex{Baum1968})
+		\indexfr{log-log-convexe}%
+		\indexfr{polynôme}%
+		
+		Soit $P : \R^N \dans \R$ un polynôme dont les coefficients sont tous positifs, 
+		soit $x = \vecteur{x_1}{x_N} \in \R^N$ tels que $\summy{i=1}{N}x_i = 1$ et $\forall i \in \intervalle{1}{N}, 
+				\; x_i \supegal 0$, 
+		soit $y = \vecteur{y_1}{y_N} \in \R^N$ défini par~:
+		        $$
+		        \forall i \in \intervalle{1}{N}, \; y_i = \frac{x_i \partialfrac{P}{x_i}\pa{x}}{\summy{k=1}{N}x_k \partialfrac{P}{x_k}\pa{x}}
+		        $$
+		alors~:
+		        $$
+		        P\pa{y} \supegal P\pa{x}
+		        $$
+		\end{xcorollary}
+
+
+
+\begin{xdemomine}{corollaire}{\ref{hmm_theorem_baumwelch_un}}
+
+Soit $D$ l'ensemble défini dans le théorème~\ref{theorem_loglogconvexe}, si $f$ est une fonction log-log-convexe défini sur $\overline{D}$, si $f$ est continue alors les égalités démontrées sur $D$ le sont aussi sur $\overline{D}$. Il ne reste plus qu'à démontrer qu'un polynôme à coefficients positifs est log-log-convexe.
+
+Soit $x=\vecteur{x_1}{x_n} \in D$, on note $e^u = \vecteur{e_{u_1}}{e_{u_n}}$, on peut écrire le polynôme $P$ sous la forme :
+        \begin{eqnarray*}
+        P\pa{x} &=& \summyone{ 0 \infegal \vecteurno{i_1}{i_n} \infegal \deg P} \; 
+        			a_{\vecteurno{i_1}{i_n}} \prody{k=1}{n} x_k^{i_k} \\
+        P\pa{e^u} &=& \summyone{ 0 \infegal \vecteurno{i_1}{i_n} \infegal \deg P} \; 
+        			a_{\vecteurno{i_1}{i_n}} \prody{k=1}{n} \pa{e^{u_k}}^{i_k} \\
+        P\pa{e^u} &=& \summyone{ 0 \infegal \vecteurno{i_1}{i_n} \infegal \deg P} \; 
+        			a_{\vecteurno{i_1}{i_n}} e^{ \summy{k=1}{n} i_k u_k} \\
+        \partialfrac{P\pa{e^u}}{u_l} &=& \summyone{ 0 \infegal \vecteurno{i_1}{i_n}
+        		 \infegal \deg P} \; a_{\vecteurno{i_1}{i_n}} \,  i_l \, e^{ \summy{k=1}{n} i_k
+            u_k}
+        \end{eqnarray*}
+        
+On pose $i = \vecteur{i_1}{i_n}$. On en déduit pour $m \in \intervalle{1}{n}$ que :
+
+        \begin{eqnarray*}
+        \dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m} &=& \dfrac{1}{P^2\pa{e_u}} \crochet {%
+            \begin{array}{cl}
+                & \pa{\summyone{i} \; a_i \,  i_l i_m \, e^{\scal{i,u}}} \pa{\summyone{i} \; a_i \,  e^{\scal{i,u}}} \\%
+            -   & \pa{\summyone{i} \; a_i \,  i_l \, e^{\scal{i,u}}}      \pa{\summyone{i} \; a_i \, 
+            		i_m \, e^{\scal{i,u}}}%
+            \end{array}}
+         \\
+        \dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m} &=& \dfrac{1}{P^2\pa{e_u}} \crochet {%
+            \summyone{i} \summyone{j} \; a_i \, a_j \, i_l \pa{i_m -j_m} \, e^{\scal{i,u}} \, e^{\scal{j,u}}}
+        \end{eqnarray*}
+
+Il faut montrer que la matrice $\pa{\dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m}}_{u_l u_m}$ est définie positive. On cherche donc à montrer que pour tout $y \in \R^n$, $\summyone{l,m} y_l y_m \dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m} \supegal 0$. On note $b_{\vecteurno{i_1}{i_n}} = a_{\vecteurno{i_1}{i_n}} e^{ \summy{k=1}{n} i_k u_k} \supegal 0 $.
+
+        \begin{eqnarray*}
+        \summyone{l,m} y_l y_m \dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m} & = &
+            \summyone{l,m} y_l y_m  \summyone{i} \summyone{j} \; a_i \, a_j \, i_l \pa{i_m -j_m} \,
+            				 e^{\scal{i,u}} \, e^{\scal{j,u}} \\ \\
+        & = & \summyone{i} \summyone{j} \; \summyone{l,m}  \; y_l y_m  \; b_i b_j i_l \pa{i_m -j_m} \\
+        & = & \summyone{i} \summyone{j} \; b_i b_j \pa{ \summyone{l,m}  \; y_l y_m   i_l \pa{i_m -j_m}} \\
+        & = & \summyone{i} \summyone{j} \; b_i b_j \pa{
+                                        \crochet { \summyone{l}  y_l i_l }   \crochet{ \summyone{m}  y_m  i_m }
+                                    -   \crochet { \summyone{l}  y_l i_l }   \crochet{ \summyone{m}  y_m  j_m } }
+        \end{eqnarray*}
+
+On pose $I_i = \summyone{l}  y_l i_l $, comme $\dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m} =\dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_m \partial u_l}$, on peut écrire que~:
+
+        \begin{eqnarray*}
+        \summyone{l,m} y_l y_m \dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m} & = &
+          \dfrac{1}{2} \summyone{l,m} y_l y_m \crochet{ \dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m} +
+                                         \dfrac{\partial \pa{\ln \pr{e^u}}}{\partial u_m \partial u_l} } \\
+        & = & \dfrac{1}{2} \summyone{i} \summyone{j} \; b_i b_j \pa{ I_i^2 - I_i I_j + I_j^2 -  I_j I_i } \\
+        & = & \dfrac{1}{2} \summyone{i} \summyone{j} \; b_i b_j \pa{ I_i - I_j}^2 \\
+        & \supegal & 0
+        \end{eqnarray*}
+
+Un polynôme à coefficients positifs est donc log-log-convexe.
+\end{xdemomine}
+
+
+
+
+
+
+
+
+
+\subsection{Démonstration basée sur le gradient}
+\label{hmm_demo_gradient_par}
+\indexfr{gradient}
+
+Cette démonstration est présentée dans \citeindex{Levinson1983}.
+
+
+\begin{xdemo}{théorème}{\ref{theoreme_hmm_baum_welch_1}}
+
+
+L'expression de la probabilité d'une séquence $O$ connaissant le modèle $M$ est :%
+
+        $$
+        \pr{  O\left|  M\right.  }  =\underset{\left(  q_{1},...,q_{T}%
+        \right)  }{\overset{}{{\displaystyle\sum} }}\left[  \pi_{q_{1}}b_{q_{1}}\left(  O_{1}\right)  \left(  \underset
+        {t=1}{\overset{T-1}{\prod}}a_{q_{t},q_{t+1}}b_{q_{t+1}}\left(  O_{t}\right) \right)  \theta_{q_{T}}\right]
+        $$
+
+Chaque coefficient intervient plusieurs fois dans l'expression de la probabilité, cependant il ne peut intervenir qu'une seule fois à chaque temps $u\in\left\{  1,...T\right\}  $. C'est pourquoi on décompose $P\left(  O\left|  M\right.  \right)  $ en~:
+
+        \begin{eqnarray}
+        \pr{   O\left|  M\right.  }   &=& \underset{u=1}{\overset{T-1}{\sum} }
+        		\left[  \underset{\left(  i,j\right)  }{\overset{}{
+            {\displaystyle\sum}}}a_{ij}b_{j}\left(  O_{t}\right)  \underset{=
+            			\pr{  q_{u}=i,\,q_{u+1} =j,O\left|  M\right.  }
+            }{\underbrace{\underset{\left(  q_{1},...,q_{T}\right)  }
+            {\overset{q_{u}=i,\,q_{u+1}=j}{ {\displaystyle\sum} }}\pi_{q_{1}}b_{q_{1}}\left(
+            O_{1}\right)  \theta_{q_{T}}\left(\underset{t=1,t\neq u}{\overset{T-1}{\prod}}a_{q_{t},q_{t+1}}b_{q_{t+1}
+            }\left(  O_{t}\right)  \right)  }}\right] \nonumber\\
+        \Longleftrightarrow \pr{  O\left|  M\right.  } &=& \underset{u=1}
+        			{\overset{T-1}{\sum}}\left[  \underset{\left(  i,j\right)
+            }{\overset{}{{\displaystyle\sum} }}a_{ij}b_{j}\left(  O_{t}\right)  \alpha_{u}
+            		\left(  i\right)  \beta _{u+1}\left(  j\right)  \right]
+            \label{hmm_gradient_equation_un}\\
+        \Longleftrightarrow \pr{  O\left|  M\right.  }  &=& \underset
+        		 {u=1}{\overset{T}{\sum}}\,\underset{i,o}{\overset{}{{\displaystyle\sum}
+            }}b_{i}\left(  o\right)  \underset{=\pr{  q_{u}=i,\,O_{u}=o,O\left| 
+            	M\right.  }  = \pr{  q_{u}=i,\,O\left|  M\right.  }
+            \,\indicatrice{O_{u}=o}}{\underbrace{\underset{\left(q_{1},...,q_{T}\right)  }
+            {\overset{q_{u}=i,\,O_{u}=o}{ {\displaystyle\sum}
+            }}\left[  \pi_{q_{1}}b_{q_{1}}\left(  O_{1}\right)  \left(  \underset
+            	 {t=1}{\overset{T-1}{\prod}}a_{q_{t},q_{t+1}}b_{q_{t+1}}\left(  O_{t}\right)
+            \right)  \theta_{q_{T}}\right] \label{hmm_gradient_equation_deux} }}
+        \end{eqnarray}
+
+
+On en déduit que :%
+
+        $$
+        \begin{array}
+        [c]{rrcl}%
+            (\ref{hmm_gradient_equation_un})\Longrightarrow & %
+            \dfrac{\partial \pr{  O\left|  M\right.  }  }{\partial a_{ij} }%
+            & = &%
+            \underset{u=1}{\overset{T-1}{\sum}}b_{j}\left(O_{t}\right) 
+            		 \alpha _{u}\left(  i\right)  \beta_{u+1}\left(  j\right)
+        \\
+            (\ref{hmm_gradient_equation_un})\Longrightarrow & %
+            \dfrac{\partial \pr{  O\left|  M\right.  }  }{\partial\pi_{i}}%
+            & = &%
+            \beta_{1}\left(  i\right)
+        \\
+            (\ref{hmm_gradient_equation_un})\Longrightarrow & %
+            \dfrac{\partial \pr{  O\left|  M\right.  }  }{\partial\theta_{i}}%
+            & = & %
+            \alpha_{T}\left(  i\right)  b_{i}\left(  O_{T}\right)
+        \\
+            (\ref{hmm_gradient_equation_deux})\Longrightarrow &%
+            \dfrac{\partial \pr{   O\left|  M\right.  }  }{\partial b_{i}\left( o\right) }%
+            & = &%
+            \underset{u=1}{\overset{T}{\sum}}\alpha_{u}\left( i\right)\beta_{u}
+            	\left(  i\right)  \,\mathbf{1}_{\left\{  O_{u}=o\right\}  }%
+        \end{array}
+        $$
+
+De plus, dans le cas de plusieurs séquences, si $x$ est un coefficient du modèle, on utilise le fait que :
+
+        $$
+        \dfrac{\partial L}{\partial x}=\dfrac{\partial\left(  \underset{k=1}{\overset{K}{\prod}} \pr{
+         O_{1}^{k},...,O_{T_{k}}^{k}\left|  M\right.
+        }  \right)  }{\partial x}=\underset{k=1}{\overset{K}{ {\displaystyle\sum} }}\dfrac{L}
+        { \pr{  O^{k}\left|  M\right.  }
+        }\dfrac{\partial \pr{ O^{k}\left|  M\right.  }  }{\partial x}
+        $$
+
+Comme la fonction $\pa{A,B,\theta,\pi} \longrightarrow \pr{O|M}$ est un polynôme à coefficients positifs, le théorème~\ref{hmm_theorem_baumwelch_un} nous assure de la croissance de $\pr{O|M}$ au cours des itérations de l'algorithme d'apprentissage. Comme cette suite est majorée par $1$, elle est convergente.
+
+\end{xdemo}
+
+
+
+
+\subsection{Démonstration antérieure à la découverte de l'algorithme EM}
+\label{hmm_demo_em_em}
+
+Cette démonstration est présentée dans \citeindex{Levinson1983}.
+
+
+\begin{xdemo}{théorème}{\ref{theoreme_hmm_baum_welch_1}}
+
+
+Soient deux modèles $M$ et $M^{\prime}$ possédant le même nombre d'états. On définit $P_{k}\left( M\right)  = \pr{   O^{k}\left|  M\right. } $ et $P_{k}\left( M^{\prime}\right)  = \pr{  O^{k}\left|  M^{\prime}\right.  }$. Pour cette séquence d'observations, il existe $N^{T_{k}}$ séquences d'états possibles. On note $s^{i}=\left(  s_{1}^{i},...,s_{T_{k}}%
+^{i}\right)  $ la séquence d'état d'indice $i$.
+
+        $$
+        P_{k}\left(  M\right)  =\underset{\left(  q_{1},...,q_{T_{k}}\right)}{\overset{}{{\displaystyle\sum}}}\left[
+         \pi_{q_{1}}b_{q_{1}}\left(
+        O_{1}^{k}\right)  \left(  \underset {t=1}{\overset{T_{k}-1}
+        		{\prod}}a_{q_{t},q_{t+1}}b_{q_{t+1}}\left(  O_{t} ^{k}\right)  \right)
+        \theta_{q_{T_{k}}}\right]  =\underset{i=1} {\overset{N^{T_{k}}}{ {\displaystyle\sum}}}u_{i}^{k}
+        $$
+
+De manière analogue :
+
+        $$
+        P_{k}\left(  M^{\prime}\right)  =\underset{\left(q_{1},...,q_{T}\right)  }
+        {\overset{}{{\displaystyle\sum} }}\left[
+        \pi_{q_{1}}^{\prime}b_{q_{1}}^{\prime}\left(  O_{1}^{k}\right) \left(
+         \underset{t=1}{\overset{T_{k}-1}{\prod}}a_{q_{t},q_{t+1}}^{\prime
+        }b_{q_{t+1}}^{\prime}\left(  O_{t}^{k}\right)  \right) 
+        		 \theta_{q_{T_{k}} }^{\prime}\right]  =\underset{i=1}{\overset{N^{T_{k}}}{
+        {\displaystyle\sum} }}v_{i}^{k}
+        $$
+
+En appliquant le lemme ~\ref{hmm_lemme_baumwelch_1_un}, on trouve :
+
+        $$
+        \ln\left(  \dfrac{\underset{k=1}{\overset{K}{\prod}}P_{k}\left(  M^{\prime }\right) 
+         }{\underset{k=1}{\overset{K}{\prod}}P_{k}\left(  M\right)
+        }\right)=\underset{k=1}{\overset{K}{\sum}}\ln\left(  \frac{\underset{i=1}
+        {\overset{N^{T_{k}}}{ {\displaystyle\sum}
+        }}v_{i}^{k}}{\underset{i=1}{\overset{N^{T_{k}}}{ {\displaystyle\sum} }}u_{i}^{k}}\right) 
+         \geqslant\underset{k=1}{\overset{K}{\sum}}\dfrac
+        {\overset{N^{T_{k}}}{\underset{i=1}{\sum}}u_{i}^{k}\ln v_{i}^{k}-u_{i}^{k}\ln
+        u_{i}^{k}}{\overset{N^{T_{k}}}{\underset{i=1}{\sum}}u_{i}^{k}}=\underset {k=1}
+        {\overset{K}{\sum}}\left[  \dfrac{Q_{k}\left(
+         M,M^{\prime}\right)
+        }{P_{k}\left(  M\right)  }-\frac{Q_{k}\left(  M,M\right)  }{P_{k}\left( M\right)  }\right]
+        $$
+
+On cherche à maximiser :
+
+        $$
+        \underset{\left(  v_{1},...,v_{N^{T}}\right) }{\max}\,\underset{k=1}{\overset{K}{\sum}}
+        \dfrac{Q_{k}\left(  M,M^{\prime
+        }\right)  }{P_{k}\left(  M\right)  }=\underset{\left(  v_{1},...,v_{N^{T}}\right) 
+         }{\max}\,\underset{k=1}{\overset{K}{\sum}}\left[  \dfrac{1}
+        {P_{k}\left(  M\right)  }\overset{N^{T_{k}}}{\underset{i=1}{\sum}}u_{i}^{k}\ln v_{i}^{k}\right]
+        $$
+
+Or :
+        $$
+        u_{i}^{k}\ln v_{i}^{k}=u_{i}^{k}\left[  \ln\pi_{q_{s_{1}^{i}}}^{\prime }+\ln b_{s_{1}^{i}}^{\prime}
+        \left(  O_{1}^{k}\right)  +\underset{t=1}
+        {\overset{T_{k}-1}{\sum}}\left(  \ln a_{s_{t}^{i},s_{t+1}^{i}}^{\prime}+
+        \ln b_{s_{t+1}^{i}}^{\prime}\left(  O_{t}^{k}\right) 
+         \right)  +\ln\theta
+        _{s_{T}^{i}}^{\prime}\right]
+        $$
+
+On cherche à écrire différemment la somme $\overset{N^{T_{k}}}{\underset{i=1}{\sum}}u_{i}^{k}\ln v_{i}^{k}$ sous la forme$\,$ :
+
+        \begin{eqnarray}
+        \underset{k=1}{\overset{K}{\sum}}\left[\dfrac{1}{P_{k}\left(  M\right) }
+        \overset{N^{T_{k}}} {\underset{i=1}{\sum} }u_{i}^{k}\ln v_{i}^{k}\right]
+        =\underset{n=1}{\overset{N}{\sum}} C_{n}\ln \pi_{n}^ {\prime} + \underset{n=1} {\overset{N}{\sum}}\underset{m=1}
+        {\overset {N}{\sum}}A_{nm}\ln
+        a_{nm}^{\prime}+\underset{n=1}{\overset{N}{\sum}} \underset{o}{\overset{}{\sum}}B_{n,o}\ln b_{n}^{\prime}\left(
+        o\right)+\underset{n=1}{\overset{N}{\sum}}D_{n}\ln\theta_{n}^{\prime} \label{hmm_em_equation_trois}
+        \end{eqnarray}
+
+Pour cela, on note :
+
+\begin{itemize}
+\item $p\left(  s,i,j\right)  $ avec $\left(  i,j\right)  \in\left\{ E,S,1,...,N\right\}  ^{2}$ le nombre de fois où la connexion $i\rightarrow j$ est utilisée dans la séquence d'états $s$
+
+\item $p^{\prime}\left(  s,i,o\right)  $ avec $\left(  i,o\right)  \in\left\{ E,S,1,...,N\right\} \times\mathbf{O}$ le nombre de fois où l'état $i$ émet l'observation $o$ dans la séquence d'états $s$
+\end{itemize}\bigskip
+
+
+Avec ces notations~:
+
+        \begin{eqnarray}
+            A_{nm}%
+            & = &%
+            \underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k}\left(  M\right)}\overset{N^{T_{k}}}
+            {\underset{i=1}{\sum}}u_{i}^{k}\,p\left(  s^{i} ,n,m\right)%
+            = %
+            \underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k}\left(M\right)  }
+            \pr{  q_{t}=n,q_{t+1}=m,O^{k}\left|  M\right.  } \label{hmm_em_demo_eq_un}%
+        \\
+            B_{n}%
+            &  = & %
+            \underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k}\left(  M\right)
+             }\overset{N^{T_{k}}}{\underset{i=1}{\sum}}u_{i}^{k}\,p^{\prime}\left(
+            s^{i},n,o\right)%
+            = %
+            \underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k}\left(M\right)  }
+            \pr{ q_{t}=n,O_{t}=o,O^{k}\left|  M\right.  } \label{hmm_em_demo_eq_deux}
+        \\
+            C_{n}%
+            &  =&%
+            \underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k}
+            \left(  M\right)}\overset{N^{T_{k}}}{\underset{i=1}{\sum}}u_{i}^{k}\,p\left(  s^{i} ,E,k\right)%
+            = %
+            \underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k}\left(M\right)  }
+            \pr{  q_{1}=n,O^{k}\left|  M\right.  } \label{hmm_em_demo_eq_trois}%
+        \\
+            D_{n}%
+            & = &%
+            \underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k}\left(  M\right)}
+            \overset{N^{T_{k}}}{\underset{i=1}{\sum}}u_{i}^{k}\,p\left(  s^{i} ,n,S\right)%
+            = %
+            \underset{k=1}{\overset{K}{\sum}}\dfrac{1}{P_{k}\left( M\right)  }
+            \pr{  q_{T_{k}}=n,O^{k}\left|  M\right.  }\label{hmm_em_demo_eq_quatre}%
+        \end{eqnarray}
+
+Les équations (\ref{hmm_proba_state}) et (\ref{hmm_proba_transition}) (page~\pageref{hmm_proba_transition}) permettent de déduire les valeurs de $A_{nm}, B_{n}, C_{n}, D_{n}$. En appliquant le lemme~\ref{hmm_lemme_baumwelch_2_deux} à l'équation (\ref{hmm_em_equation_trois}), on démontre que les valeurs qui maximisent $Q\left(M,M^{\prime}\right)  $ sont~:%
+
+        $$
+        \begin{array}
+        [c]{ccc}%
+        a_{ij}^{\prime}=\dfrac{A_{ij}}{\overset{N}{\underset{l=1}{\sum}}A_{il}} &  &
+        b_{i,o}^{\prime}=\dfrac{B_{i,o}}{\overset{}{\underset{r\in\mathbf{O}}{\sum}%
+        }B_{i,r}}\\
+        \pi_{i}^{\prime}=\dfrac{C_{i}}{\overset{N}{\underset{l=1}{\sum}}C_{l}} &  &
+        \theta_{i}^{\prime}=\dfrac{D_{i}}{\overset{N}{\underset{l=1}{\sum}}D_{l}}%
+        \end{array}
+        $$
+
+On retrouve les formules de Baum-Welch. Si on note $\left(  M_{t}\right)  $ la suite de modèles obtenus après chaque itération, la démonstration précédente (paragraphe~\ref{hmm_demo_gradient_par}) nous assure que la suite $\pr{  O\left| M_{t}\right.  }  $ est croissante, comme elle est majorée par un, elle est convergente. Cependant, la convergence s'effectue vers un maximum local.
+
+\end{xdemo}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Algorithme EM (Expectation-Maximisation)}
+\label{hmm_algo_em_sec_new}
+
+\indexfr{EM}
+
+\subsubsection{Définition}
+
+Dans le cas général, l'algorithme permet d'estimer les paramètres d'une loi lorsque certaines données sont manquantes ou cachées. On considère deux variables aléatoires~:
+
+\begin{itemize}
+\item $X\in\mathcal{X}\subset \R^p$ de densité $f\left(  x\left|  \theta\right.  \right)  $ avec $\theta\in\Theta$ ($\Theta$ est l'ensemble des paramètres) 
+\item $Z\in\mathcal{Z}\subset\R^{q}$ de densité $g\left(  z\left|  \theta\right.  \right)  $
+\end{itemize}
+
+
+Les variables $X$, $Z$, $\pa{X,Z}$ sont appelées :
+
+
+\begin{itemize}
+\item $X$ est la variable observée ou incomplète
+\item $Z$ est la variable cachée ou manquante
+\item $\left( X,Z\right) $ est la variable complète
+\end{itemize}
+
+On note $h\left( x,z\left| \theta\right. \right)  $ la densité de $\left( X,Z\right)$ et $k\left( z\left| x,\theta\right. \right)  $ la densité de la variable $E\left(  Z\left|  X\right.  \right)$. D'après la règle de Bayes~:
+
+        \begin{eqnarray*}
+        && h\left(  x,z\left|  \theta\right.  \right)   = k\left(  z\left| x,\theta\right.  \right)  
+        f\left(  x\left|  \theta\right.  \right)\\
+        &\Longrightarrow & f\left(  x\left|  \theta\right.  \right)  =\dfrac{h\left( x,z\left| 
+        			 \theta\right.  \right)  }
+        {k\left(  z\left|
+            x,\theta\right.    \right)  }\\
+        & \Longrightarrow & \ln f\left(  x\left|  \theta\right.  \right)  =\ln h\left( x,z\left| 
+        		 \theta\right.  \right) 
+         -\ln k\left(  z\left|
+            x,\theta\right.
+            \right) \\
+        & \Longrightarrow &\left[  \ln f\left(  x\left|  \theta\right.  \right) \right]  
+        k\left(  z\left|  x,\theta\right.  \right)  =\left[  \ln h\left(
+            x,z\left|  \theta\right.  \right)  \right]  k\left(  z\left|  x,\theta\right. \right)
+              -\left[  \ln k\left(  z\left|  x,\theta\right.  \right)
+            \right]k\left(  z\left|  x,\theta\right.  \right) \\
+        & \Longrightarrow & \int_{\mathcal{Z}}\left[  \ln f\left(  x\left| \theta\right.  \right) 
+        	 \right]  k\left(  z\left|  x,\theta\right.
+            \right) dz=\int_{\mathcal{Z}}\left[  \ln h\left(  x,z\left|  \theta\right. \right)  
+            \right]  \,k\left(  z\left|  x,\theta\right.  \right)
+            dz - \int _{\mathcal{Z}}\left[  \ln k\left(  z\left|  x,\theta\right.  \right) \right] 
+             \,k\left(  z\left|  x,\theta\right.  \right)  dz
+        \end{eqnarray*}
+
+On définit :
+
+        \begin{eqnarray*}
+        Q_{\mathcal{Z}}\left(  \varphi,\theta\right)   &=& E_{\mathcal{Z}}\left[  \ln h\left( 
+        		 x,z\left|  \varphi\right.  \right)  \,\left|
+            \,x,\theta\right. \right]  =\int_{\mathcal{Z}}\left[  \ln h\left(  x,z\left| 
+            \varphi\right.  \right)  \right]  \,k\left(  z\left|
+            x,\theta\right.\right)  dz\\
+        H_{\mathcal{Z}}\left(  \varphi,\theta\right)   &=& E_{\mathcal{Z}}\left[ 
+        		 \ln h\left(  z\left|  x,\varphi\right.  \right)  \,\left|
+            \,x,\theta\right. \right]  =\int_{\mathcal{Z}}\left[  \ln k\left(  z\left| 
+             x,\varphi \right.  \right)  \right]  \,k\left(  z\left|
+            x,\theta\right.  \right)  dz
+        \end{eqnarray*}
+
+D'où :%
+
+        \begin{eqnarray*}
+        &  \Longrightarrow & \ln f\left(  x\left|  \theta\right.  \right)  =
+        		\underset {=Q_{\mathcal{Z}}\left(  \theta,\theta\right)
+            }{\underbrace{E_{\mathcal{Z} }\left[  \ln h\left(  x,z\left|  \theta\right.  \right)  \,\left|
+            	 \,x,\theta\right.  \right]
+            }}-\underset{=H_{\mathcal{Z}}\left(  \theta ,\theta\right)  }{\underbrace{E_{\mathcal{Z}}
+            		\left[  \ln h\left(  z\left|
+            x,\theta\right.  \right)  \,\left|  \,x,\theta\right.  \right]  }}\\
+        &  \Longrightarrow & \ln f\left(  x\left|  \theta\right.  \right) =Q_{\mathcal{Z}}\left(  
+        		\theta,\theta\right) -H_{\mathcal{Z}}\left(
+            \theta,\theta\right)
+        \end{eqnarray*}
+
+Or :
+        \begin{eqnarray*}
+        H_{\mathcal{Z}}\left(  \varphi,\theta\right)  -H_{\mathcal{Z}}\left( \theta,\theta\right)
+        	  =\int_{\mathcal{Z}}\left[  \ln\dfrac{k\left(
+        z\left|  x,\varphi\right.  \right)  }{k\left(  z\left|  x,\theta\right. \right)  }\right]
+        	  k\left(  z\left|  x,\theta\right.  \right)  dz
+        \end{eqnarray*}
+
+
+
+
+			\begin{xtheorem}{Inégalité de Jensen}
+			\label{theoreme_inegalite_jensen_1}%
+			\indexfr{Jensen}%
+			Soit $X\in\mathcal{X}$ une variable aléatoire de densité $f$, soit $g:\mathcal{X}\longrightarrow\R$ 
+			une fonction convexe alors~:
+			
+			        $$
+			        E\left(  g\left(  X\right)  \right)  =\int _{\mathcal{X}}g\left(  x\right)  
+			        			f\left(  x\right)  dx\leqslant g\left(
+			        \int_{\mathcal{X}}f\left(  x\right)  dx\right)  =g\left(  E\left( X\right)  \right)
+			        $$
+			        
+			\end{xtheorem}
+
+D'après l'inégalité de Jensen, on déduit que, puisque la fonction $t\rightarrow-\ln t$ est convexe~:
+
+        $$
+        H_{\mathcal{Z}}\left(  \varphi,\theta\right)  -H_{\mathcal{Z}}
+        			\left( \theta,\theta\right)  \leqslant\ln\int_{\mathcal{Z}}\left[
+        \dfrac{k\left(  z\left|  x,\varphi\right.  \right)  }{k\left(  z\left| x,\theta\right.  \right)  }\right] 
+         k\left(  z\left|  x,\theta\right.
+        \right)  dz=\ln\int_{\mathcal{Z}}k\left(  z\left|  x,\varphi\right. \right)  dz=\ln1=0
+        $$
+
+Par conséquent~:
+
+        \begin{eqnarray}
+        \forall\varphi\in\Theta,\; H_{\mathcal{Z}}\left(  \theta,\theta\right) \geqslant H_{\mathcal{Z}}\left(
+        \varphi,\theta\right) \label{hmm_eq_em_jensen}
+        \end{eqnarray}
+
+De plus~:
+
+        \begin{eqnarray}
+        && \text{soit } \varphi\in\Theta \text { tel que } Q_{\mathcal{Z} }\left(  \varphi,\theta\right)  
+        				\geqslant Q_{\mathcal{Z}}\left(  \theta ,\theta\right)
+                        \nonumber\\
+        & \Longrightarrow & E_{\mathcal{Z}}\left[  \ln h\left(  x,z\left|  \varphi \right.  \right)  \,\left| 
+        		 \,x,\theta\right.  \right]  -E_{\mathcal{Z}
+            }\left[  \ln h\left(  z\left|  x,\varphi\right.  \right)  \,\left| \,x,\theta\right.  \right]  \geqslant
+            	 E_{\mathcal{Z}}\left[  \ln h\left(
+            x,z\left|  \theta\right.  \right)  \,\left|  \,x,\theta\right.  \right] -E_{\mathcal{Z}}\left[  \ln h\left(  
+            	z\left|  x,\theta\right.  \right)
+            \,\left|  \,x,\theta\right.  \right] \nonumber \\
+        & \Longrightarrow & \ln f\left(  x\left|  \varphi\right.  \right)  \geqslant\ln f\left(  x\left|  \theta\right.  
+        		\right) \label{hmm_eq_em_jensen_2}
+        \end{eqnarray}
+
+
+L'algorithme~EM a pour objectif de trouver $\theta^{\ast}\in\Theta$ qui maximise $\ln f\left(  x\left|  \theta\right.  \right)  $, il est inspiré de ce qui précède~:
+
+			\begin{xalgorithm}{EM}
+			\label{algorithme_EM}
+			\indexfr{EM}
+			Les notations adoptées sont celles des paragraphes qui précèdent. L'objectif de cet algorithme est de trouver 
+			les paramètres $\theta$ qui maximisent la densité $f\pa{x \sac \theta}$~:
+			
+			\begin{xalgostep}{initialisation}
+			        On choisit $\theta_{0}\in\Theta$ de manière aléatoire.
+			\end{xalgostep}
+			
+			\begin{xalgostep}{expectation "E"}\label{hmm_em_step_e}
+			        Pour $\theta_{t}$, on calcule $Q_{\mathcal{Z}}\left(  \varphi,\theta _{t}\right)  =
+			        \displaystyle\int_{\mathcal{Z}}\left[  \ln h\left(  x,z\left|
+			        \varphi\right.  \right)  \right]  \,k\left(  z\left|  x,\theta_t\right.  \right) dz$.
+			\end{xalgostep}
+			
+			\begin{xalgostep}{maximisation "M"}
+			        On obtient $\theta_{t+1}=\underset{\varphi\in\Theta}{\arg\max }\;
+			        		 Q_{\mathcal{Z}}\left(  \varphi,\theta_{t}\right)$.
+			\end{xalgostep}
+			
+			\begin{xalgostep}{terminaison}
+			        On retourne à l'étape~\ref{hmm_em_step_e} jusqu'à ce que la suite 
+			        $\left(  \ln f\left(  x\left| \theta_{t}\right. \right)\right)  _{t}$ converge.
+			\end{xalgostep}
+			
+			\end{xalgorithm}
+			
+			
+		\begin{xtheorem}{convergence de l'algorithme EM}\label{hmm_theorem_em}
+		\indexfr{EM}
+		
+		La suite $\left(  \ln f\left(  x\left| \theta_{t}\right. \right)\right)  _{t}$ construite par l'algorthime 
+		EM (\ref{algorithme_EM})
+		converge vers un minimum local de la fonction $\theta \longrightarrow f\pa{x \sac \theta}$.
+		\end{xtheorem}
+		
+		
+\begin{xdemo}{théorème}{\ref{hmm_theorem_em}}
+Le théorème est démontrée par l'équation (\ref{hmm_eq_em_jensen_2}), la suite $\left(  \ln f\left(  x\left| \theta_{t}\right. \right)\right)  _{t}$ est croissante et bornée, donc elle converge.
+\end{xdemo}
+		
+		
+		
+		
+		
+
+
+
+\subsubsection{Exemple : la taille d'un poisson selon le sexe}
+\indexfrr{exemple}{algorithme EM}
+\indexfr{poisson}
+
+
+Soit $X$ une variable aléatoire représentant la taille d'un poisson d'une espèce donnée à l'âge adulte. La taille dépend fortement du sexe du poisson. Soit $Z\in\left\{  0,1\right\}  $ le sexe du poisson, $X$ est la variable observée, $Z$ la variable manquante. On suppose que, connaissant le sexe du poisson, sa taille suit une loi normale de paramètre $\left(  \mu_{i},\sigma_{i}\right)  _{i\in\left\{ 0,1\right\} }$. Le sexe du poisson suit une loi binomiale de paramètre $p$.
+
+Dans ce cas, $\theta=\left(  p,\mu_{0},\sigma_{0},\mu_{1},\sigma_{1}\right)$, la densité de $X|Z$ est :%
+
+        $$
+        l\left(  x\left|  z,\theta\right.  \right)   = \dfrac{1}{\sigma_z\sqrt{2\pi} }
+        e^{-\dfrac{\left(  x-\mu_{z}\right)  ^{2}}{2\sigma_{z}^{2}}}
+        $$
+        
+et la densité de $Z|\theta$ est~:
+
+        $$
+        \pr{Z=z\left|  \theta\right.  }   = p\,\mathbf{1}_{\left\{z=0\right\}  }+\left(  1-p\right)
+        \,\mathbf{1}_{\left\{  z=1\right\}  }
+        $$
+
+D'après les hypothèses, on en déduit que :%
+
+        \begin{eqnarray*}
+        h\left(  x,z\left|  \theta\right.  \right)   &=& \indicatrice{z=0} \left[  \dfrac{p}{\sigma_0
+        		 \sqrt{2\pi}}e^{-\dfrac{\left( x-\mu
+            _{0}\right)  ^{2}}{2\sigma_{0}^{2}}}\right]  + \indicatrice{z=1} \left[ 
+            	 \dfrac{\left(  1-p\right)  }{\sigma_1
+             \sqrt{2\pi}}e^{-\dfrac
+            {\left(  x-\mu_{1}\right)  ^{2}}{2\sigma_{1}^{2}}}\right] \\
+        \ln h\left(  x,z\left|  \theta\right.  \right)   &=& \indicatrice{z=0}\left[ 
+        		 \ln\dfrac{p}{\sigma_0 \sqrt{2\pi}}-\dfrac{\left(
+         x-\mu
+            _{0}\right)  ^{2}}{2\sigma_{0}^{2}}\right]  +\indicatrice{z=1}\left[ 
+            		 \ln\dfrac{\left(  1-p\right)  }{\sigma_1
+             \sqrt{2\pi}}-\dfrac{\left(
+            x-\mu _{1}\right)  ^{2}}{2\sigma_{1}^{2}}\right] \\
+        f\left(  x\left|  \theta\right.  \right)   &=& \dfrac{p}{\sigma_0 \sqrt{2\pi} }
+        		e^{-\dfrac{\left(  x-\mu_{0}\right)
+            ^{2}}{2\sigma_{0}^{2}}}+\dfrac{\left(1-p\right)  }{\sigma_1 \sqrt{2\pi}}
+            		e^{-\dfrac{\left(  x-\mu_{1}\right)  ^{2}}
+             {2\sigma_{1}^{2}}}\\
+        \pr{  Z=z\left|  x,\theta\right.  }   &=& k\left(  z\left| x,\theta\right. 
+        		 \right)  =\dfrac{h\left(  x,z\left| 
+         \theta\right.  \right)
+            }{f\left(  x\left|  \theta\right.  \right)  }
+        \end{eqnarray*}
+
+L'objectif est de trouver les véritables valeurs de $\left(  p,\mu _{0},\sigma_{0},\mu_{1},\sigma_{1}\right)  $ à partir d'une liste d'observation $\left(  x_{1},...,x_{n}\right)  $ donc de trouver :
+
+        $$
+        \theta^{\ast}=\underset{\theta}{\arg\max}\underset{i=1}{\overset{n}{\prod}
+        }f\left(  x_{i}\left|  \theta\right.  \right)  =\underset{\theta}{\arg\max
+        		 }\underset{i=1}{\overset{n}{\sum}}\ln f\left( 
+         x_{i}\left|
+        \theta\right. \right)
+        $$
+
+Ce problème n'est pas soluble par maximum de vraisemblance. En effet, maximiser la vraisemblance du modèle aboutit à la résolution d'un système d'équations à cinq inconnues insoluble. L'algorithme EM est une alternative, dans ce cas~:
+
+        \begin{eqnarray*}
+        Q_{\mathcal{Z}}\left(  \theta,\theta_{t}\right)   &=& \overset {n}{\underset{i=1}{\sum}}\overset{1}
+        {\underset{z=0}{\sum}}\left[  \ln h\left(
+            x_{i},z\left|  \theta\right.  \right)  \right]  \,k\left(  z\left|x,\theta_{t}\right.  \right)\\
+        Q_{\mathcal{Z}}\left(  \theta,\theta_{t}\right)   &=& \overset {n}{\underset{i=1}{\sum}}
+                \left[  \ln\dfrac{p}{\sigma_0 \sqrt{2\pi}} - \dfrac{\left(  x_{i}-\mu_{0}\right) ^{2}}
+                {2\sigma_{0}^{2}}\right] k\pa{0 |x_i,\theta_t}
+            +   \left[  \ln\dfrac{\left(  1-p\right) }{\sigma_1 \sqrt{2\pi}}-\dfrac{\left(  x_i-\mu_{1}\right) ^{2}}
+            		{2\sigma_{1}^{2} }\right] k\pa{1 |x_i,\theta_t}
+        \end{eqnarray*}
+
+Trouver $\theta_{t+1}=\underset{\theta}{\arg\max}Q_{\mathcal{Z}}\left( \theta,\theta_{t}\right)  $ est un problème plus simple que le précédent et soluble car cette fois, le système d'équation à cinq inconnues obtenu est soluble. Cet exemple est un cas particulier des mélanges de lois normales.
+
+\indexfr{EM}\indexfr{SEM}\indexfr{SAEM}
+\indexfr{stochastique}
+
+Les formules de Baum-Welch sont un cas particulier de cet algorithme dont la décourverte est postérieure. L'algorithme EM est aussi décliné dans plusieurs variantes SEM, SAEM, CEM, ... (voir \citeindex{Celeux1985}, \citeindex{Celeux1995}). En particulier, comme pour les réseaux de neurones\seeannex{rn_section_train_rn}{réseau de neurones}, il existe une version stochastique de l'algorithme EM notée SEM.
+
+
+
+
+
+
+
+
+
+
+\subsection{Démonstration des formules de Baum-Welch avec l'algorithme EM}
+
+\begin{xdemo}{théorème}{\ref{theoreme_hmm_baum_welch_1}}
+
+Les formules de Baum-Welch (voir table~\ref{figure_formule_baumwelch-fig}, page~\pageref{figure_formule_baumwelch-fig}) se déduisent de l'algorithme EM (algorithme ~\ref{algorithme_EM}). Soit $M\pa{\phi}$ un modèle de Markov caché dont les paramètres sont le vecteur $\phi = \pa{A_\phi, B_\phi, \pi_\phi, \theta_\phi}$. Soit $O=\vecteur{O_1}{O_K}$ $K$ séquences d'observations avec $\forall k \in \intervalle{1}{K}, \; O^k = \vecteur{O_1^k}{O_{T_k}^k}$, $s = \vecteur{q_1}{q_T}$ est une séquence d'états cachés. Les densités $h$, $k$, $f$ de l'algorithme EM correspondent à~:
+
+        \begin{eqnarray*}
+        h\pa{O,s | M\pa{\phi}} &=& \prody{k=1}{K} \pr{\vecteurno{O_1^k}{O_{T_k}^k},
+        			\vecteurno{q_1}{q_{T_k}} | M\pa{\phi}} \\
+         &=& \prody{k=1}{K}  \pi_{\phi,q_1} b_{\phi,q_1}\pa{O_1} \crochet { \prody{t=2}{T_k} 
+         			a_{\phi,q_{t-1} q_t} b_{\phi,q_t} \pa{O_t}
+          } \theta_{\phi,q_{T_k}} \\
+        f\pa{O | M\pa{\phi}} &=& \summyone{s} h\pa{O,s | M\pa{\phi}} \\
+        k\pa{s | O,M\pa{\phi}} &=& \dfrac{ h\pa{O,s | M\pa{\phi}} } {f\pa{O | M\pa{\phi}}}
+        \end{eqnarray*}
+
+On note $\mathcal{S}$ l'ensemble des séquences d'états cachés, alors :
+
+        \begin{eqnarray}
+        Q_{\mathcal{S}} \pa{\psi, \phi} &=& \summyone{s \in \mathcal{S}} \ln h\pa{O,s | M\pa{\psi}} 
+        				k\pa{s | O,M\pa{\phi}} \\
+        &=& \summyone{s \in \mathcal{S}} k\pa{s | O,M\pa{\phi}}
+                    \summy{k=1}{K}  \crochet{
+                        \begin{array}{cl}
+                              &  \ln \pi_{\psi,q_1} + \ln b_{\psi,q_1}\pa{O_1} \\
+                            + &  \summy{t=2}{T_k} \ln a_{\psi,q_{t-1} q_t} + \ln b_{\psi,q_t} \pa{O_t} \\
+                            + &  \ln \theta_{\psi,q_{T_k}}
+                        \end{array} } \label{hmm_em_demo_un}
+        \end{eqnarray}
+
+$\Theta$ est l'ensemble des paramètres $\phi = \pa{A_\phi, B_\phi, \pi_\phi, \theta_\phi}$ vérifiant les contraintes inhérentes aux chaînes de Markov cachées. L'objectif est de trouver :
+
+        $$
+        \psi^* = \underset{\psi \in \Theta} {\arg \max} \; Q_{\mathcal{S}} \pa{\psi, \phi}
+        $$
+
+Pour cela, on écrit différemment l'équation (\ref{hmm_em_demo_un}) :
+
+        \begin{eqnarray}
+        Q_{\mathcal{S}} \pa{\psi, \phi} = \summy{n=1}{N} C_{n}\ln \pi_{\psi,n} + \summy{n=1}{N}\summy{m=1}{N} A_{nm} 
+            \ln a_{\psi,nm}+ \summy{n=1}{N}
+        \summyone{o} B_{n,o} \ln b_{\psi,n} \pa{o} + \summy{n=1}{N} D_{n} \ln\theta_{\psi,n}
+        \end{eqnarray}
+
+Les matrices $C_{n}, A_{nm}, B_{n,o}, D_{n}$ ont les valeurs données par les équations (\ref{hmm_em_demo_eq_un}) à (\ref{hmm_em_demo_eq_quatre}) (page~\pageref{hmm_em_demo_eq_un}).
+
+
+\end{xdemo}
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Amélioration de l'apprentissage}
+
+\indexfrr{coefficients}{nuls}%
+\indexfr{recuit simulé}%
+\indexfr{apprentissage}%
+\label{hmm_apprentissage_ameliore}%
+
+Les formules de Baum-Welch (voir table~\ref{figure_formule_baumwelch-fig}) impliquent que si un coefficient devient nul après un certain nombre d'itérations, il le restera aux itérations suivantes. Cela ne signifie pas que la valeur optimale pour ce coefficient soit différente de zéro, cependant si ce n'est pas le cas, l'apprentissage est biaisé. C'est pourquoi on préfère que tous les coefficients soient non nuls. 
+
+Afin d'éviter cet écueil, les coefficients inférieurs à un certain seuil sont modifiés aléatoirement de sorte qu'ils soient supérieurs à ce seuil, ce seuil $s_t$ décroît avec le nombre d'itérations~$t$~:
+
+			$$
+			s_t = \frac{s_0}{ 1 + \gamma t } \text{ avec } \gamma \in \R^+
+			$$
+
+La vraisemblance des modèles obtenue lors des itérations successives décroît globalement mais l'aléatoire introduit entre chaque itération fait osciller la valeur de cette vraisemblance lorsque les coefficients sont proches d'un optimum local. Cette oscillation décroît au fur et à mesure que $s_t$ décroît.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------------------------
+\section{Observations continues et réseau de neurones} \label{hmm_sec_rn_obs_cont}
+%----------------------------------------------------------------------------------------------------------------------
+
+\indexfrr{observations}{continues}%
+\indexfrr{émissions}{continues}%
+
+Jusqu'à présent, les observations étaient discrètes~: les séquences d'observations étaient des séquences d'entiers pris dans un ensemble fini. Lorsque les données observées sont continues, il est possible de se ramener à ce cas-là en construisant une partition de l'espace (avec l'algorithme des centres mobiles par exemple, voir paragraphe~\ref{emission_continue_centre_mobile}). Néanmoins, une classification traite de manière insatisfaisante les ambiguïtés : les observations situées sur une frontière entre deux classes (voir figure~\ref{figure_partitionnement_ambigu-fig}). Il est alors préférable de conserver des probabilités d'appartenir à telle ou telle classe (voir paragraphe~\ref{hmm_classification_obs_trois}).
+
+		\begin{figure}[ht]
+    $$\frame{$\begin{array}[c|c]{c}\includegraphics[height=4cm, width=5cm] 
+    {\filext{../dessin2/hmm_rn_ambigu}}\end{array}$}$$
+    \caption{Ambiguïtés d'un partitionnenement d'un espace continu.}
+    \label{figure_partitionnement_ambigu-fig}
+		\end{figure}
+
+
+
+
+
+
+
+\subsection{Chaîne de Markov cachée incluant un réseau de neurones}
+\label{hmm_reseau_neurone}
+\indexfr{MMC}
+\indexfr{réseau de neurones}
+
+Les chaînes de Markov cachées incluant un réseau de neurones sont qualifiées de \emph{hybrides},\indexfrr{MMC}{hybride} les émissions sont en quelque sorte sous-traitées par la chaîne de Markov à un réseau de neurones.
+
+\indexfrr{MMC}{réseau de neurones}%
+
+\subsubsection{Initialisation}
+
+On suppose que l'espace des observations continues a été partitionné à l'aide des méthodes présentées dans les paragraphes~\ref{hmm_classification_obs_un}, \ref{hmm_classification_obs_deux}, \ref{hmm_classification_obs_trois} (pages~\pageref{hmm_classification_obs_un} et suivantes), on dispose donc pour chaque observation $x$ des probabilités $\pr{  c\left| x\right.}$, elles sont retournées par un réseau de neurones classifieur (voir paragraphe~\ref{classification}, page~\pageref{classification}) dont l'apprentissage est évoqué au paragraphe~\ref{hmm_classification_obs_trois}.
+
+
+
+\subsubsection{Des observations discrètes aux observations continues}
+\label{hmm_definition_observation_continue}
+
+Jusqu'à présent, les modèles d'émissions ont toujours été discrets, les modèles de Markov retournaient la probabilités de séquences discrètes. Les modèles d'émissions discretes sont entièrement décrits par une matrice :
+
+        $$
+        \begin{array}{l}
+        \left(  b_{i,o}\right)_{\substack{1\leqslant i\leqslant N\\1\leqslant o\leqslant O}}=
+        		\left(  \pr{ o\left|  i\right.  }  \right)
+            _{\substack{1\leqslant i\leqslant N\\1\leqslant o\leqslant O}}\\ \\
+        \text{avec }        \left |
+                            \begin{array}{l}
+                            N \text{ est le nombre d'états de la chaîne de Markov} \\
+                            O \text{ le nombre d'observations possibles} \\
+                            \pr{  o\left|  i\right.  } \text{ est la probabilité d'émettre l'observation } o 
+                            		\text{ connaissant l'état } i
+                            \end{array}
+                            \right.
+        \end{array}
+        $$
+
+Comme les observations sont continues, il faut construire un modèle d'émission estimant la densité d'une observation continue $x$ sachant l'état~$i$~: $f\left(  x\left| i\right. \right)$. On note $x\longrightarrow Rn\left(  x\right)  =\left(  \pr{ c\left|  x\right. }  \right) _{1\leqslant c\leqslant C}$ la fonction définie par le réseau de neurones appris grâce à la classification (voir paragraphe~\ref{hmm_classification_obs_trois}).
+
+
+
+
+
+
+			\begin{xdefinition}{Chaîne de Markov cachée hybride}
+			\label{definition_mmc_1}
+			\indexfr{hybride}
+			
+			Une chaîne de Markov cachée hybride dont les observations sont continues vérifie les conditions 2 à 4 vérifiées 
+			par une chaîne de Markov cachée dont les observations sont discrètes 
+			(voir définition~\ref{markov_chaine_cachee_definition},
+			 page~\pageref{markov_chaine_cachee_definition}), et les conditions 1 à 3 qui suivent~:
+			
+			\begin{enumerate}
+			\item La densité d'une observation ne dépend que de sa classe : $f\left(  x\left|  c,i\right.  \right)  =
+						f\left( x\left| c\right.  \right)$
+			\item La probabilité que l'observation à l'instant $t$ soit dans la classe $c$ ne dépend que 
+							de l'état à l'instant $t$ :
+			
+			    $$
+			    \pr{  O_{t}\in classe\left(  c\right)  \,\left|  \,q_{1},...,q_{t},O_{1},...,O_{t-1}\right.  } 
+			    			 = \pr{   O_{t}\in classe\left( c\right)
+			    \left|  q_{t}\right.  }  = \pr{  c\left| q_{t}\right. }
+			    $$
+			    
+			\item La probabilité que l'observation à l'instant $t$ soit dans la classe $c$ ne dépend pas du temps :
+			
+			    $$
+			    \forall t_{1},t_{2},\,\forall i,c,\; \pr{   O_{t_1}\in classe\left( c\right)  \left|  q_{t_{1}}=i\right.  
+			    		}  = \pr{   O_{t_2}\in
+			    classe\left(  c\right)  \left|  q_{t_{2}}=i\right. }
+			    $$
+			\end{enumerate}%
+			\end{xdefinition}
+			
+
+\indexfr{densité}%
+
+
+		\begin{xproperty}{probabilité d'émission}
+		On en déduit que la densité $f\pa{x|i}$ d'une observation $x$ sachant l'état $i$ est~:
+		
+		        $$
+		        f\left(  x\left|  i\right.  \right)  =\underset{c=1}{\overset{C}{\sum} }f\left(  x,c\left|  i\right.  
+		        		\right)  =\underset{c=1}{\overset{C}{\sum}
+		        }f\left(  x\left|  c,i\right.  \right)  \pr{   c\left|  i\right. } =\underset{c=1}{\overset{C}
+		        		{\sum}}\dfrac{ \pr{   c\left|  x\right.
+		        } \pr{  c\left|  i\right.  }  f\left(  x\right)  }{ \pr{   c}  }
+		        $$
+		
+		où~:
+		
+		        \begin{eqnarray*}
+		        \pr{  c\left|  x\right.  }  && \text{est estimé par le réseau de neurones : }
+		        			\pr{   c\left|  x\right.  }  =Rn\left(  x\right)\\
+		        \pr{  c\left|  i\right.  }  && \text{est un coefficient qui sera estimé de la même manière que 
+		        				les probabilités de transition}\\
+		        f\left(  x\right) && \text{est la densité des observations, elle est inconnue mais peut être estimée par
+		        				 (\ref{hmm_rn_densite_x})}\\
+		        \pr{  c } && \text{est la probabilité de la classe $c$, elle est incoonue mais peut être estimée par
+		        			 (\ref{hmm_rn_densite_p})}
+		        \end{eqnarray*}
+		\end{xproperty}
+
+On note $\pr{c|i}_{i,c} = \pa{c_{i,c}}_{i,c}$ la matrice des probabilités émissions dans le cas d'observations continues.
+
+
+
+
+
+
+\subsection{Réestimation de $\pa{c_{i,c}}_{i,c}$}
+
+On définit de nouveaux coefficients pour le modèle de Markov caché :
+
+        $$
+        \pa{c_{ci}}_{\begin{subarray}{c} 1 \infegal i \infegal N \\ 1 \infegal c \infegal C \end{subarray}} =%
+        \pa{\pr{c|i}}_{\begin{subarray}{c} 1 \infegal i \infegal N \\ 1 \infegal c \infegal C \end{subarray}}
+        $$
+        
+
+\label{hmm_reestimation_emission_rn}%
+\indexfr{Baum-Welch}%
+
+De la même manière que pour les formules de Baum-Welch, on cherche à estimer $\pr{  c,i,O}  $ où $O$ est une séquence
+d'observations. $C_{t}$ désigne la classe de l'observation $O_{t}$.%
+
+        $$
+        \pr{  c\left|  i\right.  }  =\overline{c_{i,c}}=\dfrac{\underset {k=1}{\overset{K}
+        		{ {\displaystyle\sum} }}\dfrac{1}{P_{k}}
+        \underset{t=1}{\overset{T_{k}}{ {\displaystyle\sum}}} \pr{   C_{t}=c, \, q_{t}=i,O^{k}}  }
+        		{\underset{k=1}{\overset{K}{ {\displaystyle\sum}
+        }}\dfrac{1}{P_{k}}\underset{t=1}{\overset{T_{k}}{ {\displaystyle\sum}}} \pr{  q_{t}=i, \, O^{k}}  }
+        $$
+
+La démonstration de la formule de réestimation de $c_{i,c}$ pour un modèle apprenant la séquence d'observations $\vecteur{O_1}{O_T}$~:
+
+        \begin{eqnarray}
+        \pr{  C_{t},q_{t},O }  &=&  \pr{  O_{t+1},..,O_{T}\left| 
+        		 C_{t},q_{t},O_{1},...,O_{t}\right.  } \pr{    C_{t},q_{t},O_{1}
+            ,...,O_{t}} \nonumber\\
+        \pr{   C_{t},q_{t},O}  &=& \pr{  O_{t+1},..,O_{T}\left|q_{t}\right.  }
+        			\pr{  O_{t}\left|  C_{t},q_{t},O_{1},...,O_{t-1}
+            \right. }  \pr{  C_{t},q_{t},O_{1},...,O_{t-1}} \nonumber\\
+        \pr{  C_{t},q_{t},O}  &=& \beta_{q_{t}}\left(  t\right)  \pr{O_{t}\left|  C_{t}\right.  }
+        		 \pr{  C_{t}\left|  q_{t},O_{1}
+            ,...,O_{t-1}\right.  }  \pr{ q_{t},O_{1},...,O_{t-1}} \nonumber\\
+        \pr{  C_{t},q_{t},O}  &=& \beta_{q_{t}}\left(  t\right)  \pr{ O_{t}\left|  C_{t}\right. }
+        		  \pr{  C_{t}\left|  q_{t}\right.
+            }  \underset{q_{t-1}}{\overset{}{\sum}} \pr{ q_{t},q_{t-1} ,O_{1},...,O_{t-1}} \nonumber\\
+        \pr{  C_{t},q_{t},O}  &=& \beta_{q_{t}}\left(  t\right)  \pr{ O_{t}\left|  C_{t}\right.  }
+        		 \,c_{q_{t},C_{t}}\underset{q_{t-1}
+            }{\overset{}{\sum}}a_{q_{t-1},q_{t}}\,\alpha_{q_{t-1}}\left(  t\right) =\dfrac{\beta_{q_{t}}\left(  t\right)
+            		  \pr{ O_{t}\left|  C_{t}\right.
+            }  \,c_{q_{t},C_{t}}\,\alpha_{q_{t}}\left(  t\right)  }{b_{q_{t}}\left( O_{t}\right)  } \nonumber\\
+        \pr{  C_{t},q_{t},O}  &=& \dfrac{\beta_{q_{t}}\left(  t\right) \pr{  O_{t}\left|  C_{t}\right.
+        		 }\,c_{q_{t},C_{t}} \,
+            \alpha_{q_{t}} \left(  t\right)  }{\underset{d=1}{\overset{N}{{\displaystyle\sum}}}
+            		\pr{  O_{t}\left|  C_{t}=d\right.}
+            \,c_{q_{t},d}} \label{hmm_equation_reestimation}\\
+        \text{Rappel :} \pr{  q_{t},O}  &=& \alpha_{q_{t}}\left(  t\right)  \beta_{q_{t} }\left(  t\right) \nonumber
+        \end{eqnarray}
+
+Si le modèle apprend plusieurs séquences $\vecteur{O^1}{O^K}$ de longueurs respectives $\vecteur{T_1}{T_K}$, alors la formule de la table~\ref{figure_formule_baumwelch-fig_2} vient s'ajouter à celles de la table~\ref{figure_formule_baumwelch-fig}.%
+
+                \begin{table}[t]
+                \[
+                \fbox{$\begin{array}[c]{c}%
+                \overline{c_{i,c}}= \pr{  c\left|  i,O\right.  }  =\dfrac{\underset{k=1}
+                		{\overset{K}{ {\displaystyle\sum} }}\dfrac{1}{P_{k}}
+                \underset{t=1}{\overset{T_{k}}{ {\displaystyle\sum} }}\dfrac{\beta_{i}^{k}
+                		\left(  t\right)  \pr{  O_{t}^k\left|  c\right. }
+                c_{i,c}\alpha_{i}^{k}\left(  t\right)  }{\underset{d=1}{\overset {N}{\sum}}
+                		\pr{ O_{t}^k\left|  c\right.  }  c_{i,d}}}{\underset
+                {k=1}{\overset{K}{ {\displaystyle\sum} }}\dfrac{1}{P_{k}}\underset{t=1}
+                		{\overset{T_{k}}{ {\displaystyle\sum} }}\alpha_{i}^{k} \left(  t\right)
+                \beta_{i}^{k}\left(  t\right)  }\end{array}$}
+                \]
+                \caption{Formules de réestimation de Baum-Welch, modèle hybride}
+                \label{figure_formule_baumwelch-fig_2}
+                \indexfr{Baum-Welch}
+                \indexfr{réestimation}
+                \indexfr{hybride}
+                \end{table}
+
+
+
+
+
+
+\subsection{Réestimation des $\pr{c |o }$}
+
+\indexfrr{MMC}{annotation RN par MMC}%
+\label{hmm_reestimation_rn_classification}%
+\indexfr{réestimation}
+
+Ces probabilités sont fournies par le réseau de neurones dont l'apprentissage peut être mis en parallèle avec celui du modèle de Markov caché ou être différé. Dans cette seconde solution, il faut estimer les probabilités $\left( \pr{ c\left| x\right. } \right) _{1\leqslant c\leqslant C}$ qui diminueront la vraisemblance des observations. De la même manière que précédemment, on estime la probabilité $\pr{C_{t}\left| O_{t}^{k}\right. }  $ pour la séquence $O^{k}$. 
+
+$C_{t}$ désigne toujours la classe de l'observation $O_{t}$, la démonstration des formules sera faite pour une séquence, pour abréger les notations, $O=O^{k}$~:
+
+        \begin{eqnarray*}
+        \pr{C_t|O_t} &=& \pr{C_t|O} = \frac{\pr{C_t,O}}{\pr{O}} = \frac{1}{\pr{O}} \summyone{q_t} \pr{C_t,q_t,O}\\
+        &=& \frac{1}{\pr{O}} \summyone{q_t} \dfrac{\beta_{q_{t}}\left(  t\right) \pr{ O_{t}\left|  
+        			C_{t}\right. }\,c_{q_{t},C_{t}} \,
+            \alpha_{q_{t}} \left(  t\right)  }{\underset{d=1}{\overset{N}{{\displaystyle\sum}}}\pr{ O_{t}\left| 
+            		 C_{t}=d\right. }
+            \,c_{q_{t},d}} \quad \text{ d'après (\ref{hmm_equation_reestimation})}
+        \end{eqnarray*}
+
+Par conséquent, dans un premier temps, la base d'apprentissage du réseau de neurones est la base $\left(  X,Y\right)  $ définies par la table~\ref{figure_formule_baumwelch-fig_3}.%
+
+                \begin{table}[t]
+                \[
+                \fbox{$%
+                \begin{array}{l}%
+                i {{}^\circ} \text{ ligne de }X\text{ : }X_{i}=O_{t}^k\\
+                k {{}^\circ} \text{ ligne de }Y\text{ : }Y_{k}=\left(  \dfrac{1}{\pr{O^k}
+                				} \bigsummyone{q_t} \dfrac{\beta_{q_{t}^k}\left(  t\right) \pr{
+                    O_{t}^k\left| c\right. }\,c_{q_{t},c} \, \alpha_{q_{t}^k} \left(  t\right) 
+                    		 }{\underset{d=1}{\overset{C}{{\displaystyle\sum}}} \pr{ 
+                    O_{t}^k\left|  d\right. } \,c_{q_{t},d}}
+                    \right)  _{1\leqslant c\leqslant C} %
+                \end{array}
+                $}%
+                \]
+                \caption{Formules de réestimation de Baum-Welch, modèle hybride, partie réseau de neurones.
+                				 On passe d'une ligne à la suivante en incrémentant~$t$ ou lorsque~$t$ correspond
+                				 à la dernière observations de la séquence~$O^k$, en incrémentant~$k$. Les 
+                				 matrices $X$ et $Y$ constituent la base d'apprentissage du réseau de neurones, $X$ 
+                				 contient les entrées, $Y$ les sorties désirées.	}
+                \label{figure_formule_baumwelch-fig_3}
+                \indexfr{Baum-Welch}
+                \indexfr{réestimation}
+                \indexfr{hybride}
+                \indexfr{réseau de neurones}
+                \end{table}
+
+Toutefois la formule décrite dans cette table~\ref{figure_formule_baumwelch-fig_3} ne donne pas le vecteur de probabilité $Y$ qui maximise la vraisemblance des observations mais celui-ci peut être obtenu en adaptant l'algorithme EM\indexfr{EM} à ce cas-là. On note $Y_{ct} = \pr{ O_j \sac C_c }$. $O_t$ désigne la $t^\text{ème}$ observations de la séquence $O = \vecteur{O_1}{O_T}$ et $C_i$ la $c^\text{ème}$ classe. Par conséquent $Y_{tc}$ est la sortie $c^\text{ème}$ désirée du réseau de neurones lorsqu'il a pour entrée le vecteur $O_t$. Comme les coefficients $c_{i,c}$ (voir table~\ref{figure_formule_baumwelch-fig_2}), les nombres $Y_{tc}$ sont mis à jour selon la formules de la table~\ref{figure_formule_baumwelch-fig_3prime}. 
+
+
+                \begin{table}[t]
+                $$\begin{array}{|l|}\hline
+                \overline{Y_{tc}^k} = \dfrac{1}{ \pr{O^k} } \pa { 
+                					\summyone{q_t} \; 
+                							\dfrac{  \beta_{q_t}^k\pa{t} \, Y_{tc}^k  \, c_{q_t,c} \, \alpha_{q_t}^k \pa{t} }
+                									{  \summy{d=1}{C} \, Y_{td}^k  \,  c_{q_t,d} }
+                									}
+                \\ \hline
+                \end{array}$$
+                \caption{	Formules de réestimation de Baum-Welch, modèle hybride, partie réseau de neurones.
+                					Cette formule de réestimation vient en complément de la
+                					table~\ref{figure_formule_baumwelch-fig_3} où le terme $Y_i$ est remplacé par le 
+                					vecteur $\vecteur{ \overline{Y_{t1}^k} }{ \overline{Y_{tC}^k} } $ obtenu après convergence
+                					de la probabilité $\pr{ O_t \sac M}$ et en utilisant la formule 
+                					de réestimation ci-dessus. La première valeur pour $Y_{tC}^k$ correspond à la sortie
+                					du réseau de neurones avant réapprentissage. }
+                \label{figure_formule_baumwelch-fig_3prime}
+                \indexfr{Baum-Welch}
+                \indexfr{réestimation}
+                \indexfr{hybride}
+                \indexfr{réseau de neurones}
+                \end{table}
+
+Il faut d'ajouter que l'utilisation de telles formules de convergence mènent souvent à des sorties désirées pour le réseau de neurones qui sont soient nulles, soient égales à un. La remarque~\ref{nn_remark_classification_output_alpha}\seeannex{nn_remark_classification_output_alpha}{réseau de neurones} suggère de ne pas utiliser ces sorties telles quelles afin de faciliter l'apprentissage.
+
+
+			\begin{xalgorithm}{apprentissage alterné du modèle hybride complet}
+			\label{algorithme_apprentissge_modelel_complet_1}%
+			\indexfrr{apprentissage}{MMC + RN}%
+			\indexfr{réseau de neurones}
+			L'apprentissage proposé alterne l'apprentissage de la chaîne de Markov cachée de celui du réseau de neurones, 
+			il est constitué de trois étapes~:
+			
+			\begin{xalgostep}{initialisation}
+			        Initialisation du réseau de neurones à l'aide des méthodes proposées dans les paragraphes :
+			                \ref{hmm_classification_obs_un}         (page~\pageref{hmm_classification_obs_un}),
+			                \ref{hmm_classification_obs_deux}       (page~\pageref{hmm_classification_obs_deux}),
+			                \ref{hmm_classification_obs_trois}      (page~\pageref{hmm_classification_obs_trois})
+			\end{xalgostep}
+			
+			\begin{xalgostep}{apprentissage MMC}\label{hmm_rn_step_algo_mmc}
+			        Apprentissage Baum-Welch des probabilités de transitions et d'émissions, voir les paragraphes~:
+			                \ref{formule_baumwelch}                 (page~\pageref{formule_baumwelch}),
+			                \ref{hmm_reestimation_emission_rn}      (page~\pageref{hmm_reestimation_emission_rn}),
+			\end{xalgostep}
+			
+			\begin{xalgostep}{apprentissage RN}
+			        Réapprentissage du réseau de neurones, voir ce paragraphe
+			                \ref{hmm_reestimation_rn_classification} (page~\pageref{hmm_reestimation_rn_classification}) 
+			                ainsi que les tables~\ref{figure_formule_baumwelch-fig_3}
+			                et~\ref{figure_formule_baumwelch-fig_3prime}. \\
+			        Retour à l'étape~\ref{hmm_rn_step_algo_mmc} jusqu'à convergence.
+			\end{xalgostep}
+			
+			\end{xalgorithm}
+			
+
+
+
+
+
+\begin{xremark}{convergence non monotone}
+Il est conseillé de conserver les versions des modèles à chaque itération car la convergence est rarement monotone.
+\indexfr{monotone}
+\end{xremark}
+
+
+
+
+
+
+
+
+
+
+\subsection{Emissions continues modélisées par une loi normale multidimensionnelle}
+\label{hmm_loi_normale_emission_section}
+\indexfrr{émissions}{continues}%
+\indexfrr{loi}{normale multidimensionnelle}%
+
+Les probabilités d'émission peuvent être modélisées par des lois normales, soit $\vecteur{O_1}{O_T}$ une séquence d'observations et $\vecteur{q_1}{q_T}$ une séquence d'états du modèle $M$. On suppose que la variable~:
+
+        $$
+        O_t | q_t = i \sim \loinormale{\mu_i}{V_i}
+        $$
+        
+Par conséquent~:
+
+        $$
+        b_i\pa{O_t} = f\pa{O_t | q_t = i,M} = \dfrac{1}{\pa{2\pi}^{\frac{n}{2}} \sqrt{ \det \pa{ V_i}} }
+                                \; e ^{ - \frac{1}{2} \pa{O_t - \mu_i}' \,  V_i^{-1} \pa{O_t - \mu_i}             }
+        $$
+
+Les formules de réestimation (voir \citeindex{Bottou1991}) à utiliser lors de l'algorithme de Baum-Welch sont les suivantes pour les séquences d'observations $\vecteur{O^k_1}{O^k_{T_k}}_{1 \infegal k \infegal K}$, on note $P_k = f\pa{O^k|M}$ où $f$ est la densité des séquences d'observations~:%
+
+\indexfrr{MMC}{Baum-Welch}%
+
+        \begin{eqnarray}
+        \overline {\mu_{i}} &=& \dfrac      {   \summy{k=1}{K} \; \dfrac{1}{P_k} \,  
+        																				\summy{t=1}{T_k}  \alpha_t^k\pa{i} \beta_t^k\pa{i} O_t^k }
+                                            {   \summy{k=1}{K} \; \dfrac{1}{P_k} \,  
+                                            		\summy{t=1}{T_k}   \alpha_t^k\pa{i} \beta_t^k\pa{i}  } \\
+        && \nonumber\\
+        \overline {V_{i}} &=& \dfrac        {   \summy{k=1}{K} \; \dfrac{1}{P_k} \,  
+        																				\summy{t=1}{T_k}   \alpha_t^k\pa{i} \beta_t^k\pa{i} O_t^k {O_t^k}' }
+                                            {   \summy{k=1}{K} \; \dfrac{1}{P_k} \,  
+                                            		\summy{t=1}{T_k}   \alpha_t^k\pa{i} \beta_t^k\pa{i}  }
+                            - \mu_i \mu'_i
+        \end{eqnarray}
+
+L'inconvénient de ces modèles est le calcul de la densité qui implique un produit matrice en $O\pa{d^3}$ où $d$ est la dimension de l'espace des observations. Etant donné la taille considérable de cette matrice, elles sont soit réduites à leur diagonale, soit factorisées entre les états. Pour cette dernière solution, le modèle hybride résultant est agencé de manière semblable à celui regroupant un modèle de Markov caché et un réseau de neurones. Le réseau de neurones agit comme un classifieur commun à tous les états, dans l'autre cas, c'est un mélange de lois normales qui modélisent la distribution des observations. \indexfrr{loi}{mélange}
+
+
+\begin{xremark}{calcul pratique de probabilités~: utlisation de coûts}
+L'utilisation de lois normales \index{coût} peut poser des problèmes informatiques de mise en \oe uvre. En effet, les probabilités sont alors souvent très faibles pour des espaces de grandes dimensions, quelques dizaines comme pour la reconnaissance de l'écriture manuscrite. Il arrive fréquemment que l'estimation de tels modèles nécessite le calcul de probabilités parfois inférieures à $10^{-300}$ qui est la limite d'un réel codé informatique sur huit octets. Il est alors préférable d'utiliser des coûts ou logarithme de probabilités lors des calculs.
+\end{xremark}
+
+
+
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------------------------------------
+\section{Chaînes de Markov d'ordres supérieurs}
+%----------------------------------------------------------------------------------------------------------------------
+
+\label{par_chaine_ordre_superieur}
+
+Jusqu'à présent, seules les chaînes de Markov cachées d'ordre un ont été utilisées, ceci signifie que l'état à l'instant $t$ ne dépend que de l'état à l'instant $t-1$, un ordre supérieur signifie que l'état à l'instat $t$ dépend de plusieurs des états précédents.
+
+\subsection{Définition d'une chaîne de Markov d'ordre $n$}
+
+La définition suivante concerne une chaîne de Markov et non une chaîne de Markov cachée : les émissions ne sont pas prises en compte.
+
+		\begin{xdefinition}{Chaîne de Markov d'ordre $n$}
+		\label{definition_mmc_ordre_n}
+		\indexfr{ordre}
+		
+		Soit $N\in\N^{\ast}$, on appelle une chaîne de Markov à $N$ états d'ordre $n$ une chaîne de Markov 
+		qui vérifie les conditions suivantes~:
+		
+		        \begin{enumerate}
+		        \item l'état à l'instant $t$ ne dépend que des états aux instants $\left(  t-1,...,t-n\right)$. 
+		        			Par conséquent~:
+		            $$
+		            \forall t>n, \; \pr{  q_{t}\left|  q_{t-1},...,q_{1},M\right. }  = \pr{   q_{t}\left| 
+		             q_{t-1},...,q_{t-n},M\right. }
+		            $$
+		            
+		        \item les probabilités de transition ne dépendent pas du temps, par conséquent :
+		        
+		            $$
+		            \begin{array}{l} \forall t_{1},t_{2}>1,\,\forall\left(i_{0},i_{1},...,i_{d}\right),\\
+		            \pr{  q_{t_{1}}=i_{0}\left|q_{t_{1}-1}=i_{1},...,
+		            q_{t_{1}-d}=i_{d},M\right.  }  = \pr{  q_{t_{2}}=i_{0}\left|  
+		            		q_{t_{2}-1}=i_{1},...,q_{t_{2}-d}=i_{d},M\right.  }
+		            \end{array}
+		            $$
+		            
+		        \end{enumerate}
+		\end{xdefinition}
+		
+
+On note $\mathcal{M}_{n}$ l'ensemble des chaîne de Markov d'ordre $n$.
+
+
+
+
+\subsection{Descente d'ordre}
+\indexfr{descente d'ordre}%
+\indexfrr{ordre}{descente}
+
+Tout d'abord, on définit la fonction suivante $f$ :
+
+        \begin{eqnarray}
+        \begin{array}{l}
+        g:\left\{  1,...,N\right\}  ^{n}\longrightarrow\left\{  1,...,N^{n}\right\}\\
+        g\left(  i_{1},...,i_{n}\right)  =\underset{k=1}{\overset{n}{\sum}}\pa{i_{k}-1}N^{k-1}+1
+        \end{array}
+        \label{markov_ordre_homomorphisme_un}
+        \end{eqnarray}
+
+		\begin{xproperty}{homomorphisme}
+		\label{propriete_chaine_ordre_n_1}%
+		Si $g$ est la fonction définie en (\ref{markov_ordre_homomorphisme_un}), alors $g$ est bijective.
+		\end{xproperty}
+
+
+Par conséquent, $g^{-1}$ existe et, on notera $\left[g^{-1}\left(l\right)\right]  _{k}$ la $k{{}^\circ}$ coordonnées de $g^{-1}\left(l\right)$. Cette fonction est tout simplement l'écriture des entiers en base $N$.
+
+Dans toute la suite, les état de sorties et d'entrées ne seront plus distincts des autres états, ceci permettra de ne pas traiter les probabilités de transition, les probabilités d'entrée et les probabilités de sortie de manière séparée.
+
+
+Soit une chaîne de Markov $M$ d'ordre $n$ contenant $N$ états représentés par l'ensemble $\vecteur{1}{N}$. Cette chaîne est entièrement définie par une hyper-matrice carrée $A_{M}\in\mathcal{M}_{N}^{n+1}\left(\R\right)  $ contenant les $\left( N\right)^{n+1}$ probabilités de transition de la chaîne de Markov $M\in\mathcal{M}_{n}$~:
+
+        $$
+        A_{M}\left(i_{1},...,i_{n},i_{n+1}\right)  =\pr{  q_{t}=i_{n+1}\left| 
+         q_{t-1}=i_{n},...,q_{t-n}=i_{1},M\right.  }
+        $$
+
+Si $e$ est l'état d'entrée du modèle, on pose comme convention :
+
+        \begin{eqnarray}
+        A_M \vecteur{i_1}{i_{n+1}} &=& \left \{
+        \begin{array}{l}
+        0 \text{ si } i_{n+1} = e \\
+        0 \text{ si } \exists k \infegal n \text{ tel que } i_k \neq e \text{ et } i_{k+1} = e \\
+        1 \text{ si } \exists k \text{ tel que }  3 \infegal k \infegal n \text{ et } \forall k' < k, \; i_{k'} =
+        		 e \text { et } \forall k' \supegal k, \; i_{k'} \neq e \\
+        \pr{q_t = i_{n+1} \, | \, \vecteurno{q_{t-1} = i_n}{q_{t-n} = i_1}} \text{ sinon}
+        \end{array}
+        \right. \label{hmm_equation_convention_ordre}
+        \end{eqnarray}
+
+On construit la chaîne de Markov $M^{\prime}$ d'ordre un contenant $N^{n}$ états représentés par l'ensemble $\vecteur{1}{N^n}$. Cette chaîne est entièrement définie par sa matrice carrée $A_{M^{\prime}}^{\prime }\in \mathcal{M}_{N^{n}}^{2}\left( \R\right) $ contenant les $\pa{N^n}^2$ probabilités de transition de la chaîne $M^{\prime}\in\mathcal{M}_1$~:
+
+        $$
+        A_{M^{\prime}}^{\prime}\left(  k,l\right)=\pr{ q_{t}=l\left| q_{t-1}=k,M^{\prime}\right.  }
+        $$
+
+La matrice des transitions $A_{M^{\prime}}^{\prime }$ est définie à partir de l'hyper-matrice $A_M$~:
+
+        \begin{eqnarray}
+        A_{M^{\prime}}^{\prime}\left(  k,l\right) &=&\left\{
+        \begin{array}[c]{l}%
+        A_{M}\left(  \left[  g^{-1}\left(  k\right)  \right]  _{1},g^{-1}\left( l\right)  \right) 
+        		 \text{ si }\forall i\in\left\{  1,...,n-1\right\}
+        ,\,\left[  g^{-1}\left(  l\right)  \right]  _{i}=\left[  g^{-1}\left(
+        k\right)  \right]  _{i+1}\\
+        0\text{ sinon}%
+        \end{array}
+        \right. \label{markov_ordre_homomorphisme_deux}\\
+        && \text{avec $g$ la fonction définie en (\ref{markov_ordre_homomorphisme_un})} \nonumber
+        \end{eqnarray}
+
+Enfin on définit la fonction $h$~:%
+
+        \begin{eqnarray}
+        \begin{array}[c]{l}
+        h:\mathcal{M}_{n}\longrightarrow\mathcal{M}_{1}\\
+        h\left(  M\right)  =M^{\prime} \text{ avec $M'$ construite comme en (\ref{markov_ordre_homomorphisme_deux})}%
+        \end{array}
+        \label{markov_ordre_homomorphisme_trois}
+        \end{eqnarray}
+
+On doit d'abord définir l'équivalence entre deux chaînes de Markov~:
+
+
+		\begin{xdefinition}{équivalence entre deux chaînes de Markov}
+		\label{definition_mm_equivalence}%
+		\indexfr{équivalence}
+		Soient $M_1$ et $M_2$ deux chaînes de Markov, on note $S$ l'ensemble des séquences d'états, alors~:
+		        $$
+		        \pa{M_1 \Longleftrightarrow M_2} \Longleftrightarrow \pa{\forall s \in S, \; \pr{s|M_1} = \pr{s|M_2}}
+		        $$
+		\end{xdefinition}
+		
+
+On peut maintenant énoncer le théorème suivant~:
+
+
+		\begin{xtheorem}{homomorphisme}
+		\label{markov_ordre_homomorphisme_trois_th}%
+		Avec ces notations, la fonction $h$ (\ref{markov_ordre_homomorphisme_trois}) définit un homomorphisme de $\left(\mathcal{M}_{n} ,
+		\Longleftrightarrow \right)$ dans $\left( \mathcal{M}_{1},\Longleftrightarrow\right)  $ où $\Longleftrightarrow$ 
+		est la relation d'équivalence	entre deux chaînes de Markov.
+		\end{xtheorem}
+
+
+
+
+\para{Rappel :}
+
+
+		\begin{xdefinition}{homomorphisme}
+		\label{definition_mmc_homomorphisme}%
+		Soit $\left(  E,\perp\right)  $ et $\left(  F,\perp\right)  $ deux espaces munis chacun 
+		d'une relation d'équivalence.\newline%
+		Soit $h:\left( E,\perp\right) \longrightarrow\left(  F,\perp\right)  $ une fonction, $h$ est un homomorphisme 
+		si et seulement si :
+		        $$
+		        \forall\left(  x,y\right)  \in E^{2},\; x\perp y\Longrightarrow h\left(  x\right)  \perp h\left(y\right)
+		        $$
+		\end{xdefinition}
+		
+
+
+\begin{xdemo}{theoreme}{\ref{markov_ordre_homomorphisme_trois_th}}
+
+\textbf{Rappel :} L'état 0 correspond à l'état d'entrée.\newline%
+
+
+Soit $s=\vecteur{s_1}{s_T}$ une séquence d'états du modèle $M$.\newline%
+On définit la séquence d'états $u=k\left(  s\right)  $ comme suit~:
+
+        $$
+        u=k\pa{s}=\left(  u_{1},...,u_{T}\right)  =\left(  \left(
+        \begin{array}[c]{c}%
+        u_{11}\\
+        \vdots\\
+        u_{1n}%
+        \end{array}
+        \right),....,\left(
+        \begin{array}[c]{c}%
+        u_{T1}\\
+        \vdots\\
+        u_{Tn}%
+        \end{array}
+        \right)  \right)  \in\left[  \left\{  1,...,N\right\}  ^{n}\right]  ^{T}
+        $$
+avec :
+        $$
+        \forall t\in \intervalle{1}{T}, \; \forall l\in \intervalle{1}{n}, \; u_{tl} =
+            \left\{
+            \begin{array}[c]{l}%
+            s_{t+l-n} \text { si } t+l-n > 0\\
+            e \text { si } l+t-n\leqslant0 \text{ où } e \text{ est l'état d'entrée de } M
+            \end{array}
+            \right.
+        $$
+
+Cette séquence vérifie :
+
+        $$
+        \begin{array}{rrcl}
+        \forall t \in \intervalle{2}{T}, \; \forall l\in \intervalle{1}{n-1}, & u_{t-1,l+1}&=&u_{tl} \\
+        \forall t \in \intervalle{1}{T-1}, & u_{tn} &=& u_{t+1,1}
+        \end{array}
+        $$
+
+La convention choisie en (\ref{hmm_equation_convention_ordre}) implique que :
+
+        $$
+        \pr{  s\left|  M\right.  } = \pr{ u\left|M^{\prime}\right.  }  = \pr{ h\left( s\right) \left|
+         M^{\prime}\right.  }
+        $$
+
+Donc, soit $\left(  M,N\right)  \in\left(  \mathcal{M}_{n}\right)  ^{2},$
+
+        $$
+        \biggcro{M \Longleftrightarrow N } \Longrightarrow  \biggcro{ \forall s \in S ,\; 
+        		_pr{  s\left| M\right.  }
+        = \pr{   s\left| N\right.
+        } \Longrightarrow \forall s,\, \pr{   k\left(  s\right)  \left| h\left( M\right) \right. } 
+        = \pr{  k\left(  s\right) \left|
+        g\left( N\right)  \right. }}
+        $$
+
+De plus, d'après (\ref{markov_ordre_homomorphisme_deux}), on déduit que :
+
+        $$
+        \forall u,\; \biggcro{  \nexists s \in S \text{ tel que }k\left(  s\right)  =u } \Longrightarrow \pr{
+         u\left|  g\left(  M\right) \right.
+        } = \pr{  u\left|  g\left(  N\right)  \right.  }  =0
+        $$
+
+Donc :
+
+        $$
+        \biggcro { M\Longleftrightarrow N }  \Longrightarrow \biggcro{ g\left( M\right) 
+         \Longleftrightarrow g\left(  N\right)  }
+        $$
+
+\end{xdemo}
+
+
+
+
+
+
+
+
+
+\subsection{Définition d'une chaîne de Markov cachée d'ordre $n$}
+
+Le paragraphe précédent a montré comment transformer une chaîne de Markov d'ordre $n$ en une chaîne de Markov d'ordre un. Ce résultat peut être étendu aux chaînes de Markov cachées~:
+
+		\begin{xdefinition}{chaîne de Markov cachée d'ordre $n$}
+		\label{hmm_markov_ordre_n_def}%
+		\indexfr{ordre}
+		
+		Soit $N\in\N^{\ast}$, soit une chaîne de Markov cachée à $N$ états d'ordre $n$ dont les émissions sont discrètes 
+		et appartiennent à l'ensemble $\vecteur{1}{D}$, cette chaîne vérifie les hypothèses suivantes~:
+		
+		\begin{enumerate}
+		\item L'état à l'instant $t$ ne dépend que des états aux instants $\left(  t-1,...,t-n\right)$. Par conséquent :
+		        $$
+		        \forall t>n,\quad \pr{q_{t}\left|  q_{t-1},...,q_{1},M\right. }  = \pr{  q_{t}\left| 
+		         q_{t-1},...,q_{t-n},M\right. }
+		        $$
+		
+		\item Les probabilités de transition ne dépendent pas du temps, par conséquent :
+		        $$
+		        \begin{array}{l}
+		        \forall t_{1},t_{2}>1,\,\forall\left(i_{0},i_{1},...,i_{n}\right)  ,\\
+		        \pr{  q_{t_{1}}=i_{0}\left|q_{t_{1}-1}=i_{1},...,q_{t_{1}-n}=i_{n},M\right.  }  
+		        = \pr{  q_{t_{2}}=i_{0}\left|  q_{t_{2}-1}=i_{1},
+		        ...,q_{t_{2}-n}=i_{n},M\right. }
+		        \end{array}
+		        $$
+		
+		\item Les probabilités d'émission ne dépendent que des états aux instants $\left(  t,...,t-n+1\right)$ :
+		
+		        $$
+		        \forall t\geqslant 1,\, \pr{ O_{t}\left|q_{1},...,q_{t},O_{1},...,O_{t-1},M\right.  } =
+		        	\pr{  O_{t}\left| 
+		         \vecteur{q_{t}}{q_{t-n+1}},M\right.}
+		        $$
+		
+		\item Les probabilités d'émission ne dépendent pas du temps :
+		
+		        $$
+		        \begin{array}{l}
+		        \forall t_{1},t_{2}>1,\;\forall\left(i_{1},...,i_{n}\right), \; \forall o, \\
+		        \pr{  O_{t_{1}}=o\left|q_{t_{1}}=i_{1},...,q_{t_{1}-n+1}=i_{n},M\right.  }  =
+		        \pr{ O_{t_{2}}=o\left| 
+		         q_{t_{2}}=i_{1},
+		        ...,q_{t_{2}-n+1}=i_{n},M\right.  }
+		        \end{array}
+		        $$
+		
+		\end{enumerate}
+		
+		\end{xdefinition}
+		
+\begin{xremark}{autres types d'émission}
+Cette définition peut être déclinée pour des observations d'un type différent (réseau de neurones, normales...).
+\end{xremark}
+
+
+
+
+On note $\mathcal{C}_{n}$ l'ensemble des chaînes de Markov cachées d'ordre $n$, en appliquant les résultats du paragraphe précédent, il est possible de construire une fonction $h^{\prime}$ :%
+
+        \begin{eqnarray}%
+        \begin{array}{l}
+        h^{\prime}:\mathcal{C}_{n}\longrightarrow\mathcal{C}_{1}\\
+        h'\left(  C\right)  =C^{\prime} \text{ avec } M_{C'} = h\pa{M_C} \text{ où } \\
+        \quad\quad\quad\quad\quad\quad M_C \text { est la chaîne de Markov cachée dans } C \\
+        \quad\quad\quad\quad\quad\quad M_{C'} \text { est la chaîne de Markov cachée dans } C'%
+        \end{array}
+        \label{markov_ordre_homomorphisme_quatre}
+        \end{eqnarray}
+
+
+$h\pa{C}$ vérifie~:
+
+        \begin{eqnarray*}
+        \pr{  q_{t}=l\left|  q_{t-1}=k,M^{\prime}\right.  }  &=& \left\{%
+        \begin{array}[c]{l}%
+        \pr{  q_{t}=\left[  g^{-1}\left(  l\right)  \right]  _{n}\left| 
+        	 \vecteurno{q_{t-1}=\crochet{g^{-1}\pa{k}}_{n}} {q_{t-n}=
+        \crochet{g^{-1}\pa{k}}_{1}} \right.
+            ,M} \medskip\\
+        \quad\quad\quad \text{ si }\forall i\in\left\{  1,...,n-1\right\}  ,\,\left[  g^{-1}\left(
+            l\right)  \right]  _{i}=\left[  g^{-1}\left(  k\right)  \right]  _{i+1}\\
+        e\text{ sinon (} e \text{ est l'état d'entrée de la chaîne de Markov)}%
+        \end{array}
+        \right. \\
+        \pr{ O_{t}=o\left|  q_{t}=l,M^{\prime}\right.  }  &=& \pr{ O_{t}=o\left| 
+         \vecteurno{q_{t}=\crochet{g^{-1}\pa{l}}_{n}} {q_{t-n+1}=
+        \crochet{g^{-1}\pa{l}}_{1}} ,M\right. }
+        \end{eqnarray*}
+
+On doit d'abord définir l'équivalence entre deux chaînes de Markov cachées :
+
+
+		\begin{xdefinition}{équivalence entre deux chaînes de Markov cachées}
+		\label{definition_hmm_equivalence}%
+		Soient $C_1$ et $C_2$ deux chaînes de Markov cachée, on note $\mathcal{O}$ l'ensemble des séquences 
+		d'observations, alors :
+		        $$
+		        \biggcro{C_1 \Longleftrightarrow C_2} \Longleftrightarrow \biggcro{\forall O
+		        \in \mathcal{O}, \; \pr{O|C_1} = \pr{O|C_2}}
+		        $$
+		\end{xdefinition}
+
+
+
+
+On peut maintenant énoncer le théorème suivant :
+
+
+		\begin{xtheorem}{homomorphisme}
+		\label{theoreme_equivalence_cachee}%
+		\indexfr{homomorphisme}
+		Avec ces notations, la fonction $h'$ (\ref{markov_ordre_homomorphisme_quatre}) 
+		définit un homomorphisme de $\left(\mathcal{C}_{n} ,
+		 \Longleftrightarrow \right)$ dans $\left( \mathcal{C}_{1},\Longleftrightarrow\right)  $ où 
+		 $\Longleftrightarrow$ est la relation
+		  d'équivalence entre deux chaînes de Markov. De plus, $\forall C\in \mathcal{C}_n, \; h\pa{C} 
+		  \Longleftrightarrow C$.
+		\end{xtheorem}
+
+
+\begin{xdemo}{théorème}{\ref{theoreme_equivalence_cachee}}
+Ce théorème est un corollaire du théorème~\ref{markov_ordre_homomorphisme_trois_th} (page~\pageref{markov_ordre_homomorphisme_trois_th}).
+\end{xdemo}
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Définition d'une chaîne de Markov cachée d'ordre $\pa{p,q}$}
+
+
+Ces modèles sont ceux dont les hypothèses sont les moins contraignantes.
+
+
+		\begin{xdefinition}{chaîne de Markov cachée d'ordre $\pa{p,q}$}%
+		\label{hmm_markov_ordre_pq_def}%
+		\indexfr{ordre}
+		Soit $N\in\N^{\ast}$, soit une chaîne de Markov cachée à $N$ états d'ordre $p>0$ dont les émissions 
+		sont discrètes et appartiennent à l'ensemble $\vecteur{1}{D}$, cette chaîne vérifie les hypothèses suivantes~:
+		
+		\begin{enumerate}
+		\item L'état à l'instant $t$ ne dépend que des états aux instants $\left(  t-1,...,t-p\right)$ et 
+		des observations aux instants
+		        $\vecteur{O_{t-1}}{O_{t-q}}$ :
+		        $$
+		        \forall t>p,\; \pr{ q_{t}\left|  \overline{q_{t-1}}, \overline{O_{t-1}},M\right. }
+		        =   \pr{  q_{t}\left|  q_{t-1},...,q_{t-p},O_{t-1},...,O_{t-q},M\right. }
+		        $$
+		
+		\item Les probabilités de transition ne dépendent pas du temps, Par conséquent :
+		        $$
+		        \begin{array}{l}
+		        \forall t_{1},t_{2}>1,\;\forall\left(i_{0},...,i_{p}\right), \; \forall\left(x_{1},...,x_{q}\right), \; \\
+		        \pr{   q_{t_{0}}=i_0\left|q_{t_{1}}=i_{1},...,q_{t_{1}-p+1}=i_{n}, 
+		        		O_{t_{1}}=x_{1},...,O_{t_{1}-q}=x_{n},M\right.  }  \\
+		        \quad\quad= \pr{   q_{t_{2}}=i_0\left| 
+		         q_{t_{2}}=i_{1},...,q_{t_{2}-n+1}=i_{n},O_{t_{2}}=x_{1},...,O_{t_{2}-q}=x_{n},M\right.  }
+		        \end{array}
+		        $$
+		
+		\item Les probabilités d'émission ne dépendent que des états aux instants $\left(  t,...,t-p+1\right)$ 
+					et des observations aux instants $\vecteur{O_{t-1}}{O_{t-Q}}$~:
+					
+		        $$
+		        \forall t\geqslant 1,\, \pr{ O_{t}\left|q_{1},...,q_{t},O_{1},...,O_{t-1},M\right.  } =
+		        \pr{   O_{t}\left|  \vecteur{q_{t}}{q_{t-p+1}},\vecteur{O_{t-1}}{O_{t-q}},M\right.    }
+		        $$
+		
+		\item Les probabilités d'émission ne dépendent pas du temps~:
+		
+		        $$
+		        \begin{array}{l}
+		        \forall t_{1},t_{2}>1,\;\forall\left(i_{1},...,i_{p}\right), \; 
+		        			\forall\left(x_{1},...,x_{q}\right), \; \forall o, \\
+		        \pr{ O_{t_{1}}=o\left|q_{t_{1}}=i_{1},...,q_{t_{1}-p+1}=i_{n},O_{t_{1}} =
+		        			x_{1},...,O_{t_{1}-q}=x_{n},M\right.  }  \\
+		        \quad\quad= \pr{  O_{t_{2}}=o\left| 
+		        	 q_{t_{2}}=i_{1},...,q_{t_{2}-n+1}=i_{n},O_{t_{2}}=x_{1},...,O_{t_{2}-q}=x_{n},M\right.  }
+		        \end{array}
+		        $$
+		        
+		\end{enumerate}
+		\end{xdefinition}
+		
+
+
+Grâce à une démonstration similaire, les paragraphes précédents nous permettent d'énoncer le théorème suivant~:
+
+		\begin{xtheorem}{homomorphisme}%
+		\label{theoreme_hmm_homomorphisme_1}%
+		Soit $\mathcal{C}_{p,q} \pa{\mathcal{X}}$ l'ensemble des chaînes de Markov cachées d'ordre $\pa{p,q}$ 
+		dont les observations
+			 appartiennent à l'ensemble $\mathcal{X}$. Alors il existe un homomorphisme de $\pa{\mathcal{C}_{p,q}
+			  \pa{\mathcal{X}},\Longleftrightarrow}$ dans $\pa{\mathcal{C}_{1,1} \pa{\mathcal{X}^q},\Longleftrightarrow}$
+		\end{xtheorem}
+
+\begin{xdemo}{théorème}{\ref{theoreme_hmm_homomorphisme_1}}
+La démonstration est similaire à celle du théorème~\ref{markov_ordre_homomorphisme_trois_th} (page~\pageref{markov_ordre_homomorphisme_trois_th}).
+\end{xdemo}
+
+
+
+
+
+
+		\begin{xcorollary}{homomorphisme}
+		\label{corollaire_chaine_markov_cachee_1}%
+		Si $\mathcal{X}$ est un ensemble fini, il existe un homomorphisme de 
+		$\pa{\mathcal{C}_{p,q} \pa{\mathcal{X}},\Longleftrightarrow}$ dans
+		$\pa{\mathcal{C}_{1,0} \pa{\mathcal{X}^q},\Longleftrightarrow}$
+		\end{xcorollary}
+
+
+
+
+
+
+
+
+
+\subsection{Conclusion}
+
+
+Cette annexe a présenté les modèles de Markov cachés, leur utilisation pour la modélisation de séquences discrètes ou continues et leur estimation. Pour des raisons calculatoires, les chaînes de Markov cachées d'ordre $\pa{p,q}$ avec $q>0$ aux émissions continues sont peu utilisées. Il est alors possible de n'envisager que des modèles de chaînes de Markov cachées d'ordre $\pa{1,0}$ puisque toute chaîne d'ordre $\pa{p>1,0}$ a son équivalent d'ordre $\pa{1,0}$. Les calculs avec ces modèles sont simples et leur représentation peut être réduite à un simple graphe, ce dernier point facilite leur réalisation informatique.
+
+
+
+\subsection{Extension}
+
+\indexfrr{loi}{normale}
+
+L'article \citeindex{Bicego2003} démontre aussi l'équivalence entre un modèle de Markov caché dont les émissions associés aux états sont des mélanges de lois normales avec un modèle de Markov caché dont les émissions sont des lois gaussiennes. Le second modèle comporte bien évidemment plus d'états.
+
+
+
+
+\firstpassagedo{
+	\begin{thebibliography}{99}
+	\input{hmm_bibliographie.tex}
+	\end{thebibliography}
+}
+
+
+\input{../../common/livre_table_end.tex}
+\input{../../common/livre_end.tex}
