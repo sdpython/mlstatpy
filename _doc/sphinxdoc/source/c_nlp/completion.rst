@@ -28,14 +28,8 @@ Il existe de nombreuses librairies qui les implémentent.
 La plus connue en Python est `whoosh <https://whoosh.readthedocs.io/en/latest/>`_.
 
 Quelques éléments de codes sont disponibles dans le module
-:mod:`completion <mlstatpy.nlp.completion>` et le notebook :
-
-.. toctree::
-    :maxdepth: 1
-    
-    notebooks/completion_trie
-
-
+:mod:`completion <mlstatpy.nlp.completion>` et le notebook 
+:ref:`completiontrierst`.
 
 
 .. contents::

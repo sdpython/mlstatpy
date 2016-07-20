@@ -4,7 +4,7 @@
 Démonstration du théorème de la densité des réseaux de neurones
 ===============================================================
 
-.. index:: rn_enonce_probleme_regression
+.. _rn_enonce_probleme_regression:
 
 Formulation du problème de la régression
 ++++++++++++++++++++++++++++++++++++++++

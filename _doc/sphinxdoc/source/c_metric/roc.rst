@@ -28,6 +28,7 @@ En faisant varier :math:`x`, on obtient une courbe
 (source : `wikipedia <http://en.wikipedia.org/wiki/File:Roccurves.png>`_) :
 
 .. image:: rocimg/Roccurves.png
+    :width: 300
 
 Cette courbe sert également à comparer différents classifieurs. 
 Plus une courbe a des valeurs élevées, plus l'aire sous la courbe 
@@ -40,15 +41,15 @@ un classifier on dispose toujours d'une base contenant les réponses attendues.
 En fonction du score :math:`x` et d'un seuil :math:`s`, on définit quatre cas :
 
 ======================= =========================== =======================
-                        réponse prédite est +       réponse prédite est -
+cas                     réponse prédite est +       réponse prédite est -
 ======================= =========================== =======================
 :math:`x \supegal s`    TP: vrai (true) positif     FP: faux positif
 :math:`x < s`           TN: vrai (true) négatif     FN: faux négatif
 ======================= =========================== =======================
 
-A partir de ces définitions, on définit :
-
 .. index:: rappel, précision
+
+A partir de ces définitions, on définit :
 
 * la `précision <https://en.wikipedia.org/wiki/Information_retrieval#Precision>`_ : :math:`\frac{ TP }{ TP + FP }`  
 * le `rappel ou recall <https://en.wikipedia.org/wiki/Information_retrieval#Recall>`_ : :math:`\frac{ TP }{ TP + TN }` 
@@ -251,13 +252,12 @@ et on utilise le fait que :math:`\var{\hat{A}} = \esp\pa{\hat{A}^2} - \hat{A}^2`
 
 .. math::
 
-    \hat{A}^2 = \frac{1}{n^2 m^2} \sum_{i=1}^{m}\sum_{j=1}^{n} \indicatrice{ X_i < Y_j} +
-    \frac{1}{n^2 m^2}  \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i} 
-    \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_j} + 
-    \frac{1}{n^2  m^2}  \frac{1}{n^2 m^2}  \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{l \neq j}
-    \indicatrice{ X_i < Y_j}  \indicatrice{ X_i < Y_l} + 
-    \frac{1}{n^2  m^2} \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i}\sum_{l \neq j}
-    \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_l} 
+    \begin{array}{rl}
+    \hat{A}^2 &= \frac{1}{n^2 m^2} \sum_{i=1}^{m}\sum_{j=1}^{n} \indicatrice{ X_i < Y_j} \\
+    & + \frac{1}{n^2 m^2}  \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i} \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_j} \\
+    & + \frac{1}{n^2  m^2} \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{l \neq j} \indicatrice{ X_i < Y_j}  \indicatrice{ X_i < Y_l}  \\
+    & -\frac{1}{n^2  m^2} \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i}\sum_{l \neq j} \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_l} 
+    \end{array}
 		  
 On en déduit que :
 
@@ -277,7 +277,7 @@ On retrouve l'expression cherchée.
 
 .. _roc_confiance_inter:
 
-Intervalles de confiance une la courbe
+Intervalles de confiance sur la courbe
 ======================================
 
 Les systèmes de reconnaissance sont souvent ajustés de telle manière 
@@ -290,7 +290,7 @@ Construction de la courbe ROC
 +++++++++++++++++++++++++++++
 
 Ce premier paragraphe détaille la manière dont 
-est construite une courbe ROC (voir :ref:`def_roc_2`).
+est construite une courbe ROC (voir :ref:`Courbe ROC <def_roc_2>`).
 
 .. mathdef::
     :title: Courbe ROC
@@ -328,7 +328,7 @@ d'après leur définition. La courbe peut être rendue continue par interpolatio
 
     On cherche un taux de reconnaissance pour un taux d'erreur donné. 
     On dispose pour cela d'une courbe ROC obtenue par 
-    l'algorithme :ref:`algo_courb_ROC` et définie par les points 
+    l'algorithme de la :ref:`courbe ROC <algo_courb_ROC>` et définie par les points 
     `R_{OC} = \acc{ \pa{e_j,r_j} | 1 \infegal j \infegal k}`. 
     On suppose ici que :math:`\pa{e_1,r_1} = \pa{1,1}` et :math:`\pa{e_k,r_k} = \pa{0,}`. 
     Si ce n'est pas le cas, on 
@@ -372,8 +372,8 @@ On s'inspire pour cela des méthodes de `bootstrap <https://fr.wikipedia.org/wik
     
     * On construit un nouvel ensemble :math:`\pa{X'_i,\theta'_i}_{1 \infegal i \infegal n}` 
       construit par un tirage aléatoire dans l'ensemble :math:`E` avec remise.
-    * L'algorithme :ref:`algo_courb_ROC` permet de constuire la courbe :math:`R_{OC}^k`.
-    * L'algorithme :ref:`algo_courb_taux_lin` permet ensuite de déterminer 
+    * L'algorithme de la :ref:`courbe ROC <algo_courb_ROC>` permet de constuire la courbe :math:`R_{OC}^k`.
+    * L'algorithme de :ref:`taux de classification à erreur fixe <algo_courb_taux_lin>` permet ensuite de déterminer 
       un taux de reconnaissance :math:`\rho_k` pour le taux d'erreur :math:`e^*`.
     
     La liste :math:`\vecteur{\rho_1}{\rho_C}` est triée par ordre croissant. 
@@ -418,6 +418,7 @@ La méthode bootstrap peut elle aussi être appliquée pour
 calculer un intervalle de confiance pour l'aire sous la courbe (AUC). 
 
 .. image:: rocimg/roc_p100.png
+    :width: 300 
 
 Courbe ROC (l'axe des abscisse est inversé) obtenue pour 100 tirages aléatoires.
 L'aire sous la courbe est égale à 0.80 et l'intervalle de confiance à 95% 
@@ -440,7 +441,7 @@ possible, le score ne peut correspondre à un quelconque critère confiance.
 
 +--------------------------------------+--------------------------------------+
 | .. image:: rocimg/score_dist_1.png   | .. image:: rocimg/score_dist_2.png   |
-|     :width: 500                      |     :width: 500                      |
+|     :width: 400                      |     :width: 400                      |
 +--------------------------------------+--------------------------------------+
 
 
@@ -472,7 +473,7 @@ de lecture.
 
 +-------------------------------------------+--------------------------------------------+
 | .. image:: rocimg/lecture_5_curve.png     | .. image:: rocimg/lecture_intervalle.png   |
-|     :width: 500                           |     :width: 500                            |
+|     :width: 400                           |     :width: 400                            |
 +-------------------------------------------+--------------------------------------------+
 
 La première image montre 5 courbes taux de lecture / taux de substitutions. 

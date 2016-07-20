@@ -297,7 +297,7 @@ De la même manière, la norme du gradient peut exploser plus particulièrement 
 `Understanding the exploding gradient problem <http://arxiv.org/pdf/1211.5063v1.pdf>`_.
 
 
-.. selection_connexion:
+.. _selection_connexion:
 
 
 Sélection de connexions
@@ -308,7 +308,7 @@ Ce paragraphe présente un algorithme de sélection de l'architecture
 d'un réseau de neurones proposé par Cottrel et Al. dans [Cottrel1995]_. 
 La méthode est applicable à tout réseau de neurones mais n'a été démontrée 
 que pour la classe de réseau de neurones utilisée pour la 
-:ref:`régression <nn-regression>`. Les propriétés qui suivent ne sont 
+:ref:`régression <rn_section_regression>`. Les propriétés qui suivent ne sont 
 vraies que des réseaux à une couche cachée et dont les sorties 
 sont linéaires. Soit :math:`\pa{X_k,Y_k}` un exemple de la base 
 d'apprentissage, les résidus de la régression sont supposés normaux 

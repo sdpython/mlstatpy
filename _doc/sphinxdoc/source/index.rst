@@ -13,10 +13,6 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
 (format brut de fonderie) et sur 
 `GitHub/mlstatpy <https://github.com/sdpython/mlstatpy>`_ |gitlogo|.
 
-.. raw:: html
-
-    <hr />
-
 .. only:: html
 
     .. toctree::
@@ -26,7 +22,6 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
         c_ml/index
         c_nlp/index
         c_metric/index
-        end_index
 
 .. only:: latex
 
@@ -37,12 +32,13 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
         c_ml/index
         c_nlp/index
         c_metric/index
-        end_index
         
-.. raw:: html
+.. toctree::
+    :maxdepth: 1
+    
+    end_index
+        
 
-
-    <hr />
     
 On fait beaucoup de choses avec l'informatique mais en pratique
 on doit maintenir, on doit réécrire sans cesse.
@@ -102,7 +98,7 @@ Xavier Dupré
 +----------------------+---------------------+---------------------+--------------------+------------------------+------------------------------------------------+
 | :ref:`l-modules`     |  :ref:`l-functions` | :ref:`l-classes`    | :ref:`l-methods`   | :ref:`l-staticmethods` | :ref:`l-properties`                            |
 +----------------------+---------------------+---------------------+--------------------+------------------------+------------------------------------------------+
-| :ref:`modindex`      |  :ref:`l-example2`  | :ref:`search`       | :ref:`l-license`   | :ref:`l-changes`       | :ref:`l-README`                                |
+| :ref:`modindex`      |  :ref:`l-EX2`       | :ref:`search`       | :ref:`l-license`   | :ref:`l-changes`       | :ref:`l-README`                                |
 +----------------------+---------------------+---------------------+--------------------+------------------------+------------------------------------------------+
 | :ref:`genindex`      |  :ref:`l-FAQ2`      | :ref:`l-notebooks`  |                    | :ref:`l-statcode`      | `Unit Test Coverage <coverage/index.html>`_    |
 +----------------------+---------------------+---------------------+--------------------+------------------------+------------------------------------------------+
