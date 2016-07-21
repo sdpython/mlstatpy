@@ -29,7 +29,7 @@ class CompletionTrieNode(object):
         """
         usual
         """
-        return "{2}:{0}:{1}".format(self.value, self.weight, "#" if self.leave else "-")
+        return "[{2}:{0}:w={1}]".format(self.value, self.weight, "#" if self.leave else "-")
 
     def _add(self, key, child):
         """
@@ -62,9 +62,19 @@ class CompletionTrieNode(object):
                 res.extend(r)
         return res
 
+    def __iter__(self):
+        """
+        iterates on all nodes
+        """
+        yield self
+        if self.children is not None:
+            for v in self.children.values():
+                for _ in v:
+                    yield _
+
     def items(self) -> Iterator[Tuple[float, str, 'CompletionTrieNode']]:
         """
-        iterates on childen, iterates on weight, key, child
+        iterates on children, iterates on weight, key, child
         """
         if self.children is not None:
             for k, v in self.children.items():
@@ -139,6 +149,12 @@ class CompletionTrieNode(object):
         @param      prefix      prefix
         @return                 node or None for no result
         """
+        if len(prefix) == 0:
+            if not self.value:
+                return self
+            else:
+                raise ValueError(
+                    "find '{0}' but node is not empty '{1}'".format(prefix, self.value))
         node = self
         for c in prefix:
             if node.children is not None and c in node.children:
@@ -188,10 +204,37 @@ class CompletionTrieNode(object):
                 break
         return metric, best
 
+    def min_dynamic_keystroke(self, word: str) -> Tuple[int, int]:
+        """
+        returns the dynamic minimum keystrokes for a word,
+
+        @param      word        word
+        @return                 number, length of best prefix, iteration it stops moving
+
+        This function must be called after @see me precompute_stat
+        and @see update_stat_dynamic.
+        See :ref:`Dynamic Minimum Keystroke <def-mks2>`.
+
+        .. math::
+            :nowrap:
+
+            \\begin{eqnarray*}
+            K(q, k, S) &=& \\min\\acc{ i | s_i \\succ q[1..k], s_i \\in S } \\\\
+            M'(q, S) &=& \\min_{0 \\infegal k \\infegal l(q)} \\acc{ M'(q[1..k], S) + K(q, k, S) | q[1..k] \\in S }
+            \\end{eqnarray*}
+        """
+        node = self.find(word)
+        if not hasattr(node, "stat"):
+            raise AttributeError("run precompute_stat and update_stat_dynamic")
+        if not hasattr(node.stat, "mks"):
+            raise AttributeError("run precompute_stat and update_stat_dynamic\nnode={0}\n{1}".format(
+                self, "\n".join(sorted(self.stat.__dict__.keys()))))
+        return node.stat.mks, node.stat.mks_, node.stat.mksi_
+
     def precompute_stat(self):
         """
-        compute and stores list of suggestions for each node,
-        compute others metrics
+        computes and stores list of suggestions for each node,
+        computes mks
 
         @param      clean   clean stat
         """
@@ -199,14 +242,16 @@ class CompletionTrieNode(object):
         stack.extend(self.leaves())
         while len(stack) > 0:
             pop = stack.popleft()
-            if hasattr(pop, "stat") and pop.stat is not None:
+            if pop.stat is not None:
                 continue
             if not pop.children:
                 pop.stat = CompletionTrieNode._Stat()
                 pop.stat.suggestions = []
                 pop.stat.mks0 = len(pop.value)
                 pop.stat.mks0_ = len(pop.value)
-            elif all(hasattr(v, "stat") and v.stat is not None for v in pop.children.values()):
+                if pop.parent is not None:
+                    stack.append(pop.parent)
+            elif all(v.stat is not None for v in pop.children.values()):
                 pop.stat = CompletionTrieNode._Stat()
                 if pop.leave:
                     pop.stat.mks0 = len(pop.value)
@@ -219,6 +264,37 @@ class CompletionTrieNode(object):
             else:
                 # we'll do it again later
                 stack.append(pop)
+
+    def update_stat_dynamic(self):
+        """
+        must be called after @see me precompute_stat
+        and computes dynamic mks (see :ref:`Dynamic Minimum Keystroke <def-mks2>`)
+
+        @return         number of iterations to converge
+        """
+        for node in self:
+            if node.leave:
+                node.stat.init_dynamic_minimum_keystroke()
+            node.stat.iter_ = 0
+        updates = 1
+        iter = 0
+        while updates > 0:
+            updates = 0
+            done = {}
+            stack = []
+            stack.append(self)
+            while len(stack) > 0:
+                pop = stack.pop()
+                if pop.stat.iter_ > iter:
+                    continue
+                if pop.leave:
+                    updates += pop.stat.update_dynamic_minimum_keystroke(
+                        len(pop.value))
+                if pop.children:
+                    stack.extend(pop.children.values())
+                pop.stat.iter_ += 1
+            iter += 1
+        return iter
 
     class _Stat:
         """
@@ -238,7 +314,8 @@ class CompletionTrieNode(object):
             indexes.append(0)
             last = Fake()
             last.stat = CompletionTrieNode._Stat()
-            last.stat.suggestions = list(sorted((_.weight, _) for _ in nodes))
+            last.stat.suggestions = list(
+                sorted((_.weight, _) for _ in nodes if _.leave))
             nodes = list(nodes)
             nodes.append(last)
 
@@ -271,7 +348,37 @@ class CompletionTrieNode(object):
                     sug.stat.mks0 = nl
                     sug.stat.mks0_ = lw
 
-        def str_mks(self) -> str:
+        def update_dynamic_minimum_keystroke(self, lw):
+            """
+            update dynamic minimum keystroke for the suggestions
+
+            @param      lw      prefix length
+            @return             number of updates
+            """
+            self.mks_iter += 1
+            update = 0
+            for i, wsug in enumerate(self.suggestions):
+                sug = wsug[1]
+                if not sug.leave:
+                    continue
+                nl = self.mks + i + 1
+                if sug.stat.mks > nl:
+                    sug.stat.mks = nl
+                    sug.stat.mks_ = lw
+                    sug.stat.mksi_ = self.mks_iter
+                    update += 1
+            return update
+
+        def init_dynamic_minimum_keystroke(self):
+            """
+            initializes mks from mks0
+            """
+            self.mks = self.mks0
+            self.mks_ = self.mks0_
+            self.mks_iter = 0
+            self.mksi_ = 0
+
+        def str_mks0(self) -> str:
             """
             return a string with metric information
             """
@@ -279,3 +386,13 @@ class CompletionTrieNode(object):
                 return "MKS0={0} *={1} l={2}".format(self.mks0, self.mks0_, len(self.suggestions))
             else:
                 return "-"
+
+        def str_mks(self) -> str:
+            """
+            return a string with metric information
+            """
+            s0 = self.str_mks0()
+            if hasattr(self, "mks"):
+                return s0 + " MKS={0} *={1} i={2}".format(self.mks, self.mks_, self.mksi_)
+            else:
+                return s0

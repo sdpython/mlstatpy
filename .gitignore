@@ -250,4 +250,4 @@ _doc/sphinxdoc/source/phdoc_static/require.js
 _doc/sphinxdoc/require.js
 ex.*
 m.temp
-_doc/notebooks/ml/.ipynb_checkpoints
+_doc/notebooks/*/.ipynb_checkpoints

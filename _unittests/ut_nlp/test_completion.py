@@ -87,7 +87,7 @@ class TestCompletion(unittest.TestCase):
         st = [str(_) for _ in nodes]
         fLOG(st)
         self.assertEqual(
-            st, ['-::1', '#:a:4', '#:ab:2', '#:abc:3', '#:abcd:1'])
+            st,  ['[-::w=1]', '[#:a:w=4]', '[#:ab:w=2]', '[#:abc:w=3]', '[#:abcd:w=1]'])
         find = trie.find('a')
         assert find
         ms = [(word, trie.min_keystroke(word)) for k, word in queries]
@@ -118,12 +118,59 @@ class TestCompletion(unittest.TestCase):
         queries = [(None, 'a'), (None, 'ab'), (None, 'abc'), (None, 'abcd')]
         trie = CompletionTrieNode.build(queries)
         trie.precompute_stat()
+        trie.update_stat_dynamic()
         for leave in trie.leaves():
             if leave.stat is None:
                 raise Exception("None for {0}".format(leave))
-            mk = trie.min_keystroke(leave.value)
-            fLOG(leave.value, mk, leave.stat.str_mks())
-            self.assertEqual(mk, (leave.stat.mks0, leave.stat.mks0_))
+            find = trie.find(leave.value)
+            self.assertEqual(id(find), id(leave))
+            assert hasattr(leave, "stat")
+            assert hasattr(leave.stat, "mks0")
+            assert hasattr(leave.stat, "mks")
+            mk1 = trie.min_keystroke(leave.value)
+            try:
+                mk = trie.min_dynamic_keystroke(leave.value)
+            except Exception as e:
+                raise Exception(
+                    "{0}-{1}-{2}-{3}".format(id(trie), id(leave), str(leave), leave.leave)) from e
+            if mk[0] > mk1[0]:
+                raise Exception("weird {0} > {1}".format(mk, mk1))
+            fLOG(leave.value, mk, "-", leave.stat.str_mks())
+            self.assertEqual(
+                mk, (leave.stat.mks0, leave.stat.mks0_, leave.stat.mksi_))
+
+    def test_permutations(self):
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
+        queries = ['actuellement', 'actualité', 'actu']
+        weights = [1, 1, 0]
+        for per in itertools.permutations(zip(queries, weights)):
+            trie = CompletionTrieNode.build([(None, w) for w, p in per])
+            trie.precompute_stat()
+            trie.update_stat_dynamic()
+            fLOG("----", per)
+            for n in trie.leaves():
+                fLOG("   ", n.value, n.stat.str_mks())
+                assert n.stat.mks <= n.stat.mks0
+                a, b, c = trie.min_dynamic_keystroke(n.value)
+                self.assertEqual(a, n.stat.mks)
+                a, b = trie.min_keystroke(n.value)
+                if a != n.stat.mks0:
+                    mes = [str(per)]
+                    for n in trie.leaves():
+                        mes.append("{0} - {1} || {2}".format(n.value,
+                                                             n.stat.str_mks(), trie.min_keystroke(n.value)))
+                    mes.append("---")
+                    for n in trie:
+                        mes.append("{0} || {1}".format(
+                            n.value, n.stat.str_mks()))
+                        for i, s in enumerate(n.stat.suggestions):
+                            mes.append(
+                                "  {0} - {1}:{2}".format(i, s[0], s[1].value))
+                    raise Exception("difference\n{0}".format("\n".join(mes)))
 
 
 if __name__ == "__main__":

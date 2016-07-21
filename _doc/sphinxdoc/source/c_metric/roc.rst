@@ -252,11 +252,11 @@ et on utilise le fait que :math:`\var{\hat{A}} = \esp\pa{\hat{A}^2} - \hat{A}^2`
 
 .. math::
 
-    \begin{array}{rl}
-    \hat{A}^2 &= \frac{1}{n^2 m^2} \sum_{i=1}^{m}\sum_{j=1}^{n} \indicatrice{ X_i < Y_j} \\
-    & + \frac{1}{n^2 m^2}  \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i} \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_j} \\
-    & + \frac{1}{n^2  m^2} \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{l \neq j} \indicatrice{ X_i < Y_j}  \indicatrice{ X_i < Y_l}  \\
-    & -\frac{1}{n^2  m^2} \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i}\sum_{l \neq j} \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_l} 
+    \begin{array}{rcl}
+    \hat{A}^2 &=& \frac{1}{n^2 m^2} \sum_{i=1}^{m}\sum_{j=1}^{n} \indicatrice{ X_i < Y_j} \\
+    && + \frac{1}{n^2 m^2}  \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i} \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_j} \\
+    && + \frac{1}{n^2  m^2} \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{l \neq j} \indicatrice{ X_i < Y_j}  \indicatrice{ X_i < Y_l}  \\
+    && +\frac{1}{n^2  m^2} \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i}\sum_{l \neq j} \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_l} 
     \end{array}
 		  
 On en déduit que :

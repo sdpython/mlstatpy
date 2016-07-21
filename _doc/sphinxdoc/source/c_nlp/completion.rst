@@ -322,6 +322,7 @@ Les intuitions 2 et 3 seront sans doute remise en question en considérant
 une nouvelle métrique.
 
 
+
 Nouvelle métrique
 =================
 
@@ -423,7 +424,28 @@ La suite :math:`(M_t(q, S))_t` est décroissante et positive. Elle converge néc
 vers la valeur cherchée :math:`M'(q, S)`. Cela donne aussi une idée de la façon de le calculer.
 Contrairement à la première métrique, le calcul dépend du résultat pour 
 tous les préfixes d'une requête. Il ne peut plus être calculé indépendemment.
+Le nombre d'itérations jusqu'à convergence est fini et il est inférieur
+uo égal à la profondeur maximal de l'arbre.
 
+Quelques résultats
+++++++++++++++++++
+
+On considère la liste des mots *actuellement**, *actualité*, *actuel*.
+On compare les ordres qui maximisent la première et la seconde
+métriques ainsi que le gain obtenu. Première métrique ::
+
+    7.0 - actuellement p=1.0 g=11.0 | actuel p=1.0 g=4.0 | actualité p=1.0 g=6.0
+    7.0 - actuellement p=1.0 g=11.0 | actualité p=1.0 g=7.0 | actuel p=1.0 g=3.0
+    7.0 - actuel p=1.0 g=5.0 | actuellement p=1.0 g=10.0 | actualité p=1.0 g=6.0
+
+Seconde métrique ::
+
+    7.333 - actuel p=1.0 g=5.0 | actualité p=1.0 g=7.0 | actuellement p=1.0 g=10.0
+    7.0 - actuellement p=1.0 g=11.0 | actuel p=1.0 g=4.0 | actualité p=1.0 g=6.0
+
+On note que la seconde métrique propose un meilleur gain, ce qui est attendu
+mais aussi que le mot *actuel* sera placé devant le 
+mot *actuellement*, plus long sans que cela souffre d'ambiguïté.
 
 
 
@@ -493,7 +515,7 @@ cette liste a besoin de contenir autant de suggestions que le nombre de caractè
 plus longue requêtes.
 
 
-Vocabulaire
+Digressions
 ===========
 
 Synonymes
@@ -515,3 +537,11 @@ de complétion est mise en place, la distribution des requêtes changent. Les re
 les plus utilisées vont être encore plus utilisées car les utilisateurs vont moins
 s'égarer en chemin comme s'égarer vers une faute d'orthographe.
 
+Fonction de gain
+++++++++++++++++
+
+Jusqu'à présent, on a considéré uniquement le nombre de caractères économisés pour 
+déterminer le meilleur ordre. Rien n'empêche d'ajouter une coût supplémenaires lié
+à l'ordre des suggestions. Une requête est pénalisée si les suggestions 
+associées sont loin de l'ordre alphabétique. On peut pénaliser un ordre éloigné
+à chaque caractère ajouté.
