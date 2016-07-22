@@ -280,7 +280,6 @@ class CompletionTrieNode(object):
         iter = 0
         while updates > 0:
             updates = 0
-            done = {}
             stack = []
             stack.append(self)
             while len(stack) > 0:

@@ -87,7 +87,7 @@ class TestCompletion(unittest.TestCase):
         st = [str(_) for _ in nodes]
         fLOG(st)
         self.assertEqual(
-            st,  ['[-::w=1]', '[#:a:w=4]', '[#:ab:w=2]', '[#:abc:w=3]', '[#:abcd:w=1]'])
+            st, ['[-::w=1]', '[#:a:w=4]', '[#:ab:w=2]', '[#:abc:w=3]', '[#:abcd:w=1]'])
         find = trie.find('a')
         assert find
         ms = [(word, trie.min_keystroke(word)) for k, word in queries]
