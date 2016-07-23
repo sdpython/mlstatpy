@@ -86,3 +86,31 @@ def download_titles(country, folder, unzip=True, timeout=-1, fLOG=noLOG):
     @param      fLOG        logging function
     """
     return download_dump(country, "latest-all-titles-in-ns0.gz", folder, unzip=unzip, timeout=timeout, fLOG=fLOG)
+
+
+def normalize_wiki_text(text):
+    """
+    normalize a text such as a wikipedia title
+
+    @param      text        text to normalize
+    @return                 normalized text
+    """
+    return text.replace("_", " ").replace("''", '"')
+
+
+def enumerate_titles(filename, norm=True, encoding="utf8"):
+    """
+    enumerate titles from a file
+
+    @param      filename        filename
+    @param      norm            normalize in the function
+    @param      encoding        encoding
+    """
+    if norm:
+        with open(filename, "r", encoding=encoding) as f:
+            for line in f:
+                yield normalize_wiki_text(line.strip(" \r\n\t"))
+    else:
+        with open(filename, "r", encoding=encoding) as f:
+            for line in f:
+                yield line.strip(" \r\n\t")

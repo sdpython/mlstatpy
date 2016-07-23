@@ -545,3 +545,14 @@ déterminer le meilleur ordre. Rien n'empêche d'ajouter une coût supplémenair
 à l'ordre des suggestions. Une requête est pénalisée si les suggestions 
 associées sont loin de l'ordre alphabétique. On peut pénaliser un ordre éloigné
 à chaque caractère ajouté.
+
+Minuscules, majuscules
+++++++++++++++++++++++
+
+C'est bien connu, on fait peu de ces des accents sur internet.
+De fait, même si l'accent apparaît à l'écran, le système de complétion 
+verra peut de différences entre le ``e`` et ``é``. 
+Sur Wikpédia, les homonymes sont distingués par un sous-titre 
+entre parenthèse l'année pour un événement sportif régulier. 
+On peut imaginer que plusieurs séquences de caractères aboutissent 
+à la même entrée.

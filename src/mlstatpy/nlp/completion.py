@@ -12,9 +12,10 @@ class CompletionTrieNode(object):
     see :ref:`l-completion0`.
     """
 
-    __slots__ = ["value", "children", "weight", "leave", "stat", "parent"]
+    __slots__ = ["value", "children", "weight",
+                 "leave", "stat", "parent", "disp"]
 
-    def __init__(self, value, leave, weight=1.0):
+    def __init__(self, value, leave, weight=1.0, disp=None):
         """
         @param      value       value (a character)
         """
@@ -24,6 +25,7 @@ class CompletionTrieNode(object):
         self.leave = leave
         self.stat = None
         self.parent = None
+        self.disp = disp
 
     def __str__(self):
         """
@@ -68,7 +70,7 @@ class CompletionTrieNode(object):
         """
         yield self
         if self.children is not None:
-            for v in self.children.values():
+            for k, v in sorted(self.children.items()):
                 for _ in v:
                     yield _
 
@@ -113,31 +115,52 @@ class CompletionTrieNode(object):
         """
         builds a trie
 
-        @param  words       list of (weight, word)
+        @param  words       list of ``(word)`` or ``(weight, word)`` or ``(weight, word, display string)``
         @return             root of the trie (CompletionTrieNode)
         """
         root = CompletionTrieNode('', False)
         nb = 0
         minw = None
-        for w, word in words:
+        for wword in words:
+            if isinstance(wword, tuple):
+                if len(wword) == 2:
+                    w, word = wword
+                    disp = None
+                elif len(wword) == 3:
+                    w, word, disp = wword
+                else:
+                    raise ValueError(
+                        "Unexpected number of values, it should be (weight, word) or (weight, word, dispplay string): {0}".format(wword))
+            else:
+                w = 1.0
+                word = wword
+                disp = None
             if w is None:
                 w = nb
             if minw is None or minw > w:
                 minw = w
             node = root
+            new_node = None
             for c in word:
                 if node.children is not None and c in node.children:
-                    new_node = node.children[c]
                     if not node.leave:
                         node.weight = min(node.weight, w)
-                    node = new_node
+                    node = node.children[c]
                 else:
                     new_node = CompletionTrieNode(
                         node.value + c, False, weight=w)
                     node._add(c, new_node)
                     node = new_node
+            if new_node is None:
+                if node.leave:
+                    raise ValueError(
+                        "Value '{0}' appears twice in the input list (not allowed).".format(word))
+                else:
+                    new_node = node
             new_node.leave = True
             new_node.weight = w
+            if disp is not None:
+                new_node.disp = disp
             nb += 1
         root.weight = minw
         return root
