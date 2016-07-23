@@ -1,13 +1,11 @@
 #-*- coding: utf-8 -*-
 """
-@brief      test log(time=38s)
+@brief      test log(time=60s)
 """
 
 import sys
 import os
 import unittest
-import random
-import matplotlib.pyplot as plt
 from datetime import datetime
 
 
@@ -57,6 +55,7 @@ class TestLONGWikipediaPageCount(unittest.TestCase):
         temp = get_temp_folder(__file__, "temp_wikipedia_page_count")
         name = download_pagecount(
             datetime(2016, 5, 6, 10), folder=temp, fLOG=fLOG)
+        assert name is not None
 
 if __name__ == "__main__":
     unittest.main()

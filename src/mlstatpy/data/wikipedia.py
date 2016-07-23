@@ -25,8 +25,7 @@ def download_pagecount(dt, folder, unzip=True, timeout=-1, fLOG=noLOG):
     """
     url = "https://dumps.wikimedia.org/other/pagecounts-raw/%Y/%Y-%m/pagecounts-%Y%m%d-%H0000.gz"
     url = dt.strftime(url)
-    spl = url.split("/")
-    base, file = "/".join(spl[:-1]), spl[-1]
+    file = url.split("/")[-1]
     name = os.path.join(folder, file)
     get_url_content_timeout(url, timeout=timeout,
                             encoding=None, output=name, chunk=2**20, fLOG=fLOG)
