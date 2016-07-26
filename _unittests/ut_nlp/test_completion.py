@@ -199,7 +199,7 @@ class TestCompletion(unittest.TestCase):
             OutputPrint=__name__ == "__main__")
 
         this = os.path.abspath(os.path.dirname(__file__))
-        this = os.path.join("data", "wikititles.txt")
+        this = os.path.join(this, "data", "wikititles.txt")
         titles = enumerate_titles(this)
         res = {}
         dups = 0
