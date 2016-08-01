@@ -8,7 +8,7 @@ from pyquickhelper.filehelper import get_url_content_timeout, ungzip_files
 from .data_exceptions import DataException
 
 
-def download_pagecount(dt, folder, unzip=True, timeout=-1, fLOG=noLOG):
+def download_pagecount(dt, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG):
     """
     download wikipedia pagacount for a precise date (up to the hours),
     the url follows the pattern::
@@ -19,6 +19,7 @@ def download_pagecount(dt, folder, unzip=True, timeout=-1, fLOG=noLOG):
     @param      folder      where to download
     @param      unzip       unzip the file
     @param      timeout     timeout
+    @param      overwrite   overwrite
     @param      fLOG        logging function
     @return                 filename
 
@@ -28,8 +29,9 @@ def download_pagecount(dt, folder, unzip=True, timeout=-1, fLOG=noLOG):
     url = dt.strftime(url)
     file = url.split("/")[-1]
     name = os.path.join(folder, file)
-    get_url_content_timeout(url, timeout=timeout,
-                            encoding=None, output=name, chunk=2**20, fLOG=fLOG)
+    if overwrite or not os.path.exists(name):
+        get_url_content_timeout(url, timeout=timeout,
+                                encoding=None, output=name, chunk=2**20, fLOG=fLOG)
     if unzip:
         names = ungzip_files(name, unzip=False)
         os.remove(name)
@@ -44,7 +46,7 @@ def download_pagecount(dt, folder, unzip=True, timeout=-1, fLOG=noLOG):
         return name
 
 
-def download_dump(country, name, folder, unzip=True, timeout=-1, fLOG=noLOG):
+def download_dump(country, name, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG):
     """
     download wikipedia dumps from ``https://dumps.wikimedia.org/frwiki/latest/``
 
@@ -53,14 +55,16 @@ def download_dump(country, name, folder, unzip=True, timeout=-1, fLOG=noLOG):
     @param      folder      where to download
     @param      unzip       unzip the file
     @param      timeout     timeout
+    @param      overwrite   overwrite
     @param      fLOG        logging function
     """
     url = "https://dumps.wikimedia.org/{0}wiki/latest/{0}wiki-{1}".format(
         country, name)
     file = url.split("/")[-1]
     name = os.path.join(folder, file)
-    get_url_content_timeout(url, timeout=timeout,
-                            encoding=None, output=name, chunk=2**20, fLOG=fLOG)
+    if overwrite or not os.path.exists(name):
+        get_url_content_timeout(url, timeout=timeout,
+                                encoding=None, output=name, chunk=2**20, fLOG=fLOG)
     if unzip:
         names = ungzip_files(name, unzip=False)
         os.remove(name)
@@ -75,7 +79,7 @@ def download_dump(country, name, folder, unzip=True, timeout=-1, fLOG=noLOG):
         return name
 
 
-def download_titles(country, folder, unzip=True, timeout=-1, fLOG=noLOG):
+def download_titles(country, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG):
     """
     download wikipedia titles from ``https://dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz``
 
@@ -83,9 +87,11 @@ def download_titles(country, folder, unzip=True, timeout=-1, fLOG=noLOG):
     @param      folder      where to download
     @param      unzip       unzip the file
     @param      timeout     timeout
+    @param      overwrite   overwrite
     @param      fLOG        logging function
     """
-    return download_dump(country, "latest-all-titles-in-ns0.gz", folder, unzip=unzip, timeout=timeout, fLOG=fLOG)
+    return download_dump(country, "latest-all-titles-in-ns0.gz", folder, unzip=unzip, timeout=timeout,
+                         overwrite=overwrite, fLOG=fLOG)
 
 
 def normalize_wiki_text(text):

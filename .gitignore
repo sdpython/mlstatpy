@@ -251,3 +251,4 @@ _doc/sphinxdoc/require.js
 ex.*
 m.temp
 _doc/notebooks/*/.ipynb_checkpoints
+_doc/notebooks/nlp/frwiki-latest-all-titles-in-ns0

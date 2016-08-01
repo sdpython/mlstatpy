@@ -132,11 +132,14 @@ class TestCompletion(unittest.TestCase):
             mk1 = trie.min_keystroke(leave.value)
             try:
                 mk = trie.min_dynamic_keystroke(leave.value)
+                mk2 = trie.min_dynamic_keystroke2(leave.value)
             except Exception as e:
                 raise Exception(
                     "{0}-{1}-{2}-{3}".format(id(trie), id(leave), str(leave), leave.leave)) from e
             if mk[0] > mk1[0]:
                 raise Exception("weird {0} > {1}".format(mk, mk1))
+            if mk2[0] < mk[0]:
+                raise Exception("weird {0} > {1}".format(mk, mk2))
             fLOG(leave.value, mk, "-", leave.stat.str_mks())
             self.assertEqual(
                 mk, (leave.stat.mks0, leave.stat.mks0_, leave.stat.mksi_))

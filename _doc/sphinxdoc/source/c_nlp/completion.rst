@@ -308,6 +308,10 @@ Mais si on change le poids de l'une d'elles, elle se retrouve en première posit
     19.2 - actes p=2.0 g=4.0 | actuellement p=1.0 g=10.0 | actualité p=1.0 g=6.0 | acte p=1.0 g=0.0
 
 
+
+Nouvelle métrique
+=================
+
 Intuitions
 ++++++++++
 
@@ -320,15 +324,6 @@ Intuitions
 
 Les intuitions 2 et 3 seront sans doute remise en question en considérant 
 une nouvelle métrique.
-
-
-
-Nouvelle métrique
-=================
-
-Intuition
-+++++++++
-
 On considère l'ensemble des requêtes complètes
 :math:`S` composé de deux mots *actuellement*, *actualité*.
 Le gain moyen par mots est de 9 caractères économisés.
@@ -413,7 +408,6 @@ fait partie de sa définition. La condition :math:`q[1..k] \in S` impose que
 le préfixe composé des *k* premières lettres :math:`q[1..k]` fasse partie 
 des requêtes complètes :math:`S`. Dans le cas contraire, elle n'est pas
 affichée et l'utilisateur ne pourra pas s'en servir comme tremplin.
-
 Si on définit la quantité :math:`M_0(q, S) = M(q, S)` et par récurrence :
 
 .. math::
@@ -447,7 +441,86 @@ On note que la seconde métrique propose un meilleur gain, ce qui est attendu
 mais aussi que le mot *actuel* sera placé devant le 
 mot *actuellement*, plus long sans que cela souffre d'ambiguïté.
 
+Définition avancée
+++++++++++++++++++
 
+Dans les faits, le :ref:`Dynamic Minimum Keystroke <completion-metric2>` sous-estime 
+le nombre de caractères nécessaires. Losqu'on utilise un mot comme tremplin, on
+peut aisément le compléter mais il faut presser une touche ou attendre un peu
+pour voir les nouvelles suggestions associées à la suggestion choisie et maintenant
+considéré comme préfixe. C'est ce que prend en compte la définition suivante.
+
+.. mathdef::
+    :title: Dynamic Minimum Keystroke modifié
+    :tag: Définition
+    :lid: def-mks3
+    
+    On définit la façon optimale de saisir une requête sachant un système de complétion
+    :math:`S` comme étant le minimum obtenu :
+    
+    .. math::
+        :label: completion-metric3
+        :nowrap:
+        
+        \begin{eqnarray*}
+        K(q, k, S) &=& \min\acc{ i | s_i \succ q[1..k], s_i \in S } \\
+        M"(q, S) &=& \min \left\{ \begin{array}{l}
+                        \min_{1 \infegal k \infegal l(q)} \acc{ M"(q[1..k-1], S) + 1 + K(q, k, S) | q[1..k] \in S } \\
+                        \min_{0 \infegal k \infegal l(q)} \acc{ M"(q[1..k], S) + \delta + K(q, k, S) | q[1..k] \in S } 
+                        \end{array} \right .
+        \end{eqnarray*}
+
+Si on prend comme exemple la requête *machine learning*, le premier cas correspond à la séquence :
+
+* sélection de la suggestion *machine*
+* pression de la touche espace
+* sélection de la suggestion *machine learning*
+
+Et le second cas à la séquence :
+
+* sélection de la suggestion *machine*
+* pression de la touche droite pour afficher les nouvelles suggestions
+* sélection de la suggestion *machine learning*
+
+Le coût de la pression de la touche droite est noté :math:`\delta \infegal 1` qu'on prendra inférieur à 1.
+
+Questions
++++++++++
+
+Grâce à cette métrique, on peut envisager de trouver des réponses à certaines questions :
+
+* Les différences entre les trois métriques sont-elles négligeables ou non ?
+* Ajouter des suggestions non présentes dans le corpus améliore-t-elle la métrique ?
+  Même question pour la suppression ?
+* Existe-t-il un moyen de construire de façon itérative l'ensemble des suggestions
+  ou plutôt l'ordre qui minimise la métrice :math:`M'(q, S)` ?
+  
+Pour la première question, une expérience devrait donner une piste
+à défaut d'y répondre. Pour la seconde, il n'est pas nécessaire d'envisager 
+la suppression de suggestions car celles-ci devraient naturellement se positionner 
+en fin de liste. L'ajout correspond à la situation où beaucoup de suggestions
+partagent le même préfixe sans pour autant que ce préfixe fasse partie de la 
+liste des suggestions.
+
+::
+
+    macérer
+    maline
+    machinerie
+    machinerie infernale
+    machinerie infernalissime
+    machine artistique
+    machine automatique
+    machine chaplin
+    machine intelligente
+    machine learning
+    
+L'idée consiste à ajouter à la suggestion *machine* qui sert de
+préfixe commun à beaucoup de suggestions et cela améliore le gain moyen
+dans le cas présent (sans compter le gain sur la requête
+*machine*). Enfin, la troisième question,
+si la réponse est positive, cela requiert la démonstration de quelques
+propriétés mathématiques.
 
 
 Notion de trie
