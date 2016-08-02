@@ -11,8 +11,8 @@ class CompletionTrieNode(object):
     Node definition in a trie used to do completion,
     see :ref:`l-completion0`.
     This implementation is not very efficient about
-    memmory consumption, it does not hold 
-    above 200.000 words. It should be done 
+    memmory consumption, it does not hold
+    above 200.000 words. It should be done
     another way (cython, C++).
     """
 
