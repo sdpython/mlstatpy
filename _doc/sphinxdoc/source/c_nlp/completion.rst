@@ -56,7 +56,7 @@ et le nombre de fois qu'elles ont été saisies : :math:`(q_i, w_i)` pour
 .. index:: caractère saisi, keystroke
 
 Sans système de complétion, les utilisateurs saisissent donc :math:`K=\sum_{i=1}^N l(q_i) w_i`
-où :math:`l(q_i)` est la longueur de la requête :math:`q_i`. Avec le système de complétion,
+où :math:`l(q_i)` est la longueur de la complétion :math:`q_i`. Avec le système de complétion,
 les utilisateurs saisissent moins de caractères, c'est ce chiffre là qu'on cherche à minimiser.
 L'unité est le charactère saisi ou *keystroke* en anglais.
 
@@ -89,7 +89,8 @@ dans le premier cas ou 8+1=9 touches dans le second cas.
     premières lettres de :math:`q`.
 
 
-De façon évidente, :math:`K(q, l(q), S)=0` et :math:`M(q,S) \infegal l(q)`.
+De façon évidente, :math:`K(q, l(q), S)=0` et :math:`M(q,S) \infegal l(q)`
+et :math:`K(q, k, S) > 0` si :math:`k < l(q)`.
 Certains systèmes proposent des requêtes avant de saisir quoique ce soit,
 c'est pourquoi on inclut la valeur :math:`M(q, 0)` qui représente ce cas.
 Construire un système de complétion revient à minimiser la quantité :
@@ -99,8 +100,8 @@ Construire un système de complétion revient à minimiser la quantité :
     M(S) = \sum_{i=1}^N M(q_i,S) w_i
 
 
-Ensemble des requêtes
-+++++++++++++++++++++
+Ensemble des complétions
+++++++++++++++++++++++++
 
 Il n'y a pas de restriction sur la fonction :math:`K(q, k, S)` mais on se limitera
 dans un premier temps à une fonction simple. On suppose que le système d'autocomplétion
@@ -108,23 +109,26 @@ dispose d'un ensemble de requêtes ordonnées :math:`S = (s_i)` et la fonction :
 
 .. math::
 
-    K(q, k, S) = position(q, S(q_k))
+    K(q, k, S) = position(q, S(q[1..k]))
     
-Où :math:`S(q_k)` est le sous-ensemble ordonné de :math:`S` des requêtes
+Où :math:`S(q[1..k])` est le sous-ensemble ordonné de :math:`S` des complétions
 qui commence par les :math:`k` premières lettres de :math:`q` et de longueur supérieure strictement à :math:`k`.
-:math:`position(q, S(q_k))` est la position de :math:`q` dans cet ensemble ordonné
+:math:`position(q, S(q[1..k]))` est la position de :math:`q` dans cet ensemble ordonné
 ou :math:`\infty` si elle n'y est pas. Cette position est strictement positive
 :math:`K(q, k, S) \supegal 1` sauf si :math`k=l(q)` auquel cas, elle est nulle. 
 Cela signifie que l'utilisateur doit descendre d'au moins un cran
 pour sélectionner une complétion.
+On note :math:`\sigma(q)` la position de la complétion :math:`q` dans l'ensemble :math:`S`.
+Par construction, :math:`s_ \neq s_2 \Longrightarrow \sigma(s_1) \neq \sigma(s_2)`.
 
 .. math::
+    :label:`nlp-comp-k`
 
-    K(q, k, S) = \min\acc{ i | s_i \succ q[1..k], s_i \in S }
+    K(q, k, S) = #\acc{ i | s_i \succ q[1..k], s_i \in S, \sigma(s_i) < \sigma(q)  }
     
 Trouver le meilleur système de complétion :math:`S` revient à trouver la meilleure
 fonction :math:`K(q, k, S)` et dans le cas restreint l'ordre sur :math:`S` qui minimise
-cette fonction. Le plus souvent, on se contente de trier les requêtes par ordre
+cette fonction. Le plus souvent, on se contente de trier les complétions par ordre
 décroissant de popularité. On considérera par la suite qu'on est dans ce cas.
 
 Gain
@@ -158,11 +162,11 @@ par le système de complétion.
 Fausses idées reçues
 ====================
 
-Il faut trier les requêtes par fréquence décroissante
+Il faut trier les complétions par fréquence décroissante
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 En pratique, cela marche plutôt bien. En théorie, cette assertion est fausse.
-Prenons les quatre requêtes suivantes :
+Prenons les quatre complétions suivantes :
 
 ====== ========= ======
 q      fréquence ordre
@@ -173,7 +177,7 @@ abc    2         3
 abcd   1         4
 ====== ========= ======
 
-Dans cet exemple, si l'utilisateur tape ``ab``, il verra les requêtes :
+Dans cet exemple, si l'utilisateur tape ``ab``, il verra les complétions :
 
 ::
 
@@ -192,7 +196,7 @@ abc    3
 abcd   1
 ====== ======
 
-Si l'utilisateur tape ``ab``, il verra les requêtes :
+Si l'utilisateur tape ``ab``, il verra les complétions :
 
 ::
 
@@ -213,24 +217,24 @@ abcd   1         1      1 = :math:`K(q, 0, S)`
 D'où un gain total de :math:`G(S)=3`.
 
 
-Il faut placer les requêtes courtes avant
-+++++++++++++++++++++++++++++++++++++++++
+Il faut placer les complétions courtes avant
+++++++++++++++++++++++++++++++++++++++++++++
 
 Le cas précédent est déjà un contre exemple. 
 Mais d'un point de vue utilisateur, il n'est pas facile de lire
-des requêtes de longueurs différentes. Cela veut peut-être dire aussi
+des complétions de longueurs différentes. Cela veut peut-être dire aussi
 que la métrique considérée pour choisir le meilleur système de complétion
 est faux. Cela sera discuté à la prochaine section.
 
-Il faut compléter toutes les requêtes
-+++++++++++++++++++++++++++++++++++++
+Il faut compléter toutes les complétions
+++++++++++++++++++++++++++++++++++++++++
 
-.. index:: requête complète
+.. index:: requête complète, complétion
 
 Le premier exemple offre aussi un contre exemple.
 Dans cet exemple, l'ensemble :math:`Q=(q_i)` des
 requêtes utilisateurs et l'ensemble :math:`S=(s_i)`
-des **requêtes complètes** est le même.
+des **complétions** ou **requêtes complètes** est le même.
 Il suffit de la modifier un peu. On enlève 
 la requête *ab* de :math:`S`.
 
@@ -245,17 +249,17 @@ abcd   1         3              3
 ====== ========= ============== ================ 
 
 D'où un gain total de :math:`G(S)=2`. En conclusion,
-si j'enlève une petite requête pour laquelle le gain est nul,
+si j'enlève une petite complétion pour laquelle le gain est nul,
 il est possible que le gain pour les suivantes soit positif.
-On en retient qu'il ne faut pas montrer trop de requêtes 
+On en retient qu'il ne faut pas montrer trop de complétions 
 qui se distinguent d'un caractère.
 
 
-Et si le poids de chaque requête est uniforme
-+++++++++++++++++++++++++++++++++++++++++++++
+Et si le poids de chaque complétion est uniforme
+++++++++++++++++++++++++++++++++++++++++++++++++
 
-On suppose que les requêtes ont toutes le même poids :math:`w_i=1`.
-Dans quel ordre faut-il ranger les requêtes complètes pour économiser le
+On suppose que les complétions ont toutes le même poids :math:`w_i=1`.
+Dans quel ordre faut-il ranger les complétions pour économiser le
 plus de caractères. On aurait tendance à dire la plus longue d'abord
 ce qu'on peut vérifier dans le notebook :ref:`completiontrierst`.
 
@@ -269,7 +273,7 @@ abc    1         2              2
 abcd   1         1              1
 ====== ========= ============== ================
 
-Ajouter deux autres requêtes disjointes *edf*, *edfh*.
+Ajouter deux autres complétions disjointes *edf*, *edfh*.
 Le gain maximum est 6 et il y a plusieurs ordres :
 
 ::
@@ -289,7 +293,7 @@ temrinaux dans les bulles rouges, dans la bulle verte, le meilleur ordre
 sera une fusion des deux listes ordonnées.
 
 Quelques essais sur le notebook ont tendance à montrer que l'ordre
-a peu d'impact sur le résultat final lorsque les requêtes ont le même poids.
+a peu d'impact sur le résultat final lorsque les complétions ont le même poids.
 Avec quatre mots, la somme des gains est identique quelque soit l'ordre.
 
 ::
@@ -320,16 +324,16 @@ Intuitions
    placer le mot le plus fréquent en première position.
    Pour les mots de fréquence identique, l'ordre a peu d'importance.
 #. S'il existe une séquence de mots emboîtés, les gains sont minimes
-   à moins d'enlever des mots ou de poser les grandes requêtes d'abord.
+   à moins d'enlever des mots ou de poser les grandes complétions d'abord.
 
 Les intuitions 2 et 3 seront sans doute remise en question en considérant 
 une nouvelle métrique.
-On considère l'ensemble des requêtes complètes
+On considère l'ensemble des complétions
 :math:`S` composé de deux mots *actuellement*, *actualité*.
 Le gain moyen par mots est de 9 caractères économisés.
 Si on ajoute le grand préfixe commun à la liste *actu*,
 ce gain moyen tombe à 6.33 (voir :ref:`completiontrierst`) quelque
-soit l'ordre choisi pour les requêtes. Toutefois, si on ne prend pas 
+soit l'ordre choisi pour les complétions. Toutefois, si on ne prend pas 
 en compte le gain sur le mot *actu* car ce n'est pas un mot 
 correct mais plus un mot qui aide la lecture de la liste, ce gain
 moyen tombe à 8 seulement. En conclusion, si l'utilisateur 
@@ -350,7 +354,7 @@ Au lieu de :
     
 Il doit taper en moyenne un caractère de plus pour obtenir le mot qu'il cherche.
 Et la métrique ne montre pas réellement de préférence pour l'ordre d'affichage
-des requêtes. Pourtant, l'utilisateur pourrait très bien utiliser la 
+des complétions. Pourtant, l'utilisateur pourrait très bien utiliser la 
 séquence de touches suivantes : 
 
 =========== =================
@@ -376,11 +380,11 @@ On reprend la première métrique :eq:`completion-metric1` :
     :nowrap:
 
     \begin{eqnarray*}
-    M(q, k, S) &=& \min\acc{ i | s_i \succ q[1..k], s_i \in S } \\
     M(q, S) &=& \min_{0 \infegal k \infegal l(q)}  k + K(q, k, S)
     \end{eqnarray*}
-    
-:math:`M(q, k, S)` définit la position de la requête :math:`q`
+
+La fonction :math:`K(q, k, S)` est définie par :eq:`nlp-comp-k`.
+:math:`M(q, k, S)` définit la position de la complétion :math:`q`
 dans la liste affichée pour le préfixe composé des :math:`k` premières lettres
 de :math:`q`. On va juste changer :math:`k` dans la seconde en ligne.
 
@@ -398,26 +402,25 @@ de :math:`q`. On va juste changer :math:`k` dans la seconde en ligne.
         :nowrap:
         
         \begin{eqnarray*}
-        K(q, k, S) &=& \min\acc{ i | s_i \succ q[1..k], s_i \in S } \\
-        M'(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ M'(q[1..k], S) + K(q, k, S) | q[1..k] \in S }
+        M'(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ M'(q[1..k], S) + K(q, k, S) }
         \end{eqnarray*}
 
 De manière évidente, :math:`M'(q, S) \infegal M(q, S)`.
 Il reste à démontrer que cette métrique et bien définie puisqu'elle
 fait partie de sa définition. La condition :math:`q[1..k] \in S` impose que
 le préfixe composé des *k* premières lettres :math:`q[1..k]` fasse partie 
-des requêtes complètes :math:`S`. Dans le cas contraire, elle n'est pas
+des complétions :math:`S`. Dans le cas contraire, elle n'est pas
 affichée et l'utilisateur ne pourra pas s'en servir comme tremplin.
 Si on définit la quantité :math:`M_0(q, S) = M(q, S)` et par récurrence :
 
 .. math::
 
-    M_{t+1}(q, S) = \min_{0 \infegal k \infegal l(q)} \acc{ M_t(q[1..k], S) + K(q, k, S)  | q[1..k] \in S }
+    M_{t+1}(q, S) = \min_{0 \infegal k \infegal l(q)} \acc{ M_t(q[1..k], S) + K(q, k, S) }
     
 La suite :math:`(M_t(q, S))_t` est décroissante et positive. Elle converge nécessaire
 vers la valeur cherchée :math:`M'(q, S)`. Cela donne aussi une idée de la façon de le calculer.
 Contrairement à la première métrique, le calcul dépend du résultat pour 
-tous les préfixes d'une requête. Il ne peut plus être calculé indépendemment.
+tous les préfixes d'une complétion. Il ne peut plus être calculé indépendemment.
 Le nombre d'itérations jusqu'à convergence est fini et il est inférieur
 uo égal à la profondeur maximal de l'arbre.
 
@@ -463,10 +466,9 @@ considéré comme préfixe. C'est ce que prend en compte la définition suivante
         :nowrap:
         
         \begin{eqnarray*}
-        K(q, k, S) &=& \min\acc{ i | s_i \succ q[1..k], s_i \in S } \\
         M"(q, S) &=& \min \left\{ \begin{array}{l}
-                        \min_{1 \infegal k \infegal l(q)} \acc{ M"(q[1..k-1], S) + 1 + K(q, k, S) | q[1..k] \in S } \\
-                        \min_{0 \infegal k \infegal l(q)} \acc{ M"(q[1..k], S) + \delta + K(q, k, S) | q[1..k] \in S } 
+                        \min_{1 \infegal k \infegal l(q)} \acc{ M"(q[1..k-1], S) + 1 + K(q, k, S) } \\
+                        \min_{0 \infegal k \infegal l(q)} \acc{ M"(q[1..k], S) + \delta + K(q, k, S) } 
                         \end{array} \right .
         \end{eqnarray*}
 
@@ -547,37 +549,13 @@ Calcul pour une requête en dehors
     M'(q, S) = \inf\acc{ M'(r, S) + l(q) - l(r) | r \in S \, et \, r \preceq q } 
 
 De manière évidente, :math:`M'(q, S) \infegal l(q)`.
+Mais il est faut de dire que 
+:math:`q_1 \preceq q_2 \Longrightarrow M'(q_1, S) \infegal M'(q_2, S)`.
 
-Notion de trie
-==============
+Complétions emboîtées
++++++++++++++++++++++
 
-Une implémentation des tries est décrites dans deux notebooks :
-`Arbre et Trie <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/_gs1a_A_arbre_trie.html>`_.
-Les résultats de ce chapitre ont été produits avec le module :mod:`completion <mlstatpy.nlp.completion>`
-et le notebook :ref:`completiontrierst`.
-
-Remarques pour optimiser les calculs
-++++++++++++++++++++++++++++++++++++
-
-**K(q, k, S)**
-
-On reprend la première métrique :eq:`completion-metric1` :
-
-.. math::
-    :nowrap:
-
-    \begin{eqnarray*}
-    K(q, k, S) &=& \min\acc{ i | s_i \succ q[1..k], s_i \in S } \\
-    M(q, S) &=& \min_{0 \infegal k \infegal l(q)}  k + K(q, k, S)
-    \end{eqnarray*}
-
-Etant donné que le nombre minimum de caractères pour obtenir une requête dans le trie
-ne peut pas être supérieur à la longueur, si :math:`K(q, k, S) > l(q) - k`, on sait déjà que
-que le préfixe :math:`q[1..k]` ne sera pas le minimum.
-
-**complétions**
-
-On considère les requêtes complètes suivante :
+On considère les complétions suivantes :
 
 ::
 
@@ -593,6 +571,44 @@ Pour le préfixe *actu*, on suggère la concaténation de ces deux listes.
 Par conséquent, pour construire les listes de complétions associées à chaque préfixe,
 il paraît de partir des feuilles de l'arbre puis de fusionner les listes
 de complétions jusqu'au noeud racine.
+Plus concrètement, si deux complétions 
+vérifie :math:`q_1 \preceq q_2` alors l'ensemble des complétions 
+:math:`C(q)` vérifie :math:`C(q_1) \supset C(q_2)`. On peut même dire que :
+:math:`C(q) = \cup \acc{ C(s) | s \succ q \in S}`. Cela signifie qu'une fois qu'on
+a construit un trie représentant l'ensemble des complétions, il suffit de
+partir des feuilles de l'arbre jusqu'à la racine pour construire la 
+liste des complétions à chaque étape et que pour un noeud précis,
+la liste des complétions est l'union des listes de complétions des noeuds
+fils.
+
+
+Listes tronquées de complétions
++++++++++++++++++++++++++++++++
+
+On reprend la première métrique :eq:`completion-metric1` qui 
+utilise la fonction :math:`K(q, k, S)` définie en :eq:`nlp-comp-k`.
+
+.. math::
+    :nowrap:
+
+    \begin{eqnarray*}
+    M(q, S) &=& \min_{0 \infegal k \infegal l(q)}  k + K(q, k, S)
+    \end{eqnarray*}
+
+Etant donné que le nombre minimum de caractères pour obtenir une complétion dans le trie
+ne peut pas être supérieur à la longueur, si :math:`K(q, k, S) > l(q) - k`, on sait déjà que
+que le préfixe :math:`q[1..k]` ne sera pas le minimum.
+
+Notion de trie
+==============
+
+Une implémentation des tries est décrites dans deux notebooks :
+`Arbre et Trie <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/_gs1a_A_arbre_trie.html>`_.
+Les résultats de ce chapitre ont été produits avec le module :mod:`completion <mlstatpy.nlp.completion>`
+et le notebook :ref:`completiontrierst`.
+
+Remarques préliminaires
++++++++++++++++++++++++
 
 **utilisation ou recherche**
 
@@ -608,9 +624,10 @@ en un temps raisonnable et avec une utilisation mémoire raisonnable également.
 **mémoire**
 
 D'après la remarque précédente, il n'est pas utile de conserver pour un préfixe donné
-l'intégralité des requêtes complètes qui commence par ce préfixe. Dans le pire des cas,
+l'intégralité des complétions qui commencent par ce préfixe. Dans le pire des cas,
 cette liste a besoin de contenir autant de complétions que le nombre de caractères de la
-plus longue requêtes.
+plus longue complétioms.
+
 
 
 Digressions
@@ -661,8 +678,8 @@ Suppression de caractères
 Nous pourrions considérer le fait de pouvoir supprimer des caractères
 afin de trouver le chemmin le plus court pour obtenir une requête.
 
-Coût d'un caractères
-++++++++++++++++++++
+Coût d'un caractère
++++++++++++++++++++
 
 Jusqu'à présent, la pression d'une touche a le même coût quelque soit 
 la source, un caractère, une touche vers le bas. Pourtant, plus il y a 
@@ -677,4 +694,35 @@ de décomposition d'un mot où la séquence des touches qui le construisent ?
 Dans le premier cas, il faudrait sans doute pénaliser la saisie d'un caractère
 en fonction du nombre de touches nécessaires pour le former par rapport
 à la sélection d'une complétion.
+
+
+Complétion partielle
+++++++++++++++++++++
+
+On rappelle la métrique :eq:`completion-metric2` (voir aussi :eq:`nlp-comp-k`).
+
+.. math::
+    :nowrap:
+    
+    \begin{eqnarray*}
+    M'(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ M'(q[1..k], S) + K(q, k, S) }
+    \end{eqnarray*}
+
+Si on note :math:`L(p, S)` l'ensemble des complétions
+pour le préfixe :math:`p`.
+Que dire de la définition suivante ?
+
+.. math::
+    :nowrap:
+    
+    \begin{eqnarray*}
+    M'_p(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ 
+                            \indicatrice{ L(q[1..k], S) \neq \emptyset} \cro{M'_p(q[1..k], S) +  K(q, k, S)}
+                            \indicatrice{L(q[1..k], S) = \emptyset} \cro { \min_j M'_p(q[1..j], S) + M'_p(q[j+1..], S)  }
+                            }
+    \end{eqnarray*}
+
+Cela revient à considérer que si le système de complétion ne propose aucune complétion
+avec le préfixe en cours, on propose des complétions avec un préfixe
+qui ne tient compte que des dernières lettres.
 

@@ -86,18 +86,22 @@ class TestCompletionProfiling(unittest.TestCase):
         def profile_exe():
             res = self.gain_dynamique_moyen_par_mot(lines, [1.0] * len(lines))
 
-        pr = cProfile.Profile()
-        pr.enable()
-        profile_exe()
-        pr.disable()
-        s = io.StringIO()
-        ps = pstats.Stats(pr, stream=s).sort_stats('cumulative')
-        ps.print_stats()
-        rem = os.path.normpath(os.path.join(temp, "..", "..", ".."))
-        res = s.getvalue().replace(rem, "")
-        fLOG(res)
-        with open(os.path.join(temp, "profiling.txt"), "w") as f:
-            f.write(res)
+        def prof(n, show):
+            pr = cProfile.Profile()
+            pr.enable()
+            profile_exe()
+            pr.disable()
+            s = io.StringIO()
+            ps = pstats.Stats(pr, stream=s).sort_stats('cumulative')
+            ps.print_stats()
+            rem = os.path.normpath(os.path.join(temp, "..", "..", ".."))
+            res = s.getvalue().replace(rem, "")
+            if show:
+                fLOG(res)
+            with open(os.path.join(temp, "profiling%d.txt" % n), "w") as f:
+                f.write(res)
+        prof(1, show=False)
+        prof(2, show=True)
 
 
 if __name__ == "__main__":

@@ -8,8 +8,12 @@ from collections import deque
 
 class CompletionTrieNode(object):
     """
-    node definition in a trie used to do completion,
+    Node definition in a trie used to do completion,
     see :ref:`l-completion0`.
+    This implementation is not very efficient about
+    memmory consumption, it does not hold 
+    above 200.000 words. It should be done 
+    another way (cython, C++).
     """
 
     __slots__ = ["value", "children", "weight",
@@ -18,6 +22,9 @@ class CompletionTrieNode(object):
     def __init__(self, value, leave, weight=1.0, disp=None):
         """
         @param      value       value (a character)
+        @param      leave       boolean (is it a completion)
+        @param      weight      ordering (the lower, the first)
+        @param      disp        original string, use this to identify the node
         """
         if not isinstance(value, str):
             raise TypeError(
