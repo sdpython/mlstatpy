@@ -29,11 +29,16 @@ La plus connue en Python est `whoosh <https://whoosh.readthedocs.io/en/latest/>`
 
 Quelques éléments de codes sont disponibles dans le module
 :mod:`completion <mlstatpy.nlp.completion>` et le notebook 
-:ref:`completiontrierst`.
+:ref:`completiontrierst`. Vous pouvez également lire 
+`How to Write a Spelling Corrector <http://norvig.com/spell-correct.html>`_
+de `Peter Norvig <http://norvig.com/>`_ et découvrir le sujet 
+avec `On User Interactions with Query Auto-Completion <https://www.semanticscholar.org/paper/On-user-interactions-with-query-auto-completion-Mitra-Shokouhi/71e953caa2542a61b52e684649b3569c00251021/pdf>`_
+de Bhaskar Mitra, Milad Shokouhi, Filip Radlinski, Katja Hofmann.
 
 
 .. contents::
     :local:
+    :maxdepth: 1
 
 
 Formalisation
@@ -124,8 +129,9 @@ Par construction, :math:`s_ \neq s_2 \Longrightarrow \sigma(s_1) \neq \sigma(s_2
 .. math::
     :label:`nlp-comp-k`
 
-    K(q, k, S) = #\acc{ i | s_i \succ q[1..k], s_i \in S, \sigma(s_i) < \sigma(q)  }
+    K(q, k, S) = \#\acc{ i | s_i \succ q[1..k], s_i \in S, \sigma(s_i) < \sigma(q)  }
     
+:math:`\#` désigne le cardinal de l'ensemble.
 Trouver le meilleur système de complétion :math:`S` revient à trouver la meilleure
 fonction :math:`K(q, k, S)` et dans le cas restreint l'ordre sur :math:`S` qui minimise
 cette fonction. Le plus souvent, on se contente de trier les complétions par ordre
@@ -408,7 +414,7 @@ de :math:`q`. On va juste changer :math:`k` dans la seconde en ligne.
 De manière évidente, :math:`M'(q, S) \infegal M(q, S)`.
 Il reste à démontrer que cette métrique et bien définie puisqu'elle
 fait partie de sa définition. La condition :math:`q[1..k] \in S` impose que
-le préfixe composé des *k* premières lettres :math:`q[1..k]` fasse partie 
+le préfixe composé des :math:`k` premières lettres :math:`q[1..k]` fasse partie 
 des complétions :math:`S`. Dans le cas contraire, elle n'est pas
 affichée et l'utilisateur ne pourra pas s'en servir comme tremplin.
 Si on définit la quantité :math:`M_0(q, S) = M(q, S)` et par récurrence :
@@ -427,7 +433,7 @@ uo égal à la profondeur maximal de l'arbre.
 Quelques résultats
 ++++++++++++++++++
 
-On considère la liste des mots *actuellement**, *actualité*, *actuel*.
+On considère la liste des mots ``actuellement``, ``actualité``, ``actuel``.
 On compare les ordres qui maximisent la première et la seconde
 métriques ainsi que le gain obtenu. Première métrique ::
 
@@ -495,13 +501,13 @@ Questions
 
 Grâce à cette métrique, on peut envisager de trouver des réponses à certaines questions :
 
-* Les différences entre les trois métriques sont-elles négligeables ou non ?
-* Ajouter des complétions non présentes dans le corpus améliore-t-elle la métrique ?
-  Même question pour la suppression ?
-* Existe-t-il un moyen de construire de façon itérative l'ensemble des complétions
-  ou plutôt l'ordre qui minimise la métrice :math:`M'(q, S)` ?
-* Comment calculer rapidement les métriques pour les requêtes dans l'ensemble 
-  :math:`S` et en dehors ?
+#. Les différences entre les trois métriques sont-elles négligeables ou non ?
+#. Ajouter des complétions non présentes dans le corpus améliore-t-elle la métrique ?
+   Même question pour la suppression ?
+#. Existe-t-il un moyen de construire de façon itérative l'ensemble des complétions
+   ou plutôt l'ordre qui minimise la métrice :math:`M'(q, S)` ?
+#. Comment calculer rapidement les métriques pour les requêtes dans l'ensemble 
+   :math:`S` et en dehors ?
   
 Pour la première question, une expérience devrait donner une piste
 à défaut d'y répondre. Pour la seconde, il n'est pas nécessaire d'envisager 
@@ -549,7 +555,7 @@ Calcul pour une requête en dehors
     M'(q, S) = \inf\acc{ M'(r, S) + l(q) - l(r) | r \in S \, et \, r \preceq q } 
 
 De manière évidente, :math:`M'(q, S) \infegal l(q)`.
-Mais il est faut de dire que 
+Mais il est faux de dire que 
 :math:`q_1 \preceq q_2 \Longrightarrow M'(q_1, S) \infegal M'(q_2, S)`.
 
 Complétions emboîtées
@@ -573,7 +579,7 @@ il paraît de partir des feuilles de l'arbre puis de fusionner les listes
 de complétions jusqu'au noeud racine.
 Plus concrètement, si deux complétions 
 vérifie :math:`q_1 \preceq q_2` alors l'ensemble des complétions 
-:math:`C(q)` vérifie :math:`C(q_1) \supset C(q_2)`. On peut même dire que :
+vérifie :math:`C(q_1) \supset C(q_2)`. On peut même dire que :
 :math:`C(q) = \cup \acc{ C(s) | s \succ q \in S}`. Cela signifie qu'une fois qu'on
 a construit un trie représentant l'ensemble des complétions, il suffit de
 partir des feuilles de l'arbre jusqu'à la racine pour construire la 
@@ -598,6 +604,37 @@ utilise la fonction :math:`K(q, k, S)` définie en :eq:`nlp-comp-k`.
 Etant donné que le nombre minimum de caractères pour obtenir une complétion dans le trie
 ne peut pas être supérieur à la longueur, si :math:`K(q, k, S) > l(q) - k`, on sait déjà que
 que le préfixe :math:`q[1..k]` ne sera pas le minimum.
+
+
+Problème d'optimisation
+=======================
+
+.. mathdef::
+    :title: Optimiser un système de complétion
+    :lid: optim-nlp-comp
+    :tag: Problème
+
+    On suppose que l'ensemble des complétions :math:`C=\acc{c_j}` est connu. 
+    On souhaite ordonner cet ensemble pour obtenir l'ensemble ordonné 
+    des complétions :math:`S=(s_i)` qu'on considère comme une permutation
+    :math:`\sigma` de l'ensemble de départ : :math:`S(\sigma) = (s_i) = (c_{\sigma(j)})`.
+    Ce système de complétion est destiné à un des utilisateurs qui forment des recherches ou requêtes
+    :math:`Q=(q_i, w_i)_{1 \infegal i \infegal M}`. :math:`q_i` est la requête, :math:`w_i` est la fréquence associée
+    à cette requête. On définit l'effort demandé aux utilisateurs par ce système de complétion :
+    
+    .. math::
+        
+        E(C, Q, \sigma) = \sum_{i=1}^M w_i M'(q_i, S(\sigma))
+    
+    Déterminer le meilleur système de complétion revient à trouver 
+    la permutation :math:`\sigma` qui minimise :math:`E(C, Q, \sigma)`.
+
+
+Quelques lectures :
+
+* `Complexité de Lempel-Ziv <https://fr.wikipedia.org/wiki/Complexit%C3%A9_de_Lempel-Ziv>`_
+
+
 
 Notion de trie
 ==============
@@ -633,15 +670,17 @@ plus longue complétioms.
 Digressions
 ===========
 
-Synonymes
-+++++++++
+Synonymes, Contexte
++++++++++++++++++++
 
 On utilise dabord les préfixes pour chercher les mots dans un trie 
 mails il est tout à fait possible de considérer des synonymes.
 Avec les préfixes, un noeud a au plus 27 (26 lettres + espaces) 
 caractères suivant possibles. Si le préfixe a des synonymes,
 rien n'empêche de relier ce noeud avec les successeurs de ses
-synonymes.
+synonymes. 
+A ce sujet, voir `Context-Sensitive Query Auto-Completion <http://technion.ac.il/~nkraus/papers/fr332-bar-yossef.pdf>`_,
+de Ziv Bar-Yossef et Naama Kraus.
 
 Source
 ++++++
@@ -716,10 +755,10 @@ Que dire de la définition suivante ?
     :nowrap:
     
     \begin{eqnarray*}
-    M'_p(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ 
-                            \indicatrice{ L(q[1..k], S) \neq \emptyset} \cro{M'_p(q[1..k], S) +  K(q, k, S)}
+    M'_p(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ \begin{arra}{l}
+                            \indicatrice{ L(q[1..k], S) \neq \emptyset} \cro{M'_p(q[1..k], S) +  K(q, k, S)} + \\
                             \indicatrice{L(q[1..k], S) = \emptyset} \cro { \min_j M'_p(q[1..j], S) + M'_p(q[j+1..], S)  }
-                            }
+                            \end{array} }
     \end{eqnarray*}
 
 Cela revient à considérer que si le système de complétion ne propose aucune complétion
