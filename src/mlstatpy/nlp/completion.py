@@ -30,6 +30,16 @@ class CompletionTrieNode(object):
         self.parent = None
         self.disp = disp
 
+    @property
+    def root(self):
+        """
+        return the initial node with no parent
+        """
+        node = self
+        while node.parent is not None:
+            node = node.parent
+        return node
+
     def __str__(self):
         """
         usual
@@ -113,6 +123,66 @@ class CompletionTrieNode(object):
             if pop.children:
                 stack.extend(pop.children.values())
 
+    def all_suggestions(self) -> List[Tuple['CompletionTrieNone', List[str]]]:
+        """
+        retrieve all suggestions for a node,
+        the method does not need @see me precompute_stat to be run first
+        """
+        word = self.value
+        nodes = [self.root]
+        node = nodes[0]
+        for c in word:
+            if node.children is not None and c in node.children:
+                node = node.children[c]
+                nodes.append(node)
+        nodes.reverse()
+        metric = len(word)
+        best = len(word)
+        all_res = []
+        for node in nodes:
+            res = list(n[1] for n in node.iter_leaves())
+            all_res.append((node, res))
+        all_res.reverse()
+        return all_res
+
+    def all_mks_suggestions(self) -> List[Tuple['CompletionTrieNone', List['CompletionTrieNone']]]:
+        """
+        retrieve all suggestions for a node,
+        the method assumes @see me precompute_stat was run
+        """
+        res = []
+        node = self
+        while True:
+            res.append((node, node.stat.suggestions))
+            if node.parent is None:
+                break
+            node = node.parent
+        res.reverse()
+        return res
+
+    def str_all_suggestions(self, maxn=10, use_precompute=True) -> str:
+        """
+        builds a string with all suggestions for all
+        prefixes along the paths
+
+        @param      maxn            maximum number of suggestions to show
+        @param      use_precompute  use intermediate results built by @see me precompute_stat
+        @return                     str
+        """
+        res = self.all_mks_suggestions() if use_precompute else self.all_suggestions()
+        rows = []
+        for node, sug in res:
+            rows.append("p='{0}'".format(node.value))
+            for i, s in enumerate(sug):
+                if isinstance(s, str):
+                    rows.append("  {0}-'{1}'".format(i + 1, s))
+                else:
+                    rows.append(
+                        "  {0}-w{1}-'{2}'".format(i + 1, s[0], s[1].value))
+                if maxn is not None and i > maxn:
+                    break
+        return "\n".join(rows)
+
     @staticmethod
     def build(words) -> 'CompletionTrieNode':
         """
@@ -191,7 +261,9 @@ class CompletionTrieNode(object):
 
     def min_keystroke(self, word: str) -> Tuple[int, int]:
         """
-        returns the minimum keystrokes for a word
+        Returns the minimum keystrokes for a word without optimisation,
+        this function should be used if you only have a couple of values to
+        computes. You shoud use @see me min_keystroke0 to compute all of them.
 
         @param      word        word
         @return                 number, length of best prefix
@@ -230,6 +302,37 @@ class CompletionTrieNode(object):
                 break
         return metric, best
 
+    def min_keystroke0(self, word: str) -> Tuple[int, int]:
+        """
+        returns the minimum keystrokes for a word
+
+        @param      word        word
+        @return                 number, length of best prefix, iteration it stops moving
+
+        This function must be called after @see me precompute_stat
+        and @see update_stat_dynamic.
+
+        See :ref:`l-completion-optim`.
+
+        .. math::
+            :nowrap:
+
+            \\begin{eqnarray*}
+            K(q, k, S) &=& \\min\\acc{ i | s_i \\succ q[1..k], s_i \\in S } \\\\
+            M(q, S) &=& \\min_{0 \\infegal k \\infegal l(q)}  k + K(q, k, S)
+            \\end{eqnarray*}
+        """
+        node = self.find(word)
+        if node is None:
+            raise NotImplementedError(
+                "this metric is not yet computed for a query outside the trie: '{0}'".format(word))
+        if not hasattr(node, "stat"):
+            raise AttributeError("run precompute_stat and update_stat_dynamic")
+        if not hasattr(node.stat, "mks"):
+            raise AttributeError("run precompute_stat and update_stat_dynamic\nnode={0}\n{1}".format(
+                self, "\n".join(sorted(self.stat.__dict__.keys()))))
+        return node.stat.mks0, node.stat.mks0_, 0
+
     def min_dynamic_keystroke(self, word: str) -> Tuple[int, int]:
         """
         returns the dynamic minimum keystrokes for a word,
@@ -250,6 +353,9 @@ class CompletionTrieNode(object):
             \\end{eqnarray*}
         """
         node = self.find(word)
+        if node is None:
+            raise NotImplementedError(
+                "this metric is not yet computed for a query outside the trie: '{0}'".format(word))
         if not hasattr(node, "stat"):
             raise AttributeError("run precompute_stat and update_stat_dynamic")
         if not hasattr(node.stat, "mks"):
@@ -280,6 +386,9 @@ class CompletionTrieNode(object):
             \\end{eqnarray*}
         """
         node = self.find(word)
+        if node is None:
+            raise NotImplementedError(
+                "this metric is not yet computed for a query outside the trie: '{0}'".format(word))
         if not hasattr(node, "stat"):
             raise AttributeError("run precompute_stat and update_stat_dynamic")
         if not hasattr(node.stat, "mks2"):
@@ -332,8 +441,7 @@ class CompletionTrieNode(object):
         @return                 number of iterations to converge
         """
         for node in self:
-            if node.leave:
-                node.stat.init_dynamic_minimum_keystroke()
+            node.stat.init_dynamic_minimum_keystroke(len(node.value))
             node.stat.iter_ = 0
         updates = 1
         iter = 0
@@ -345,9 +453,8 @@ class CompletionTrieNode(object):
                 pop = stack.pop()
                 if pop.stat.iter_ > iter:
                     continue
-                if pop.leave:
-                    updates += pop.stat.update_dynamic_minimum_keystroke(
-                        len(pop.value), delta)
+                updates += pop.stat.update_dynamic_minimum_keystroke(
+                    len(pop.value), delta)
                 if pop.children:
                     stack.extend(pop.children.values())
                 pop.stat.iter_ += 1
@@ -363,7 +470,7 @@ class CompletionTrieNode(object):
         def merge_suggestions(self, prefix: int, nodes: '[CompletionTrieNode]'):
             """
             merges list of suggestions and cut the list, we assume
-            given list are sorted
+            given lists are sorted
             """
             class Fake:
                 pass
@@ -371,6 +478,7 @@ class CompletionTrieNode(object):
             indexes = [0 for _ in nodes]
             indexes.append(0)
             last = Fake()
+            last.value = None
             last.stat = CompletionTrieNode._Stat()
             last.stat.suggestions = list(
                 sorted((_.weight, _) for _ in nodes if _.leave))
@@ -388,8 +496,13 @@ class CompletionTrieNode(object):
                 res.append((e[0], e[2]))
                 indexes[i] += 1
                 maxl = max(maxl, len(res[-1][1].value))
-            if len(res) > maxl - len(prefix):
-                self.suggestions = res[:maxl - len(prefix)]
+
+            # maxl - len(prefix) represents the longest list which reduces the number of keystrokes
+            # however, as the method aggregates suggestions at a lower lovel,
+            # we must keep longer suggestions for lower levels
+            ind = maxl
+            if len(res) > ind:
+                self.suggestions = res[:ind]
             else:
                 self.suggestions = res
 
@@ -419,55 +532,93 @@ class CompletionTrieNode(object):
             update = 0
             for i, wsug in enumerate(self.suggestions):
                 sug = wsug[1]
-                if not sug.leave:
-                    continue
-                nl = self.mks + i + 1
-                if sug.stat.mks > nl:
-                    sug.stat.mks = nl
-                    sug.stat.mks_ = lw
-                    sug.stat.mksi_ = self.mks_iter
-                    update += 1
-                nl += delta
-                if sug.stat.mks2 > nl:
-                    sug.stat.mks2 = nl
-                    sug.stat.mks2_ = lw
-                    sug.stat.mks2i_ = self.mks_iter
-                    update += 1
+                if sug.leave:
+                    # this is a leave so we consider the suggestion being part
+                    # of the list of suggestions
+                    nl = self.mks + i + 1
+                    if sug.stat.mks > nl:
+                        sug.stat.mks = nl
+                        sug.stat.mks_ = lw
+                        sug.stat.mksi_ = self.mks_iter
+                        update += 1
+                    nl = self.mks2 + i + 1 + delta
+                    if sug.stat.mks2 > nl:
+                        sug.stat.mks2 = nl
+                        sug.stat.mks2_ = lw
+                        sug.stat.mks2i_ = self.mks_iter
+                        update += 1
+                else:
+                    raise Exception("this case should not happen")
 
-            # optimisation of second case of modifed metric
+            # this is not a leave so it does not appear in the list of suggestions
+            # but we need to update mks for these strings, we assume it just
+            # requires an extra character
             if hasattr(self, "next_nodes"):
-                for _, child in self.next_nodes.items():
-                    for i, wsug in enumerate(child.stat.suggestions):
-                        sug = wsug[1]
-                        if not sug.leave:
-                            continue
-                        nl = self.mks + i + 2
-                        if sug.stat.mks2 > nl:
-                            sug.stat.mks2 = nl
-                            sug.stat.mks2_ = lw
-                            sug.stat.mks2i_ = self.mks_iter
+                for _, n in self.next_nodes.items():
+                    if not n.leave:
+                        if not hasattr(n.stat, "mks") or n.stat.mks > self.mks + 1:
+                            n.stat.mks = self.mks + 1
+                            n.stat.mks_ = self.mks_
+                            n.stat.mksi_ = self.mks_iter
+                            update += 1
+                        if not hasattr(n.stat, "mks2") or n.stat.mks2 > self.mks2 + 1:
+                            n.stat.mks2 = self.mks2 + 1
+                            n.stat.mks2_ = self.mks2_
+                            n.stat.mks2i_ = self.mks_iter
                             update += 1
 
+            # optimisation of second case of modifed metric
+            # in a separate function for profiling
+            def second_step(update):
+                if hasattr(self, "next_nodes"):
+                    for _, child in self.next_nodes.items():
+                        for i, wsug in enumerate(child.stat.suggestions):
+                            sug = wsug[1]
+                            if not sug.leave:
+                                continue
+                            nl = self.mks2 + i + 2
+                            if sug.stat.mks2 > nl:
+                                sug.stat.mks2 = nl
+                                sug.stat.mks2_ = lw
+                                sug.stat.mks2i_ = self.mks_iter
+                                update += 1
+                return update
+
+            # finally we need to update mks, mks2 for every prefix not included
+            # in the set of suggestions
+
+            update = second_step(update)
             return update
 
-        def init_dynamic_minimum_keystroke(self):
+        def init_dynamic_minimum_keystroke(self, lw):
             """
             initializes mks and mks2 from from mks0
+
+            @param      lw      length of the prefix
             """
-            self.mks = self.mks0
-            self.mks_ = self.mks0_
-            self.mks_iter = 0
-            self.mksi_ = 0
-            self.mks2 = self.mks0
-            self.mks2_ = self.mks0_
-            self.mks2i_ = 0
+            if hasattr(self, "mks0"):
+                self.mks = self.mks0
+                self.mks_ = self.mks0_
+                self.mks_iter = 0
+                self.mksi_ = 0
+                self.mks2 = self.mks0
+                self.mks2_ = self.mks0_
+                self.mks2i_ = 0
+            else:
+                self.mks = lw
+                self.mks_ = lw
+                self.mks_iter = 0
+                self.mksi_ = 0
+                self.mks2 = lw
+                self.mks2_ = lw
+                self.mks2i_ = 0
 
         def str_mks0(self) -> str:
             """
             return a string with metric information
             """
             if hasattr(self, "mks0"):
-                return "MKS0={0} *={1} l={2}".format(self.mks0, self.mks0_, len(self.suggestions))
+                return "MKS={0} *={1} l={2}".format(self.mks0, self.mks0_, len(self.suggestions))
             else:
                 return "-"
 
@@ -477,6 +628,6 @@ class CompletionTrieNode(object):
             """
             s0 = self.str_mks0()
             if hasattr(self, "mks"):
-                return s0 + " MKS={0} MKS2={3} *={1} i={2}".format(self.mks, self.mks_, self.mksi_, self.mks2)
+                return s0 + " '={0} \"={3} *={1} i={2}".format(self.mks, self.mks_, self.mksi_, self.mks2)
             else:
                 return s0

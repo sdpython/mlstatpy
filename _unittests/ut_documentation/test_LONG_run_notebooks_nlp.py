@@ -46,9 +46,9 @@ from pyquickhelper.ipythonhelper import install_python_kernel_for_unittest
 import IPython
 
 
-class TestRunNotebooksNLP(unittest.TestCase):
+class TestLONGRunNotebooksNLP(unittest.TestCase):
 
-    def test_run_notebook(self):
+    def test_long_run_notebook(self):
         fLOG(
             __file__,
             self._testMethodName,
@@ -72,7 +72,7 @@ class TestRunNotebooksNLP(unittest.TestCase):
             os.path.abspath(os.path.dirname(__file__)), "..", "..", "_doc", "notebooks", "nlp"))
         keepnote = []
         for f in os.listdir(fnb):
-            if os.path.splitext(f)[-1] == ".ipynb" and "long" not in f:
+            if os.path.splitext(f)[-1] == ".ipynb" and "_long" in f:
                 keepnote.append(os.path.join(fnb, f))
         assert len(keepnote) > 0
 

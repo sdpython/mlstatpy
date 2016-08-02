@@ -72,7 +72,7 @@ class TestRunNotebooksML(unittest.TestCase):
             os.path.abspath(os.path.dirname(__file__)), "..", "..", "_doc", "notebooks", "ml"))
         keepnote = []
         for f in os.listdir(fnb):
-            if os.path.splitext(f)[-1] == ".ipynb":
+            if os.path.splitext(f)[-1] == ".ipynb" and "_long" not in f:
                 keepnote.append(os.path.join(fnb, f))
         assert len(keepnote) > 0
 
@@ -95,7 +95,7 @@ class TestRunNotebooksML(unittest.TestCase):
 
         # creation of a kernel
         kernel_name = None if "travis" in sys.executable else install_python_kernel_for_unittest(
-            "python3_module_template")
+            "mlstatpy")
 
         # run the notebooks
         res = execute_notebook_list(

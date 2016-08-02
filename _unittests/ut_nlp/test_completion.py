@@ -1,9 +1,6 @@
 #-*- coding: utf-8 -*-
 """
-@brief      test log(time=2s)
-
-https://dumps.wikimedia.org/frwiki/latest/frwiki-latest-all-titles.gz
-https://dumps.wikimedia.org/frwiki/latest/frwiki-latest-all-titles-in-ns0.gz
+@brief      test log(time=3s)
 """
 
 import sys
@@ -143,6 +140,10 @@ class TestCompletion(unittest.TestCase):
             fLOG(leave.value, mk, "-", leave.stat.str_mks())
             self.assertEqual(
                 mk, (leave.stat.mks0, leave.stat.mks0_, leave.stat.mksi_))
+            text = leave.str_all_suggestions()
+            assert text
+            text = leave.str_all_suggestions(use_precompute=False)
+            assert text
 
     def test_permutations(self):
         fLOG(
@@ -329,6 +330,36 @@ class TestCompletion(unittest.TestCase):
             assert trie is not None
         except ValueError as e:
             fLOG(e)
+
+    def test_suggestions(self):
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
+        this = os.path.abspath(os.path.dirname(__file__))
+        data = os.path.join(this, "data", "sample300.txt")
+        with open(data, "r", encoding="utf-8") as f:
+            lines = [_.strip(" \n\r\t") for _ in f.readlines()]
+
+        trie = CompletionTrieNode.build([(None, q) for q in lines])
+        trie.precompute_stat()
+        trie.update_stat_dynamic()
+
+        for q in lines:
+            find = trie.find(q)
+            assert find is not None
+            sug = find.all_mks_suggestions()
+            nb_ = [(a.value, len([s.value for _, s in b if s.value == q]))
+                   for a, b in sug]
+            nb = sum(_[1] for _ in nb_)
+            if nb == 0:
+                info = "nb={0} q='{1}'".format(nb, q)
+                st = find.stat.str_mks()
+                text = find.str_all_suggestions()
+                text2 = find.str_all_suggestions(use_precompute=False)
+                raise Exception(
+                    "{4}\n---\nleave='{0}'\n{1}\n---\n{2}\n---\n{3}".format(find.value, st, text, text2, info))
 
 
 if __name__ == "__main__":
