@@ -47,7 +47,7 @@ from src.mlstatpy.nlp.normalize import remove_diacritics
 
 class TestCompletionLonger(unittest.TestCase):
 
-    def test_check_bug_about_mergeing_suggestions(self):
+    def test_check_bug_about_mergeing_completions(self):
         fLOG(
             __file__,
             self._testMethodName,
@@ -68,11 +68,11 @@ class TestCompletionLonger(unittest.TestCase):
         trie.precompute_stat()
         fLOG("bug checking")
         find = trie.find('Cann')
-        sug = find.stat.suggestions
+        sug = find.stat.completions
         self.assertEqual(len(sug), 2)
         leave = trie.find('Cannes 2005')
 
-        sugg = leave.all_mks_suggestions()
+        sugg = leave.all_mks_completions()
         assert len(sugg) > 0
         verif = 0
         for p, sug in sugg:
@@ -81,9 +81,9 @@ class TestCompletionLonger(unittest.TestCase):
                     if s[1].value == "Cannes 2005":
                         verif += 1
         if verif == 0:
-            raise Exception(leave.str_all_suggestions(use_precompute=True))
+            raise Exception(leave.str_all_completions(use_precompute=True))
 
-        sugg = leave.all_suggestions()
+        sugg = leave.all_completions()
         assert len(sugg) > 0
         verif = 0
         for p, sug in sugg:
@@ -92,7 +92,7 @@ class TestCompletionLonger(unittest.TestCase):
                     if s == "Cannes 2005":
                         verif += 1
         if verif == 0:
-            raise Exception(leave.str_all_suggestions(use_precompute=False))
+            raise Exception(leave.str_all_completions(use_precompute=False))
 
 
 if __name__ == "__main__":

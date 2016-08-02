@@ -123,9 +123,9 @@ class CompletionTrieNode(object):
             if pop.children:
                 stack.extend(pop.children.values())
 
-    def all_suggestions(self) -> List[Tuple['CompletionTrieNone', List[str]]]:
+    def all_completions(self) -> List[Tuple['CompletionTrieNone', List[str]]]:
         """
-        retrieve all suggestions for a node,
+        retrieve all completions for a node,
         the method does not need @see me precompute_stat to be run first
         """
         word = self.value
@@ -145,31 +145,31 @@ class CompletionTrieNode(object):
         all_res.reverse()
         return all_res
 
-    def all_mks_suggestions(self) -> List[Tuple['CompletionTrieNone', List['CompletionTrieNone']]]:
+    def all_mks_completions(self) -> List[Tuple['CompletionTrieNone', List['CompletionTrieNone']]]:
         """
-        retrieve all suggestions for a node,
+        retrieve all completions for a node,
         the method assumes @see me precompute_stat was run
         """
         res = []
         node = self
         while True:
-            res.append((node, node.stat.suggestions))
+            res.append((node, node.stat.completions))
             if node.parent is None:
                 break
             node = node.parent
         res.reverse()
         return res
 
-    def str_all_suggestions(self, maxn=10, use_precompute=True) -> str:
+    def str_all_completions(self, maxn=10, use_precompute=True) -> str:
         """
-        builds a string with all suggestions for all
+        builds a string with all completions for all
         prefixes along the paths
 
-        @param      maxn            maximum number of suggestions to show
+        @param      maxn            maximum number of completions to show
         @param      use_precompute  use intermediate results built by @see me precompute_stat
         @return                     str
         """
-        res = self.all_mks_suggestions() if use_precompute else self.all_suggestions()
+        res = self.all_mks_completions() if use_precompute else self.all_completions()
         rows = []
         for node, sug in res:
             rows.append("p='{0}'".format(node.value))
@@ -240,7 +240,7 @@ class CompletionTrieNode(object):
 
     def find(self, prefix: str) -> 'CompletionTrieNode':
         """
-        returns the node which holds all suggestions starting with a given prefix
+        returns the node which holds all completions starting with a given prefix
 
         @param      prefix      prefix
         @return                 node or None for no result
@@ -398,7 +398,7 @@ class CompletionTrieNode(object):
 
     def precompute_stat(self):
         """
-        computes and stores list of suggestions for each node,
+        computes and stores list of completions for each node,
         computes mks
 
         @param      clean   clean stat
@@ -411,7 +411,7 @@ class CompletionTrieNode(object):
                 continue
             if not pop.children:
                 pop.stat = CompletionTrieNode._Stat()
-                pop.stat.suggestions = []
+                pop.stat.completions = []
                 pop.stat.mks0 = len(pop.value)
                 pop.stat.mks0_ = len(pop.value)
                 if pop.parent is not None:
@@ -422,7 +422,7 @@ class CompletionTrieNode(object):
                     pop.stat.mks0 = len(pop.value)
                     pop.stat.mks0_ = len(pop.value)
                 stack.extend(pop.children.values())
-                pop.stat.merge_suggestions(pop.value, pop.children.values())
+                pop.stat.merge_completions(pop.value, pop.children.values())
                 pop.stat.next_nodes = pop.children
                 pop.stat.update_minimum_keystroke(len(pop.value))
                 if pop.parent is not None:
@@ -467,9 +467,9 @@ class CompletionTrieNode(object):
         the metrics
         """
 
-        def merge_suggestions(self, prefix: int, nodes: '[CompletionTrieNode]'):
+        def merge_completions(self, prefix: int, nodes: '[CompletionTrieNode]'):
             """
-            merges list of suggestions and cut the list, we assume
+            merges list of completions and cut the list, we assume
             given lists are sorted
             """
             class Fake:
@@ -480,15 +480,15 @@ class CompletionTrieNode(object):
             last = Fake()
             last.value = None
             last.stat = CompletionTrieNode._Stat()
-            last.stat.suggestions = list(
+            last.stat.completions = list(
                 sorted((_.weight, _) for _ in nodes if _.leave))
             nodes = list(nodes)
             nodes.append(last)
 
             maxl = 0
             while True:
-                en = [(_.stat.suggestions[indexes[i]][0], i, _.stat.suggestions[indexes[i]][1])
-                      for i, _ in enumerate(nodes) if indexes[i] < len(_.stat.suggestions)]
+                en = [(_.stat.completions[indexes[i]][0], i, _.stat.completions[indexes[i]][1])
+                      for i, _ in enumerate(nodes) if indexes[i] < len(_.stat.completions)]
                 if not en:
                     break
                 e = min(en)
@@ -498,21 +498,21 @@ class CompletionTrieNode(object):
                 maxl = max(maxl, len(res[-1][1].value))
 
             # maxl - len(prefix) represents the longest list which reduces the number of keystrokes
-            # however, as the method aggregates suggestions at a lower lovel,
-            # we must keep longer suggestions for lower levels
+            # however, as the method aggregates completions at a lower lovel,
+            # we must keep longer completions for lower levels
             ind = maxl
             if len(res) > ind:
-                self.suggestions = res[:ind]
+                self.completions = res[:ind]
             else:
-                self.suggestions = res
+                self.completions = res
 
         def update_minimum_keystroke(self, lw):
             """
-            update minimum keystroke for the suggestions
+            update minimum keystroke for the completions
 
             @param      lw      prefix length
             """
-            for i, wsug in enumerate(self.suggestions):
+            for i, wsug in enumerate(self.completions):
                 sug = wsug[1]
                 nl = lw + i + 1
                 if not hasattr(sug.stat, "mks0") or sug.stat.mks0 > nl:
@@ -521,7 +521,7 @@ class CompletionTrieNode(object):
 
         def update_dynamic_minimum_keystroke(self, lw, delta):
             """
-            update dynamic minimum keystroke for the suggestions
+            update dynamic minimum keystroke for the completions
 
             @param      lw      prefix length
             @param      delta   parameter :math:`\delta` in defintion
@@ -530,11 +530,11 @@ class CompletionTrieNode(object):
             """
             self.mks_iter += 1
             update = 0
-            for i, wsug in enumerate(self.suggestions):
+            for i, wsug in enumerate(self.completions):
                 sug = wsug[1]
                 if sug.leave:
-                    # this is a leave so we consider the suggestion being part
-                    # of the list of suggestions
+                    # this is a leave so we consider the completion being part
+                    # of the list of completions
                     nl = self.mks + i + 1
                     if sug.stat.mks > nl:
                         sug.stat.mks = nl
@@ -550,7 +550,7 @@ class CompletionTrieNode(object):
                 else:
                     raise Exception("this case should not happen")
 
-            # this is not a leave so it does not appear in the list of suggestions
+            # this is not a leave so it does not appear in the list of completions
             # but we need to update mks for these strings, we assume it just
             # requires an extra character
             if hasattr(self, "next_nodes"):
@@ -572,7 +572,7 @@ class CompletionTrieNode(object):
             def second_step(update):
                 if hasattr(self, "next_nodes"):
                     for _, child in self.next_nodes.items():
-                        for i, wsug in enumerate(child.stat.suggestions):
+                        for i, wsug in enumerate(child.stat.completions):
                             sug = wsug[1]
                             if not sug.leave:
                                 continue
@@ -585,7 +585,7 @@ class CompletionTrieNode(object):
                 return update
 
             # finally we need to update mks, mks2 for every prefix not included
-            # in the set of suggestions
+            # in the set of completions
 
             update = second_step(update)
             return update
@@ -618,7 +618,7 @@ class CompletionTrieNode(object):
             return a string with metric information
             """
             if hasattr(self, "mks0"):
-                return "MKS={0} *={1} l={2}".format(self.mks0, self.mks0_, len(self.suggestions))
+                return "MKS={0} *={1} l={2}".format(self.mks0, self.mks0_, len(self.completions))
             else:
                 return "-"
 

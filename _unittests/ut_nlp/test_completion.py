@@ -140,9 +140,9 @@ class TestCompletion(unittest.TestCase):
             fLOG(leave.value, mk, "-", leave.stat.str_mks())
             self.assertEqual(
                 mk, (leave.stat.mks0, leave.stat.mks0_, leave.stat.mksi_))
-            text = leave.str_all_suggestions()
+            text = leave.str_all_completions()
             assert text
-            text = leave.str_all_suggestions(use_precompute=False)
+            text = leave.str_all_completions(use_precompute=False)
             assert text
 
     def test_permutations(self):
@@ -173,7 +173,7 @@ class TestCompletion(unittest.TestCase):
                     for n in trie:
                         mes.append("{0} || {1}".format(
                             n.value, n.stat.str_mks()))
-                        for i, s in enumerate(n.stat.suggestions):
+                        for i, s in enumerate(n.stat.completions):
                             mes.append(
                                 "  {0} - {1}:{2}".format(i, s[0], s[1].value))
                     raise Exception("difference\n{0}".format("\n".join(mes)))
@@ -331,7 +331,7 @@ class TestCompletion(unittest.TestCase):
         except ValueError as e:
             fLOG(e)
 
-    def test_suggestions(self):
+    def test_completions(self):
         fLOG(
             __file__,
             self._testMethodName,
@@ -349,15 +349,15 @@ class TestCompletion(unittest.TestCase):
         for q in lines:
             find = trie.find(q)
             assert find is not None
-            sug = find.all_mks_suggestions()
+            sug = find.all_mks_completions()
             nb_ = [(a.value, len([s.value for _, s in b if s.value == q]))
                    for a, b in sug]
             nb = sum(_[1] for _ in nb_)
             if nb == 0:
                 info = "nb={0} q='{1}'".format(nb, q)
                 st = find.stat.str_mks()
-                text = find.str_all_suggestions()
-                text2 = find.str_all_suggestions(use_precompute=False)
+                text = find.str_all_completions()
+                text2 = find.str_all_completions(use_precompute=False)
                 raise Exception(
                     "{4}\n---\nleave='{0}'\n{1}\n---\n{2}\n---\n{3}".format(find.value, st, text, text2, info))
 

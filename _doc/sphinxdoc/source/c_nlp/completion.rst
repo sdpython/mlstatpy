@@ -116,7 +116,7 @@ qui commence par les :math:`k` premières lettres de :math:`q` et de longueur su
 ou :math:`\infty` si elle n'y est pas. Cette position est strictement positive
 :math:`K(q, k, S) \supegal 1` sauf si :math`k=l(q)` auquel cas, elle est nulle. 
 Cela signifie que l'utilisateur doit descendre d'au moins un cran
-pour sélectionner une suggestion.
+pour sélectionner une complétion.
 
 .. math::
 
@@ -357,7 +357,7 @@ séquence de touches suivantes :
 touche      mot composé
 =========== =================
 a           a
-bas         actu (suggestion)
+bas         actu (complétion)
 e           actue
 bas         actuellement
 =========== =================
@@ -447,7 +447,7 @@ Définition avancée
 Dans les faits, le :ref:`Dynamic Minimum Keystroke <completion-metric2>` sous-estime 
 le nombre de caractères nécessaires. Losqu'on utilise un mot comme tremplin, on
 peut aisément le compléter mais il faut presser une touche ou attendre un peu
-pour voir les nouvelles suggestions associées à la suggestion choisie et maintenant
+pour voir les nouvelles complétions associées à la première complétion choisie et maintenant
 considéré comme préfixe. C'est ce que prend en compte la définition suivante.
 
 .. mathdef::
@@ -472,20 +472,20 @@ considéré comme préfixe. C'est ce que prend en compte la définition suivante
 
 Si on prend comme exemple la requête *machine learning*, le premier cas correspond à la séquence :
 
-* sélection de la suggestion *machine*
+* sélection de la complétion *machine*
 * pression de la touche espace
-* sélection de la suggestion *machine learning*
+* sélection de la complétion *machine learning*
 
 Et le second cas à la séquence :
 
-* sélection de la suggestion *machine*
-* pression de la touche droite pour afficher les nouvelles suggestions
-* sélection de la suggestion *machine learning*
+* sélection de la complétion *machine*
+* pression de la touche droite pour afficher les nouvelles complétions
+* sélection de la complétion *machine learning*
 
 Le coût de la pression de la touche droite est noté :math:`\delta \infegal 1` qu'on prendra inférieur à 1.
 On remarque également qu'avec cette nouvelle métrique, il est possible
 de diminuer le nombre minimum de touches à presser pour des requêtes en dehors 
-de l'ensemble :math:`S` à partir du moment où elles prolongent une suggestion existante.
+de l'ensemble :math:`S` à partir du moment où elles prolongent une complétion existante.
 C'est là un point très intéressant de cette métrique.
 
 Questions
@@ -494,19 +494,19 @@ Questions
 Grâce à cette métrique, on peut envisager de trouver des réponses à certaines questions :
 
 * Les différences entre les trois métriques sont-elles négligeables ou non ?
-* Ajouter des suggestions non présentes dans le corpus améliore-t-elle la métrique ?
+* Ajouter des complétions non présentes dans le corpus améliore-t-elle la métrique ?
   Même question pour la suppression ?
-* Existe-t-il un moyen de construire de façon itérative l'ensemble des suggestions
+* Existe-t-il un moyen de construire de façon itérative l'ensemble des complétions
   ou plutôt l'ordre qui minimise la métrice :math:`M'(q, S)` ?
 * Comment calculer rapidement les métriques pour les requêtes dans l'ensemble 
   :math:`S` et en dehors ?
   
 Pour la première question, une expérience devrait donner une piste
 à défaut d'y répondre. Pour la seconde, il n'est pas nécessaire d'envisager 
-la suppression de suggestions car celles-ci devraient naturellement se positionner 
-en fin de liste. L'ajout correspond à la situation où beaucoup de suggestions
+la suppression de complétions car celles-ci devraient naturellement se positionner 
+en fin de liste. L'ajout correspond à la situation où beaucoup de complétions
 partagent le même préfixe sans pour autant que ce préfixe fasse partie de la 
-liste des suggestions.
+liste des complétions.
 
 ::
 
@@ -521,8 +521,8 @@ liste des suggestions.
     machine intelligente
     machine learning
     
-L'idée consiste à ajouter à la suggestion *machine* qui sert de
-préfixe commun à beaucoup de suggestions et cela améliore le gain moyen
+L'idée consiste à ajouter la complétion *machine* qui sert de
+préfixe commun à beaucoup de complétions et cela améliore le gain moyen
 dans le cas présent (sans compter le gain sur la requête
 *machine*). Enfin, la troisième et la quatrième question,
 la réponse requiert la démonstration de quelques propriétés mathématiques.
@@ -575,7 +575,7 @@ Etant donné que le nombre minimum de caractères pour obtenir une requête dans
 ne peut pas être supérieur à la longueur, si :math:`K(q, k, S) > l(q) - k`, on sait déjà que
 que le préfixe :math:`q[1..k]` ne sera pas le minimum.
 
-**suggestions**
+**complétions**
 
 On considère les requêtes complètes suivante :
 
@@ -590,26 +590,26 @@ On considère les requêtes complètes suivante :
 Pour le préfixe *actue*, on suggère *actuel* at *actuellement*.
 Pour le préfixe *actua*, on suggère *actualité* at *actualités*.
 Pour le préfixe *actu*, on suggère la concaténation de ces deux listes.
-Par conséquent, pour construire les listes de suggestions associées à chaque préfixe,
+Par conséquent, pour construire les listes de complétions associées à chaque préfixe,
 il paraît de partir des feuilles de l'arbre puis de fusionner les listes
-de suggestions jusqu'au noeud racine.
+de complétions jusqu'au noeud racine.
 
 **utilisation ou recherche**
 
-C'est différent de construire toutes le suggestions pour un préfixe plutôt 
-que toutes les suggestions pour tous les préfixes. Le premier cas correspond
+C'est différent de construire toutes les complétions pour un préfixe plutôt 
+que toutes les complétions pour tous les préfixes. Le premier cas correspond
 à un utilisateur qui cherche quelque chose. Il faut être rapide quitte à retourner un 
 résultat tronqué.
 
 Le second cas correspond à objectif de recherche des d'optimisation.
-Les enjeux sont plus de réussir à calculer toutes les suggestions
+Les enjeux sont plus de réussir à calculer toutes les complétions
 en un temps raisonnable et avec une utilisation mémoire raisonnable également.
 
 **mémoire**
 
 D'après la remarque précédente, il n'est pas utile de conserver pour un préfixe donné
 l'intégralité des requêtes complètes qui commence par ce préfixe. Dans le pire des cas,
-cette liste a besoin de contenir autant de suggestions que le nombre de caractères de la
+cette liste a besoin de contenir autant de complétions que le nombre de caractères de la
 plus longue requêtes.
 
 
@@ -640,7 +640,7 @@ Fonction de gain
 
 Jusqu'à présent, on a considéré uniquement le nombre de caractères économisés pour 
 déterminer le meilleur ordre. Rien n'empêche d'ajouter une coût supplémenaires lié
-à l'ordre des suggestions. Une requête est pénalisée si les suggestions 
+à l'ordre des complétions. Une requête est pénalisée si les complétions 
 associées sont loin de l'ordre alphabétique. On peut pénaliser un ordre éloigné
 à chaque caractère ajouté.
 
@@ -660,3 +660,21 @@ Suppression de caractères
 
 Nous pourrions considérer le fait de pouvoir supprimer des caractères
 afin de trouver le chemmin le plus court pour obtenir une requête.
+
+Coût d'un caractères
+++++++++++++++++++++
+
+Jusqu'à présent, la pression d'une touche a le même coût quelque soit 
+la source, un caractère, une touche vers le bas. Pourtant, plus il y a 
+de lettres dans l'alphabet, plus le système de complétion sera performant
+à supposer que les mots soient plus ou moins équirépartis selon les
+caractères (la probabilité du prochain caractère est uniforme).
+On peut concevoir que chercher une touche lorsque l'alphabet est grand peut prendre
+un certain temps. Le cas du chinois est intéressant car la 
+`saisie des caractères <https://fr.wikipedia.org/wiki/Saisie_du_chinois_sur_ordinateur>`_
+peut prendre plusieurs touches. Faut-il considérer un caractère chinois comme unité
+de décomposition d'un mot où la séquence des touches qui le construisent ?
+Dans le premier cas, il faudrait sans doute pénaliser la saisie d'un caractère
+en fonction du nombre de touches nécessaires pour le former par rapport
+à la sélection d'une complétion.
+

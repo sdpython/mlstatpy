@@ -82,7 +82,7 @@ class TestLONGRunNotebooksNLP(unittest.TestCase):
                 return False
             if "open_html_form" in cell:
                 return False
-            if "[50000, 100000, 200000, 500000, 500000,, 1000000, 2000000, None]" in cell:
+            if "[50000, 100000, 200000, 500000, 500000, 1000000, 2000000, None]" in cell:
                 return False
             if '<div style="position:absolute' in cell:
                 return False

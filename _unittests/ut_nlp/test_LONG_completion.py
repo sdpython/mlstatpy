@@ -79,7 +79,7 @@ class TestLONGCompletion(unittest.TestCase):
             assert hasattr(leave.stat, "mks0")
             assert hasattr(leave.stat, "mks")
 
-            sug = leave.all_mks_suggestions()
+            sug = leave.all_mks_completions()
             nb_ = [(a.value, len([s.value for _, s in b if s.value == q[1]]))
                    for a, b in sug]
             nbf_ = [(a.value, len(b)) for a, b in sug]
@@ -88,8 +88,8 @@ class TestLONGCompletion(unittest.TestCase):
             if nb == 0 and len(q[1]) > 10:
                 info = "nb={0} mnb={2} q='{1}'".format(nb, q[1], mnb)
                 st = leave.stat.str_mks()
-                text = leave.str_all_suggestions()
-                text2 = leave.str_all_suggestions(use_precompute=False)
+                text = leave.str_all_completions()
+                text2 = leave.str_all_completions(use_precompute=False)
                 raise Exception(
                     "{4}\n---\nleave='{0}'\n{1}\n---\n{2}\n---\n{3}".format(leave.value, st, text, text2, info))
 
@@ -103,14 +103,14 @@ class TestLONGCompletion(unittest.TestCase):
 
             if mk[0] > mk1[0]:
                 st = leave.stat.str_mks()
-                text = leave.str_all_suggestions()
-                text2 = leave.str_all_suggestions(use_precompute=False)
+                text = leave.str_all_completions()
+                text2 = leave.str_all_completions(use_precompute=False)
                 raise Exception("weird {0} > {1} -- leave='{2}'\n{3}\n---\n{4}\n---\n{5}".format(
                     mk, mk1, leave.value, st, text, text2))
             if mk2[0] < mk[0]:
                 st = leave.stat.str_mks()
-                text = leave.str_all_suggestions()
-                text2 = leave.str_all_suggestions(use_precompute=False)
+                text = leave.str_all_completions()
+                text2 = leave.str_all_completions(use_precompute=False)
                 raise Exception("weird {0} > {1} -- leave='{2}'\n{3}\n---\n{4}\n---\n{5}".format(
                     mk, mk2, leave.value, st, text, text2))
 
