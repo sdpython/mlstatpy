@@ -483,6 +483,10 @@ Et le second cas à la séquence :
 * sélection de la suggestion *machine learning*
 
 Le coût de la pression de la touche droite est noté :math:`\delta \infegal 1` qu'on prendra inférieur à 1.
+On remarque également qu'avec cette nouvelle métrique, il est possible
+de diminuer le nombre minimum de touches à presser pour des requêtes en dehors 
+de l'ensemble :math:`S` à partir du moment où elles prolongent une suggestion existante.
+C'est là un point très intéressant de cette métrique.
 
 Questions
 +++++++++
@@ -494,6 +498,8 @@ Grâce à cette métrique, on peut envisager de trouver des réponses à certain
   Même question pour la suppression ?
 * Existe-t-il un moyen de construire de façon itérative l'ensemble des suggestions
   ou plutôt l'ordre qui minimise la métrice :math:`M'(q, S)` ?
+* Comment calculer rapidement les métriques pour les requêtes dans l'ensemble 
+  :math:`S` et en dehors ?
   
 Pour la première question, une expérience devrait donner une piste
 à défaut d'y répondre. Pour la seconde, il n'est pas nécessaire d'envisager 
@@ -518,10 +524,29 @@ liste des suggestions.
 L'idée consiste à ajouter à la suggestion *machine* qui sert de
 préfixe commun à beaucoup de suggestions et cela améliore le gain moyen
 dans le cas présent (sans compter le gain sur la requête
-*machine*). Enfin, la troisième question,
-si la réponse est positive, cela requiert la démonstration de quelques
-propriétés mathématiques.
+*machine*). Enfin, la troisième et la quatrième question,
+la réponse requiert la démonstration de quelques propriétés mathématiques.
 
+Propriétés mathématiques
+========================
+
+On s'intéresse à la métrique :math:`M'` définie par
+:ref:`Dynamic Minimum Keystroke <completion-metric2>`.
+
+Calcul pour une requête en dehors
++++++++++++++++++++++++++++++++++
+
+ Soit une requête :math:`q \notin S`, quelque soit :math:`k`, 
+ :math:`K(q, k, S)` est infini et :math:`M(q, S) = l(q)`.
+ On définit la métrique :math:`M'(q, S)` pour :math:`q \notin S`
+ comme suit :
+ 
+ 
+ .. math::
+ 
+    M'(q, S) = \inf\acc{ M'(r, S) + l(q) - l(r) | r \in S \, et \, r \preceq q } 
+
+De manière évidente, :math:`M'(q, S) \infegal l(q)`.
 
 Notion de trie
 ==============
@@ -629,3 +654,9 @@ Sur Wikpédia, les homonymes sont distingués par un sous-titre
 entre parenthèse l'année pour un événement sportif régulier. 
 On peut imaginer que plusieurs séquences de caractères aboutissent 
 à la même entrée.
+
+Suppression de caractères
++++++++++++++++++++++++++
+
+Nous pourrions considérer le fait de pouvoir supprimer des caractères
+afin de trouver le chemmin le plus court pour obtenir une requête.
