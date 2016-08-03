@@ -255,3 +255,6 @@ _doc/notebooks/nlp/frwiki-latest-all-titles-in-ns0
 _doc/notebooks/nlp/sample*.txt
 _doc/notebooks/nlp/completion.prof
 _doc/notebooks/nlp/profile.png
+_doc/notebooks/nlp/completion.dot
+_doc/notebooks/nlp/completion.png
+_doc/notebooks/nlp/completion.pstat
