@@ -8,7 +8,6 @@ datashader
 datashape
 flake8
 flask
-gprof2dot
 h5py
 ipykernel
 ipyparallel
@@ -35,7 +34,6 @@ path.py
 patsy
 pep8
 pillow
-pyinstrument
 pyzmq
 qtconsole
 rasterio
