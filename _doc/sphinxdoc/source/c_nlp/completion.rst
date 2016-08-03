@@ -460,7 +460,7 @@ Définition avancée
 ++++++++++++++++++
 
 Dans les faits, le :ref:`Dynamic Minimum Keystroke <completion-metric2>` sous-estime 
-le nombre de caractères nécessaires. Losqu'on utilise un mot comme tremplin, on
+le nombre de caractères nécessaires. Lorsqu'on utilise un mot comme tremplin, on
 peut aisément le compléter mais il faut presser une touche ou attendre un peu
 pour voir les nouvelles complétions associées à la première complétion choisie et maintenant
 considéré comme préfixe. C'est ce que prend en compte la définition suivante.
@@ -625,22 +625,54 @@ Problème d'optimisation
     des complétions :math:`S=(s_i)` qu'on considère comme une permutation
     :math:`\sigma` de l'ensemble de départ : :math:`S(\sigma) = (s_i) = (c_{\sigma(j)})`.
     Ce système de complétion est destiné à un des utilisateurs qui forment des recherches ou requêtes
-    :math:`Q=(q_i, w_i)_{1 \infegal i \infegal M}`. :math:`q_i` est la requête, :math:`w_i` est la fréquence associée
-    à cette requête. On définit l'effort demandé aux utilisateurs par ce système de complétion :
+    :math:`Q=(q_i, w_i)_{1 \infegal i \infegal N_Q}`. 
+    :math:`q_i` est la requête, :math:`w_i` est la fréquence associée
+    à cette requête. On définit l'effort demandé aux utilisateurs 
+    par ce système de complétion :
     
     .. math::
         
-        E(C, Q, \sigma) = \sum_{i=1}^M w_i M'(q_i, S(\sigma))
+        E(C, Q, \sigma) = \sum_{i=1}^{N_Q} w_i M'(q_i, S(\sigma))
     
     Déterminer le meilleur système de complétion revient à trouver 
     la permutation :math:`\sigma` qui minimise :math:`E(C, Q, \sigma)`.
 
+La métrique :math:`M'` peut être remplacée par :math:`M"`. La différence
+peut paraître insignifiante mais elle ne l'est pas tant que ça. Le système
+de complétion peut se concevoir comme une *compression* : 
+le système de complétion permet de coder l'ensemble des recherches
+d'un utilisateur :math:`Q` avec moins de caractères que celui-ci
+en a besoin pour les taper. On ajoute les caractères :math:`rightarrow` 
+et :math:`\downarrow` aux lettres de l'alphabet et cela permet de 
+coder plus rapidement une requêtes. La quantité suivante peut être
+considérée comme le taux de compression :
 
-Quelques lectures :
+..math::
 
-* `Complexité de Lempel-Ziv <https://fr.wikipedia.org/wiki/Complexit%C3%A9_de_Lempel-Ziv>`_
+    t(C, Q, \sigma) = \frac{ E(C, Q, \sigma) } { \sum_{i=1}^{N_Q} w_i l(q_i) }
+    
 
+L'idée derrière cette métaphore est le fait d'avoir une idée de la borne inférieure
+pour ce taux de compression. On s'inspirer de la 
+`complexité de Lempel-Ziv <https://fr.wikipedia.org/wiki/Complexit%C3%A9_de_Lempel-Ziv>`_
+(`calculating Lempel-Ziv (LZ) complexity (aka sequence complexity) of a binary string <http://stackoverflow.com/questions/4946695/calculating-lempel-ziv-lz-complexity-aka-sequence-complexity-of-a-binary-str>`_)
+ou du `codage de Huffman <https://fr.wikipedia.org/wiki/Codage_de_Huffman>`_.
+:math:`M'` permet une compression avec perte et :math:`M"` sans perte.
+Le calcul de :math:`M'` autorise deux *jumps* de suite :
 
+.. math::
+
+    abb (\downarrow \downarrow \downarrow \downarrow \downarrow)
+    
+Mais les deux dernières touches :math:`\downarrow` peuvent s'appliquer 
+au premier préfixe ou aux suggestions montrées par la complétion
+obtenue après trois :math:`\downarrow`.
+
+.. math::
+
+    abb (\downarrow \downarrow \downarrow) (\downarrow \downarrow)
+    
+La métrique :math:`M"` interdit ce cas.
 
 Notion de trie
 ==============
