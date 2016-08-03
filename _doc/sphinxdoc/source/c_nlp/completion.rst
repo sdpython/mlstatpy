@@ -41,6 +41,12 @@ de Bhaskar Mitra, Milad Shokouhi, Filip Radlinski, Katja Hofmann.
     :depth: 1
 
 
+Notebooks associés :
+
+* :ref:`completiontrierst`
+* :ref:`completionprofilingrst`
+* :ref:`completiontrielongrst`
+
 Formalisation
 =============
 
@@ -642,7 +648,9 @@ Notion de trie
 Une implémentation des tries est décrites dans deux notebooks :
 `Arbre et Trie <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/_gs1a_A_arbre_trie.html>`_.
 Les résultats de ce chapitre ont été produits avec le module :mod:`completion <mlstatpy.nlp.completion>`
-et le notebook :ref:`completiontrierst`.
+et le notebook :ref:`completiontrierst`. Le notebook
+:ref:`completionprofilingrst` montre les résultats du profiling. 
+L'implémentation Python est très gourmande en mémoire.
 
 Remarques préliminaires
 +++++++++++++++++++++++
