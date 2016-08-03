@@ -2,3 +2,4 @@ ggplot
 gprof2dot
 pyinstrument
 snakeviz
+vprof
