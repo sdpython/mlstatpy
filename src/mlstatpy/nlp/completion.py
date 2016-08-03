@@ -86,13 +86,25 @@ class CompletionTrieNode(object):
 
     def __iter__(self):
         """
+        iterates on all nodes (sorted)
+        """
+        stack = [self]
+        while len(stack) > 0:
+            node = stack.pop()
+            yield node
+            if node.children:
+                stack.extend(v for k, v in sorted(node.children.items()))
+
+    def unsorted_iter(self):
+        """
         iterates on all nodes
         """
-        yield self
-        if self.children is not None:
-            for k, v in sorted(self.children.items()):
-                for _ in v:
-                    yield _
+        stack = [self]
+        while len(stack) > 0:
+            node = stack.pop()
+            yield node
+            if node.children:
+                stack.extend(node.children.values())
 
     def items(self) -> Iterator[Tuple[float, str, 'CompletionTrieNode']]:
         """
@@ -447,7 +459,7 @@ class CompletionTrieNode(object):
                                 :ref:`Modified Dynamic KeyStroke <def-mks3>`
         @return                 number of iterations to converge
         """
-        for node in self:
+        for node in self.unsorted_iter():
             node.stat.init_dynamic_minimum_keystroke(len(node.value))
             node.stat.iter_ = 0
         updates = 1

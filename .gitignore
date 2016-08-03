@@ -253,3 +253,5 @@ m.temp
 _doc/notebooks/*/.ipynb_checkpoints
 _doc/notebooks/nlp/frwiki-latest-all-titles-in-ns0
 _doc/notebooks/nlp/sample*.txt
+_doc/notebooks/nlp/completion.prof
+_doc/notebooks/nlp/profile.png

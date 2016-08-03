@@ -38,7 +38,7 @@ de Bhaskar Mitra, Milad Shokouhi, Filip Radlinski, Katja Hofmann.
 
 .. contents::
     :local:
-    :maxdepth: 1
+    :depth: 1
 
 
 Formalisation
@@ -755,7 +755,7 @@ Que dire de la définition suivante ?
     :nowrap:
     
     \begin{eqnarray*}
-    M'_p(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ \begin{arra}{l}
+    M'_p(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ \begin{array}{l}
                             \indicatrice{ L(q[1..k], S) \neq \emptyset} \cro{M'_p(q[1..k], S) +  K(q, k, S)} + \\
                             \indicatrice{L(q[1..k], S) = \emptyset} \cro { \min_j M'_p(q[1..j], S) + M'_p(q[j+1..], S)  }
                             \end{array} }
