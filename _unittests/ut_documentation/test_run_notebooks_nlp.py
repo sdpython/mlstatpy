@@ -39,7 +39,7 @@ except ImportError:
     import src
 
 from pyquickhelper.loghelper import fLOG
-from pyquickhelper.pycode import get_temp_folder
+from pyquickhelper.pycode import get_temp_folder, is_travis_or_appveyor
 from pyquickhelper.ipythonhelper import execute_notebook_list
 from pyquickhelper.pycode import compare_module_version
 from pyquickhelper.ipythonhelper import install_python_kernel_for_unittest
@@ -83,6 +83,8 @@ class TestRunNotebooksNLP(unittest.TestCase):
             if "open_window_params" in cell:
                 return False
             if '<div style="position:absolute' in cell:
+                return False
+            if "completion.dot" in cell and is_travis_or_appveyor() == "travis":
                 return False
             return True
 
