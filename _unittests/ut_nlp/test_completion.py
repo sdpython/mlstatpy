@@ -204,7 +204,7 @@ class TestCompletion(unittest.TestCase):
 
         this = os.path.abspath(os.path.dirname(__file__))
         this = os.path.join(this, "data", "wikititles.txt")
-        titles = enumerate_titles(this)
+        titles = sorted(enumerate_titles(this))
         res = {}
         dups = 0
         for w in titles:
@@ -222,11 +222,13 @@ class TestCompletion(unittest.TestCase):
             titles[-2], (None, 'grand rue de pera', 'Grand Rue de Pera'))
         trie = CompletionTrieNode.build(titles)
         nodes = list(trie)
-        if str(nodes[1]) != '[-:":w=0]':
+        exp_value = '[-:":w=0]'
+        if str(nodes[1]) != exp_value:
             lines = "\n".join(str(_) for _ in nodes[:5])
             lines2 = "\n".join(str(_) for _ in titles[:5])
-            raise Exception("{0} != {1}\n{2}\nTITLES\n{3}".format(
-                str(nodes[1]), '[-:":w=0]', lines, lines2))
+            info = ";".join(k for k, v in sorted(trie.children.items()))
+            raise Exception("{0} != {1}\n{2}\nTITLES\n{3}\INFO\n{4}".format(
+                str(nodes[1]), exp_value, lines, lines2, info))
         if str(nodes[-1]) != "[#:grand russe:w=354]":
             lines = "\n".join(str(_) for _ in nodes[-5:])
             lines2 = "\n".join(str(_) for _ in titles[-5:])

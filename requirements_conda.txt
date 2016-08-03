@@ -8,6 +8,7 @@ datashader
 datashape
 flake8
 flask
+gprof2dot
 h5py
 ipykernel
 ipyparallel
@@ -18,7 +19,9 @@ jupyter
 jupyter_client
 jupyter_console
 jupyter_core
+line_profiler
 matplotlib
+memory_profiler
 mpld3
 nbformat
 nbpresent
@@ -32,6 +35,7 @@ path.py
 patsy
 pep8
 pillow
+pyinstrument
 pyzmq
 qtconsole
 rasterio

@@ -93,7 +93,7 @@ class CompletionTrieNode(object):
             node = stack.pop()
             yield node
             if node.children:
-                stack.extend(v for k, v in sorted(node.children.items()))
+                stack.extend(v for k, v in sorted(node.children.items(), reverse=True))
 
     def unsorted_iter(self):
         """
