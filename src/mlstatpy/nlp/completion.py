@@ -329,7 +329,7 @@ class CompletionTrieNode(object):
         @return                 number, length of best prefix, iteration it stops moving
 
         This function must be called after @see me precompute_stat
-        and @see update_stat_dynamic.
+        and @see me update_stat_dynamic.
 
         See :ref:`l-completion-optim`.
 
@@ -360,7 +360,7 @@ class CompletionTrieNode(object):
         @return                 number, length of best prefix, iteration it stops moving
 
         This function must be called after @see me precompute_stat
-        and @see update_stat_dynamic.
+        and @see me update_stat_dynamic.
         See :ref:`Dynamic Minimum Keystroke <def-mks2>`.
 
         .. math::
@@ -390,7 +390,7 @@ class CompletionTrieNode(object):
         @return                 number, length of best prefix, iteration it stops moving
 
         This function must be called after @see me precompute_stat
-        and @see update_stat_dynamic.
+        and @see me update_stat_dynamic.
         See :ref:`Modified Dynamic Minimum Keystroke <def-mks3>`.
 
         .. math::
