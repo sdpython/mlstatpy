@@ -1,0 +1,10 @@
+
+
+.. blogpost::
+    :title: Lectures
+    :keywords: CNN, deep learning
+    :date: 2016-06-19
+    :categories: article
+    
+    Un article intéressant plus pratique que théorique :
+    `Recent Advances in Convolutional Neural Networks <http://arxiv.org/abs/1512.07108>`_.

@@ -570,23 +570,6 @@ class CompletionTrieNode(object):
                 else:
                     raise Exception("this case should not happen")
 
-            # this is not a leave so it does not appear in the list of completions
-            # but we need to update mks for these strings, we assume it just
-            # requires an extra character
-            if hasattr(self, "next_nodes"):
-                for _, n in self.next_nodes.items():
-                    if not n.leave:
-                        if not hasattr(n.stat, "mks") or n.stat.mks > self.mks + 1:
-                            n.stat.mks = self.mks + 1
-                            n.stat.mks_ = self.mks_
-                            n.stat.mksi_ = self.mks_iter
-                            update += 1
-                        if not hasattr(n.stat, "mks2") or n.stat.mks2 > self.mks2 + 1:
-                            n.stat.mks2 = self.mks2 + 1
-                            n.stat.mks2_ = self.mks2_
-                            n.stat.mks2i_ = self.mks_iter
-                            update += 1
-
             # optimisation of second case of modifed metric
             # in a separate function for profiling
             def second_step(update):
@@ -604,10 +587,27 @@ class CompletionTrieNode(object):
                                 update += 1
                 return update
 
+            update = second_step(update)
+
             # finally we need to update mks, mks2 for every prefix not included
             # in the set of completions
+            # this is not a leave so it does not appear in the list of completions
+            # but we need to update mks for these strings, we assume it just
+            # requires an extra character, somehow, we propagate the values
+            if hasattr(self, "next_nodes"):
+                for _, n in self.next_nodes.items():
+                    if not n.leave:
+                        if not hasattr(n.stat, "mks") or n.stat.mks > self.mks + 1:
+                            n.stat.mks = self.mks + 1
+                            n.stat.mks_ = self.mks_
+                            n.stat.mksi_ = self.mks_iter
+                            update += 1
+                        if not hasattr(n.stat, "mks2") or n.stat.mks2 > self.mks2 + 1:
+                            n.stat.mks2 = self.mks2 + 1
+                            n.stat.mks2_ = self.mks2_
+                            n.stat.mks2i_ = self.mks_iter
+                            update += 1
 
-            update = second_step(update)
             return update
 
         def init_dynamic_minimum_keystroke(self, lw):
