@@ -22,11 +22,11 @@ On suppose parfois que ce bruit suive une loi normale.
     :math:`\pa{\epsilon_i}_{1 \infegal i \infegal N}`
     est un bruit blanc :
 
-    * :math:`\exists \sigma > 0:, :math:`\forall i \in \intervalle{1}{N}, \; \epsilon_i \sim \loinormale{0}{\sigma}`
+    * :math:`\exists \sigma > 0`, :math:`\forall i \in \intervalle{1}{N}, \; \epsilon_i \sim \loinormale{0}{\sigma}`
     * :math:`\forall \pa{i,j} \in \intervalle{1}{N}^2, \; i \neq j \Longrightarrow \epsilon_i \independant \epsilon_j`
 
 
-Une régression consiste à résoudre le problème suivant~:
+Une régression consiste à résoudre le problème suivant :
 
 .. mathdef:: 
     :title: Régression
@@ -101,8 +101,9 @@ est largement supérieur au nombre de points (50).
 Il en résulte que contrairement aux trois précédents cas, 
 la "richesse" du modèle choisi lui permet d'apprendre le "hasard". 
 Lorsque ce cas de figure se présente, on dit que le réseau 
-de neurones a appris coeur *pouvoir de généralisation* est mauvais ou
-il fait de l'`overfitting <https://fr.wikipedia.org/wiki/Surapprentissage>`_.
+de neurones a appris coeur, son *pouvoir de généralisation* est mauvais ou
+il fait de l'`overfitting <https://fr.wikipedia.org/wiki/Surapprentissage>`_
+(voir aussi `Generalization Error <https://en.wikipedia.org/wiki/Generalization_error>`_).
 L'erreur minime estimée sur ce nuage de points (ou *base d'apprentissage*)
 sera considérablement accrue sur un autre nuage de points ou *base de test*
 suivant la même loi.
