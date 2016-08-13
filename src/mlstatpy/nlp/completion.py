@@ -191,7 +191,7 @@ class CompletionTrieNode(object):
         rows = []
         for node, sug in res:
             rows.append("l={3} p='{0}' {1} {2}".format(node.value, "-" * 10, node.stat.str_mks(),
-                        '+' if node.leave else '-'))
+                                                       '+' if node.leave else '-'))
             for i, s in enumerate(sug):
                 if isinstance(s, str):
                     rows.append("  {0}-'{1}'".format(i + 1, s))
@@ -479,9 +479,9 @@ class CompletionTrieNode(object):
                 pop.stat.iter_ += 1
             iter += 1
         return iter
-        
+
     ##
-    ## end of methods, beginning of subclasses
+    # end of methods, beginning of subclasses
     ##
 
     class _Stat:
@@ -489,15 +489,15 @@ class CompletionTrieNode(object):
         Stores statistics and intermediate data about the compuation the metrics.
 
         It contains the following members:
-        
+
         * mks0*: value of minimum keystroke
         * mks0_*: length of the prefix to obtain *mks0*
         * *mks_iter*: current iteration during the computation of mks
-        
+
         * *mks*: value of dynamic minimum keystroke
         * *mks_*: length of the prefix to obtain *mks*
         * *mksi_*: iteration when it was obtained
-        
+
         * *mks2*: value of modified dynamic minimum keystroke
         * *mks2_*: length of the prefix to obtain *mks2*
         * *mks2i*: iteration when it converged
@@ -628,7 +628,7 @@ class CompletionTrieNode(object):
             """
             initializes mks and mks2 from from mks0
 
-            @param      lw      length of the prefix            
+            @param      lw      length of the prefix
             """
             if hasattr(self, "mks0"):
                 self.mks = self.mks0
@@ -664,7 +664,7 @@ class CompletionTrieNode(object):
             """
             s0 = self.str_mks0()
             if hasattr(self, "mks"):
-                return s0 + " |'={0} *={1},{2} |\"={3} *={4},{5} |nn={6}".format(self.mks, self.mks_, self.mksi_,
-                            self.mks2, self.mks2i_, self.mks2i_, '+' if hasattr(self, "next_nodes") else '-')
+                return s0 + " |'={0} *={1},{2} |\"={3} *={4},{5} |nn={6}".format(
+                    self.mks, self.mks_, self.mksi_, self.mks2, self.mks2i_, self.mks2i_, '+' if hasattr(self, "next_nodes") else '-')
             else:
                 return s0
