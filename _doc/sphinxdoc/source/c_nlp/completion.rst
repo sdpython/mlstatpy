@@ -238,8 +238,10 @@ des complétions de longueurs différentes. Cela veut peut-être dire aussi
 que la métrique considérée pour choisir le meilleur système de complétion
 est faux. Cela sera discuté à la prochaine section.
 
-Il faut compléter toutes les complétions
-++++++++++++++++++++++++++++++++++++++++
+.. _l-nlp-comp-montre:
+
+Il faut montrer toutes les complétions
+++++++++++++++++++++++++++++++++++++++
 
 .. index:: requête complète, complétion
 
@@ -264,7 +266,11 @@ D'où un gain total de :math:`G(S)=2`. En conclusion,
 si j'enlève une petite complétion pour laquelle le gain est nul,
 il est possible que le gain pour les suivantes soit positif.
 On en retient qu'il ne faut pas montrer trop de complétions 
-qui se distinguent d'un caractère.
+qui se distinguent d'un caractère. Plus généralement, 
+il ne sert à rien de montrer des complétions plus longue que le préfixe d'un caractère.
+Par extension, si une complétion est plus longue que
+le préfixe de :math:`d` caractères, il faut la montrer à une position
+inférieure à :math:`d`.
 
 
 Et si le poids de chaque complétion est uniforme
@@ -615,6 +621,9 @@ que le préfixe :math:`q[1..k]` ne sera pas le minimum.
 Problème d'optimisation
 =======================
 
+Enoncé 1
+++++++++
+
 .. mathdef::
     :title: Optimiser un système de complétion
     :lid: optim-nlp-comp
@@ -674,6 +683,51 @@ obtenue après trois :math:`\downarrow`.
     
 La métrique :math:`M"` interdit ce cas.
 
+Enoncé 2
+++++++++
+
+.. mathdef::
+    :title: Optimiser un système de complétion filtré
+    :lid: optim-nlp-comp
+    :tag: Problème
+
+    On suppose que l'ensemble des complétions :math:`C=\acc{c_j}` est connu. 
+    On souhaite ordonner cet ensemble pour obtenir l'ensemble ordonné 
+    des complétions :math:`S=(s_i)` qu'on considère comme une permutation
+    :math:`\sigma` de l'ensemble de départ : :math:`S(\sigma) = (s_i) = (c_{\sigma(j)})`.
+    On utilise aussi une fonction :math:`f` qui filtre les suggestions montrées 
+    à l'utilisateur, elle ne change pas l'ordre mais peut cacher certaines suggestions 
+    si elles ne sont pas pertinentes.
+    Ce système de complétion est destiné à un des utilisateurs qui forment des recherches ou requêtes
+    :math:`Q=(q_i, w_i)_{1 \infegal i \infegal N_Q}`. 
+    :math:`q_i` est la requête, :math:`w_i` est la fréquence associée
+    à cette requête. On définit l'effort demandé aux utilisateurs 
+    par ce système de complétion :
+    
+    .. math::
+        
+        E(C, Q, \sigma, f) = \sum_{i=1}^{N_Q} w_i M'(q_i, S(\sigma), f)
+    
+    Déterminer le meilleur système de complétion revient à trouver 
+    la permutation :math:`\sigma` qui minimise :math:`E(C, Q, \sigma, f)`.
+    
+Comme suggéré au paragraphe :ref:`l-nlp-comp-montre`, le filtre :math:`f`
+peut rejetter une suggestion si elle est montrée à une position
+qui ne permet aucun gain à l'utilisateur, c'est-à-dire que la différence
+des longueurs complétion - préfixe est plus petite que la position où elle est montrée.
+
+
+Intermèdes mathématiques
+++++++++++++++++++++++++
+
+L'ensemble des requêtes :math:`s(p) \cup S` regroupe toutes les requêtes
+de :math:`S` qui commencent par :math:`p`. Soit :
+:math:`s(q) = \acc{ q \in S | q \succ p}`.
+On note la quantité :math:`M(q, S, k) = M(q, s(q[[1..k]]))`.
+Elle correspond à la même métrique sur un sous-ensemble de :math:`S`
+et cette définition est valable pour :math:`M`, :math:`M'`, :math:`M"`.
+De manière évidente, :math:`k \infegal l \Longrightarrow M(q, S, k) \infegal M(q, S, l)`.
+
 Notion de trie
 ==============
 
@@ -730,6 +784,9 @@ est construit à partir des requêtes des utilisateurs. Lorsque le système
 de complétion est mise en place, la distribution des requêtes changent. Les requêtes
 les plus utilisées vont être encore plus utilisées car les utilisateurs vont moins
 s'égarer en chemin comme s'égarer vers une faute d'orthographe.
+Comment corriger la distribution des requêtes malgré l'intervention
+du système de complétion ? Cela pourrait faire l'objet d'un sujet de recherche.
+
 
 Fonction de gain
 ++++++++++++++++

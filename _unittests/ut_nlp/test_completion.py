@@ -251,7 +251,8 @@ class TestCompletion(unittest.TestCase):
             return nb, gmks, gmksd, size
         nb, gmks, gmksd, size = cmks(trie)
         fLOG(nb, size, gmks / nb, gmksd / nb, gmks / size, gmksd / size)
-        assert gmks >= gmksd
+        if gmks > gmksd:
+            raise Exception("gmks={0} gmksd={1}".format(gmks, gmksd))
         if gmksd == 0:
             i = 0
             for node in trie:

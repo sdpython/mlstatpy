@@ -8,12 +8,10 @@ from collections import deque
 
 class CompletionTrieNode(object):
     """
-    Node definition in a trie used to do completion,
-    see :ref:`l-completion0`.
-    This implementation is not very efficient about
-    memmory consumption, it does not hold
-    above 200.000 words. It should be done
-    another way (cython, C++).
+    Node definition in a trie used to do completion, see :ref:`l-completion0`.
+    This implementation is not very efficient about memmory consumption,
+    it does not hold above 200.000 words.
+    It should be done another way (cython, C++).
     """
 
     __slots__ = ["value", "children", "weight",
@@ -192,7 +190,8 @@ class CompletionTrieNode(object):
         res = self.all_mks_completions() if use_precompute else self.all_completions()
         rows = []
         for node, sug in res:
-            rows.append("p='{0}'".format(node.value))
+            rows.append("l={3} p='{0}' {1} {2}".format(node.value, "-" * 10, node.stat.str_mks(),
+                        '+' if node.leave else '-'))
             for i, s in enumerate(sug):
                 if isinstance(s, str):
                     rows.append("  {0}-'{1}'".format(i + 1, s))
@@ -480,11 +479,28 @@ class CompletionTrieNode(object):
                 pop.stat.iter_ += 1
             iter += 1
         return iter
+        
+    ##
+    ## end of methods, beginning of subclasses
+    ##
 
     class _Stat:
         """
-        stores statistics and intermediate data about the compuation
-        the metrics
+        Stores statistics and intermediate data about the compuation the metrics.
+
+        It contains the following members:
+        
+        * mks0*: value of minimum keystroke
+        * mks0_*: length of the prefix to obtain *mks0*
+        * *mks_iter*: current iteration during the computation of mks
+        
+        * *mks*: value of dynamic minimum keystroke
+        * *mks_*: length of the prefix to obtain *mks*
+        * *mksi_*: iteration when it was obtained
+        
+        * *mks2*: value of modified dynamic minimum keystroke
+        * *mks2_*: length of the prefix to obtain *mks2*
+        * *mks2i*: iteration when it converged
         """
 
         def merge_completions(self, prefix: int, nodes: '[CompletionTrieNode]'):
@@ -570,7 +586,7 @@ class CompletionTrieNode(object):
                 else:
                     raise Exception("this case should not happen")
 
-            # optimisation of second case of modifed metric
+            # optimisation of second case of modified metric
             # in a separate function for profiling
             def second_step(update):
                 if hasattr(self, "next_nodes"):
@@ -589,24 +605,22 @@ class CompletionTrieNode(object):
 
             update = second_step(update)
 
-            # finally we need to update mks, mks2 for every prefix not included
-            # in the set of completions
-            # this is not a leave so it does not appear in the list of completions
+            # finally we need to update mks, mks2 for every prefix
+            # this is not necessary a leave so it does not appear in the list of completions
             # but we need to update mks for these strings, we assume it just
             # requires an extra character, somehow, we propagate the values
             if hasattr(self, "next_nodes"):
                 for _, n in self.next_nodes.items():
-                    if not n.leave:
-                        if not hasattr(n.stat, "mks") or n.stat.mks > self.mks + 1:
-                            n.stat.mks = self.mks + 1
-                            n.stat.mks_ = self.mks_
-                            n.stat.mksi_ = self.mks_iter
-                            update += 1
-                        if not hasattr(n.stat, "mks2") or n.stat.mks2 > self.mks2 + 1:
-                            n.stat.mks2 = self.mks2 + 1
-                            n.stat.mks2_ = self.mks2_
-                            n.stat.mks2i_ = self.mks_iter
-                            update += 1
+                    if not hasattr(n.stat, "mks") or n.stat.mks > self.mks + 1:
+                        n.stat.mks = self.mks + 1
+                        n.stat.mks_ = self.mks_
+                        n.stat.mksi_ = self.mks_iter
+                        update += 1
+                    if not hasattr(n.stat, "mks2") or n.stat.mks2 > self.mks2 + 1:
+                        n.stat.mks2 = self.mks2 + 1
+                        n.stat.mks2_ = self.mks2_
+                        n.stat.mks2i_ = self.mks_iter
+                        update += 1
 
             return update
 
@@ -614,7 +628,7 @@ class CompletionTrieNode(object):
             """
             initializes mks and mks2 from from mks0
 
-            @param      lw      length of the prefix
+            @param      lw      length of the prefix            
             """
             if hasattr(self, "mks0"):
                 self.mks = self.mks0
@@ -625,6 +639,8 @@ class CompletionTrieNode(object):
                 self.mks2_ = self.mks0_
                 self.mks2i_ = 0
             else:
+                self.mks0 = lw
+                self.mks0_ = 0
                 self.mks = lw
                 self.mks_ = lw
                 self.mks_iter = 0
@@ -638,7 +654,7 @@ class CompletionTrieNode(object):
             return a string with metric information
             """
             if hasattr(self, "mks0"):
-                return "MKS={0} *={1} l={2}".format(self.mks0, self.mks0_, len(self.completions))
+                return "MKS={0} *={1}".format(self.mks0, self.mks0_)
             else:
                 return "-"
 
@@ -648,6 +664,7 @@ class CompletionTrieNode(object):
             """
             s0 = self.str_mks0()
             if hasattr(self, "mks"):
-                return s0 + " '={0} \"={3} *={1} i={2}".format(self.mks, self.mks_, self.mksi_, self.mks2)
+                return s0 + " |'={0} *={1},{2} |\"={3} *={4},{5} |nn={6}".format(self.mks, self.mks_, self.mksi_,
+                            self.mks2, self.mks2i_, self.mks2i_, '+' if hasattr(self, "next_nodes") else '-')
             else:
                 return s0
