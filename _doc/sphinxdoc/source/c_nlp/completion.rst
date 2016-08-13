@@ -726,7 +726,13 @@ de :math:`S` qui commencent par :math:`p`. Soit :
 On note la quantité :math:`M(q, S, k) = M(q, s(q[[1..k]]))`.
 Elle correspond à la même métrique sur un sous-ensemble de :math:`S`
 et cette définition est valable pour :math:`M`, :math:`M'`, :math:`M"`.
-De manière évidente, :math:`k \infegal l \Longrightarrow M(q, S, k) \infegal M(q, S, l)`.
+De manière évidente, :math:`k \infegal l \Longrightarrow M(q, S, k) \infegal M(q, S, l)`
+mais ce n'est pas vrai pour les deux autres métriques :math:`M'` et :math:`M"`.
+En terme de calcul, cela signifie qu'on peut calculer la métrique :math:`M`
+pour toutes les complétions organisées en trie en partant des 
+feuilles du trie mais il faudra plusieurs itérations pour
+faire converger les deux autres métriques.
+
 
 Notion de trie
 ==============
