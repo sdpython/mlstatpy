@@ -546,6 +546,9 @@ préfixe commun à beaucoup de complétions et cela améliore le gain moyen
 dans le cas présent (sans compter le gain sur la requête
 *machine*). Enfin, la troisième et la quatrième question,
 la réponse requiert la démonstration de quelques propriétés mathématiques.
+Mais avant j'ajouterai que la première métrique :math:`M` correspond 
+à la ligne de commande Windows et la métrique :math:`M'` correspond à
+la ligne de commande Linux.
 
 Propriétés mathématiques
 ========================
