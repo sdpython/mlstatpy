@@ -169,7 +169,7 @@ if is_local():
         requirements=["pyquickhelper", "pymyinstall"],
         add_htmlhelp=sys.platform.startswith("win"),
         coverage_options=dict(omit=["*exclude*.py"]),
-        fLOG=logging_function, covtoken=("ab2da06c-1ff3-4875-97fa-145e594bd7f9", "'jenkins' in outfile"))
+        fLOG=logging_function, covtoken=("ab2da06c-1ff3-4875-97fa-145e594bd7f9", "'_UT_35_std' in outfile"))
     if not r and not ({"bdist_msi", "sdist",
                        "bdist_wheel", "publish", "publish_doc", "register",
                        "upload_docs", "bdist_wininst"} & set(sys.argv)):
