@@ -9,7 +9,6 @@ https://dumps.wikimedia.org/frwiki/latest/frwiki-latest-all-titles-in-ns0.gz
 import sys
 import os
 import unittest
-import itertools
 import cProfile
 import pstats
 import io
@@ -48,8 +47,6 @@ except ImportError:
 from pyquickhelper.loghelper import fLOG
 from pyquickhelper.pycode import get_temp_folder
 from src.mlstatpy.nlp.completion import CompletionTrieNode
-from src.mlstatpy.data.wikipedia import normalize_wiki_text, enumerate_titles
-from src.mlstatpy.nlp.normalize import remove_diacritics
 
 
 class TestCompletionProfiling(unittest.TestCase):
@@ -57,7 +54,6 @@ class TestCompletionProfiling(unittest.TestCase):
     def gain_dynamique_moyen_par_mot(self, queries, weights):
         per = list(zip(weights, queries))
         total = sum(weights) * 1.0
-        res = []
         trie = CompletionTrieNode.build([(None, q) for _, q in per])
         trie.precompute_stat()
         trie.update_stat_dynamic()
@@ -85,6 +81,7 @@ class TestCompletionProfiling(unittest.TestCase):
 
         def profile_exe():
             res = self.gain_dynamique_moyen_par_mot(lines, [1.0] * len(lines))
+            return res
 
         def prof(n, show):
             pr = cProfile.Profile()

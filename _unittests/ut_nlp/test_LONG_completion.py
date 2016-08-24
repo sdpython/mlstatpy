@@ -6,7 +6,6 @@
 import sys
 import os
 import unittest
-import itertools
 
 
 try:
@@ -41,8 +40,6 @@ except ImportError:
 
 from pyquickhelper.loghelper import fLOG
 from src.mlstatpy.nlp.completion import CompletionTrieNode
-from src.mlstatpy.data.wikipedia import normalize_wiki_text, enumerate_titles
-from src.mlstatpy.nlp.normalize import remove_diacritics
 
 
 class TestLONGCompletion(unittest.TestCase):
