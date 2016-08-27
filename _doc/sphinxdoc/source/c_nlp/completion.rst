@@ -133,7 +133,7 @@ On note :math:`\sigma(q)` la position de la complétion :math:`q` dans l'ensembl
 Par construction, :math:`s_ \neq s_2 \Longrightarrow \sigma(s_1) \neq \sigma(s_2)`.
 
 .. math::
-    :label:`nlp-comp-k`
+    :label: nlp-comp-k
 
     K(q, k, S) = \#\acc{ i | s_i \succ q[1..k], s_i \in S, \sigma(s_i) < \sigma(q)  }
     
@@ -659,7 +659,7 @@ et :math:`\downarrow` aux lettres de l'alphabet et cela permet de
 coder plus rapidement une requêtes. La quantité suivante peut être
 considérée comme le taux de compression :
 
-..math::
+.. math::
 
     t(C, Q, \sigma) = \frac{ E(C, Q, \sigma) } { \sum_{i=1}^{N_Q} w_i l(q_i) }
     
@@ -736,9 +736,12 @@ pour toutes les complétions organisées en trie en partant des
 feuilles du trie mais il faudra plusieurs itérations pour
 faire converger les deux autres métriques.
 
+Implémentation
+==============
+
 
 Notion de trie
-==============
+++++++++++++++
 
 Une implémentation des tries est décrites dans deux notebooks :
 `Arbre et Trie <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/_gs1a_A_arbre_trie.html>`_.
@@ -746,9 +749,6 @@ Les résultats de ce chapitre ont été produits avec le module :mod:`completion
 et le notebook :ref:`completiontrierst`. Le notebook
 :ref:`completionprofilingrst` montre les résultats du profiling. 
 L'implémentation Python est très gourmande en mémoire.
-
-Remarques préliminaires
-+++++++++++++++++++++++
 
 **utilisation ou recherche**
 
@@ -863,7 +863,7 @@ Que dire de la définition suivante ?
     \begin{eqnarray*}
     M'_p(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ \begin{array}{l}
                             \indicatrice{ L(q[1..k], S) \neq \emptyset} \cro{M'_p(q[1..k], S) +  K(q, k, S)} + \\
-                            \indicatrice{L(q[1..k], S) = \emptyset} \cro { \min_j M'_p(q[1..j], S) + M'_p(q[j+1..], S)  }
+                            \;\;\;\;\indicatrice{L(q[1..k], S) = \emptyset} \cro { \min_j M'_p(q[1..j], S) + M'_p(q[j+1..], S)  }
                             \end{array} }
     \end{eqnarray*}
 
