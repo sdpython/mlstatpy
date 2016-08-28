@@ -568,7 +568,8 @@ Le lemme suivant précise pourquoi
 
 .. mathref::
     :title: calcul de :math:`M'(q, S)`
-    :tag: lemme
+    :tag: Lemme
+    :lid: lemme-nlp-long-completion
     
     On suppose que :math:`p(q, S)` est la complétion la plus longue
     de l'ensemble :math:`S` qui commence :math:`q` :
@@ -610,8 +611,44 @@ Cette propriété est importante puisque pour calculer :math:`M'(q[[1..k^*]], S)
 il suffit de regarder le plus préfixe appartenir à l'ensemble des complétions
 et seulement celui-ci.
 En ce qui concerne la métrique :math:`M`, par définition 
-:math:`\forall q \notin S, \; M(q, S) = 0`. Le 
+:math:`\forall q \notin S, \; M(q, S) = 0`. La métrique
+:math:`M"` m'évoque la `côte anglaise <https://www.youtube.com/watch?v=YV54e3R-rLg>`_.
+L'itération :math:`n` fonctionne de la même manière à partir du moment où
+la requête considérée ne fait pas partie de l'ensemble des complétions mais
+il y a l'étage d'en dessous qui pose un doute.
+Il y a un brin de poésie dans ce +1. L'application de l'implémentation du calcul
+de la métrique montre que :math:`M'` et :math:`M"` sont très souvent égales.
+Je vais laisser ce :math:`\delta` sous forme de poésie pour le moment.
+
+.. todoext::
+    :title: terminer la démonstration pour :math:`M`
+
+    La côte anglaise.
     
+    
+On a besoin d'une propriété pour calculer élégamment les métriques.
+
+
+.. mathdef::
+    :title: Dynamic Minimum Keystroke
+    :tag: Lemme
+    :lid: lemme-mks
+    
+    On note :math:`\sigma(q, S)` la position de la complétion :math:`q`
+    pour le système de complétion :math:`S` en supposant qu'il y ait un ordre
+    total. La métrique :ref:`dynamique MKS <def-mks2>` vérifie :
+    
+    .. math::
+        :label: completion-metric2
+        :nowrap:
+        
+        \begin{eqnarray*}
+        M'(q, S) &=& \min_{0 \infegal k < l(q)} \acc{ M'(q[1..k], S) + 
+                    \min( K(q, k, S), l(q) - k) | q[1..k] \in S \text{ et } \sigma(q[1..k], S)  \infegal \sigma(q, S) }
+        \end{eqnarray*}    
+
+On rappelle que si :math:`\sigma(q_1, S) < \sigma(q_2, S)`, la requête :math:`q_1` apparaîtra toujours 
+avant :maht:`q_2` si elles apparaissent ensemble.
 
 
 Complétions emboîtées
@@ -824,9 +861,16 @@ pour le préfixe :math:`c(i)[[1..k]]`. Le coût de l'algorithme est en :math:`O(
 
 Dans le cas où :math:`\sigma` est quelconque et :math:`C \neq Q`, on procède en deux étapes.
 Dans un premier temps, on utilise une variante de l'algorithme précédent pour calculer
-:math:`M'(q, C)`. Dans un second temps, on effectue une sorte de fusion entre les deux listes
+:math:`M'(q, C)`. 
+
+........ il manque la démo d'une propriété
+
+
+Dans un second temps, on effectue une sorte de fusion entre les deux listes
 triées alphabétiquement. Le coût de l'algorithme est en :math:`O(LN + 2 N\ln N + M \ln M + max(N,M))`
-où :math:`M` est le nombre de requêtes dans l'ensemble :math:`Q`.
+où :math:`M` est le nombre de requêtes dans l'ensemble :math:`Q`. Cette partie repose sur le
+:ref:`lemme <lemme-nlp-long-completion>` lié au calcul des métriques 
+pour les réquêtes hors de l'ensemble des complétions. 
 
 L'algorithme est implémenté dans le module 
 :mod:`completion_simple <mlstatpy.nlp.completion_simple>` et plus particulièrement la fonction 

@@ -107,6 +107,8 @@ class CompletionElement(object):
             self.mks0 = mks
             self.mks0_ = k
             check = True
+        elif mks == self.mks0 and self.mks0_ < k:
+            self.mks0_ = k
         if mks < self.mks1:
             self.mks1 = mks
             self.mks1_ = k

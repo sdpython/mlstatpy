@@ -21,6 +21,12 @@ Définitions
 .. mathdeflist::
     :tag: Définition
 
+Lemmes
+++++++
+
+.. mathdeflist::
+    :tag: Lemme
+
 Figures
 +++++++
 

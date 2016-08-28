@@ -115,6 +115,22 @@ class TestCompletionSimple(unittest.TestCase):
             res = [_[-1] for _ in diffs]
             raise Exception("\n".join(res))
 
+    def test_completions(self):
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
+        this = os.path.abspath(os.path.dirname(__file__))
+        data = os.path.join(this, "data", "sample300.txt")
+        with open(data, "r", encoding="utf-8") as f:
+            lines = [_.strip(" \n\r\t") for _ in f.readlines()]
+
+        trie = CompletionSystem([(None, q) for q in lines])
+        diffs = trie.compare_with_trie()
+        if diffs:
+            res = [_[-1] for _ in diffs]
+            raise Exception("\n".join(res))
 
 if __name__ == "__main__":
     unittest.main()
