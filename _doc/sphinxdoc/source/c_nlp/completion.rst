@@ -101,7 +101,9 @@ dans le premier cas ou 8+1=9 touches dans le second cas.
 
 
 De façon évidente, :math:`K(q, l(q), S)=0` et :math:`M(q,S) \infegal l(q)`
-et :math:`K(q, k, S) > 0` si :math:`k < l(q)`.
+et :math:`K(q, k, S) > 0` si :math:`k < l(q)`. On prend également
+comme convention :math:`\forall q \notin S, \; K(q, k, S) = \infty`
+et :math:`\forall q \notin S, \; M(q, S) = l(q)`.
 Certains systèmes proposent des requêtes avant de saisir quoique ce soit,
 c'est pourquoi on inclut la valeur :math:`M(q, 0)` qui représente ce cas.
 Construire un système de complétion revient à minimiser la quantité :
@@ -402,9 +404,6 @@ On reprend la première métrique :eq:`completion-metric1` :
     \end{eqnarray*}
 
 La fonction :math:`K(q, k, S)` est définie par :eq:`nlp-comp-k`.
-:math:`M(q, k, S)` définit la position de la complétion :math:`q`
-dans la liste affichée pour le préfixe composé des :math:`k` premières lettres
-de :math:`q`. On va juste changer :math:`k` dans la seconde en ligne.
 
 
 .. mathdef::
@@ -420,27 +419,28 @@ de :math:`q`. On va juste changer :math:`k` dans la seconde en ligne.
         :nowrap:
         
         \begin{eqnarray*}
-        M'(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ M'(q[1..k], S) + K(q, k, S) }
+        M'(q, S) &=& \min_{0 \infegal k < l(q)} \acc{ M'(q[1..k], S) + 
+                    \min( K(q, k, S), l(q) - k) | q[1..k] \in S }
         \end{eqnarray*}
 
-De manière évidente, :math:`M'(q, S) \infegal M(q, S)`.
-Il reste à démontrer que cette métrique et bien définie puisqu'elle
-fait partie de sa définition. La condition :math:`q[1..k] \in S` impose que
-le préfixe composé des :math:`k` premières lettres :math:`q[1..k]` fasse partie 
-des complétions :math:`S`. Dans le cas contraire, elle n'est pas
-affichée et l'utilisateur ne pourra pas s'en servir comme tremplin.
-Si on définit la quantité :math:`M_0(q, S) = M(q, S)` et par récurrence :
-
-.. math::
-
-    M_{t+1}(q, S) = \min_{0 \infegal k \infegal l(q)} \acc{ M_t(q[1..k], S) + K(q, k, S) }
-    
-La suite :math:`(M_t(q, S))_t` est décroissante et positive. Elle converge nécessaire
-vers la valeur cherchée :math:`M'(q, S)`. Cela donne aussi une idée de la façon de le calculer.
+On prend comme convention :math:`M'(\emptyset, S)=0`. Le calcul de la métrique
+se construit comme une suite qui part des chaînes les plus courtes aux plus longues.
+La métrique est donc bien définie.
 Contrairement à la première métrique, le calcul dépend du résultat pour 
-tous les préfixes d'une complétion. Il ne peut plus être calculé indépendemment.
-Le nombre d'itérations jusqu'à convergence est fini et il est inférieur
-uo égal à la profondeur maximal de l'arbre.
+tous les préfixes d'une complétion. 
+
+.. mathref::
+    :title: métriques
+    :tag: propriété
+
+    \forall q, :math:`M'(q, S) \infegal M(q, S)
+    
+Si :math:`q \notin S`, c'est évident puisque :math:`M'(q, S) \infegal M'(\emptyset, S) + l(q)`.
+Si :math:`q \in S`, cela découle de la constation précédente puisque : 
+:math:`M'(q, S) \infegal M'(q[[1..k]], S) + K(q, k, S) \infegal k + K(q, k, S)`.
+
+
+
 
 Quelques résultats
 ++++++++++++++++++
@@ -485,8 +485,8 @@ considéré comme préfixe. C'est ce que prend en compte la définition suivante
         
         \begin{eqnarray*}
         M"(q, S) &=& \min \left\{ \begin{array}{l}
-                        \min_{1 \infegal k \infegal l(q)} \acc{ M"(q[1..k-1], S) + 1 + K(q, k, S) } \\
-                        \min_{0 \infegal k \infegal l(q)} \acc{ M"(q[1..k], S) + \delta + K(q, k, S) } 
+                        \min_{1 \infegal k \infegal l(q)} \acc{ M"(q[1..k-1], S) + 1 +\min( K(q, k, S), l(q) - k)  | q[1..k] \in S } \\
+                        \min_{0 \infegal k \infegal l(q)} \acc{ M"(q[1..k], S) + \delta + \min( K(q, k, S), l(q) - k)  | q[1..k] \in S } 
                         \end{array} \right .
         \end{eqnarray*}
 
@@ -507,6 +507,7 @@ On remarque également qu'avec cette nouvelle métrique, il est possible
 de diminuer le nombre minimum de touches à presser pour des requêtes en dehors 
 de l'ensemble :math:`S` à partir du moment où elles prolongent une complétion existante.
 C'est là un point très intéressant de cette métrique.
+De manière évidente, :math:`\forall q, \; M'(q, S) \infegal M"(q, S)`.
 
 Questions
 +++++++++
@@ -559,19 +560,59 @@ On s'intéresse à la métrique :math:`M'` définie par
 Calcul pour une requête en dehors
 +++++++++++++++++++++++++++++++++
 
- Soit une requête :math:`q \notin S`, quelque soit :math:`k`, 
- :math:`K(q, k, S)` est infini et :math:`M(q, S) = l(q)`.
- On définit la métrique :math:`M'(q, S)` pour :math:`q \notin S`
- comme suit :
  
- 
- .. math::
- 
-    M'(q, S) = \inf\acc{ M'(r, S) + l(q) - l(r) | r \in S \, et \, r \preceq q } 
+Mais il est faux de dire que pour deux requêtes en dehors de l'ensemble
+des complétions, :math:`q_1 \preceq q_2 \Longrightarrow M'(q_1, S) \infegal M'(q_2, S)`.
+Le lemme suivant précise pourquoi
 
-De manière évidente, :math:`M'(q, S) \infegal l(q)`.
-Mais il est faux de dire que 
-:math:`q_1 \preceq q_2 \Longrightarrow M'(q_1, S) \infegal M'(q_2, S)`.
+
+.. mathref::
+    :title: calcul de :math:`M'(q, S)`
+    :tag: lemme
+    
+    On suppose que :math:`p(q, S)` est la complétion la plus longue
+    de l'ensemble :math:`S` qui commence :math:`q` :
+    
+    .. math::
+        :nowrap:
+    
+        \begin{eqnarray*}
+        k^* &=& \max\acc{ k | q[[1..k]] \prec q \text{ et } q \in S}  \\
+        p(q, S) &=& q[[1..k^*]]
+        \end{eqnarray*}
+    
+    La métrique :math:`M'(q, S)` vérifie la propriété suivante :
+    
+    .. math::
+    
+        M'(q, S) = M'(p(q, S), S) + l(q) - l(p(q, S))
+        
+La métrique :math:`M'(q, S)` est égale à celle du plus long préfixe inclus
+dans l'ensemble les complétions à laquelle on ajoute la différence des longueurs.
+Cela correspond aux caractères que l'utilisateur doit saisir.
+La démonstration est assez simple. On suppose que cela n'est pas vrai et qu'il existe 
+un existe :math:`k < k^*` tel que :
+
+.. math::
+    :nowrap:
+        
+    \begin{eqnarray*}
+    M'(q[[1..k]], S) + l(q) - l(q[[1..k]]) < M'(q[[1..k^*]], S) + l(q) - l(q[[1..k^*]]) \\
+    && \Longrightarrow M'(q[[1..k]], S) - k < M'(q[[1..k^*]], S) - k^* \\
+    && \Longrightarrow M'(q[[1..k]], S) + (k^* - k) < M'(q[[1..k^*]], S)
+    \end{eqnarray*}
+    
+Cela signifie qu'on a réussi une façon plus efficace d'écrire le préfixe
+:math:`q[[1..k^*]]`. Or par définition :math:`M'(q[[1..k^*]], S)`
+est censée être le nombre de caractères minimal pour obtenir :math:`q[[1..k^*]]`.
+Ce n'est donc pas possible.
+Cette propriété est importante puisque pour calculer :math:`M'(q[[1..k^*]], S)`, 
+il suffit de regarder le plus préfixe appartenir à l'ensemble des complétions
+et seulement celui-ci.
+En ce qui concerne la métrique :math:`M`, par définition 
+:math:`\forall q \notin S, \; M(q, S) = 0`. Le 
+    
+
 
 Complétions emboîtées
 +++++++++++++++++++++
@@ -618,7 +659,10 @@ utilise la fonction :math:`K(q, k, S)` définie en :eq:`nlp-comp-k`.
 
 Etant donné que le nombre minimum de caractères pour obtenir une complétion dans le trie
 ne peut pas être supérieur à la longueur, si :math:`K(q, k, S) > l(q) - k`, on sait déjà que
-que le préfixe :math:`q[1..k]` ne sera pas le minimum.
+que le préfixe :math:`q[1..k]` ne sera pas le minimum. Cette remarque est applicable
+aux métriques :math:`M'` et :math:`M"`.
+
+
 
 
 Problème d'optimisation
@@ -720,24 +764,20 @@ qui ne permet aucun gain à l'utilisateur, c'est-à-dire que la différence
 des longueurs complétion - préfixe est plus petite que la position où elle est montrée.
 
 
-Intermèdes mathématiques
-++++++++++++++++++++++++
-
-L'ensemble des requêtes :math:`s(p) \cup S` regroupe toutes les requêtes
-de :math:`S` qui commencent par :math:`p`. Soit :
-:math:`s(q) = \acc{ q \in S | q \succ p}`.
-On note la quantité :math:`M(q, S, k) = M(q, s(q[[1..k]]))`.
-Elle correspond à la même métrique sur un sous-ensemble de :math:`S`
-et cette définition est valable pour :math:`M`, :math:`M'`, :math:`M"`.
-De manière évidente, :math:`k \infegal l \Longrightarrow M(q, S, k) \infegal M(q, S, l)`
-mais ce n'est pas vrai pour les deux autres métriques :math:`M'` et :math:`M"`.
-En terme de calcul, cela signifie qu'on peut calculer la métrique :math:`M`
-pour toutes les complétions organisées en trie en partant des 
-feuilles du trie mais il faudra plusieurs itérations pour
-faire converger les deux autres métriques.
 
 Implémentation
 ==============
+
+.. |trie| `trie <https://fr.wikipedia.org/wiki/Trie_(informatique)>`_
+
+J'allais vous raconter en détail ce qu'est un |trie| et le paragraphe suivant 
+vous en dira sans doute un peu plus à ce sujet. Le |trie| est le moyen
+le plus efficace de trouver un mot aléatoire ou un préfixe aléatoire dans une liste.
+Mais il y a mieux et plus simple dans notre cas où il faut trouver
+une longue liste de mots connue à l'avance - donc pas aléatoire -.
+Et puis, c'était sous mes yeux. Il y a plus simple et aussi efficace quand 
+les listes des mots et des complétions sont connues à l'avance.
+
 
 
 Notion de trie
@@ -748,7 +788,8 @@ Une implémentation des tries est décrites dans deux notebooks :
 Les résultats de ce chapitre ont été produits avec le module :mod:`completion <mlstatpy.nlp.completion>`
 et le notebook :ref:`completiontrierst`. Le notebook
 :ref:`completionprofilingrst` montre les résultats du profiling. 
-L'implémentation Python est très gourmande en mémoire.
+L'implémentation Python est très gourmande en mémoire et elle serait
+plus efficace en C++.
 
 **utilisation ou recherche**
 
@@ -767,6 +808,36 @@ D'après la remarque précédente, il n'est pas utile de conserver pour un préf
 l'intégralité des complétions qui commencent par ce préfixe. Dans le pire des cas,
 cette liste a besoin de contenir autant de complétions que le nombre de caractères de la
 plus longue complétioms.
+
+Algorithme élégant
+++++++++++++++++++
+
+Il faut relire le premier problème d':ref:`optimisation <optim-nlp-comp>`
+pour commencer à se poser la question : comment calculer la quantité 
+:math:`E(C, C, \sigma)` lorsque :math:`\sigma` correspond à l'ordre alphabétique ?
+La réponse est simple : il suffit de parcourir les complétions une et une seule fois.
+Supposons qu'au cours de ce parcours, on est à la complétion d'indice :math:`i`.
+On conserve un compteur :math:`p(k, i)=K(c(i), k, C)` qui représente la position de la 
+complétion :math:`c(i)` dans la liste des complétions affichées par le système de complétion
+pour le préfixe :math:`c(i)[[1..k]]`. Le coût de l'algorithme est en :math:`O(N\ln N + LN)` où 
+:math:`N` est le nombre de complétions et :math:`L` la longueur maximale d'une complétion.
+
+Dans le cas où :math:`\sigma` est quelconque et :math:`C \neq Q`, on procède en deux étapes.
+Dans un premier temps, on utilise une variante de l'algorithme précédent pour calculer
+:math:`M'(q, C)`. Dans un second temps, on effectue une sorte de fusion entre les deux listes
+triées alphabétiquement. Le coût de l'algorithme est en :math:`O(LN + 2 N\ln N + M \ln M + max(N,M))`
+où :math:`M` est le nombre de requêtes dans l'ensemble :math:`Q`.
+
+L'algorithme est implémenté dans le module 
+:mod:`completion_simple <mlstatpy.nlp.completion_simple>` et plus particulièrement la fonction 
+:meth:`CompletionSystem.compute_metrics <mlstatpy.nlp.completion_simple.CompletionSystem.compute_metrics>`.
+
+
+
+Calcul de gain
+++++++++++++++
+
+
 
 
 

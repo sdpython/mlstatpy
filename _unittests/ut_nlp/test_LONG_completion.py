@@ -74,7 +74,7 @@ class TestLONGCompletion(unittest.TestCase):
                 raise Exception("None for {0}".format(leave))
             assert hasattr(leave, "stat")
             assert hasattr(leave.stat, "mks0")
-            assert hasattr(leave.stat, "mks")
+            assert hasattr(leave.stat, "mks1")
 
             sug = leave.all_mks_completions()
             nb_ = [(a.value, len([s.value for _, s in b if s.value == q[1]]))

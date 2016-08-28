@@ -125,7 +125,7 @@ class TestCompletion(unittest.TestCase):
             self.assertEqual(id(find), id(leave))
             assert hasattr(leave, "stat")
             assert hasattr(leave.stat, "mks0")
-            assert hasattr(leave.stat, "mks")
+            assert hasattr(leave.stat, "mks1")
             mk1 = trie.min_keystroke(leave.value)
             try:
                 mk = trie.min_dynamic_keystroke(leave.value)
@@ -139,7 +139,7 @@ class TestCompletion(unittest.TestCase):
                 raise Exception("weird {0} > {1}".format(mk, mk2))
             fLOG(leave.value, mk, "-", leave.stat.str_mks())
             self.assertEqual(
-                mk, (leave.stat.mks0, leave.stat.mks0_, leave.stat.mksi_))
+                mk, (leave.stat.mks0, leave.stat.mks0_, leave.stat.mks1i_))
             text = leave.str_all_completions()
             assert text
             text = leave.str_all_completions(use_precompute=False)
@@ -160,9 +160,9 @@ class TestCompletion(unittest.TestCase):
             fLOG("----", per)
             for n in trie.leaves():
                 fLOG("   ", n.value, n.stat.str_mks())
-                assert n.stat.mks <= n.stat.mks0
+                assert n.stat.mks1 <= n.stat.mks0
                 a, b, c = trie.min_dynamic_keystroke(n.value)
-                self.assertEqual(a, n.stat.mks)
+                self.assertEqual(a, n.stat.mks1)
                 a, b = trie.min_keystroke(n.value)
                 if a != n.stat.mks0:
                     mes = [str(per)]
@@ -245,7 +245,7 @@ class TestCompletion(unittest.TestCase):
             size = 0
             for n in trie.leaves():
                 gmks += len(n.value) - n.stat.mks0
-                gmksd += len(n.value) - n.stat.mks
+                gmksd += len(n.value) - n.stat.mks1
                 size += len(n.value)
                 nb += 1
             return nb, gmks, gmksd, size
@@ -294,7 +294,7 @@ class TestCompletion(unittest.TestCase):
             size = 0
             for n in trie.leaves():
                 gmks += len(n.value) - n.stat.mks0
-                gmksd += len(n.value) - n.stat.mks
+                gmksd += len(n.value) - n.stat.mks1
                 size += len(n.value)
                 nb += 1
             return nb, gmks, gmksd, size

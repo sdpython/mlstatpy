@@ -345,7 +345,7 @@ class CompletionTrieNode(object):
                 "this metric is not yet computed for a query outside the trie: '{0}'".format(word))
         if not hasattr(node, "stat"):
             raise AttributeError("run precompute_stat and update_stat_dynamic")
-        if not hasattr(node.stat, "mks"):
+        if not hasattr(node.stat, "mks1"):
             raise AttributeError("run precompute_stat and update_stat_dynamic\nnode={0}\n{1}".format(
                 self, "\n".join(sorted(self.stat.__dict__.keys()))))
         return node.stat.mks0, node.stat.mks0_, 0
@@ -375,10 +375,10 @@ class CompletionTrieNode(object):
                 "this metric is not yet computed for a query outside the trie: '{0}'".format(word))
         if not hasattr(node, "stat"):
             raise AttributeError("run precompute_stat and update_stat_dynamic")
-        if not hasattr(node.stat, "mks"):
+        if not hasattr(node.stat, "mks1"):
             raise AttributeError("run precompute_stat and update_stat_dynamic\nnode={0}\n{1}".format(
                 self, "\n".join(sorted(self.stat.__dict__.keys()))))
-        return node.stat.mks, node.stat.mks_, node.stat.mksi_
+        return node.stat.mks1, node.stat.mks1_, node.stat.mks1i_
 
     def min_dynamic_keystroke2(self, word: str) -> Tuple[int, int]:
         """
@@ -492,9 +492,9 @@ class CompletionTrieNode(object):
         * mks0_*: length of the prefix to obtain *mks0*
         * *mks_iter*: current iteration during the computation of mks
 
-        * *mks*: value of dynamic minimum keystroke
-        * *mks_*: length of the prefix to obtain *mks*
-        * *mksi_*: iteration when it was obtained
+        * *mks1*: value of dynamic minimum keystroke
+        * *mks1_*: length of the prefix to obtain *mks*
+        * *mks1i_*: iteration when it was obtained
 
         * *mks2*: value of modified dynamic minimum keystroke
         * *mks2_*: length of the prefix to obtain *mks2*
@@ -569,11 +569,11 @@ class CompletionTrieNode(object):
                 if sug.leave:
                     # this is a leave so we consider the completion being part
                     # of the list of completions
-                    nl = self.mks + i + 1
-                    if sug.stat.mks > nl:
-                        sug.stat.mks = nl
-                        sug.stat.mks_ = lw
-                        sug.stat.mksi_ = self.mks_iter
+                    nl = self.mks1 + i + 1
+                    if sug.stat.mks1 > nl:
+                        sug.stat.mks1 = nl
+                        sug.stat.mks1_ = lw
+                        sug.stat.mks1i_ = self.mks_iter
                         update += 1
                     nl = self.mks2 + i + 1 + delta
                     if sug.stat.mks2 > nl:
@@ -609,10 +609,10 @@ class CompletionTrieNode(object):
             # requires an extra character, somehow, we propagate the values
             if hasattr(self, "next_nodes"):
                 for _, n in self.next_nodes.items():
-                    if not hasattr(n.stat, "mks") or n.stat.mks > self.mks + 1:
-                        n.stat.mks = self.mks + 1
-                        n.stat.mks_ = self.mks_
-                        n.stat.mksi_ = self.mks_iter
+                    if not hasattr(n.stat, "mks1") or n.stat.mks1 > self.mks1 + 1:
+                        n.stat.mks1 = self.mks1 + 1
+                        n.stat.mks1_ = self.mks1_
+                        n.stat.mks1i_ = self.mks_iter
                         update += 1
                     if not hasattr(n.stat, "mks2") or n.stat.mks2 > self.mks2 + 1:
                         n.stat.mks2 = self.mks2 + 1
@@ -629,20 +629,20 @@ class CompletionTrieNode(object):
             @param      lw      length of the prefix
             """
             if hasattr(self, "mks0"):
-                self.mks = self.mks0
-                self.mks_ = self.mks0_
+                self.mks1 = self.mks0
+                self.mks1_ = self.mks0_
                 self.mks_iter = 0
-                self.mksi_ = 0
+                self.mks1i_ = 0
                 self.mks2 = self.mks0
                 self.mks2_ = self.mks0_
                 self.mks2i_ = 0
             else:
                 self.mks0 = lw
                 self.mks0_ = 0
-                self.mks = lw
-                self.mks_ = lw
+                self.mks1 = lw
+                self.mks1_ = lw
                 self.mks_iter = 0
-                self.mksi_ = 0
+                self.mks1i_ = 0
                 self.mks2 = lw
                 self.mks2_ = lw
                 self.mks2i_ = 0
@@ -661,8 +661,8 @@ class CompletionTrieNode(object):
             return a string with metric information
             """
             s0 = self.str_mks0()
-            if hasattr(self, "mks"):
+            if hasattr(self, "mks1"):
                 return s0 + " |'={0} *={1},{2} |\"={3} *={4},{5} |nn={6}".format(
-                    self.mks, self.mks_, self.mksi_, self.mks2, self.mks2i_, self.mks2i_, '+' if hasattr(self, "next_nodes") else '-')
+                    self.mks1, self.mks1_, self.mks1i_, self.mks2, self.mks2i_, self.mks2i_, '+' if hasattr(self, "next_nodes") else '-')
             else:
                 return s0
