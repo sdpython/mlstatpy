@@ -420,7 +420,7 @@ La fonction :math:`K(q, k, S)` est définie par :eq:`nlp-comp-k`.
         
         \begin{eqnarray*}
         M'(q, S) &=& \min_{0 \infegal k < l(q)} \acc{ M'(q[1..k], S) + 
-                    \min( K(q, k, S), l(q) - k) | q[1..k] \in S }
+                    \min( K(q, k, S), l(q) - k) }
         \end{eqnarray*}
 
 On prend comme convention :math:`M'(\emptyset, S)=0`. Le calcul de la métrique
@@ -485,8 +485,8 @@ considéré comme préfixe. C'est ce que prend en compte la définition suivante
         
         \begin{eqnarray*}
         M"(q, S) &=& \min \left\{ \begin{array}{l}
-                        \min_{1 \infegal k \infegal l(q)} \acc{ M"(q[1..k-1], S) + 1 +\min( K(q, k, S), l(q) - k)  | q[1..k] \in S } \\
-                        \min_{0 \infegal k \infegal l(q)} \acc{ M"(q[1..k], S) + \delta + \min( K(q, k, S), l(q) - k)  | q[1..k] \in S } 
+                        \min_{1 \infegal k \infegal l(q)} \acc{ M"(q[1..k-1], S) + 1 +\min( K(q, k, S), l(q) - k) } \\
+                        \min_{0 \infegal k \infegal l(q)} \acc{ M"(q[1..k], S) + \delta + \min( K(q, k, S), l(q) - k) } 
                         \end{array} \right .
         \end{eqnarray*}
 
@@ -554,8 +554,42 @@ la ligne de commande Linux.
 Propriétés mathématiques
 ========================
 
-On s'intéresse à la métrique :math:`M'` définie par
-:ref:`Dynamic Minimum Keystroke <completion-metric2>`.
+On s'intéresse principalement à la métrique :math:`M'` définie par
+:ref:`Dynamic Minimum Keystroke <completion-metric2>` mais les résultats
+seront étendues aux autres quand cela est possible.
+
+Calcul pour une complétion
+++++++++++++++++++++++++++
+
+On a besoin d'une propriété pour calculer élégamment les métriques
+pour l'ensemble des complétions.
+
+
+.. mathdef::
+    :title: Dynamic Minimum Keystroke
+    :tag: Lemme
+    :lid: lemme-mks-last
+    
+    On note :math:`d(q, S)` la longueur du plus long préfixe de :math:`q` inclus dans :math:`S`.
+    
+    .. math::
+    
+        d(q, S) = \max\acc{ l(p) | p \prec q, \; p \in S, \; p \neq q}
+    
+    .. math::
+        :label: lemme-m2-nlp-comp
+        :nowrap:
+        
+        \begin{eqnarray*}
+        M'(q, S) &=& \min_{d(q, S) \infegal k < l(q)} \acc{ M'(q[1..k], S) + \min( K(q, k, S), l(q) - k) }
+        \end{eqnarray*}    
+
+Il n'est pas nécessaire de regarder tous les préfixes mais seulement ceux entre le plus long préfixe
+qui est aussi une complétion et la requête :math:`q`. La démonstration est identique à la démonstration
+du lemme qui suit.
+
+
+
 
 Calcul pour une requête en dehors
 +++++++++++++++++++++++++++++++++
@@ -626,31 +660,6 @@ Je vais laisser ce :math:`\delta` sous forme de poésie pour le moment.
     La côte anglaise.
     
     
-On a besoin d'une propriété pour calculer élégamment les métriques.
-
-
-.. mathdef::
-    :title: Dynamic Minimum Keystroke
-    :tag: Lemme
-    :lid: lemme-mks
-    
-    On note :math:`\sigma(q, S)` la position de la complétion :math:`q`
-    pour le système de complétion :math:`S` en supposant qu'il y ait un ordre
-    total. La métrique :ref:`dynamique MKS <def-mks2>` vérifie :
-    
-    .. math::
-        :label: completion-metric2
-        :nowrap:
-        
-        \begin{eqnarray*}
-        M'(q, S) &=& \min_{0 \infegal k < l(q)} \acc{ M'(q[1..k], S) + 
-                    \min( K(q, k, S), l(q) - k) | q[1..k] \in S \text{ et } \sigma(q[1..k], S)  \infegal \sigma(q, S) }
-        \end{eqnarray*}    
-
-On rappelle que si :math:`\sigma(q_1, S) < \sigma(q_2, S)`, la requête :math:`q_1` apparaîtra toujours 
-avant :maht:`q_2` si elles apparaissent ensemble.
-
-
 Complétions emboîtées
 +++++++++++++++++++++
 

@@ -40,7 +40,7 @@ except ImportError:
     import src
 
 from pyquickhelper.loghelper import fLOG
-from src.mlstatpy.nlp.completion_simple import CompletionSystem
+from src.mlstatpy.nlp.completion_simple import CompletionSystem, CompletionElement
 
 
 class TestCompletionSimple(unittest.TestCase):
@@ -69,11 +69,24 @@ class TestCompletionSimple(unittest.TestCase):
             self.assertEqual(el.mks0, el.mks2)
             s = el.str_mks()
             assert s is not None
-            # fLOG(s, el.value)
-        diffs = trie.compare_with_trie()
+        diffs = trie.compare_with_trie(fLOG=fLOG)
         if diffs:
             res = [_[-1] for _ in diffs]
             raise Exception("\n".join(res))
+        r = trie[2]
+        assert r._info
+        s = trie[2].str_all_completions()
+        assert s
+        assert isinstance(r._info._log_imp, list)
+        for k, v in sorted(r._info._completions.items()):
+            assert isinstance(v, list)
+            assert len(v) <= 2
+            assert v
+            fLOG(k, v)
+            for _ in v:
+                fLOG("    ", _.value, ":", _.str_mks())
+        assert "MKS=3 *=3 |'=3 *=3 |\"=3 *=3" in s
+        assert trie.to_dict()
 
     def test_permutations(self):
         fLOG(
@@ -127,10 +140,93 @@ class TestCompletionSimple(unittest.TestCase):
             lines = [_.strip(" \n\r\t") for _ in f.readlines()]
 
         trie = CompletionSystem([(None, q) for q in lines])
-        diffs = trie.compare_with_trie()
+        diffs = trie.compare_with_trie(fLOG=fLOG)
         if diffs:
             res = [_[-1] for _ in diffs]
+            if len(res) > 3:
+                res = res[:3]
             raise Exception("\n".join(res))
+        assert len(trie) > 0
+
+    def test_exception(self):
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
+        try:
+            e = CompletionElement(4, 5)
+        except TypeError as e:
+            assert "value must be str not '4'" in str(e)
+        e = CompletionElement("4", 5)
+        r = e.str_mks0()
+        self.assertEqual(r, "-")
+        r = e.str_mks()
+        self.assertEqual(r, "-")
+
+    def test_mks_consistency(self):
+
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
+        def cmks(trie):
+            diffs = trie.compare_with_trie(fLOG=fLOG)
+            if diffs:
+                res = [_[-1] for _ in diffs]
+                if len(res) > 3:
+                    res = res[:3]
+                raise Exception("\n".join(res))
+
+            gmks = 0.0
+            gmksd = 0.0
+            gmksd2 = 0.0
+            nb = 0
+            size = 0
+            for n in trie:
+                if (True and n.mks2 < n.mks1) or \
+                        (n.value == "baaaab" and n.mks1 != 4):
+                    info = ""  # n.str_all_completions()
+                    info2 = ""  # n.str_all_completions(use_precompute=True)
+                    print(Exception("issue with query '{0}'\n{1}\n##########\n{2}\n############\n{3}".format(
+                        n.value, n.str_mks(), info, info2)))
+
+                gmks += len(n.value) - n.mks0
+                gmksd += len(n.value) - n.mks1
+                gmksd2 += len(n.value) - n.mks2
+                size += len(n.value)
+                nb += 1
+            return nb, gmks, gmksd, gmksd2, size
+
+        def gain_dynamique_moyen_par_mot(queries, weights):
+            per = list(zip(weights, queries))
+            total = sum(w * len(q) for q, w in zip(queries, weights))
+            trie = CompletionSystem([(None, q) for _, q in per])
+            trie.compute_metrics()
+            wks = [(w, p, len(w) - trie.find(w).mks0) for p, w in per]
+            wks_dyn = [(w, p, len(w) - trie.find(w).mks1) for p, w in per]
+            wks_dyn2 = [(w, p, len(w) - trie.find(w).mks2) for p, w in per]
+            gain = sum(g * p / total for w, p, g in wks)
+            gain_dyn = sum(g * p / total for w, p, g in wks_dyn)
+            gain_dyn2 = sum(g * p / total for w, p, g in wks_dyn2)
+            ave_length = sum(len(w) * p / total for p, w in per)
+            return gain, gain_dyn, gain_dyn2, ave_length
+
+        this = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), "data", "sample_alpha_2.txt"))
+        with open(this, "r", encoding="utf-8") as f:
+            titles = [_.strip(" \n\r\t") for _ in f.readlines()]
+        fLOG(titles[:5])
+        trie = CompletionSystem([(None, q) for q in titles])
+        trie.compute_metrics(fLOG=fLOG)
+        nb, gmks, gmksd, gmksd2, size = cmks(trie)
+        gain, gain_dyn, gain_dyn2, ave_length = gain_dynamique_moyen_par_mot(titles, [
+                                                                             1.0] * len(titles))
+        fLOG("***", 1, nb, size, "*", gmks / size, gmksd / size, gmksd2 / size)
+        fLOG("***", gain, gain_dyn, gain_dyn2, ave_length)
+        self.assertEqual(nb, 494)
+
 
 if __name__ == "__main__":
     unittest.main()
