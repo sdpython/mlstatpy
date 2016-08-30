@@ -80,7 +80,8 @@ class TestCompletionSimple(unittest.TestCase):
         assert isinstance(r._info._log_imp, list)
         for k, v in sorted(r._info._completions.items()):
             assert isinstance(v, list)
-            assert len(v) <= 2
+            if k != '' and len(v) > 2:
+                raise Exception(v)
             assert v
             fLOG(k, v)
             for _ in v:
@@ -164,7 +165,7 @@ class TestCompletionSimple(unittest.TestCase):
         r = e.str_mks()
         self.assertEqual(r, "-")
 
-    def test_mks_consistency(self):
+    def test_mks_consistency_bigger(self):
 
         fLOG(
             __file__,
@@ -174,9 +175,9 @@ class TestCompletionSimple(unittest.TestCase):
         def cmks(trie):
             diffs = trie.compare_with_trie(fLOG=fLOG)
             if diffs:
+                if len(diffs) > 3:
+                    diffs = diffs[:3]
                 res = [_[-1] for _ in diffs]
-                if len(res) > 3:
-                    res = res[:3]
                 raise Exception("\n".join(res))
 
             gmks = 0.0
@@ -185,12 +186,11 @@ class TestCompletionSimple(unittest.TestCase):
             nb = 0
             size = 0
             for n in trie:
-                if (True and n.mks2 < n.mks1) or \
-                        (n.value == "baaaab" and n.mks1 != 4):
+                if n.mks2 < n.mks1 or (n.value == "baaaab" and n.mks1 != 4):
                     info = ""  # n.str_all_completions()
                     info2 = ""  # n.str_all_completions(use_precompute=True)
-                    print(Exception("issue with query '{0}'\n{1}\n##########\n{2}\n############\n{3}".format(
-                        n.value, n.str_mks(), info, info2)))
+                    raise Exception("issue with query '{0}'\n{1}\n##########\n{2}\n############\n{3}".format(
+                        n.value, n.str_mks(), info, info2))
 
                 gmks += len(n.value) - n.mks0
                 gmksd += len(n.value) - n.mks1
@@ -219,7 +219,7 @@ class TestCompletionSimple(unittest.TestCase):
             titles = [_.strip(" \n\r\t") for _ in f.readlines()]
         fLOG(titles[:5])
         trie = CompletionSystem([(None, q) for q in titles])
-        trie.compute_metrics(fLOG=fLOG)
+        trie.compute_metrics(fLOG=fLOG, details=True)
         nb, gmks, gmksd, gmksd2, size = cmks(trie)
         gain, gain_dyn, gain_dyn2, ave_length = gain_dynamique_moyen_par_mot(titles, [
                                                                              1.0] * len(titles))

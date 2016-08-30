@@ -49,6 +49,20 @@ class CompletionElement(object):
         self.prefix = None
         self._info = None
 
+    @staticmethod
+    def empty_prefix():
+        """
+        return an instance filled with an empty prefix
+        """
+        if not hasattr(CompletionElement, "static_empty_prefix"):
+            res = CompletionElement('', None)
+            res.mks0 = res.mks1 = res.mks2 = 0
+            res.mks0_ = res.mks1_ = res.mks2_ = 0
+            CompletionElement.static_empty_prefix = res
+            return res
+        else:
+            return CompletionElement.static_empty_prefix
+
     def __repr__(self):
         """
         usual
@@ -97,29 +111,56 @@ class CompletionElement(object):
         """
         rows = [
             "{0} -- {1} -- {2}".format(self.weight, self.value, self.str_mks())]
-        for i in range(len(self.value)):
-            prefix = self.value[:i]
+        if self._info is not None:
             rows.append("------------------")
-            rows.append("i={0} - {1}".format(i, prefix))
-            if self._info is not None:
+            for el in self._info._log_imp:
+                rows.append(str(el))
+            for i in range(len(self.value)):
+                prefix = self.value[:i]
+                rows.append("------------------")
+                rows.append("i={0} - {1}".format(i, prefix))
                 completions = self._info._completions.get(prefix, [])
                 for i, el in enumerate(completions):
-                    rows.append("   {0}:{1} -- {2}{4}-- {3}".format(i,
-                                                                    el.weight, el.value, el.str_mks(), " " * (20 - len(el.value))))
-                rows.append("------------------")
-                for el in self._info._log_imp:
-                    rows.append(str(el))
-            else:
-                rows.append("NO INFO")
+                    ar = "   " if el.value != self.value else "-> "
+                    add = "{5}{0}:{1} -- {2}{4}-- {3}".format(
+                        i, el.weight, el.value, el.str_mks(), " " * (20 - len(el.value)), ar)
+                    rows.append(add)
+        else:
+            rows.append("NO INFO")
         return "\n".join(rows)
 
-    def init_metrics(self, position: int):
+    def init_metrics(self, position: int, completions: List['CompletionElement']=None):
         """
         initiate the metrics
 
         @param      position    position in the completion system when prefix is null,
                                 *position starting from 0*
+        @param      completions displayed completions, if not None, the method will
+                                store them in member *_completions*
+        @return                 boolean which indicates there was an update
         """
+        if completions is not None:
+            log_imp = True
+
+            class c:
+
+                def __str__(self):
+                    return "{0}-{1}".format(self._completions, self._log_imp)
+                pass
+            self._info = c()
+            self._info._completions = {}
+            self._info._log_imp = []
+            if '' not in self._info._completions:
+                cut = min(15, max(10, len(self.value)),
+                          len(completions['']))
+                if len(completions['']) >= cut:
+                    self._info._completions[''] = completions[''][:cut]
+                else:
+                    self._info._completions[''] = completions[''].copy()
+        else:
+            log_imp = False
+
+        self.prefix = CompletionElement.empty_prefix()
         position += 1
         if len(self.value) <= position:
             self.mks0 = len(self.value)
@@ -128,6 +169,7 @@ class CompletionElement(object):
             self.mks0_ = len(self.value)
             self.mks1_ = len(self.value)
             self.mks2_ = len(self.value)
+            return False
         else:
             self.mks0 = position
             self.mks1 = position
@@ -135,8 +177,14 @@ class CompletionElement(object):
             self.mks0_ = 0
             self.mks1_ = 0
             self.mks2_ = 0
+            if log_imp:
+                self._info._log_imp.append(
+                    (0, "mks0", position, '', "k={0}".format(0),
+                     "p={0}".format(position), "it={0}".format(0)))
+            return True
 
-    def update_metrics(self, prefix: str, position: int, improved: dict, delta: float, completions=None):
+    def update_metrics(self, prefix: str, position: int, improved: dict, delta: float,
+                       completions: List['CompletionElement']=None, iteration: int=-1):
         """
         update the metrics
 
@@ -148,6 +196,7 @@ class CompletionElement(object):
         @param      delta       delta in the dynamic modified mks
         @param      completions displayed completions, if not None, the method will
                                 store them in member *_completions*
+        @param      iteration   for debugging purpose, indicates when this improvment was detected
         @return                 boolean which indicates there was an update
         """
         if self.prefix is not None and len(prefix) < len(self.prefix.value):
@@ -156,15 +205,6 @@ class CompletionElement(object):
 
         if completions is not None:
             log_imp = True
-            if self._info is None:
-                class c:
-
-                    def __str__(self):
-                        return "{0}-{1}".format(self._completions, self._log_imp)
-                    pass
-                self._info = c()
-                self._info._completions = {}
-                self._info._log_imp = []
             if prefix not in self._info._completions:
                 cut = min(15, max(10, len(self.value)),
                           len(completions[prefix]))
@@ -186,7 +226,8 @@ class CompletionElement(object):
             check = True
             if log_imp:
                 self._info._log_imp.append(
-                    (1, "mks0", mks, prefix, k, position))
+                    (1, "mks0", mks, prefix, "k={0}".format(k), "p={0}".format(position),
+                     "it={0}".format(iteration), "last={0}".format(self.prefix.value)))
         elif mks == self.mks0 and self.mks0_ < k:
             self.mks0_ = k
         if mks < self.mks1:
@@ -198,26 +239,7 @@ class CompletionElement(object):
             self.mks2_ = k
             check = True
 
-        if prefix in improved:
-            v = improved[prefix]
-            self.prefix = v
-            mks = v.mks1 + min(len(self.value) - len(prefix), pos)
-            if mks < self.mks1:
-                self.mks1 = mks
-                self.mks1_ = k
-                check = True
-                if log_imp:
-                    self._info._log_imp.append(
-                        (2, "mks1", mks, prefix, k, position))
-            mks = v.mks2 + min(len(self.value) - len(prefix), pos + delta)
-            if mks < self.mks2:
-                self.mks2 = mks
-                self.mks2_ = k
-                check = True
-                if log_imp:
-                    self._info._log_imp.append(
-                        (3, "mks2", mks, prefix, k, position))
-        elif self.prefix and len(self.prefix.value) < len(prefix):
+        if self.prefix and len(self.prefix.value) < len(prefix):
             # we use the latest prefix available
             v = self.prefix
             dd = len(prefix) - len(v.value) + pos
@@ -228,7 +250,8 @@ class CompletionElement(object):
                 check = True
                 if log_imp:
                     self._info._log_imp.append(
-                        (4, "mks1", mks, prefix, k, position))
+                        (4, "mks1", mks, prefix, "k={0}".format(k), "p={0}".format(position),
+                         "it={0}".format(iteration), "last={0}".format(self.prefix.value)))
             mks = v.mks2 + dd
             if mks < self.mks2:
                 self.mks2 = mks
@@ -236,8 +259,32 @@ class CompletionElement(object):
                 check = True
                 if log_imp:
                     self._info._log_imp.append(
-                        (5, "mks2", mks, prefix, k, position))
+                        (5, "mks2", mks, prefix, "k={0}".format(k), "p={0}".format(position),
+                         "it={0}".format(iteration), "last={0}".format(self.prefix.value)))
+        if prefix in improved:
+            v = improved[prefix]
+            self.prefix = v
+            mks = v.mks1 + min(len(self.value) - len(prefix), pos)
+            if mks < self.mks1:
+                self.mks1 = mks
+                self.mks1_ = k
+                check = True
+                if log_imp:
+                    self._info._log_imp.append(
+                        (2, "mks1", mks, prefix, "k={0}".format(k), "p={0}".format(position),
+                         "it={0}".format(iteration), "last={0}".format(self.prefix.value)))
+            mks = v.mks2 + min(len(self.value) - len(prefix), pos + delta)
+            if mks < self.mks2:
+                self.mks2 = mks
+                self.mks2_ = k
+                check = True
+                if log_imp:
+                    self._info._log_imp.append(
+                        (3, "mks2", mks, prefix, "k={0}".format(k), "p={0}".format(position),
+                         "it={0}".format(iteration), "last={0}".format(self.prefix.value)))
 
+        if log_imp and self.prefix and self.prefix.value != '':
+            self._info._log_imp.append(self.prefix)
         return check
 
 
@@ -326,7 +373,7 @@ class CompletionSystem:
         @return                 None or differences
         """
         def format_diff(el, f, diff):
-            s = "VALUE={0}\nSYST=[{1}]\nTRIE=[{2}]\nMORE SYSTEM:\n{3}\nMORE TRIE:\n{3}".format(
+            s = "VALUE={0}\nSYST=[{1}]\nTRIE=[{2}]\nMORE SYSTEM:\n{3}\n######\nMORE TRIE:\n{4}".format(
                 el.value, el.str_mks(), f.stat.str_mks(),
                 el.str_all_completions(), f.str_all_completions())
             if diff:
@@ -373,28 +420,31 @@ class CompletionSystem:
         self.sort_weight()
         if filter is not None:
             raise NotImplementedError("filter not None is not implemented")
-        # max_length = max(len(e.value) for e in self)
+        if details:
+            store_completions = {'': []}
 
+        improved = {}
         to = time.clock()
         fLOG("init_metrics:", len(self))
         for i, el in enumerate(self._elements):
-            el.init_metrics(i)
+            if details:
+                store_completions[''].append(el)
+                r = el.init_metrics(i, store_completions)
+            else:
+                r = el.init_metrics(i)
+            if r and el.value not in improved:
+                improved[el.value] = el
         t = time.clock()
         fLOG(
             "interation 0: #={0} dt={1} - log details={2}".format(len(self), t - to, details))
 
-        if details:
-            store_completions = {}
-
-        improved = {}
         updates = 1
         it = 1
         while updates > 0:
             displayed = {}
             updates = 0
             for i, el in enumerate(self._elements):
-                l = len(el.value)
-                for k in range(1, len(el.value)):
+                for k in range(0, len(el.value)):
                     prefix = el.value[:k]
                     if prefix not in displayed:
                         displayed[prefix] = 0
@@ -406,7 +456,8 @@ class CompletionSystem:
                             store_completions[prefix].append(el)
                     r = el.update_metrics(
                         prefix, displayed[prefix], improved, delta,
-                        completions=store_completions if details else None)
+                        completions=(store_completions if details else None),
+                        iteration=it)
                     if r:
                         if el.value not in improved:
                             improved[el.value] = el

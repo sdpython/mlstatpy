@@ -586,8 +586,18 @@ pour l'ensemble des complétions.
 
 Il n'est pas nécessaire de regarder tous les préfixes mais seulement ceux entre le plus long préfixe
 qui est aussi une complétion et la requête :math:`q`. La démonstration est identique à la démonstration
-du lemme qui suit.
+du lemme qui suit. L'idée de cette propriété est de pouvoir réduire le coût de l'algorithme
+de calcul des métriques. Ce n'est pas la seule écriture qu'on puisse en fait.
 
+Le calcul de la métrique :math:`M'` suggère qu'on doit faire ce calcul dans le sens
+des préfixes croissants mais il serait plus simple de le faire dans le sens des complétions 
+de poids croissant (les complétions de moindre poids sont toujours affichées avant).
+
+
+.. image:: completion_img/algocomp.png
+
+Si l'algorithme est plus simple (sens de la fléche dans le figure précédente), il faut parfois
+plusieurs itérations pour obtenir la valeur finale.
 
 
 
@@ -870,16 +880,14 @@ pour le préfixe :math:`c(i)[[1..k]]`. Le coût de l'algorithme est en :math:`O(
 
 Dans le cas où :math:`\sigma` est quelconque et :math:`C \neq Q`, on procède en deux étapes.
 Dans un premier temps, on utilise une variante de l'algorithme précédent pour calculer
-:math:`M'(q, C)`. 
-
-........ il manque la démo d'une propriété
-
+:math:`M'(q, C)` pour les requêtes :math:`q` dans l'ensemble des complétions.
 
 Dans un second temps, on effectue une sorte de fusion entre les deux listes
-triées alphabétiquement. Le coût de l'algorithme est en :math:`O(LN + 2 N\ln N + M \ln M + max(N,M))`
+triées alphabétiquement. Le coût de l'algorithme est en :math:`O(ILN + 2 N\ln N + M \ln M + max(N,M))`
 où :math:`M` est le nombre de requêtes dans l'ensemble :math:`Q`. Cette partie repose sur le
 :ref:`lemme <lemme-nlp-long-completion>` lié au calcul des métriques 
-pour les réquêtes hors de l'ensemble des complétions. 
+pour les réquêtes hors de l'ensemble des complétions. :math:`I` est un nombre d'itération nécessaires
+pour que les métriques :math:`M'` convergent pour l'ensemble des complétions. En pratique, c'est très petit.
 
 L'algorithme est implémenté dans le module 
 :mod:`completion_simple <mlstatpy.nlp.completion_simple>` et plus particulièrement la fonction 
