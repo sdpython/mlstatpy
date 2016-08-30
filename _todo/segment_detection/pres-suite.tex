@@ -1,0 +1,127 @@
+%!TEX encoding =  IsoLatin
+\documentclass[french,11pt]{article}
+\usepackage[french]{babel}
+\usepackage{a4}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{subfigure}
+\usepackage{float}
+\usepackage{latexsym}
+\usepackage{amsfonts}
+\usepackage{epic}
+\usepackage{eepic}
+\usepackage{makeidx}
+\usepackage{multido}
+\usepackage{varindex}
+\usepackage{alltt}
+\usepackage{moreverb}
+\newenvironment{slide}[1] {\section{#1}} {}
+
+
+\begin{document}
+
+\begin{slide}{Petits objets géométriques et statistiques}
+
+\begin{itemize}
+\item géométrie
+ 
+     \begin{itemize}
+      \item point ou vecteur :  $class$ $Point$
+ 
+            \begin{itemize}
+                \item deux coordonnées $x$ et $y$
+                \item méthodes pour ajouter, multiplier des vecteurs, calculer une norme, un produit scalaire, un angle (ou orientation)
+              \end{itemize}
+              
+     \item segment : $class$ $Segment$
+     
+            \begin{itemize}
+                \item deux extrémités $a$ et $b$ de type $Point$
+                \item méthodes pour calculer un vecteur directeur et un vecteur normal
+              \end{itemize}
+              
+     \end{itemize}
+     
+\item statistique : calcul des probabilités de lois binomiales $B(n,p)$  ($fonction $  $tabule\_queue\_binom (n,p)$)
+
+     \begin{itemize}
+     \item pour $n$ aussi grand que la plus grande dimension de l'image
+     \item pour $p$ : probabilité que l'angle entre deux vecteurs < $\frac{2\pi}{32} =  \frac{1}{16}$
+     \item calcul par récurrence : $a^k_m =  p a^{k-1}_{m-1} + (1-p) a ^k_{m-1 }$ 
+     
+     		où $a^k_m = P(X = k)$ et $X$ suit une loi binomiale $B(m,p)$
+     \end{itemize}
+
+\end{itemize}
+
+\end{slide}
+
+
+\begin{slide}{Fonctionnement du programme informatique : trois étapes}
+  \begin{enumerate}
+     \item Préliminaires
+     \begin{itemize}
+        \item chargement de l'image
+        \item affichage de l'image
+        \item calcul du gradient : matrice de vecteurs, $grad [ (x,y) ] = $ gradient au pixel $(x,y)$, le gradient est la seule information manipulée par l'algorithme  % première image de dessin.ppt
+
+\begin{verbatim}        
+def calcule_gradient (image) :    """retourne le gradient d'une image sous forme d'une matrice    de Point, consideres ici comme des vecteurs"""    size     = X,Y = image.get_size ()    m        = [  [ GEO.Point (0,0) for i in xrange (0,Y) ] for j in xrange (0,X) ]    res      = Numeric.array (m)  # pour voir d'autres types, le type array du package Numeric,                                   # plus efficace qu'une liste de listes pour les matrices     for x in xrange (0,size [0] - 1) :        for y in xrange (0, size [1] - 1) :            ij = image.get_at ( (x,y) ) [0]     # c'est une image en niveau de gris            Ij = image.get_at ( (x+1,y) ) [0]   # les trois intensites sont egales            iJ = image.get_at ( (x,y+1) )  [0]  # on ne prend que la premiere            IJ = image.get_at ( (x+1,y+1) )  [0]            gx = 0.5 * (IJ - iJ + Ij - ij)            gy = 0.5 * (IJ - Ij + iJ - ij)            res [ (x,y) ] = GEO.Point (gx,gy)                return res
+\end{verbatim}
+      \end{itemize}
+     \item Algorithme de détection de segments
+     \item Affichage du résultat : une image sur laquelle on superpose les segments détectés
+\end{enumerate}
+\end{slide}
+
+\begin{slide}{Algorithme de détection de segments}
+
+\begin{enumerate}
+\item choix d'un segment  : $class$ $SegmentBord$ % seconde image de dessin.ppt
+\item est-ce un segment significatif ?
+  \begin{enumerate}  
+  \item pour chaque pixel :  le gradient est-il presque perpendiculaire au segment $\rightarrow$ 0 ou 1 % image que tu as faite
+  
+  		segment $\longrightarrow$ liste de 0 ou 1 (exemple : $[0,1,0,0,1,1,1,1,0,0,1,0]$, stockés dans une instance de la classe $LigneGradient$)
+		
+		$class$ $SegmentBord\_Commun$, méthode $decoupe\_gradient$
+  \item  y a -t-il suffisamment de 1 pour en faire un segment ou est-ce le hasard ?
+  
+  		$\longrightarrow$ fait intervenir les probabilités
+		
+		$class$ $LigneGradient$, méthode $segments\_significatifs$
+  \item on réitère ce procédé pour chaque sous-liste
+  \end{enumerate}
+\item on recommence les étapes précédentes pour chaque segment reliant deux bords différents de l'image
+\end{enumerate}
+
+\end{slide}
+
+
+\begin{slide}{Les segments reliant deux bords différents de l'image}
+\begin{itemize}
+\item 2 paramètres
+\begin{enumerate}
+\item une orientation : un angle choisi dans l'ensemble $\{0,\delta,2\delta, 3\delta, ..., 2 \pi - \delta \}$
+\item 1 extrémité : tout  pixel du contour 
+\end{enumerate}
+\item Comment les étudier tous ?
+\begin{enumerate}
+\item choisir un premier point du contour $a$ et un angle $\alpha$ nul  
+\item détecter si ce segment ou une sous-partie est significatif dans l'image
+\item on passe au segment suivant : (next)   
+\begin{itemize}
+\item on change la première extrémité : on passe au pixel suivant, on déduit la seconde avec l'orientation
+\item si on a fait le tour, on change l'orientation
+\item si on a aussi fait le tour, on a fini
+\end{itemize}
+\end{enumerate}
+\end{itemize}
+\end{slide}
+
+
+
+
+\end{document}
+
