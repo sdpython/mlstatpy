@@ -297,8 +297,14 @@ class CompletionSystem:
         """
         fill the completion system
         """
-        self._elements = [(e if isinstance(e, CompletionElement)
-                           else CompletionElement(e[1], e[0])) for e in elements]
+        def create_element(i, e):
+            if isinstance(e, CompletionElement):
+                return e
+            elif isinstance(e, tuple):
+                return CompletionElement(e[1], e[0] if e[0] else i)
+            else:
+                return CompletionElement(e, i)
+        self._elements = [create_element(i, e) for i, e in enumerate(elements)]
 
     def __getitem__(self, i):
         """
@@ -323,7 +329,7 @@ class CompletionSystem:
                     return e
             return None
 
-    def items(self) ->Iterator[Tuple[str, CompletionElement]]:
+    def items(self) -> Iterator[Tuple[str, CompletionElement]]:
         """
         iterate on ``(e.value, e)``
         """

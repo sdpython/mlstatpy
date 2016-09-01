@@ -129,6 +129,28 @@ class TestCompletionSimple(unittest.TestCase):
             res = [_[-1] for _ in diffs]
             raise Exception("\n".join(res))
 
+    def test_mks_consistency_port(self):
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
+        titles = ["por", "por rouge", "por vert",
+                  "por orange", "port", "port blanc", "port rouge"]
+        trie = CompletionSystem(titles)
+        diffs = trie.compare_with_trie()
+        if diffs:
+            res = [_[-1] for _ in diffs]
+            raise Exception("\n".join(res))
+
+        titles = ["po", "po rouge", "po vert", "po orange",
+                  "port", "port blanc", "port rouge"]
+        trie = CompletionSystem(titles)
+        diffs = trie.compare_with_trie()
+        if diffs:
+            res = [_[-1] for _ in diffs]
+            raise Exception("\n".join(res))
+
     def test_completions(self):
         fLOG(
             __file__,

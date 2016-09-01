@@ -821,6 +821,8 @@ des longueurs complétion - préfixe est plus petite que la position où elle es
 
 
 
+
+
 Implémentation
 ==============
 
