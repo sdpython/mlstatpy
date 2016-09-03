@@ -819,6 +819,36 @@ peut rejetter une suggestion si elle est montrée à une position
 qui ne permet aucun gain à l'utilisateur, c'est-à-dire que la différence
 des longueurs complétion - préfixe est plus petite que la position où elle est montrée.
 
+Une idée
+++++++++
+
+On aimerait bien pouvoir trouver l'ordre optimal par morceau,
+supposer que l'ordre optimal pour l'ensemble des complétions
+correspond à l'ordre complétions sur un sous-ensemble
+partageant le même préfixe.
+
+.. mathdef::
+    :title: M' et sous-ensemble
+    :tag: lemme
+
+    On suppose que la complétion :math:`q` est préfixe
+    pour la requête :math:`q'` et 
+    :math:`\sigma(q) < \sigma(q')` ce qui signifie
+    que la complétion :math:`q` est toujours affichée
+    avant la complétion :math:`q'` si elles apparaissent ensemble.
+    Alors :math:`M'(q, S) < M'(q', S)`.
+    Plus spécifiquement, si on considère l'ensemble 
+    :math:`S'(q) = \acc{ s-q \in S | q \prec s }`
+    (:math:`s-s` est la complétion :math:`s`
+    sans son préfixe :math:`q`). 
+    
+    .. math::
+    
+        M'(q', S) = M'(q'-q, S')
+        
+
+
+    
 
 
 
