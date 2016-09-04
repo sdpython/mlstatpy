@@ -13,7 +13,7 @@ def download_pageviews(dt, folder=".", unzip=True, timeout=-1, overwrite=False, 
     download wikipedia pagacount for a precise date (up to the hours),
     the url follows the pattern::
 
-        https://dumps.wikimedia.org/other/pagecounts-raw/%Y/%Y-%m/pagecounts-%Y%m%d-%H0000.gz
+        https://dumps.wikimedia.org/other/pageviews/%Y/%Y-%m/pagecounts-%Y%m%d-%H0000.gz
 
     @param      dt          datetime
     @param      folder      where to download
