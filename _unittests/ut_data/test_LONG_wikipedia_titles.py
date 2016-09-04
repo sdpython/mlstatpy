@@ -6,7 +6,6 @@
 import sys
 import os
 import unittest
-from datetime import datetime
 
 
 try:
