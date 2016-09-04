@@ -52,7 +52,7 @@ class TestLONGWikipediaPageViews(unittest.TestCase):
             self._testMethodName,
             OutputPrint=__name__ == "__main__")
 
-        temp = get_temp_folder(__file__, "temp_wikipedia_page_views")
+        temp = get_temp_folder(__file__, "temp_wikipedia_pageviews")
         name = download_pageviews(
             datetime(2016, 5, 6, 10), folder=temp, fLOG=fLOG)
         assert name is not None
