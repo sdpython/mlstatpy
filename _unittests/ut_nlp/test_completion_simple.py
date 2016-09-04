@@ -255,12 +255,14 @@ class TestCompletionSimple(unittest.TestCase):
             self._testMethodName,
             OutputPrint=__name__ == "__main__")
 
-        couleur = ["blanc", "vert", "orange", "rouge", "noir", "noire", "blanche"]
+        couleur = ["blanc", "vert", "orange",
+                   "rouge", "noir", "noire", "blanche"]
         key = "portes"
-        mots = ["porch", "porch rouge", "porch vert", "porch orange", "pore", "pour"]
+        mots = ["porch", "porch rouge", "porch vert",
+                "porch orange", "pore", "pour"]
         mots.append(key)
         mots += [key + " " + c for c in couleur]
-        ens = CompletionSystem(mots)        
+        ens = CompletionSystem(mots)
         diffs = ens.compare_with_trie(fLOG=fLOG)
         if diffs:
             res = [_[-1] for _ in diffs]

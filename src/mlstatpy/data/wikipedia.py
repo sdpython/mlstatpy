@@ -8,7 +8,7 @@ from pyquickhelper.filehelper import get_url_content_timeout, ungzip_files
 from .data_exceptions import DataException
 
 
-def download_pagecount(dt, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG):
+def download_pageviews(dt, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG):
     """
     download wikipedia pagacount for a precise date (up to the hours),
     the url follows the pattern::
@@ -23,9 +23,9 @@ def download_pagecount(dt, folder=".", unzip=True, timeout=-1, overwrite=False, 
     @param      fLOG        logging function
     @return                 filename
 
-    More information on page `pagecounts-raw <https://dumps.wikimedia.org/other/pagecounts-raw/>`_.
+    More information on page `pageviews <https://dumps.wikimedia.org/other/pageviews/>`_.
     """
-    url = "https://dumps.wikimedia.org/other/pagecounts-raw/%Y/%Y-%m/pagecounts-%Y%m%d-%H0000.gz"
+    url = "https://dumps.wikimedia.org/other/pageviews/%Y/%Y-%m/pageviews-%Y%m%d-%H0000.gz"
     url = dt.strftime(url)
     file = url.split("/")[-1]
     name = os.path.join(folder, file)

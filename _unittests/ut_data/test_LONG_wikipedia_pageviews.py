@@ -41,19 +41,19 @@ except ImportError:
 
 from pyquickhelper.loghelper import fLOG
 from pyquickhelper.pycode import get_temp_folder
-from src.mlstatpy.data.wikipedia import download_pagecount
+from src.mlstatpy.data.wikipedia import download_pageviews
 
 
-class TestLONGWikipediaPageCount(unittest.TestCase):
+class TestLONGWikipediaPageViews(unittest.TestCase):
 
-    def test_wikipedia_page_count(self):
+    def test_wikipedia_page_views(self):
         fLOG(
             __file__,
             self._testMethodName,
             OutputPrint=__name__ == "__main__")
 
-        temp = get_temp_folder(__file__, "temp_wikipedia_page_count")
-        name = download_pagecount(
+        temp = get_temp_folder(__file__, "temp_wikipedia_page_views")
+        name = download_pageviews(
             datetime(2016, 5, 6, 10), folder=temp, fLOG=fLOG)
         assert name is not None
 
