@@ -125,7 +125,7 @@ dispose d'un ensemble de requêtes ordonnées :math:`S = (s_i)` et la fonction :
     K(q, k, S) = position(q, S(q[1..k]))
     
 Où :math:`S(q[1..k])` est le sous-ensemble ordonné de :math:`S` des complétions
-qui commence par les :math:`k` premières lettres de :math:`q` et de longueur supérieure strictement à :math:`k`.
+qui commencent par les :math:`k` premières lettres de :math:`q` et de longueur supérieure strictement à :math:`k`.
 :math:`position(q, S(q[1..k]))` est la position de :math:`q` dans cet ensemble ordonné
 ou :math:`\infty` si elle n'y est pas. Cette position est strictement positive
 :math:`K(q, k, S) \supegal 1` sauf si :math`k=l(q)` auquel cas, elle est nulle. 
@@ -824,7 +824,7 @@ Une idée
 
 On aimerait bien pouvoir trouver l'ordre optimal par morceau,
 supposer que l'ordre optimal pour l'ensemble des complétions
-correspond à l'ordre complétions sur un sous-ensemble
+correspond à l'ordre des complétions sur un sous-ensemble
 partageant le même préfixe.
 
 .. mathdef::
@@ -839,16 +839,44 @@ partageant le même préfixe.
     Alors :math:`M'(q, S) < M'(q', S)`.
     Plus spécifiquement, si on considère l'ensemble 
     :math:`S'(q) = \acc{ s-q \in S | q \prec s }`
-    (:math:`s-s` est la complétion :math:`s`
+    (:math:`s-q` est la complétion :math:`s`
     sans son préfixe :math:`q`). 
     
     .. math::
     
-        M'(q', S) = M'(q'-q, S')
+        M'(q', S) = M'(q'-q, S') + M'(q, S)
+        
+On sait déjà, par construction que 
+:math:`M'(q', S) \infegal M'(q'-q, S') + M'(q, S)`.
+Par l'absurde, on suppose que :math:`M'(q', S) < M'(q'-q, S') + M'(q, S)`,
+comme la requête :math:`q-q'` est toujours affiché avant la requête 
+:math:`q'`, cela voudrait dire qu'on aurait trouvé une façon plus optimale 
+d'écrire la requête :math:`q-q'` avec le système :math:`S` ce qui
+impossible d'après la définition de la métrique :math:`M'`.
+Cette propriété n'aide pas forcmément à trouver un algorithme
+pour optimiser l'ordre des complétions dans la mesure où la 
+propriété suppose qu'une complétion soit affiché avant toutes
+celles dont elle est le préfixe. La propriété suivante est évidemment vraie
+pour le cas particulier qu'on vient de mentionner. Si elle est vraie, cela devrait
+permettre de procéder par sous-ensemble pour trouver l'ordre optimal.
+
+
+.. mathdef::
+    :title: M', ordre et sous-ensemble
+    :tag: lemme
+
+    On désigne par :math:`S(q)` est le sous-ensemble ordonné de :math:`S` 
+    des complétions qui commencent par :math:`q` et de longueur supérieure 
+    strictement à :math:`q`. On note :math:`S'(q) = \acc{ q'-q | q' \in S(q) }`.
+    Soit :math:`q_1, q_2 \succ q`, alors :
+    
+    .. math::
+    
+        M'(q_1, S'(q) ) < M'(q_2, S'(q) ) \Longleftrightarrow M'(q_1, S ) < M'(q_2, S )
         
 
-
-    
+On sait déjà que pour une complétion :math:`t`, par construction,
+:math:`M'(t, S) \infegal M'(t, S) + M'(t-q, S'(q'))`.
 
 
 

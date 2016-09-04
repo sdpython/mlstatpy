@@ -249,6 +249,27 @@ class TestCompletionSimple(unittest.TestCase):
         fLOG("***", gain, gain_dyn, gain_dyn2, ave_length)
         self.assertEqual(nb, 494)
 
+    def test_completions_bug(self):
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
+        couleur = ["blanc", "vert", "orange", "rouge", "noir", "noire", "blanche"]
+        key = "portes"
+        mots = ["porch", "porch rouge", "porch vert", "porch orange", "pore", "pour"]
+        mots.append(key)
+        mots += [key + " " + c for c in couleur]
+        ens = CompletionSystem(mots)        
+        diffs = ens.compare_with_trie(fLOG=fLOG)
+        if diffs:
+            res = [_[-1] for _ in diffs]
+            if len(res) > 3:
+                res = res[:3]
+            raise Exception("\n".join(res))
+        assert len(ens) > 0
+        m = ens.find("portes blanche")
+        self.assertEqual(m.mks2, 7.8)
 
 if __name__ == "__main__":
     unittest.main()
