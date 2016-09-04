@@ -36,7 +36,7 @@ avec `On User Interactions with Query Auto-Completion <https://www.semanticschol
 de Bhaskar Mitra, Milad Shokouhi, Filip Radlinski, Katja Hofmann.
 
 
-.. totree::
+.. toctree::
     :depth: 1
     
     completion_formalisation
