@@ -90,9 +90,9 @@ un existe :math:`k < k^*` tel que :
     :nowrap:
         
     \begin{eqnarray*}
-    M'(q[[1..k]], S) + l(q) - l(q[[1..k]]) < M'(q[[1..k^*]], S) + l(q) - l(q[[1..k^*]]) \\
-    && \Longrightarrow M'(q[[1..k]], S) - k < M'(q[[1..k^*]], S) - k^* \\
-    && \Longrightarrow M'(q[[1..k]], S) + (k^* - k) < M'(q[[1..k^*]], S)
+    && M'(q[[1..k]], S) + l(q) - l(q[[1..k]]) < M'(q[[1..k^*]], S) + l(q) - l(q[[1..k^*]]) \\
+    & \Longrightarrow & M'(q[[1..k]], S) - k < M'(q[[1..k^*]], S) - k^* \\
+    & \Longrightarrow & M'(q[[1..k]], S) + (k^* - k) < M'(q[[1..k^*]], S)
     \end{eqnarray*}
     
 Cela signifie qu'on a réussi une façon plus efficace d'écrire le préfixe
