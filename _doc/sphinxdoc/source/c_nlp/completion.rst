@@ -37,7 +37,7 @@ de Bhaskar Mitra, Milad Shokouhi, Filip Radlinski, Katja Hofmann.
 
 
 .. toctree::
-    :depth: 1
+    :maxdepth: 1
     
     completion_formalisation
     completion_fausse
