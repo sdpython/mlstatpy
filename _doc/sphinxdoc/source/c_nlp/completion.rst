@@ -53,4 +53,4 @@ Notebooks associés :
 * :ref:`completiontrierst`
 * :ref:`completionprofilingrst`
 * :ref:`completiontrielongrst`
-
+* :ref:`completionsimplerst`
