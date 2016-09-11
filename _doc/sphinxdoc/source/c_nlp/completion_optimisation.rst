@@ -129,7 +129,7 @@ partageant le même préfixe.
 On sait déjà, par construction que 
 :math:`M'(q', S) \infegal M'(q'-q, S') + M'(q, S)`.
 Par l'absurde, on suppose que :math:`M'(q', S) < M'(q'-q, S') + M'(q, S)`,
-comme la requête :math:`q-q'` est toujours affichéz avant la requête 
+comme la requête :math:`q-q'` est toujours affichée avant la requête 
 :math:`q'`, cela voudrait dire qu'on aurait trouvé une façon plus optimale 
 d'écrire la requête :math:`q-q'` avec le système :math:`S` ce qui
 impossible d'après la définition de la métrique :math:`M'`.
@@ -143,21 +143,34 @@ permettre de procéder par sous-ensemble pour trouver l'ordre optimal.
 
 .. mathdef::
     :title: M', ordre et sous-ensemble
-    :tag: Lemme
+    :tag: Théorème
     :lid: lemme-nlp-m-sous-ens-ordre
 
-    On désigne par :math:`S(q)` est le sous-ensemble ordonné de :math:`S` 
-    des complétions qui commencent par :math:`q` et de longueur supérieure 
-    strictement à :math:`q`. On note :math:`S'(q) = \acc{ q'-q | q' \in S(q) }`.
-    Soit :math:`q_1, q_2 \succ q`, alors :
+    Soit :math:`q` une requête de l'ensemble de complétion :math:`S`
+    ordonnées selon :math:`sigma`. 
+    Si cet ordre vérifie :
     
     .. math::
+        :label: best-order-lemme-completion
     
-        M'(q_1, S'(q) ) < M'(q_2, S'(q) ) \Longleftrightarrow M'(q_1, S ) < M'(q_2, S )
+        \forall k, \; \sigma(q[1..k]) \infegal \sigma(q[1..k+1])
+    
+    On note l'ensemble :math:`S'(q[1..k]) = \acc{ q[k+1..len(q)] \in S }` :
+    
+    alors :
+        
+        \forall k, \; M'(q[1..k], S) = M'(q[k+1..l(q)], S'(q[1..k]) + M'(q[1..k], S)
         
 
-On sait déjà que pour une complétion :math:`t`, par construction,
-:math:`M'(t, S) \infegal M'(t, S) + M'(t-q, S'(q'))`.
-
+Ceci découle de l'application du lemme précédent.
+Ce théorème permet presque de déterminer le meilleur ordre `\sigma` parmi ceux qui 
+vérifie la contrainte :eq:`best-order-lemme-completion`, à savoir
+une requête courte est toujours affichée avant celles qui la complète.
+On procède par récurrence, on suppose connu les ordres :math:`\sigma(q)`
+pour l'ensemble des complétions qui commencent par le préfixe :math:`p = q[1..k]`, 
+:math:`S'(q[1..k]) = \acc{ q | q[1..k] = p, q \in S }`. Pour :math:`i =k-1`, 
+le meilleur ordre : :math:`\sigma` revient à fusionner les listes ordonnées 
+obtenues pour chaque préfixe de longueur :math:`k`. 
+Il faut démontrer la possibilité de traiter les complétions par ordre croissant.
 
 

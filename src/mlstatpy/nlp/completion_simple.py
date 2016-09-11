@@ -10,7 +10,7 @@ from .completion import CompletionTrieNode
 
 class CompletionElement(object):
     """
-    Element definition in a completion system,
+    Definition of an element in a completion system,
     it contains the following members:
 
     * *value*: the completion
@@ -36,6 +36,8 @@ class CompletionElement(object):
 
     def __init__(self, value: str, weight: float=1.0, disp=None):
         """
+        constructor
+
         @param      value       value (a character)
         @param      weight      ordering (the lower, the first)
         @param      disp        original string, use this to identify the node
@@ -415,13 +417,15 @@ class CompletionSystem:
     def compute_metrics(self, filter: 'func'=None, delta: float=0.8,
                         details=False, fLOG: 'func'=noLOG) -> int:
         """
-        compute the metric for the completion itself
+        Compute the metric for the completion itself.
 
         @param      filter      filter function
         @param      delta       parameter *delta* in the dynamic modified mks
         @param      details     log more details about displayed completions
         @param      fLOG        logging function
         @return                 number of iterations
+
+        The function ends by sorting the set of completion by alphabetical order.
         """
         self.sort_weight()
         if filter is not None:
@@ -473,4 +477,120 @@ class CompletionSystem:
                 it, updates, t - to))
             it += 1
 
+        self.sort_values()
         return it - 1
+
+    def enumerate_test_metric(self, qset: Iterator[Tuple[str, float]]) -> Iterator[Tuple[CompletionElement, CompletionElement]]:
+        """
+        Evaluate the completion set on a set of queries,
+        the function returns a list of @see cl CompletionElement
+        with the three metrics :math:`M`, :math:`M'`, :math:`M"`
+        for these particular queries
+
+        @param      qset        list of tuple(str, float) = (query, weight)
+        @return                 list of tuple of @see cl CompletionElement,
+                                the first one is the query, the second one is the None or
+                                the matching completion
+
+        The method @see me compute_metric needs to be called first.
+        """
+        qset = sorted(qset)
+        current = 0
+        for query, weight in qset:
+            while current < len(self) and self[current].value <= query:
+                current += 1
+            ind = current - 1
+            el = CompletionElement(query, weight)
+            if ind >= 0:
+                inset = self[ind]
+                l = len(inset.value)
+                if l <= len(query) and inset.value == query[:l]:
+                    if l == len(query):
+                        found = inset
+                        el.mks0 = inset.mks0
+                        el.mks1 = inset.mks1
+                        el.mks2 = inset.mks2
+                        el.mks0_ = len(query)
+                        el.mks1_ = len(query)
+                        el.mks2_ = len(query)
+                    else:
+                        found = None
+                        el.mks0 = 0
+                        el.mks0_ = 0
+                        el.mks1 = inset.mks1 + len(query) - l
+                        el.mks1_ = l
+                        el.mks2 = inset.mks2 + len(query) - l
+                        el.mks2_ = l
+                else:
+                    found = None
+                    el.mks0 = len(query)
+                    el.mks1 = len(query)
+                    el.mks2 = len(query)
+                    el.mks0_ = len(query)
+                    el.mks1_ = len(query)
+                    el.mks2_ = len(query)
+            else:
+                found = None
+                el.mks0 = len(query)
+                el.mks1 = len(query)
+                el.mks2 = len(query)
+                el.mks0_ = len(query)
+                el.mks1_ = len(query)
+                el.mks2_ = len(query)
+
+            yield el, found
+
+    def test_metric(self, qset: Iterator[Tuple[str, float]]) -> Dict[str, float]:
+        """
+        evaluate the completion set on a set of queries,
+        the function returns a dictionary with the aggregated metrics and
+        some statisitcs about them
+
+        @param      qset        list of tuple(str, float) = (query, weight)
+        @return                 list of @see cl CompletionElement
+
+        The method @see me compute_metric needs to be called first.
+        It then calls @see me enumerate_metric.
+        """
+        res = dict(mks0=0.0, mks1=0.0, mks2=0.0,
+                   sum_weights=0.0, sum_wlen=0.0, n=0)
+        hist = {k: {} for k in {"mks0", "mks1", "mks2", "l"}}
+        wei = {k: {} for k in hist}
+        res["hist"] = hist
+        res["histnow"] = wei
+
+        for el, found in self.enumerate_test_metric(qset):
+            l = len(el.value)
+            w = el.weight
+            res["mks0"] += w * el.mks0
+            res["mks1"] += w * el.mks1
+            res["mks2"] += w * el.mks2
+            res["sum_weights"] += w
+            res["sum_wlen"] += w * l
+            res["n"] += 1
+
+            if el.mks0 not in hist["mks0"]:
+                hist["mks0"][el.mks0] = w
+                wei["mks0"][el.mks0] = 1
+            else:
+                hist["mks0"][el.mks0] += w
+                wei["mks0"][el.mks0] += 1
+            if el.mks1 not in hist["mks1"]:
+                hist["mks1"][el.mks1] = w
+                wei["mks1"][el.mks1] = 1
+            else:
+                hist["mks1"][el.mks1] += w
+                wei["mks1"][el.mks1] += 1
+            if el.mks2 not in hist["mks2"]:
+                hist["mks2"][el.mks2] = w
+                wei["mks2"][el.mks2] = 1
+            else:
+                hist["mks2"][el.mks2] += w
+                wei["mks2"][el.mks2] += 1
+            if l not in hist["l"]:
+                hist["l"][l] = w
+                wei["l"][l] = 1
+            else:
+                hist["l"][l] += w
+                wei["l"][l] += 1
+        return res

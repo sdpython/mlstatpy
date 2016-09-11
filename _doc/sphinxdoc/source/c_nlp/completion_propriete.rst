@@ -100,8 +100,9 @@ Cela signifie qu'on a réussi une façon plus efficace d'écrire le préfixe
 est censée être le nombre de caractères minimal pour obtenir :math:`q[[1..k^*]]`.
 Ce n'est donc pas possible.
 Cette propriété est importante puisque pour calculer :math:`M'(q[[1..k^*]], S)`, 
-il suffit de regarder le plus préfixe appartenir à l'ensemble des complétions
-et seulement celui-ci.
+il suffit de regarder le plus long préfixe appartenant à l'ensemble des complétions
+et seulement celui-ci. Cet algorithme et implémenté par la méthode
+:meth:`enumerate_test_metric <mlstatpy.nlp.completion_simple.CompletionSystem.enumerate_test_metric>`.
 En ce qui concerne la métrique :math:`M`, par définition 
 :math:`\forall q \notin S, \; M(q, S) = 0`. La métrique
 :math:`M"` m'évoque la `côte anglaise <https://www.youtube.com/watch?v=YV54e3R-rLg>`_.
