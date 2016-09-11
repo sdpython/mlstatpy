@@ -32,7 +32,8 @@ def download_pageviews(dt, folder=".", unzip=True, timeout=-1, overwrite=False, 
     if overwrite or not os.path.exists(name):
         get_url_content_timeout(url, timeout=timeout,
                                 encoding=None, output=name, chunk=2**20, fLOG=fLOG)
-    if unzip:
+    unzipname = os.path.splitext(name)[0]
+    if unzip and not os.path.exists(unzipname):
         names = ungzip_files(name, unzip=False)
         os.remove(name)
         if isinstance(names, list):
@@ -65,7 +66,8 @@ def download_dump(country, name, folder=".", unzip=True, timeout=-1, overwrite=F
     if overwrite or not os.path.exists(name):
         get_url_content_timeout(url, timeout=timeout,
                                 encoding=None, output=name, chunk=2**20, fLOG=fLOG)
-    if unzip:
+    unzipname = os.path.splitext(name)[0]
+    if unzip and not os.path.exists(unzipname):
         names = ungzip_files(name, unzip=False)
         os.remove(name)
         if isinstance(names, list):
