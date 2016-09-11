@@ -29,10 +29,10 @@ def download_pageviews(dt, folder=".", unzip=True, timeout=-1, overwrite=False, 
     url = dt.strftime(url)
     file = url.split("/")[-1]
     name = os.path.join(folder, file)
-    if overwrite or not os.path.exists(name):
+    unzipname = os.path.splitext(name)[0]
+    if overwrite or (not os.path.exists(name) and not os.path.exists(unzipname)):
         get_url_content_timeout(url, timeout=timeout,
                                 encoding=None, output=name, chunk=2**20, fLOG=fLOG)
-    unzipname = os.path.splitext(name)[0]
     if unzip and not os.path.exists(unzipname):
         names = ungzip_files(name, unzip=False)
         os.remove(name)
@@ -63,10 +63,10 @@ def download_dump(country, name, folder=".", unzip=True, timeout=-1, overwrite=F
         country, name)
     file = url.split("/")[-1]
     name = os.path.join(folder, file)
-    if overwrite or not os.path.exists(name):
+    unzipname = os.path.splitext(name)[0]
+    if overwrite or (not os.path.exists(name) and not os.path.exists(unzipname)):
         get_url_content_timeout(url, timeout=timeout,
                                 encoding=None, output=name, chunk=2**20, fLOG=fLOG)
-    unzipname = os.path.splitext(name)[0]
     if unzip and not os.path.exists(unzipname):
         names = ungzip_files(name, unzip=False)
         os.remove(name)
