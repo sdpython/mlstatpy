@@ -58,7 +58,7 @@ des complétions, :math:`q_1 \preceq q_2 \Longrightarrow M'(q_1, S) \infegal M'(
 Le lemme suivant précise pourquoi
 
 
-.. mathref::
+.. mathdef::
     :title: calcul de :math:`M'(q, S)`
     :tag: Lemme
     :lid: lemme-nlp-long-completion

@@ -99,7 +99,8 @@ tous les préfixes d'une complétion.
     :title: métriques
     :tag: propriété
 
-    \forall q, :math:`M'(q, S) \infegal M(q, S)
+
+    :math:`\forall q, \; M'(q, S) \infegal M(q, S)`
     
 Si :math:`q \notin S`, c'est évident puisque :math:`M'(q, S) \infegal M'(\emptyset, S) + l(q)`.
 Si :math:`q \in S`, cela découle de la constation précédente puisque : 
