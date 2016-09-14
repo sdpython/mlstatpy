@@ -95,7 +95,7 @@ La métrique est donc bien définie.
 Contrairement à la première métrique, le calcul dépend du résultat pour 
 tous les préfixes d'une complétion. 
 
-.. mathref::
+.. mathdef::
     :title: métriques
     :tag: propriété
 
