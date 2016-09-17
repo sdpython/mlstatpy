@@ -78,7 +78,7 @@ def download_dump(country, name, folder=".", unzip=True, timeout=-1, overwrite=F
         else:
             return names
     else:
-        return name
+        return name.replace(".gz", "")
 
 
 def download_titles(country, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG):
