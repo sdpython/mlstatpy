@@ -156,7 +156,7 @@ celle de la variable :math:`Y`. On peut alors définir la probabilité
     \end{eqnarray*}
 	
 On note :math:`F_X` la fonction de répartition de 
-:math:`X`\footnote{`F_X(x) = \int_{-\infty}^x f_X(u)du`}. 
+:math:`X` soit :math:`F_X(x) = \int_{-\infty}^x f_X(u)du`. 
 On pose comme changement de variable : :math:`u = F_X(x)`. 
 On en déduit que :math:`du = f_X(x) dx`. La variable aléatoire :math:`U = F_X(X)` 
 est uniforme et comprise dans :math:`\cro{0,1}`.
@@ -227,7 +227,7 @@ une loi normale lorsque :math:`n` et :math:`m` tendent vers l'infini.
     :tag: Corollair
 
     On note :math:`P_X = \pr{ X < \min\acc{Y_i,Y_j }}` et :math:`P_Y = \pr { \max\acc{X_i,X_j} < Y}`. 
-    `X_i` et :math:`X_j` sont de même loi que :math:`X`, :math:`Y_i`, :math:`Y_j` sont de même loi que :math:`Y`.
+    :math:`X_i` et :math:`X_j` sont de même loi que :math:`X`, :math:`Y_i`, :math:`Y_j` sont de même loi que :math:`Y`.
     La variance de l'estimateur :math:`\hat{A}` définie par :eq:`estimateur_roc` est :
 
     .. math::
@@ -329,7 +329,7 @@ d'après leur définition. La courbe peut être rendue continue par interpolatio
     On cherche un taux de reconnaissance pour un taux d'erreur donné. 
     On dispose pour cela d'une courbe ROC obtenue par 
     l'algorithme de la :ref:`courbe ROC <algo_courb_ROC>` et définie par les points 
-    `R_{OC} = \acc{ \pa{e_j,r_j} | 1 \infegal j \infegal k}`. 
+    :math:`R_{OC} = \acc{ \pa{e_j,r_j} | 1 \infegal j \infegal k}`. 
     On suppose ici que :math:`\pa{e_1,r_1} = \pa{1,1}` et :math:`\pa{e_k,r_k} = \pa{0,}`. 
     Si ce n'est pas le cas, on 
     ajoute ces valeurs à l'ensemble :math:`R_{OC}`.
@@ -401,7 +401,7 @@ Moins il y a de points pour estimer une partie de la courbe,
 plus les courbes sont espacées. Ces courbes ont été construites avec 12000 points. 
 Le taux de lecture pour 1% d'erreur est égal à 68,09%. 
 L'intervalle de confiance à 95% est
-[66,10%, 70,16%] (construit avec 500 courbes). 
+[66,10%; 70,16%] (construit avec 500 courbes). 
 Moyenne (68,25) et médiane (68,12) sont sensiblement égales au taux calculé sur la première courbe
 construite sans tirage aléatoire. L'écart-type est :math:`1,10`, cela donne un intervalle de confiance
 équivalent au précédent si on considère que la moyenne des taux suit asymptotiquement une loi normale.
