@@ -40,12 +40,23 @@ mauvaise (-) soit bonne (+). On peut l'évaluer car pour construire
 un classifier on dispose toujours d'une base contenant les réponses attendues. 
 En fonction du score :math:`x` et d'un seuil :math:`s`, on définit quatre cas :
 
-======================= =========================== =======================
-cas                     réponse prédite est +       réponse prédite est -
-======================= =========================== =======================
-:math:`x \supegal s`    TP: vrai (true) positif     FP: faux positif
-:math:`x < s`           TN: vrai (true) négatif     FN: faux négatif
-======================= =========================== =======================
+======================= =============================== ================================
+cas                     réponse prédite est bonne (+)   réponse prédite est mauvaise (-)
+======================= =============================== ================================
+:math:`x \supegal s`    TP: vrai (true) positif         FP: faux positif
+:math:`x < s`           TN: vrai (true) négatif         FN: faux négatif
+======================= =============================== ================================
+
+Ces résultats sont souvent présentés selon une matrice confusion :
+
+=================== =================== ================
+                    réponse prédite
+réponse attendue    0                   1
+=================== =================== ================
+0                   TN                  FP                  
+1                   FN                  TP
+=================== =================== ================
+    
 
 .. index:: rappel, précision
 
@@ -86,11 +97,11 @@ avec les notations *TP*, *FP*, *FN*, *TN*, cela revient à :
 
     \begin{eqnarray*}
     E(s) &=& 1 - \frac{ TP(s) } { TP(s) + TN(s) } \\
-    R(s) &=& 1 - \frac{ FN(s) } { FN(s) + FN(s) } 
+    R(s) &=& 1 - \frac{ FN(s) } { FP(s) + FN(s) } 
     \end{eqnarray*}
 
 On remarque que :math:`\forall s, \; TP(s) + TN(s)` est constant. 
-De même pour :math:`FN(s) + FN(s)`.
+De même pour :math:`FP(s) + FN(s)`.
 
 On remarque que les fonctions :math:`s \longrightarrow E(s)` et :math:`s \longrightarrow R(s)` 
 sont décroissantes toutes deux. Elles sont donc inversibles.
