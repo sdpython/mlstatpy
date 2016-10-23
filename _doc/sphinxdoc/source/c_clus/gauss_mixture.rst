@@ -114,7 +114,7 @@ Celles ci sont définies comme suit :
 
 .. math::
 
-    J\pa{m,\theta} = \inte f_m\pa{x,\theta} \; \log \frac{f_m\pa{x,\theta}}{p_m\pa{x,\theta_m}} \, dx 
+    J\pa{m,\theta} = \int f_m\pa{x,\theta} \; \log \frac{f_m\pa{x,\theta}}{p_m\pa{x,\theta_m}} \, dx 
     
 Où : :math:`f_m\pa{x,\theta} = \frac{ \sum_{i=1}^{n} \, \indicatrice{x = x_i} \, \pr{ m \sac x_i,\theta} }
 { \sum_{i=1}^{n} \, \pr{ m \sac x_i,\theta}}`.
