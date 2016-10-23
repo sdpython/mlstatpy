@@ -62,6 +62,7 @@ custom_preamble = """\n
 \\newcommand{\\partialdfrac}[2]{\\dfrac{\\partial #1}{\\partial #2}}
 \\newcommand{\\loimultinomiale}[1]{{\\cal M}\\pa{#1}}
 \\newcommand{\\trace}[1]{tr\\pa{#1}}
+\\newcommand{\\sac}[0]{|}
 \\newcommand{\\abs}[1]{\\left|#1\\right|}
 """
 #\\usepackage{eepic}
