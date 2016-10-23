@@ -70,7 +70,7 @@ Enoncé 2
 
 .. mathdef::
     :title: Optimiser un système de complétion filtré
-    :lid: optim-nlp-comp
+    :lid: optim-nlp-comp2
     :tag: Problème
 
     On suppose que l'ensemble des complétions :math:`C=\acc{c_j}` est connu. 

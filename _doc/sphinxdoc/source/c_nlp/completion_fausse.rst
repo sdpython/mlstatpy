@@ -4,7 +4,7 @@ Fausses idées reçues
 ====================
 
 Il faut trier les complétions par fréquence décroissante
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 En pratique, cela marche plutôt bien. En théorie, cette assertion est fausse.
 Prenons les quatre complétions suivantes :

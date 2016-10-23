@@ -32,7 +32,7 @@ critère appelé *inertie* ou variance *intra-classe*.
     A chaque point est associée une classe : 
     :math:`\left(c_i\right)_{1\leqslant i\leqslant P}\in\left\{1,...,C\right\}^P`.
     On définit les barycentres des classes :
-    :math:`\left( G_i\right)_{1\leqslant i\leqslant C}\in\left(\R^N\right)^C.
+    :math:`\left( G_i\right)_{1\leqslant i\leqslant C}\in\left(\R^N\right)^C`.
     
     *Initialisation*
     
@@ -44,7 +44,7 @@ critère appelé *inertie* ou variance *intra-classe*.
     *Calcul des barycentres*
     
     | for k in :math:`1..C`
-    |   :math:`G_k^t \longleftarrow \sum_{i=1}^P X_i \, \mathbf{1}_{\left\{c_i^t=k\right\}} \sum_{i=1}^P \mathbf{1}_{\left\{c_i^t=k\right\}}
+    |   :math:`G_k^t \longleftarrow \sum_{i=1}^P X_i \, \mathbf{1}_{\left\{c_i^t=k\right\}} \sum_{i=1}^P \mathbf{1}_{\left\{c_i^t=k\right\}}`
     
     *Calcul de l'inertie*
     
@@ -160,7 +160,7 @@ des centres mobiles. Des points sont générés aléatoirement
 dans le plan et répartis en quatre groupes.
 
 
-.. images:: images/cm.png
+.. image:: images/cm.png
 
 C'est une application des centres mobiles avec une classification en quatre classes 
 d'un ensemble aléatoire de points plus dense sur la partie droite du graphe. Les quatre classes
@@ -464,7 +464,7 @@ minimisation de :math:`J\pa{\alpha}` est résolu par l'algorithme qui suit.
 Il s'appuie sur la méthode des multiplicateurs de Lagrange.
 
 .. mathdef::
-    :title: sélection du nombre de classes (Kothari1999)
+    :title: sélection du nombre de classes ([Kothari1999]_)
     :tag: Algorithme
     :lid: classification_kothari_1999
 
@@ -504,35 +504,20 @@ Il s'appuie sur la méthode des multiplicateurs de Lagrange.
     
     | for i in :math:`1..N`
     |   Mise à jour d'après le premier terme de la fonction de coût :math:`J\pa{\alpha}`.
-    |
-    |   .. math::
-    |
-    |       \begin{array}{lll}
-    |       w             &\longleftarrow&         \underset{1 \infegal l \infegal K}{\arg \min} \; \norme{x_i - y_l}^2 \\
-    |       z^1_w     &\longleftarrow&         z^1_w + \eta \pa{ x_i - y_w} \\
-    |       c^1_w     &\longleftarrow&         c^1_w + 1 
-    |       \end{array}
+    |   :math:`w \longleftarrow \underset{1 \infegal l \infegal K}{\arg \min} \; \norme{x_i - y_l}^2`
+    |   :math:`z^1_w \longleftarrow z^1_w + \eta \pa{ x_i - y_w}`
+    |   :math:`c^1_w \longleftarrow c^1_w + 1`
     | 
     |   Mise à jour d'après le second terme de la fonction de coût :math:`J\pa{\alpha}`
     |
     |   for v in :math:`1..k`
     |       if :math:`\norme{y_v - y_w} < \alpha`
-    |
-    |           .. math::
-    |
-    |               \begin{array}{lll}
-    |               z^2_v     &\longleftarrow&         z^2_v - \pa{ y_v - y_w} \\
-    |               c^2_v     &\longleftarrow&         c^2_v + 1 
-    |               \end{array}
+    |           :math:`z^2_v \longleftarrow z^2_v - \pa{ y_v - y_w}`
+    |           :math:`c^2_v \longleftarrow c^2_v + 1` 
     |
     |   for v in :math:`1..k`
-    |
-    |       .. math::
-    |
-    |           \begin{array}{lll}
-    |           \lambda_v &\longleftarrow& \frac{ c^2_v \norme{z^1_v} } { c^1_v \norme{z^2_v} } \\
-    |           y_v                &\longleftarrow& y_v + z^1_v + \lambda_v z^2_v
-    |           \end{array}
+    |       :math:`\lambda_v \longleftarrow \frac{ c^2_v \norme{z^1_v} } { c^1_v \norme{z^2_v} }`
+    |       :math:`y_v \longleftarrow y_v + z^1_v + \lambda_v z^2_v`
 
     *convergence*
     
@@ -606,14 +591,9 @@ L'algorithme qui suit a pour objectif de minimiser la quantité pour un échanti
         i = \underset{1 \infegal i \infegal N}{\arg \min} \; G\pa{X_k, \mu_i^t, \Sigma_i^t}
         
     | for i in :math:`1..N`
-    |
-    |   .. math::
-    |
-    |       \begin{array}{lll}
-    |       \mu_i^{t+1}         &=& \mu_i^t + \eta \, \pa{\Sigma_i^t}^{-1} \, \pa{ X_k - \mu_i^t} \\
-    |       \beta_i^{t+1}     &=& \beta_i^t + \eta \, \pa{1 - \alpha_i^t} \\
-    |       \Sigma^{t+1}_i     &=& \pa{1 - \eta_s} \, \Sigma_i^t + \eta_s \, \pa{ X_k - \mu_i^t} \pa{ X_k - \mu_i^t}'
-    |       \end{array}
+    |   :math:`\mu_i^{t+1} = \mu_i^t + \eta \, \pa{\Sigma_i^t}^{-1} \, \pa{ X_k - \mu_i^t}`
+    |   :math:`\beta_i^{t+1} = \beta_i^t + \eta \, \pa{1 - \alpha_i^t}`
+    |   :math:`\Sigma^{t+1}_i = \pa{1 - \eta_s} \, \Sigma_i^t + \eta_s \, \pa{ X_k - \mu_i^t} \pa{ X_k - \mu_i^t}'`
     |
     | for i in :math:`1..N`
     |   :math:`p^{t+1}_i = \frac{ e^{ \beta_i^{t+1} } } { \sum_{j=1}^{N} e^{ \beta_j^{t+1} } }`
@@ -678,25 +658,17 @@ de sorte qu'aucun point ne leur sera affecté.
     |   :math:`\gamma_j = \dfrac{n_j}{ \sum_{k=1}^{C} n_k}`
     |
     | for j in :math:`1..C`
-    |
-    |   .. math::
-    |
-    |       u_j = \left \{ \begin{array}{ll} 1   & \text{si} j \in \underset{k}{\arg \min} \; \cro {\gamma_k \; d\pa{X_i,C_k} } \\
-    |       -1  & \text{si} j \in \underset{j \neq k}{\arg \min} \; \cro {\gamma_k \; d\pa{X_i,C_k} } \\
-    |       0   & \text{sinon}
-    |       \end{array} \right.
+    |   :math:`u_j = \left \{ \begin{array}{ll} 1   & \text{si} j \in \underset{k}{\arg \min} \; \cro {\gamma_k \; d\pa{X_i,C_k} }`
+    |   -1 si :math:`j \in \underset{j \neq k}{\arg \min} \; \cro {\gamma_k \; d\pa{X_i,C_k} }`
+    |   0 sinon
             
     *mise à jour*
     
     | for j in :math:`1..C`
-    | 
-    |   .. math::
-    |
-    |       \begin{array}{lcl}
-    |       C_j^{t+1} &\longleftarrow&  C_j^t +  \left \{ \begin{array}{ll} \alpha_c \pa{X_i - C_j} & \text{si } u_j = 1 \\
-    |       - \alpha_r \pa{X_i - C_j} & \text{si } u_j = -1 \\ 0 & \text{sinon} \end{array} \right. \\
-    |       n_j^{t+1} &\longleftarrow&  n_j^t +  \left \{ \begin{array}{ll} 1 & \text{si } u_j = 1 \\
-    |       0 & \text{sinon} \end{array} \right. 
+    |   :math:`C_j^{t+1} \longleftarrow  C_j^t +  \left \{ \begin{array}{ll} \alpha_c \pa{X_i - C_j} & \text{si } u_j = 1`
+    |   :math:`- \alpha_r \pa{X_i - C_j} & \text{si } u_j = -1 \\ 0 & \text{sinon} \end{array} \right.`
+    |   :math:`n_j^{t+1} &\longleftarrow&  n_j^t +  \left \{ \begin{array}{ll} 1 & \text{si } u_j = 1`
+    |   0 sinon
     |
     | :math:`t \longleftarrow t+1`
     
@@ -718,7 +690,7 @@ sur un résultat comme celui de la figure suivante où un centre reste coincé
 entre plusieurs autres. Ce problème est moins important 
 lorsque la dimension de l'espace est plus grande.
 
-.. image:: images/class6.ong
+.. image:: images/class6.png
 
 Application de l'algorithme :ref:`RPCL <classif_algo_rpcl>` : la classe 0 est incrusté entre les quatre autres 
 et son centre ne peut se "faufiler" vers l'infini.
@@ -876,7 +848,7 @@ Bibliographie
    P. V. Sundar Balakrishnan, Martha Cooper, Varghese S. Jacob, Phillip A. Lewis,
    *European Journal of Operation Research*, volume 93, pages 346-357
 
-.. [Cheung2003] :math:`k^*`-Means: A new generalized :math:`kè -means clustering algorithm (2003),
+.. [Cheung2003] :math:`k^*`-Means: A new generalized k-means clustering algorithm (2003),
    Yiu-Ming Cheung, 
    *Pattern Recognition Letters*, volume 24, 2883-2893
 

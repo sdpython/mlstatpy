@@ -14,12 +14,12 @@ def tabule_queue_binom(n, p):
 
     Pour aller plus vite, ces probabilités sont estimées par récurrence :
 
-    * :math:`\forall m, \; t [(m,0)] = 1.0`
-    * :math:`\forall m, \; t [(m,m+1)] = 0.0`
+    * :math:`\\forall m, \\; t [(m,0)] = 1.0`
+    * :math:`\\forall m, \\; t [(m,m+1)] = 0.0`
       et :math:`t[(m,k)] = p * t [ (m-1, k-1)] + (1-p) * t [ (m-1,k) ]`
 
     Cette fonction calcule tous les coefficients :math:`t [ (a,b) ]` pour une
-    probabilité :math:`p` donnée et :math:`b \infegal a \infegal n`.
+    probabilité :math:`p` donnée et :math:`b \\infegal a \\infegal n`.
 
     Ces probabilités sont stockées dans un dictionnaire car s'ils étaient
     stockées dans une matrice, celle-ci serait triangulaire inférieure.

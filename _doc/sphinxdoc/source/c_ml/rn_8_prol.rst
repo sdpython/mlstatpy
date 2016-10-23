@@ -476,7 +476,7 @@ régression grâce à l'algorithme suivant.
     dans l'étape d'initilisation. Le modèle sélectionné est noté :math:`g`.
 
 	*Validation*
-    
+
 	Si :math:`\norm{f-g} \approx 0`,
     l'algorithme de :ref:`sélection <rn_algorithme_selection_connexion_1>` est validé.
 

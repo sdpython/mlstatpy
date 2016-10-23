@@ -3,10 +3,10 @@
 Implémentation
 ==============
 
-.. |trie| `trie <https://fr.wikipedia.org/wiki/Trie_(informatique)>`_
+.. _trie: https://fr.wikipedia.org/wiki/Trie_(informatique)
 
-J'allais vous raconter en détail ce qu'est un |trie| et le paragraphe suivant 
-vous en dira sans doute un peu plus à ce sujet. Le |trie| est le moyen
+J'allais vous raconter en détail ce qu'est un trie_ et le paragraphe suivant 
+vous en dira sans doute un peu plus à ce sujet. Le trie_ est le moyen
 le plus efficace de trouver un mot aléatoire ou un préfixe aléatoire dans une liste.
 Mais il y a mieux et plus simple dans notre cas où il faut trouver
 une longue liste de mots connue à l'avance - donc pas aléatoire -.
