@@ -99,8 +99,8 @@ La démonstration du théorème nécessite le lemme suivant.
         Q\pa{Y} &=& \sum_{i=1}^P \; d^2\pa{X_i,Y}
         \end{eqnarray}
         
-        est atteint pour :math:`Y=G=\dfrac{1}{P} \sum_{i=1}^{P} X_i` 
-        le barycentre des points :math:`\vecteur{X_1}{X_P}`.
+    est atteint pour :math:`Y=G=\dfrac{1}{P} \sum_{i=1}^{P} X_i` 
+    le barycentre des points :math:`\vecteur{X_1}{X_P}`.
 
 
 Soit :math:`\vecteur{X_1}{X_P} \in \pa{\R^N}^P`, 
