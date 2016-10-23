@@ -675,7 +675,7 @@ de sorte qu'aucun point ne leur sera affecté.
     Choisir aléatoirement un point :math:`X_i`.
     
     | for j in :math:`1..C`
-    |   :math:`\gamma_j = \dfrac{n_j}{ \sum_{k=1}^{C} n_k`
+    |   :math:`\gamma_j = \dfrac{n_j}{ \sum_{k=1}^{C} n_k}`
     |
     | for j in :math:`1..C`
     |

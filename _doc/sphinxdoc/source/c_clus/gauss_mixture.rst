@@ -71,7 +71,7 @@ il détermine le nombre de classes optimal en supprimant ou en ajoutant des clas
 
 .. list-table::
     :widths: 6 6 6
-    :header-rows: 1
+    :header-rows: 0
     
     * - .. image:: images/zhangc1.png
       - .. image:: images/zhangc2.png
