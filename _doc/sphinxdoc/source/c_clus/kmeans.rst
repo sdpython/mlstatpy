@@ -308,8 +308,8 @@ Avec :
     :nowrap:
     
     \begin{eqnarray*}
-    S^+ &=& \acc{ \pa{q,r,s,t} \sac d\pa{q,r} < d\pa{s,t}  \\
-    S^- &=& \acc{ \pa{q,r,s,t} \sac d\pa{q,r} < d\pa{s,t} 
+    S^+ &=& \acc{ \pa{q,r,s,t} \sac d\pa{q,r} < d\pa{s,t} } \\
+    S^- &=& \acc{ \pa{q,r,s,t} \sac d\pa{q,r} < d\pa{s,t} }
     \end{eqnarray}
     
 Où :math:`\pa{q,r}` sont dans la même classe et :math:`\pa{s,t}` sont dans des classes différentes.

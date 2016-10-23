@@ -70,7 +70,7 @@ un mélange de lois - normales en particulier -,
 il détermine le nombre de classes optimal en supprimant ou en ajoutant des classes.
 
 .. list-table::
-    :widths: 5 10
+    :widths: 6 6 6
     :header-rows: 1
     
     * - .. image:: images/zhangc1.png
