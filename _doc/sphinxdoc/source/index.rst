@@ -19,6 +19,7 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
         :maxdepth: 2
         
         introduction
+        c_clus/index
         c_ml/index
         c_nlp/index
         c_metric/index
@@ -29,6 +30,7 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
         :maxdepth: 3
         
         introduction
+        c_clus/index
         c_ml/index
         c_nlp/index
         c_metric/index
