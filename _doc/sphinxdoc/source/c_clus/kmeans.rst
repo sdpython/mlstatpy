@@ -124,7 +124,7 @@ point le barycentre le plus proche. On définit :math:`J_t` par :
     :nowrap:
 
     \begin{eqnarray}
-    J^{t+1} &=&    \sum_{i=1}^{P} \; d^2\pa{ X_i, G_{c_i^{t+1}}^t} 
+    J^{t+1} &=& \sum_{i=1}^{P} \; d^2\pa{ X_i, G_{c_i^{t+1}}^t} 
     \end{eqnarray}
             
 On en déduit que :        
@@ -310,7 +310,7 @@ Avec :
     \begin{eqnarray*}
     S^+ &=& \acc{ \pa{q,r,s,t} \sac d\pa{q,r} < d\pa{s,t} } \\
     S^- &=& \acc{ \pa{q,r,s,t} \sac d\pa{q,r} < d\pa{s,t} }
-    \end{eqnarray}
+    \end{eqnarray*}
     
 Où :math:`\pa{q,r}` sont dans la même classe et :math:`\pa{s,t}` sont dans des classes différentes.
 
@@ -567,7 +567,6 @@ constituant le nuage de points est de la forme :
 .. math::
 
     f\pa{x} =  \sum_{i=1}^{N} \; p_i \; \dfrac{1}{\pa{2 \pi}^{\frac{d}{2}}\sqrt{\det \Sigma_i}} \; exp \pa{-\frac{1}{2}  \pa{x-\mu_i}' \Sigma_i^{-1} \pa{x-\mu_i} } 
-    \end{eqnarray}
 
 Avec :math:`sum_{i=1}^{N} \; p_i = 1`. On définit :
 
@@ -578,12 +577,9 @@ Avec :math:`sum_{i=1}^{N} \; p_i = 1`. On définit :
 L'algorithme qui suit a pour objectif de minimiser la quantité pour un échantillon :math:`\vecteur{X_1}{X_K}` :
 
 .. math::
-    :nowrap:
     
-    \begin{eqnarray}
     I = \sum_{i=1}^{N}\sum_{k=1}^{K} \indicatrice{ i = \underset{1 \infegal j \infegal N}{\arg \max} 
     G\pa{X_k, \mu_j,\Sigma_j} } \; \ln \cro{ p_i G\pa{ X_k, \mu_i, \Sigma_i } }
-    \end{eqnarray}
 
 
 .. mathdef::
@@ -860,7 +856,7 @@ Exemple de fonctions pour :math:`F`, :math:`\epsilon` (voir [Balakrishnan1996]_)
     :nowrap:
     
     \begin{eqnarray*}
-    F\pa{u,t} &=& u \, \beta e^{-t/T}                 \text{ avec } \beta = 0,06 \text{ et } 1/T = 0,00005 \\
+    F\pa{u,t} &=& u \, \beta e^{-t/T} \text{ avec } \beta = 0,06 \text{ et } 1/T = 0,00005 \\
     \epsilon\pa{t} &=& \beta \, e^{ - \gamma t } \text{ avec } \gamma = 0,05
     \end{eqnarray*}
 
