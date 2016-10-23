@@ -198,7 +198,7 @@ L'algorithme des centres mobiles est appliqué sur l'ensemble
 :math:`\left( X_{i}^{\prime}\right)_{1\leqslant i\leqslant P}`. 
 Il est possible ensuite de décorréler les variables ou d'utiliser 
 une distance dite de `Malahanobis <https://fr.wikipedia.org/wiki/Distance_de_Mahalanobis>`_ définie par 
-:math:`d_M\pa{X, Y} &=& X \, M \, Y'` où :math:`Y'` 
+:math:`d_M\pa{X, Y} = X \, M \, Y'` où :math:`Y'` 
 désigne la transposée de :math:`Y` et :math:`M` 
 est une matrice symétrique définie positive.
 Dans le cas de variables corrélées, la matrice 
@@ -233,7 +233,6 @@ notée :math:`c_i`. On peut alors écrire :
 On en déduit que :
 
 .. math::
-    :nowrap:
 
     \pr{c_X = i |X } = \dfrac{f\pa{X | c_X = i}\pr{c_X = i}} {f\pa{X} }
 
