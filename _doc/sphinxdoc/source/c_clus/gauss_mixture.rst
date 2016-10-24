@@ -150,7 +150,7 @@ est dérivé de l'algorithme EM :
     
     .. math::
     
-        Q\pa{\theta,\hat{\theta}_t } = \esp{ \log \cro{ f\pa{ X,Y \sac \theta }} \sac X, \hat{\theta}_t } 
+        Q\pa{\theta,\hat{\theta}_t } = \esp{ \pa{\log \cro{ f\pa{ X,Y \sac \theta }} \sac X, \hat{\theta}_t }} 
     
     *Maximization*
     
