@@ -658,17 +658,16 @@ de sorte qu'aucun point ne leur sera affecté.
     |   :math:`\gamma_j = \dfrac{n_j}{ \sum_{k=1}^{C} n_k}`
     |
     | for j in :math:`1..C`
-    |   :math:`u_j = \left \{ \begin{array}{ll} 1   & \text{si} j \in \underset{k}{\arg \min} \; \cro {\gamma_k \; d\pa{X_i,C_k} }`
-    |   -1 si :math:`j \in \underset{j \neq k}{\arg \min} \; \cro {\gamma_k \; d\pa{X_i,C_k} }`
-    |   0 sinon
+    |   :math:`u_j = `
+    |       1 si :math:`j \in \underset{k}{\arg \min} \; \cro {\gamma_k \; d\pa{X_i,C_k} }`
+    |       -1 si :math:`j \in \underset{j \neq k}{\arg \min} \; \cro {\gamma_k \; d\pa{X_i,C_k} }`
+    |       0 sinon
             
     *mise à jour*
     
     | for j in :math:`1..C`
-    |   :math:`C_j^{t+1} \longleftarrow  C_j^t +  \left \{ \begin{array}{ll} \alpha_c \pa{X_i - C_j} & \text{si } u_j = 1`
-    |   :math:`- \alpha_r \pa{X_i - C_j} & \text{si } u_j = -1 \\ 0 & \text{sinon} \end{array} \right.`
-    |   :math:`n_j^{t+1} &\longleftarrow&  n_j^t +  \left \{ \begin{array}{ll} 1 & \text{si } u_j = 1`
-    |   0 sinon
+    |   :math:`C_j^{t+1} \longleftarrow  C_j^t +  \left \{ \begin{array}{ll} \alpha_c \pa{X_i - C_j} & \text{si } u_j = 1 \\ - \alpha_r \pa{X_i - C_j} & \text{si } u_j = -1 \\ 0 & \text{sinon} \end{array} \right.`
+    |   :math:`n_j^t +  \left \{ \begin{array}{ll} 1 & \text{si } u_j = 1 \\ 0 & \text{sinon} \end{array} \right.`
     |
     | :math:`t \longleftarrow t+1`
     
