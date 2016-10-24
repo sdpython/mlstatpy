@@ -196,6 +196,15 @@ Outre les résultats de l'article [Wu2004]_ sommairement résumés ici,
 ce dernier revient sur l'histoire des cartes de Kohonen, 
 depuis leur création [Kohonen1982]_ jusqu'aux derniers développements récents.
 
+Autres utilisation des cartes de Kohenen
+========================================
+
+On peut les utiliser pour déterminer le plus court 
+chemin passant par tous les noeuds d'un graphe,
+c'est à dire appliquer 
+`Kohonen au problème du voyageur de commerce <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/specials/tsp_kohonen.html>`_.
+
+
 
 Bibliographie
 =============
