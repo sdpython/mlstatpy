@@ -92,5 +92,6 @@ class TestROC(unittest.TestCase):
                          'interval', 'max', 'mean', 'mediane', 'min', 'var', 'y'])
         assert values["min"] <= values["y"] <= values["max"]
 
+
 if __name__ == "__main__":
     unittest.main()

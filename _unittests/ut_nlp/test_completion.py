@@ -328,8 +328,8 @@ class TestCompletion(unittest.TestCase):
             trie = CompletionTrieNode.build(
                 [(None, remove_diacritics(w).lower(), w) for w in titles])
             fLOG(trie)
-            l = list(trie)
-            assert len(l) == 6
+            le = list(trie)
+            assert len(le) == 6
             assert trie is not None
         except ValueError as e:
             fLOG(e)

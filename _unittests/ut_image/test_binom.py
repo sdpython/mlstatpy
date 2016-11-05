@@ -54,5 +54,6 @@ class TestQueueBinom(unittest.TestCase):
         self.assertEqual(b, {(0, 1): 0.0, (1, 2): 0.0, (0, 0): 1.0, (2, 3): 0.0,
                              (2, 0): 1.0, (1, 0): 1.0, (2, 2): 4.0, (1, 1): 2.0, (2, 1): 0.0})
 
+
 if __name__ == "__main__":
     unittest.main()

@@ -57,5 +57,6 @@ class TestLONGWikipediaPageViews(unittest.TestCase):
             datetime(2016, 5, 6, 10), folder=temp, fLOG=fLOG)
         assert name is not None
 
+
 if __name__ == "__main__":
     unittest.main()

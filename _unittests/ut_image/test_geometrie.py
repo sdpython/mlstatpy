@@ -81,5 +81,6 @@ class TestGeometrie(unittest.TestCase):
         s = d.scalaire(n)
         assert abs(s) < 1e-8
 
+
 if __name__ == "__main__":
     unittest.main()

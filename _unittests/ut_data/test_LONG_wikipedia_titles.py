@@ -55,5 +55,6 @@ class TestLONGWikipediaPageCount(unittest.TestCase):
         name = download_titles("fr", folder=temp, fLOG=fLOG)
         assert name is not None
 
+
 if __name__ == "__main__":
     unittest.main()

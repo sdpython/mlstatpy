@@ -273,5 +273,6 @@ class TestCompletionSimple(unittest.TestCase):
         m = ens.find("portes blanche")
         self.assertEqual(m.mks2, 7.8)
 
+
 if __name__ == "__main__":
     unittest.main()

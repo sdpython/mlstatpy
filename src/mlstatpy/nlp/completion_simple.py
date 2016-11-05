@@ -503,9 +503,9 @@ class CompletionSystem:
             el = CompletionElement(query, weight)
             if ind >= 0:
                 inset = self[ind]
-                l = len(inset.value)
-                if l <= len(query) and inset.value == query[:l]:
-                    if l == len(query):
+                le = len(inset.value)
+                if le <= len(query) and inset.value == query[:le]:
+                    if le == len(query):
                         found = inset
                         el.mks0 = inset.mks0
                         el.mks1 = inset.mks1
@@ -517,10 +517,10 @@ class CompletionSystem:
                         found = None
                         el.mks0 = 0
                         el.mks0_ = 0
-                        el.mks1 = inset.mks1 + len(query) - l
-                        el.mks1_ = l
-                        el.mks2 = inset.mks2 + len(query) - l
-                        el.mks2_ = l
+                        el.mks1 = inset.mks1 + len(query) - le
+                        el.mks1_ = le
+                        el.mks2 = inset.mks2 + len(query) - le
+                        el.mks2_ = le
                 else:
                     found = None
                     el.mks0 = len(query)
@@ -560,13 +560,13 @@ class CompletionSystem:
         res["histnow"] = wei
 
         for el, found in self.enumerate_test_metric(qset):
-            l = len(el.value)
+            le = len(el.value)
             w = el.weight
             res["mks0"] += w * el.mks0
             res["mks1"] += w * el.mks1
             res["mks2"] += w * el.mks2
             res["sum_weights"] += w
-            res["sum_wlen"] += w * l
+            res["sum_wlen"] += w * le
             res["n"] += 1
 
             if el.mks0 not in hist["mks0"]:
@@ -587,10 +587,10 @@ class CompletionSystem:
             else:
                 hist["mks2"][el.mks2] += w
                 wei["mks2"][el.mks2] += 1
-            if l not in hist["l"]:
-                hist["l"][l] = w
-                wei["l"][l] = 1
+            if le not in hist["l"]:
+                hist["l"][le] = w
+                wei["l"][le] = 1
             else:
-                hist["l"][l] += w
-                wei["l"][l] += 1
+                hist["l"][le] += w
+                wei["l"][le] += 1
         return res
