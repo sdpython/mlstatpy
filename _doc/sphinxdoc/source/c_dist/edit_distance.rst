@@ -106,7 +106,7 @@ Tout d'abord, il faut définir ce qu'est un mot ou une séquence :
 
     On note :math:`\mathcal{C}` l'espace des caractères ou des symboles. Un mot ou une séquence est 
     une suite finie de :math:`\mathcal{C}`. On note
-    :math:`\mathcal{S}_\mathcal{C} = \union{k=1}{\infty} C^k` l'espace des mots formés 
+    :math:`\mathcal{S}_\mathcal{C} = \cup_{k=1}^{\infty} C^k` l'espace des mots formés 
     de caractères appartenant à :math:`\mathcal{C}`.
 
 On peut définir la distance d'édition :
@@ -144,7 +144,7 @@ Ce paragraphe a pour objectif de démontrer que la
     :title: distance entre caractères
     :lid: edition_distance_definition_1
     
-    Soit :math:`\mathcal{C}' = \mathcal{C} \bigcup \accolade{.}` 
+    Soit :math:`\mathcal{C}' = \mathcal{C} \bigcup \acc{.}` 
     l'ensemble des caractères ajouté au caractère vide ``.``.
     On note :math:`c : \pa{\mathcal{C}'}^2 \longrightarrow \R^+` 
     la fonction coût définie comme suit :
@@ -157,14 +157,14 @@ Ce paragraphe a pour objectif de démontrer que la
         \forall \pa{x,y} \in \pa{\mathcal{C}'}^2, \; c\pa{x,y} \text{ est le coût } \left\{
         \begin{array}{ll}
         \text { d'une comparaison}  & \text{si } \pa{x,y} \in \pa{\mathcal{C}}^2\\
-        \text { d'une insertion}		& \text{si } \pa{x,y} \in \pa{\mathcal{C}} \times \accolade{.}\\
-        \text { d'une suppression} 	& \text{si } \pa{x,y} \in \accolade {.} \times \pa{\mathcal{C}} \\
+        \text { d'une insertion}		& \text{si } \pa{x,y} \in \pa{\mathcal{C}} \times \acc{.}\\
+        \text { d'une suppression} 	& \text{si } \pa{x,y} \in \acc {.} \times \pa{\mathcal{C}} \\
         0 													& \text{si } \pa{x,y} = \pa{\acc{.},\acc{.}}
         \end{array}
         \right.
         \end{eqnarray}
         
-    On note :math:`\mathcal{S}_\mathcal{C'}^2 = \union{n=1}{\infty} \pa{\mathcal{C'}^2}^n` 
+    On note :math:`\mathcal{S}_\mathcal{C'}^2 = \cup_{n=1}^{\infty} \pa{\mathcal{C'}^2}^n` 
     l'ensemble des suites finies de :math:`\mathcal{C'}`.
 
 
@@ -266,7 +266,7 @@ tels que :math:`d\pa{m_1,m_2} = d\pa{N_2,N_1}` alors :
 
     \begin{eqnarray*}
     d\pa{m_1,m_2} = 0   & \Longrightarrow &     d\pa{N_1,N_2} = 0 \\
-                        & \Longrightarrow &     \summy{i=1}{+\infty} c\pa{N_1^i, N_2^i} = 0 \\
+                        & \Longrightarrow &     \sum_{i=1}^{+\infty} c\pa{N_1^i, N_2^i} = 0 \\
                         & \Longrightarrow &     \forall i \supegal 1, \; N_1^i = N_2^i \\
                         & \Longrightarrow &     N_1 = N_2 \\
     d\pa{m_1,m_2} = 0   & \Longrightarrow &     m_1 = m_2 
@@ -416,7 +416,7 @@ Cette suite tronquée permet d'obtenir le résultat de la propriété suivante :
     :title: calcul rapide de la distance d'édition
     :label: edition_distance_propriete_001
     
-    La suite définie en~\ref{definition_edit_dist_tronc} vérifie
+    La suite définie par :ref:`3 <definition_edit_dist_tronc>` vérifie
     :math:`d\left(  m_{1},m_{2}\right)  =d_{n_{1},n_{2}}`
     où :math:`d` est la distance d'édition définie en :ref:`1 <defition_distance_edition_1>`_
     ou :ref:`2 <defition_distance_edition_2>`.
@@ -589,7 +589,7 @@ Apprentissage d'une distance d'édition
 
 L'article [Waard1995]_ suggère l'apprentissage des coûts des opérations 
 élémentaires associées à une distance d'édition (comparaison, insertion, 
-suppression, permutation,~...). On note l'ensemble de ces coûts ou 
+suppression, permutation, ...). On note l'ensemble de ces coûts ou 
 paramètres :math:`\Theta = \vecteur{\theta_1}{\theta_n}`. 
 On considère deux mots :math:`X` et :math:`Y`, la distance d'édition :math:`d\pa{X,Y}` 
 est une fonction linéaire des coûts. Soit :math:`D = \vecteur{\pa{X_1,Y_1}}{\pa{X_N,Y_N}}` 
