@@ -153,7 +153,7 @@ Ce paragraphe a pour objectif de démontrer que la
         :nowrap:
         :eq: equation_edit_car
         
-        \begin{eqnarray}
+        \begin{eqnarray*}
         \forall \pa{x,y} \in \pa{\mathcal{C}'}^2, \; c\pa{x,y} \text{ est le coût } \left\{
         \begin{array}{ll}
         \text { d'une comparaison}  & \text{si } \pa{x,y} \in \pa{\mathcal{C}}^2\\
@@ -162,7 +162,7 @@ Ce paragraphe a pour objectif de démontrer que la
         0 													& \text{si } \pa{x,y} = \pa{\acc{.},\acc{.}}
         \end{array}
         \right.
-        \end{eqnarray}
+        \end{eqnarray*}
         
     On note :math:`\mathcal{S}_\mathcal{C'}^2 = \cup_{n=1}^{\infty} \pa{\mathcal{C'}^2}^n` 
     l'ensemble des suites finies de :math:`\mathcal{C'}`.
@@ -400,9 +400,6 @@ d'exprimer cette distance d'une autre manière afin de résoudre ce problème
         d_{i-1,j-1}	&	+	& \text{comparaison}	\left(  m_1^i,m_2^j\right), \\
         d_{i,j-1}		&	+	& \text{insertion}		\left(  m_2^j\right), \\
         d_{i-1,j}		&	+	& \text{suppression}	\left(  m_1^i\right)
-        \indexfr{comparaison}
-        \indexfr{insertion}
-        \indexfr{suppression}
         \end{array}
         \right\}%
         \end{array}
@@ -460,35 +457,27 @@ de passer du premier mot au second.
 
     .. math::
     
-        \frame{$%
         \begin{array}{c}
             \begin{array}[c]{ccc}%
-                \frame{$%
                 \begin{array}[c]{cc}%
                     \searrow & \\
                     \text{dans ce sens,} \\
                     \text{c'est une } \\
                     \text{comparaison}%
                 \end{array}
-                $}
                 &
-                \frame{$%
                 \begin{array}[c]{c}%
                     \longrightarrow j\\
                     \text{dans ce sens, c'est une insertion}%
                 \end{array}
-                $}
                 &
                 \\%
-                \frame{$%
                 \begin{array}[c]{ll}%
                     & \text{dans ce sens,}\\
                     \downarrow & \text{c'est une}\\
                     i & \text{suppression}%
                 \end{array}
-                $}
                 &
-                \frame{$%
                 \begin{array}[c]{ccccccccccc}%
                     &  & d & i & s & t & a & n & c & e & s\\
                     & 0 &  &  &  &  &  &  &  &  & \\
@@ -502,11 +491,8 @@ de passer du premier mot au second.
                     c &  &  &  &  &  &  &  & 3 &  & \\
                     e &  &  &  &  &  &  &  &  & 3 & 4
                 \end{array}
-                $}%
                 &
-                \frame{$
-                \begin{array}
-                [c]{ccccccccccc}%
+                \begin{array}[c]{ccccccccccc}%
                 &  & d & i & s & t & a & n & c & e & s\\
                 & 0 &  &  &  &  &  &  &  &  & \\
                 i & 1 &  &  &  &  &  &  &  &  & \\
@@ -519,20 +505,15 @@ de passer du premier mot au second.
                 c &  &  &  &  &  &  &  & 9 &  & \\
                 e &  &  &  &  &  &  &  &  & 9 & 10
                 \end{array}
-                $}
             \end{array}
-            \bigskip
-            \\
-            \begin{tabular}{c}%
-                \begin{minipage}{15cm}
-                Chaque case $\pa{i,j}$ contient la distance qui sépare les $i$ premières lettres du mot $1$
-                des $j$ premières lettres du mot $2$ selon le chemin ou la méthode choisie.
-                La dernière case indique la distance qui sépare les deux mots quel que soit le chemin choisi.
-                \end{minipage}
-            \end{tabular}
         \end{array}
-        $}%
         
+        Chaque case :math:`\pa{i,j}` contient la distance qui sépare les 
+        :math:`i` premières lettres du mot :math:`1`
+        des :math:`j` premières lettres du mot 
+        :math:`2` selon le chemin ou la méthode choisie.
+        La dernière case indique la distance qui sépare 
+        les deux mots quel que soit le chemin choisi.        
 
 
 Extension de la distance d'édition
