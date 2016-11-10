@@ -3,9 +3,12 @@
 k-means
 =======
 
-.. index:: centres mobiles, k-means, variance intra-classe, inertie
+.. contents::
+    :local:
 
 *Dénomination française : algorithme des centres mobiles.*
+
+.. index:: centres mobiles, k-means, variance intra-classe, inertie
 
 
 Principe
@@ -204,6 +207,122 @@ est une matrice symétrique définie positive.
 Dans le cas de variables corrélées, la matrice 
 :math:`M = \Sigma^{-1}` où :math:`\Sigma^{-1}` est la matrice 
 de variance-covariance des variables aléatoires :math:`\pa{X_i}_i`.
+
+
+Améliorations de l'initialisation
+=================================
+
+.. _l-kmeanspp:
+
+K-means++
++++++++++
+
+.. index:: k-means++, outliers
+
+L'article [Arthur2007]_ montre que l'initialisation aléatoire n'est pas efficace et
+est sensible aux outliers ou points aberrants. L'étape d'initialisation est remplacée 
+par la suivante :
+
+.. mathdef::
+    :title: initialisation k-means++
+    :tag: Algorithme
+    :lid: init_kmeanspp
+    
+    Cette étape d'initialisation viendra remplacer celle
+    définie dans l'alogorithme
+    :ref:`k-means <hmm_classification_obs_un>`_.
+    On considère un ensemble de points :
+    
+    .. math::
+    
+        X=\left(X_i\right)_{1\leqslant i\leqslant P}\in\left(\R^N\right)^P
+    
+    A chaque point est associée une classe : 
+    :math:`\left(c_i\right)_{1\leqslant i\leqslant P}\in\left\{1,...,C\right\}^P`.    
+    
+    Pour :math:`k` centres, on choisit :math:`C_1`
+    au hasard dans l'ensemble :math:`X`.
+    Pour les suivants :
+    
+    #. :math:`k \leftarrow 2`
+    #. On choisit aléatoirement :math:`G_k \in X` avec la probabilité 
+       :math:`P(x) = \frac{D_{k-1}(x)^2}{\sum_{x\in X}D_{k-1}(x)^2}`
+    #. :math:`k \leftarrow k+1`
+    #. On revient à l'étape 2 jusqu'à ce que :math:`k=C`.
+    
+    La fonction :math:`D_k` est définie par la distance du point :math:`x`
+    au centre :math:`G_l` choisi parmi les :math:`k` premiers centres.
+    :math:`D_k(x) = \min_{1 \infegal l \infegal k} d(x - G_l)`.
+    
+    La suite de l'algorithme *k-means++* reprend les mêmes étapes que
+    :ref:`k-means <hmm_classification_obs_un>`_.
+    
+
+Cette initilisation éloigne le prochain centre le plus possibles des
+centres déjà choisis. L'article montre que :
+
+.. mathdef::
+    :title: Borne supérieure de l'erreur produite par k-means++
+    :tag: Théorème
+    
+    On définit l'inertie par
+    :math:`J_(X) = \sum_{i=1}^{P} \; \min_G d^2(X_i, G)`.
+    Si :math:`J_{OPT}` définit l'inertie optimale alors
+    :math:`\esp{J(X)} \infegal 8 (\ln C + 2) J_{OPT}(X)`.
+    
+La démonstration est disponible dans l'article [Arthur2007]_.
+
+
+
+
+K-means||
++++++++++
+
+
+L'article [Bahmani2012]_ propose une autre initialisation 
+que :ref:`l-kmeanspp` mais plus rapide et parallélisable.
+
+.. mathdef::
+    :title: initialisation k-means||
+    :tag: Algorithme
+    :lid: init_kmeansppll
+    
+    Cette étape d'initialisation viendra remplacer celle
+    définie dans l'alogorithme
+    :ref:`k-means <hmm_classification_obs_un>`_.
+    On considère un ensemble de points :
+    
+    .. math::
+    
+        X=\left(X_i\right)_{1\leqslant i\leqslant P}\in\left(\R^N\right)^P
+    
+    A chaque point est associée une classe : 
+    :math:`\left(c_i\right)_{1\leqslant i\leqslant P}\in\left\{1,...,C\right\}^P`.    
+    
+    Pour :math:`k` centres, on choisit :math:`G = \{G_1\}`
+    au hasard dans l'ensemble :math:`X`.
+    
+    | on répète :math:`O(\ln D(G, X))` fois :
+    |   :math:`G' \leftarrow échantillon aléatoire issue de :math:`X` de probabilité :math:`p(x) = l \frac{D(G,x)^2}{\sum_x D(G,x)^2}`
+    |   :math:`G \leftarrow G \cup G'`
+    
+    La fonction :math:`D(G,x)` est définie par la distance du point :math:`x`
+    au plus proche centre :math:`g \in G` :
+    :math:`D(g,x) = \min_{g \in G} d(x - g)`.
+    Cette étape ajoute à l'ensemble des centres :math:`G`
+    un nombre aléatoire de centres à chaque étape.
+    L'ensemble :math:`G` contiendra plus de :math:`C` centres.
+    
+    #. Pour tout :math:`g \in G`, on assigne le poids :math:`w_g = card \acc{ y | d(x, y) < \min_{h \in G} d(x, h)}`
+    #. On clusterise l'ensemble des points :math:`G` en :math:`C` clusters
+       (avec un k-means classique par exemple)
+
+Au lieu d'ajouter les centres un par un comme dans l'algorithme 
+:ref:`k-means++ <init_kmeanspp>`, plusieurs sont ajoutés à chaque fois,
+plus :math:`l` est grand, plus ce nombre est grand. Le tirage d'un échantillon 
+aléatoire consiste à inclure chaque point :math:`x` avec la probabilité
+:math:`p(x) = l \frac{D(G,x)^2}{\sum_x D(G,x)^2}`.
+
 
 
 .. _hmm_classification_obs_trois:
@@ -464,10 +583,11 @@ minimisation de :math:`J\pa{\alpha}` est résolu par l'algorithme qui suit.
 Il s'appuie sur la méthode des multiplicateurs de Lagrange.
 
 .. mathdef::
-    :title: sélection du nombre de classes ([Kothari1999]_)
+    :title: sélection du nombre de classes
     :tag: Algorithme
     :lid: classification_kothari_1999
 
+    (voir  [Kothari1999]_)
     Les notations sont celles utilisés dans les paragraphes précédents. On suppose que le 
     paramètre :math:`\alpha` évolue dans l'intervalle :math:`\cro{\alpha_1, \alpha_2}` 
     à intervalle régulier :math:`\alpha_t`.
@@ -843,9 +963,21 @@ bien que cet avantage disparaisse au fur et à mesure des itérations.
 Bibliographie
 =============
 
+.. [Arthur2007] k-means++: the advantages of careful seeding (2007),
+    *Arthur, D.; Vassilvitskii, S.*,
+    Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms.
+    Society for Industrial and Applied Mathematics Philadelphia, PA, USA. pp. 1027–1035.
+    `PDF <http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf>`_.
+     
 .. [Balakrishnan1996] Comparative performance of the FSCL neural net and K-means algorithm for market segmentation (1996),
    P. V. Sundar Balakrishnan, Martha Cooper, Varghese S. Jacob, Phillip A. Lewis,
    *European Journal of Operation Research*, volume 93, pages 346-357
+   
+.. [Bahmani2012] Scalable K-Means++ (2012),
+    *Bahman Bahmani, Benjamin Moseley, Andrea Vattani, Ravi Kumar, Sergei Vassilvitskii*,
+    Proceedings of the VLDB Endowment (PVLDB), Vol. 5, No. 7, pp. 622-633 (2012)
+    `PDF <http://theory.stanford.edu/~sergei/papers/vldb12-kmpar.pdf>`_,
+    `arXiv <https://arxiv.org/abs/1203.6402>`_
 
 .. [Cheung2003] :math:`k^*`-Means: A new generalized k-means clustering algorithm (2003),
    Yiu-Ming Cheung, 
@@ -878,5 +1010,3 @@ Bibliographie
 .. [Xu1993] Rival penalized competitive learning for clustering analysis, rbf net and curve detection (1993),
    L. Xu, A. Krzyzak, E. Oja,
    *IEEE Trans. Neural Networks*, volume (4), pages 636-649
-
-
