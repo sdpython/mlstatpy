@@ -14,4 +14,5 @@ Glossary
         Raccourci pour `Natural Language Processing <https://en.wikipedia.org/wiki/Natural_language_processing>`_.
         
     outlier
-        Point aberrant. C'est un point qui est à l'écart des autres de façon évidente.
+        Point aberrant. C'est une observation qui est Ã  l'Ã©cart des autres observations
+        du jeu de donnÃ©es de faÃ§on Ã©vidente. Il perturbe l'apprentissage d'une prÃ©diction.
