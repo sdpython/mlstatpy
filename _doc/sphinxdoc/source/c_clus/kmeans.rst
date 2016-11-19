@@ -340,14 +340,14 @@ notée :math:`c_i`. On peut alors écrire :
 .. math::
     :nowrap:
 
-    \begin{eqnarray}
+    \begin{eqnarray*}
     \forall i \in \intervalle{1}{C}, \; & & \\
     G_i &=& E\pa{X \indicatrice{c_X = i}} = \dfrac{\sum_{k=1}^{P} X_k \indicatrice {c_k = i}} {\sum_{k=1}^{P} \indicatrice {c_k = i}} \\
     V_i &=& E\pa{XX' \indicatrice{c_X = i}} = \dfrac{\sum_{k=1}^{P} X_k X_k' \indicatrice {c_k = i}} {\sum_{k=1}^{P} \indicatrice {c_k = i}} \\
-    \pr{c_X = i} &=& \sum_{k=1}^{P} \indicatrice {c_k = i} \label{hmm_rn_densite_p}\\
+    \pr{c_X = i} &=& \sum_{k=1}^{P} \indicatrice {c_k = i} \\
     f\pa{X | c_X = i} &=& \dfrac{1}{\pa{2\pi}^{\frac{N}{2}} \sqrt{\det \pa{V_i}}} \; e^{ - \frac{1}{2} \pa{X - G_i}' \; V_i^{-1} \; \pa{X - G_i} } \\
-    f\pa{X} &=& \sum_{k=1}^{P}  f\pa{X | c_X = i} \pr{c_X = i} \label{hmm_rn_densite_x}
-    \end{eqnarray}
+    f\pa{X} &=& \sum_{k=1}^{P}  f\pa{X | c_X = i} \pr{c_X = i} 
+    \end{eqnarray*}
 
 On en déduit que :
 
@@ -778,7 +778,7 @@ de sorte qu'aucun point ne leur sera affecté.
     |   :math:`\gamma_j = \dfrac{n_j}{ \sum_{k=1}^{C} n_k}`
     |
     | for j in :math:`1..C`
-    |   :math:`u_j = `
+    |   :math:`u_j =`
     |       1 si :math:`j \in \underset{k}{\arg \min} \; \cro {\gamma_k \; d\pa{X_i,C_k} }`
     |       -1 si :math:`j \in \underset{j \neq k}{\arg \min} \; \cro {\gamma_k \; d\pa{X_i,C_k} }`
     |       0 sinon
