@@ -15,10 +15,6 @@ README
 .. image:: https://badge.fury.io/py/mlstatpy.svg
     :target: http://badge.fury.io/py/mlstatpy    
 
-.. image:: http://img.shields.io/pypi/dm/mlstatpy.png
-    :alt: PYPI Package
-    :target: https://pypi.python.org/pypi/mlstatpy
-
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT
