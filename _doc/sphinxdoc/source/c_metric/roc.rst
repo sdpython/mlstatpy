@@ -3,6 +3,9 @@
 Courbe ROC
 ==========
 
+.. contents::
+    :local:
+
 .. index:: ROC
 
 Ce document introduit la `courbe ROC <https://en.wikipedia.org/wiki/Receiver_operating_characteristic>`_
@@ -561,6 +564,10 @@ Il n'existe donc pas toujours une fonction :math:`f` reliant :math:`R'(s)` à :m
 ne choisissant qu'une sous-suite :math:`\pa{E'(X_i), R'(X_i)}_i` qui vérifie cette hypothèse.
 
 
+Classiciation multiclass
+========================
+
+à venir
 
 
 
