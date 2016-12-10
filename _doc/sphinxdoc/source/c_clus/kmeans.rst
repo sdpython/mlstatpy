@@ -303,7 +303,7 @@ que :ref:`l-kmeanspp` mais plus rapide et parallélisable.
     au hasard dans l'ensemble :math:`X`.
     
     | on répète :math:`O(\ln D(G, X))` fois :
-    |   :math:`G' \leftarrow échantillon aléatoire issue de :math:`X` de probabilité :math:`p(x) = l \frac{D(G,x)^2}{\sum_x D(G,x)^2}`
+    |   :math:`G' \leftarrow` échantillon aléatoire issue de :math:`X` de probabilité :math:`p(x) = l \frac{D(G,x)^2}{\sum_x D(G,x)^2}`
     |   :math:`G \leftarrow G \cup G'`
     
     La fonction :math:`D(G,x)` est définie par la distance du point :math:`x`
