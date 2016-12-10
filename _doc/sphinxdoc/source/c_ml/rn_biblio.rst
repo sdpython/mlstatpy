@@ -3,8 +3,8 @@
 Bibliographie
 =============
 
-.. [Bottou1991] Une approche théorique de l'apprentissage connexionniste, Application à la reconnaissance de la parole,
-   Léon Bottou,
+.. [Bottou1991] Une approche théorique de l'apprentissage connexionniste,
+    Application à la reconnaissance de la parole, Léon Bottou,
    *Thèse de l'Université de Paris Sud, Centre d'Orsay*.
    
 .. [Broyden1967] Quasi-Newton methods and their application to function minimization (1967),
