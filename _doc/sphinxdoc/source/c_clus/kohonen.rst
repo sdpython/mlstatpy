@@ -223,6 +223,9 @@ Bibliographie
 .. [Lo1991] On the rate of convergence in topology preserving neural networks (1991),
    Z. Lo, B. Bavarian,
    *Biological Cybernetics*, volume 63, pages 55-63
+   
+.. [Rougier] `Dynamic Self-Organising Map <http://www.labri.fr/perso/nrougier/coding/article/article.html>`_,
+   Nicolas P. Rougier and Yann Boniface
 
 .. [Wu2004] Clustering of the self-organizing map using a clustering validity index based on inter-cluster and intra-cluster density (2004),
    Sitao Wu, Tommy W. S. Chow,
