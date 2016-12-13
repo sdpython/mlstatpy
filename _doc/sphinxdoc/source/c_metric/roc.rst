@@ -571,15 +571,15 @@ Classification multi-classe
 Une courbe ROC se construit avec deux informations : une réponse binaire
 et un score. Que signifie cette réponse binaire ? Elle peut être :
 
-#. Le fait que le prédicteur ait bien prédit une classe en particulier,
-   le score associé est celui que le prédicteur donne pour cette classe.
+#. Le fait que le prédicteur ait bien prédit une classe en particulier.
 #. Le fait que le prédicteur ait bien prédit,
    c'est-à-dire que la réponse binaire signifie que la classe prédite
-   est la classe attendue. Le score associé est celui de la classe
-   prédite (et non celui de la classe attendue).
-   
+   est la classe attendue.
 
-Le prédicteur retourne un vecteur :math:`S_i` qui contient
+Dans les deux cas, le score associé est celui de la classe prédite,
+c'est-à-dire le score maximum obtenu pour l'une des classes.
+
+Plus formellement, le prédicteur retourne un vecteur :math:`S_i` qui contient
 les probabilités d'appartenance à toutes les classes. 
 :math:`S_i(c)` est la probabilité pour la classe :math:`c`.
 La classe attendue est la classe pour l'observation :math:`i`
@@ -588,13 +588,13 @@ On construit le couple :math:`(b_i, s_i)` de telle sorte que :
 
 .. math::
 
-    \begin{array}{l} b_i = 1 \; si \; \max S_i = S_i(c) \; sinon \; 0 \\ s_i = S_i(c) \end{array}
+    \begin{array}{l} b_i = 1 \; si \; \max S_i = S_i(c) \; sinon \; 0 \\ s_i = \max S_i \end{array}
 
 Dans le second cas :
 
 .. math::
 
-    \begin{array}{l} b_i = 1 \; si \; \max S_i = S_i(y_i) \; sinon \; 0 \\ s_i = S_i(y_i) \end{array}
+    \begin{array}{l} b_i = 1 \; si \; \max S_i = S_i(y_i) \; sinon \; 0 \\ s_i = \max S_i \end{array}
 
 Le premier cas correspond par exemple à des problèmes de 
 `détection de fraude <https://en.wikipedia.org/wiki/Predictive_analytics#Fraud_detection>`_.
