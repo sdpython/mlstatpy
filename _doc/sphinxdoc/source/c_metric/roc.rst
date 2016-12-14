@@ -581,10 +581,9 @@ et un score. Que signifie cette réponse binaire ? Elle peut être :
 Plus formellement, le prédicteur retourne un vecteur :math:`S_i` qui contient
 les probabilités d'appartenance à toutes les classes aussi appelées 
 plus généralement score de confiance ou juste score.
-:math:`S_i(c)` est la probabilité pour la classe :math:`c`.
-La classe attendue est la classe pour l'observation :math:`i`
-est notée :math:`y_i`. 
-On construit le couple :math:`(b_i, s_i)` de telle sorte que :
+:math:`S_i(c)` est la probabilité de prédire la classe :math:`c`.
+La classe attendue est notée :math:`y_i`, c'est celle que le prédicteur doit prédire.
+Dans le premier cas, on construit le couple :math:`(b_i, s_i)` de telle sorte que :
 
 .. math::
 
