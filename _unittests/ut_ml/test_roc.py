@@ -67,6 +67,14 @@ class TestROC(unittest.TestCase):
         t = test.roc_intersect(roc, 0.2)
         assert 1 >= t >= 0
 
+        conf = test.confusion()
+        s = str(conf)
+        fLOG(s)
+        self.assertEqual(conf.shape, (12, 5))
+        conf = test.confusion(score=0.5)
+        fLOG(conf)
+        self.assertEqual(conf.shape, (1, 5))
+
         fLOG("graph.............. PROBSCORE")
 
         fig, ax = plt.subplots()

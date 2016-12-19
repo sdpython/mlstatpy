@@ -113,6 +113,84 @@ class ROC:
         rows.append(str(roc))
         return "\n".join(rows)
 
+    def confusion(self, score=None, nb=10, curve=CurveType.ROC, bootstrap=False):
+        """
+        Computes the confusion matrix for a specific *score*
+        or all if *score* is None.
+
+        @param      score       score or None.
+        @param      nb          number of scores (if *score* is None)
+        @param      curve       see :class:`CurveType <mlstatpy.ml.roc.ROC.CurveType>`
+        @param      boostrap    builds the curve after resampling
+        @return                 One row if score is precised, many roww is score is None
+        """
+        if not bootstrap:
+            cloud = self.data.copy()
+        else:
+            cloud = self.random_cloud()
+
+        if score is None:
+
+            sum_weights = cloud[cloud.columns[2]].sum()
+            if nb <= 0:
+                nb = len(cloud)
+            else:
+                nb = min(nb, len(cloud))
+            seuil = numpy.arange(nb + 1) * sum_weights / nb
+
+            cloud = cloud.iloc[::-1].copy()
+            cloud["lw"] = cloud[cloud.columns[2]] * cloud[cloud.columns[1]]
+            cloud["cw"] = cloud[cloud.columns[2]].cumsum()
+            cloud["clw"] = cloud["lw"].cumsum()
+            if cloud.columns[4] != "cw":
+                raise ValueError("Column 4 should be 'cw'.")
+            if cloud.columns[5] != "clw":
+                raise ValueError("Column 5 should be 'clw'.")
+
+            pos_roc = 0
+            pos_seuil = 0
+            if curve is ROC.CurveType.ROC:
+                roc = pandas.DataFrame(0, index=numpy.arange(
+                    nb + 2), columns=["True Positive", "False Positive",
+                                      "False Negative", "True Negative",
+                                      "threshold"])
+                sum_good_weights = cloud.iloc[-1, 5]
+                sum_bad_weights = sum_weights - sum_good_weights
+                roc.iloc[0, 0] = 0
+                roc.iloc[0, 1] = 0
+                roc.iloc[0, 2] = sum_good_weights
+                roc.iloc[0, 3] = sum_bad_weights
+                roc.iloc[0, 4] = max(cloud.iloc[:, 0])
+                pos_roc += 1
+                for i in range(len(cloud)):
+                    if cloud.iloc[i, 4] > seuil[pos_seuil]:
+                        tp = cloud.iloc[i, 5]
+                        fp = cloud.iloc[i, 4] - cloud.iloc[i, 5]
+                        roc.iloc[pos_roc, 0] = tp
+                        roc.iloc[pos_roc, 1] = fp
+                        roc.iloc[pos_roc, 2] = sum_good_weights - tp
+                        roc.iloc[pos_roc, 3] = sum_bad_weights - fp
+                        roc.iloc[pos_roc, 4] = cloud.iloc[i, 0]
+                        pos_roc += 1
+                        pos_seuil += 1
+                roc.iloc[pos_roc:, 0] = sum_good_weights
+                roc.iloc[pos_roc:, 1] = sum_bad_weights
+                roc.iloc[pos_roc:, 2] = 0
+                roc.iloc[pos_roc:, 3] = 0
+                roc.iloc[pos_roc:, 4] = min(cloud.iloc[:, 0])
+                return roc
+            else:
+                raise NotImplementedError(
+                    "Unexpected type '{0}', only ROC is allowed.".format(curve))
+        else:
+            roc = self.confusion(nb=len(self), curve=curve,
+                                 bootstrap=False, score=None)
+            roc = roc[roc["threshold"] <= score]
+            if len(roc) == 0:
+                raise ValueError(
+                    "The requested confusion is empty for score={0}.".format(score))
+            return roc[:1]
+
     def precision(self):
         """
         Compute precision
@@ -129,7 +207,7 @@ class ROC:
         @param      nb          number of points for the curve
         @param      curve       see :class:`CurveType <mlstatpy.ml.roc.ROC.CurveType>`
         @param      boostrap    builds the curve after resampling
-        @return                 DataFrame (metrics and thresholds)
+        @return                 DataFrame (metrics and threshold)
 
         If *curve* is *SKROC*, the parameter *nb* is not taken into account.
         It should be set to 0.
@@ -138,13 +216,13 @@ class ROC:
             roc = self.compute_roc_curve(
                 nb=nb, curve=ROC.CurveType.RECPREC, bootstrap=bootstrap)
             roc["error"] = - roc["precision"] + 1
-            return roc[["error", "recall", "thresholds"]]
+            return roc[["error", "recall", "threshold"]]
         elif curve is ROC.CurveType.PROBSCORE:
             roc = self.compute_roc_curve(
                 nb=nb, curve=ROC.CurveType.ROC, bootstrap=bootstrap)
             roc["P(->s)"] = roc["False Positive Rate"]
             roc["P(+<s)"] = - roc["True Positive Rate"] + 1
-            return roc[["P(+<s)", "P(->s)", "thresholds"]]
+            return roc[["P(+<s)", "P(->s)", "threshold"]]
 
         if not bootstrap:
             cloud = self.data.copy()
@@ -159,7 +237,7 @@ class ROC:
                                              y_score=cloud[cloud.columns[0]],
                                              sample_weight=cloud[cloud.columns[2]])
             roc = pandas.DataFrame(0, index=numpy.arange(len(fpr)),
-                                   columns=["False Positive Rate", "True Positive Rate", "thresholds"])
+                                   columns=["False Positive Rate", "True Positive Rate", "threshold"])
             roc[roc.columns[0]] = fpr
             roc[roc.columns[1]] = tpr
             roc[roc.columns[2]] = thresholds
@@ -187,7 +265,7 @@ class ROC:
 
         if curve is ROC.CurveType.ROC:
             roc = pandas.DataFrame(0, index=numpy.arange(
-                nb + 1), columns=["False Positive Rate", "True Positive Rate", "thresholds"])
+                nb + 1), columns=["False Positive Rate", "True Positive Rate", "threshold"])
             sum_good_weights = cloud.iloc[-1, 5]
             sum_bad_weights = sum_weights - sum_good_weights
             for i in range(len(cloud)):
@@ -205,7 +283,7 @@ class ROC:
 
         elif curve is ROC.CurveType.RECPREC:
             roc = pandas.DataFrame(0, index=numpy.arange(
-                nb + 1), columns=["recall", "precision", "thresholds"])
+                nb + 1), columns=["recall", "precision", "threshold"])
             for i in range(len(cloud)):
                 if cloud.iloc[i, 4] > seuil[pos_seuil]:
                     roc.iloc[pos_roc, 0] = cloud.iloc[i, 4] / sum_weights
@@ -265,12 +343,15 @@ class ROC:
             for l in range(0, bootstrap):
                 roc = self.compute_roc_curve(nb, curve=curve, bootstrap=True)
                 if thresholds:
-                    cols = list(_ for _ in roc.columns if _ != "thresholds")
-                    ax = roc.plot(x="thresholds", y=cols,
+                    cols = list(_ for _ in roc.columns if _ != "threshold")
+                    roc = roc.sort_values("threshold").reset_index(drop=True)
+                    ax = roc.plot(x="threshold", y=cols,
                                   ax=ax, label=['_nolegend_' for i in cols], **ckwargs)
                 else:
                     cols = list(_ for _ in roc.columns[
-                                1:] if _ != "thresholds")
+                                1:] if _ != "threshold")
+                    roc = roc.sort_values(
+                        roc.columns[0]).reset_index(drop=True)
                     ax = roc.plot(x=roc.columns[0], y=cols,
                                   ax=ax, label=['_nolegend_' for i in cols], **ckwargs)
                 nb_bootstrap += len(cols)
@@ -281,18 +362,20 @@ class ROC:
                 kwargs['legend'] = False
             roc = self.compute_roc_curve(nb, curve=curve)
             if not thresholds:
-                roc = roc[[_ for _ in roc.columns if _ != "thresholds"]]
+                roc = roc[[_ for _ in roc.columns if _ != "threshold"]]
 
-            cols = list(_ for _ in roc.columns if _ != "thresholds")
+            cols = list(_ for _ in roc.columns if _ != "threshold")
             final = 0
             if thresholds:
-                ax = roc.plot(x="thresholds", y=cols, ax=ax, **kwargs)
+                roc = roc.sort_values("threshold").reset_index(drop=True)
+                ax = roc.plot(x="threshold", y=cols, ax=ax, **kwargs)
                 ax.set_ylim([0, 1])
                 ax.set_xlabel("thresholds")
                 final += len(cols)
                 diag = 0
             else:
                 final += len(cols) - 1
+                roc = roc.sort_values(cols[0]).reset_index(drop=True)
                 ax = roc.plot(x=cols[0], y=cols[1:], ax=ax, **kwargs)
                 if curve is ROC.CurveType.ROC or curve is ROC.CurveType.SKROC:
                     ax.plot([0, 1], [0, 1], "k--", linewidth=1)
