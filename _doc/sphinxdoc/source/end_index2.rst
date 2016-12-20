@@ -8,5 +8,6 @@ Index
     end_index_changes
     end_index_glossaire
     end_index_module
-    all_notebooks
+    gyexamples/index
+    gynotebooks/index  
     blog/blogindex

@@ -38,7 +38,7 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
         
 .. toctree::
     :maxdepth: 1
-    
+
     end_index
         
 
