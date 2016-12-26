@@ -40,6 +40,15 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
     :maxdepth: 1
 
     end_index
+
+Exemples
+========
+
+.. toctree::
+    :maxdepth: 1
+    
+    gyexamples/index
+    all_notebooks
         
 
     
