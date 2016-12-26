@@ -13,32 +13,15 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
 (format brut de fonderie) et sur 
 `GitHub/mlstatpy <https://github.com/sdpython/mlstatpy>`_ |gitlogo|.
 
-.. only:: html
-
-    .. toctree::
-        :maxdepth: 2
-        
-        introduction
-        c_clus/index
-        c_ml/index
-        c_nlp/index
-        c_metric/index
-        c_dist/index
-
-.. only:: latex
-
-    .. toctree::
-        :maxdepth: 3
-        
-        introduction
-        c_clus/index
-        c_ml/index
-        c_nlp/index
-        c_metric/index
-        
 .. toctree::
-    :maxdepth: 1
-
+    :maxdepth: 2
+    
+    introduction
+    c_clus/index
+    c_ml/index
+    c_nlp/index
+    c_metric/index
+    c_dist/index
     end_index
 
 Exemples
