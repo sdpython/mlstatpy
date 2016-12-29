@@ -1,11 +1,9 @@
 
-
 #########
 Métriques
 #########
 
 .. toctree::
     :maxdepth: 1
-    
-    roc
 
+    roc

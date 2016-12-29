@@ -9,5 +9,5 @@ Index
     end_index_glossaire
     end_index_module
     gyexamples/index
-    gynotebooks/index  
+    gynotebooks/index
     blog/blogindex

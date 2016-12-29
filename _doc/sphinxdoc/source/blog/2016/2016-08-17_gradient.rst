@@ -1,10 +1,9 @@
 
-
 .. blogpost::
     :title: Articles autour du gradient
     :keywords: gradient
     :date: 2016-08-17
     :categories: article
-    
+
     * `DSA: Decentralized Double Stochastic Averaging Gradient Algorithm <http://www.jmlr.org/papers/volume17/15-292/15-292.pdf>`_
     * `Distributed Coordinate Descent Method for Learning with Big Data <http://www.jmlr.org/papers/volume17/15-001/15-001.pdf>`_

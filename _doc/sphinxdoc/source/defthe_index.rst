@@ -1,7 +1,4 @@
 
-
-
-
 Listes des définitions et théorèmes
 ===================================
 
@@ -13,7 +10,6 @@ Corollaires
 
 .. mathdeflist::
     :tag: Corollaire
-
 
 Définitions
 +++++++++++
@@ -32,7 +28,7 @@ Figures
 
 .. mathdeflist::
     :tag: Figure
-    
+
 Problèmes
 +++++++++
 
@@ -56,5 +52,3 @@ Théorèmes
 
 .. mathdeflist::
     :tag: Théorème
-
-
