@@ -23,7 +23,7 @@ sys.path.insert(
 local_template = os.path.join(os.path.abspath(
     os.path.dirname(__file__)), "phdoc_templates")
 
-from pyquickhelper.helpgen.default_conf import set_sphinx_variables
+from pyquickhelper.helpgen.default_conf import set_sphinx_variables, get_default_stylesheet
 set_sphinx_variables(__file__, "mlstatpy", "Xavier Dupré", 2016,
                      sphtheme.__name__, [
                          sphtheme.get_html_theme_path()], locals(),
@@ -34,7 +34,7 @@ set_sphinx_variables(__file__, "mlstatpy", "Xavier Dupré", 2016,
 blog_root = "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/"
 
 html_context = {
-    'css_files': ['_static/my-styles.css'],
+    'css_files': get_default_stylesheet() + ['_static/my-styles.css'],
 }
 
 language = "fr"
