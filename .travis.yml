@@ -2,6 +2,7 @@ sudo: false
 language: python
 python:
   - "3.5"
+  - "3.6"
 env:
   - SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=disk
 install:
