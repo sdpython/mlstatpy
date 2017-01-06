@@ -1,5 +1,3 @@
-biopython 
-bokeh
 cvxopt
 Cython
 cytoolz
