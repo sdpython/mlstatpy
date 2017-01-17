@@ -3,7 +3,6 @@ Cython
 cytoolz
 datashader
 datashape
-flake8
 flask
 h5py
 ipykernel
@@ -42,6 +41,5 @@ six
 Sphinx
 statsmodels
 sympy
-toolz
 traitlets
 xarray
