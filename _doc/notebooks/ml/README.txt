@@ -2,5 +2,7 @@
 Machine Learning
 ----------------
 
-
-
+.. contents::
+    :local:
+    
+    

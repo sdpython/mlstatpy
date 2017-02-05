@@ -2,5 +2,8 @@
 Métriques
 ---------
 
+.. contents::
+    :local:
+    
 
 
