@@ -23,7 +23,7 @@ except ImportError:
     if path not in sys.path:
         sys.path.append(path)
     import jyquickhelper as skip_
-    
+
 
 try:
     import pyquickhelper as skip__
@@ -40,7 +40,7 @@ except ImportError:
     if path not in sys.path:
         sys.path.append(path)
     import pyquickhelper as skip__
-    
+
 
 try:
     import src
