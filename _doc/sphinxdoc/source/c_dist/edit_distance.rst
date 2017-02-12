@@ -29,8 +29,8 @@ choisies. La comparaison entre deux lettres identiques est en général
 de coût nul, toute autre opération étant de coût strictement positif.
 
 .. list-table:: distance d'édition
-   :widths: 3 3 10 3
-   :header-rows: 1
+    :widths: 3 3 10 3
+    :header-rows: 1
 
     * - mot 1
       - mot 2
@@ -145,7 +145,7 @@ Ce paragraphe a pour objectif de démontrer que la
 
     .. math::
         :nowrap:
-        :eq: equation_edit_car
+        :label: equation_edit_car
 
         \begin{eqnarray*}
         \forall \pa{x,y} \in \pa{\mathcal{C}'}^2, \; c\pa{x,y} \text{ est le coût } \left\{
@@ -399,7 +399,7 @@ Cette suite tronquée permet d'obtenir le résultat de la propriété suivante :
 
     La suite définie par :ref:`3 <definition_edit_dist_tronc>` vérifie
     :math:`d\left(  m_{1},m_{2}\right)  =d_{n_{1},n_{2}}`
-    où :math:`d` est la distance d'édition définie en :ref:`1 <defition_distance_edition_1>`_
+    où :math:`d` est la distance d'édition définie en :ref:`1 <defition_distance_edition_1>`
     ou :ref:`2 <defition_distance_edition_2>`.
 
 Cette factorisation des calculs est illustrée par les tableaux de
@@ -437,65 +437,65 @@ Il est souvent illustré par un tableau comme celui de la figure suivante
 qui permet également de retrouver la meilleure séquence d'opérations permettant
 de passer du premier mot au second.
 
-    .. math::
+.. math::
 
-        \begin{array}{c}
-            \begin{array}[c]{ccc}%
-                \begin{array}[c]{cc}%
-                    \searrow & \\
-                    \text{dans ce sens,} \\
-                    \text{c'est une } \\
-                    \text{comparaison}%
-                \end{array}
-                &
-                \begin{array}[c]{c}%
-                    \longrightarrow j\\
-                    \text{dans ce sens, c'est une insertion}%
-                \end{array}
-                &
-                \\%
-                \begin{array}[c]{ll}%
-                    & \text{dans ce sens,}\\
-                    \downarrow & \text{c'est une}\\
-                    i & \text{suppression}%
-                \end{array}
-                &
-                \begin{array}[c]{ccccccccccc}%
-                    &  & d & i & s & t & a & n & c & e & s\\
-                    & 0 &  &  &  &  &  &  &  &  & \\
-                    i &  & 1 &  &  &  &  &  &  &  & \\
-                    d &  &  & 2 &  &  &  &  &  &  & \\
-                    s &  &  &  & 2 &  &  &  &  &  & \\
-                    t &  &  &  &  & 2 &  &  &  &  & \\
-                    z &  &  &  &  & 3 &  &  &  &  & \\
-                    a &  &  &  &  &  & 3 &  &  &  & \\
-                    n &  &  &  &  &  &  & 3 &  &  & \\
-                    c &  &  &  &  &  &  &  & 3 &  & \\
-                    e &  &  &  &  &  &  &  &  & 3 & 4
-                \end{array}
-                &
-                \begin{array}[c]{ccccccccccc}%
+    \begin{array}{c}
+        \begin{array}{ccc}%
+            \begin{array}{cc}%
+                \searrow & \\
+                \text{dans ce sens,} \\
+                \text{c'est une } \\
+                \text{comparaison}%
+            \end{array}
+            &
+            \begin{array}{c}%
+                \longrightarrow j\\
+                \text{dans ce sens, c'est une insertion}%
+            \end{array}
+            &
+            \\%
+            \begin{array}{ll}%
+                & \text{dans ce sens,}\\
+                \downarrow & \text{c'est une}\\
+                i & \text{suppression}%
+            \end{array}
+            &
+            \begin{array}{ccccccccccc}%
                 &  & d & i & s & t & a & n & c & e & s\\
                 & 0 &  &  &  &  &  &  &  &  & \\
-                i & 1 &  &  &  &  &  &  &  &  & \\
-                d & 2 & 3 & 4 &  &  &  &  &  &  & \\
-                s &  &  &  & 4 &  &  &  &  &  & \\
-                t &  &  &  &  & 4 &  &  &  &  & \\
-                z &  &  &  &  & 5 &  &  &  &  & \\
-                a &  &  &  &  &  & 5 & 6 & 7 &  & \\
-                n &  &  &  &  &  &  &  & 8 &  & \\
-                c &  &  &  &  &  &  &  & 9 &  & \\
-                e &  &  &  &  &  &  &  &  & 9 & 10
-                \end{array}
+                i &  & 1 &  &  &  &  &  &  &  & \\
+                d &  &  & 2 &  &  &  &  &  &  & \\
+                s &  &  &  & 2 &  &  &  &  &  & \\
+                t &  &  &  &  & 2 &  &  &  &  & \\
+                z &  &  &  &  & 3 &  &  &  &  & \\
+                a &  &  &  &  &  & 3 &  &  &  & \\
+                n &  &  &  &  &  &  & 3 &  &  & \\
+                c &  &  &  &  &  &  &  & 3 &  & \\
+                e &  &  &  &  &  &  &  &  & 3 & 4
+            \end{array}
+            &
+            \begin{array}{ccccccccccc}%
+            &  & d & i & s & t & a & n & c & e & s\\
+            & 0 &  &  &  &  &  &  &  &  & \\
+            i & 1 &  &  &  &  &  &  &  &  & \\
+            d & 2 & 3 & 4 &  &  &  &  &  &  & \\
+            s &  &  &  & 4 &  &  &  &  &  & \\
+            t &  &  &  &  & 4 &  &  &  &  & \\
+            z &  &  &  &  & 5 &  &  &  &  & \\
+            a &  &  &  &  &  & 5 & 6 & 7 &  & \\
+            n &  &  &  &  &  &  &  & 8 &  & \\
+            c &  &  &  &  &  &  &  & 9 &  & \\
+            e &  &  &  &  &  &  &  &  & 9 & 10
             \end{array}
         \end{array}
+    \end{array}
 
-        Chaque case :math:`\pa{i,j}` contient la distance qui sépare les
-        :math:`i` premières lettres du mot :math:`1`
-        des :math:`j` premières lettres du mot
-        :math:`2` selon le chemin ou la méthode choisie.
-        La dernière case indique la distance qui sépare
-        les deux mots quel que soit le chemin choisi.
+Chaque case :math:`\pa{i,j}` contient la distance qui sépare les
+:math:`i` premières lettres du mot :math:`1`
+des :math:`j` premières lettres du mot
+:math:`2` selon le chemin ou la méthode choisie.
+La dernière case indique la distance qui sépare
+les deux mots quel que soit le chemin choisi.
 
 Extension de la distance d'édition
 ==================================

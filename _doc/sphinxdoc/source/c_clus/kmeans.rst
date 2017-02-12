@@ -217,8 +217,8 @@ par la suivante :
     :lid: init_kmeanspp
 
     Cette étape d'initialisation viendra remplacer celle
-    définie dans l'alogorithme
-    :ref:`k-means <hmm_classification_obs_un>`_.
+    définie dans l'algorithme
+    :ref:`k-means <hmm_classification_obs_un>`.
     On considère un ensemble de points :
 
     .. math::
@@ -243,7 +243,7 @@ par la suivante :
     :math:`D_k(x) = \min_{1 \infegal l \infegal k} d(x - G_l)`.
 
     La suite de l'algorithme *k-means++* reprend les mêmes étapes que
-    :ref:`k-means <hmm_classification_obs_un>`_.
+    :ref:`k-means <hmm_classification_obs_un>`.
 
 Cette initilisation éloigne le prochain centre le plus possibles des
 centres déjà choisis. L'article montre que :
@@ -271,8 +271,8 @@ que :ref:`l-kmeanspp` mais plus rapide et parallélisable.
     :lid: init_kmeansppll
 
     Cette étape d'initialisation viendra remplacer celle
-    définie dans l'alogorithme
-    :ref:`k-means <hmm_classification_obs_un>`_.
+    définie dans l'algorithme
+    :ref:`k-means <hmm_classification_obs_un>`.
     On considère un ensemble de points :
 
     .. math::
