@@ -16,7 +16,7 @@ Je me suis dit qu'il fallait que j'arrête et que je remette
 un peu de sens dans tout ça.
 
 Derrière le code, il y a les algorithmes et derrière encore
-des idées. Plein d'idées magnifiques, plein d'intuition.
+des idées. Plein d'idées magnifiques, plein d'intuitions.
 Un code efficace n'a rien à voir avec sa lisibilité.
 C'est même souvent le contraire et il ne sera jamais lisible.
 Mais l'idée soujacente, elle, lorsqu'on l'a comprise,
@@ -40,3 +40,10 @@ et des :ref:`notebooks <l-notebooks>` accessibles sur le site.
 ::
 
     pip install mlstatpy
+
+Je n'ai pas la prétention d'être exhaustif. Vous la trouverez dans la documentation
+des librairies de machine learning qui implémentent la plupart des algorithmes
+performants connus. Allez voir
+`scikit-learn <http://scikit-learn.org/stable/>`_
+pour connaître ce qui marche. La documentation rend obsolète
+n'importe quel livre au bout de six mois.
