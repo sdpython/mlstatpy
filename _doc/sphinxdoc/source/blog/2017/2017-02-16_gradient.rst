@@ -1,0 +1,17 @@
+
+.. blogpost::
+    :title: Adam
+    :keywords: gradient
+    :date: 2017-02-16
+    :categories: machine learning
+
+    `Adam <https://en.wikipedia.org/wiki/Adam_(Buffy_the_Vampire_Slayer)>`_
+    n'est pas le personnage de la saison 4
+    de `Buffy contre les vampires <https://en.wikipedia.org/wiki/Buffy_the_Vampire_Slayer>`_
+    mais un algorithme de descente de gradient :
+    `Adam: A Method for Stochastic Optimization <https://arxiv.org/abs/1412.6980>`_.
+    Si vous ne me croyez pas, vous devriez lire cette petite revue
+    `An overview of gradient descent optimization algorithms <http://sebastianruder.com/optimizing-gradient-descent/>`_.
+    Un autre algorithme intéressant est
+    `Hogwild <http://sebastianruder.com/optimizing-gradient-descent/index.html#hogwild>`_,
+    asynchrone et distribué. Bref, a unicorn comme disent les anglais.

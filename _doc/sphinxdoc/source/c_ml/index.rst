@@ -1,6 +1,6 @@
 
 #########################
-Bases de Machine Learning 
+Bases de Machine Learning
 #########################
 
 .. toctree::
