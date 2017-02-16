@@ -12,6 +12,6 @@
     `Adam: A Method for Stochastic Optimization <https://arxiv.org/abs/1412.6980>`_.
     Si vous ne me croyez pas, vous devriez lire cette petite revue
     `An overview of gradient descent optimization algorithms <http://sebastianruder.com/optimizing-gradient-descent/>`_.
-    Un autre algorithme intéressant est
+    Un autre algorithme intÃ©ressant est
     `Hogwild <http://sebastianruder.com/optimizing-gradient-descent/index.html#hogwild>`_,
-    asynchrone et distribué. Bref, a unicorn comme disent les anglais.
+    asynchrone et distribuÃ©. Bref, a unicorn comme disent les anglais.
