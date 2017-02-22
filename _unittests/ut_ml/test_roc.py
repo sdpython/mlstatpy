@@ -7,7 +7,6 @@ import sys
 import os
 import unittest
 import random
-import matplotlib.pyplot as plt
 
 
 try:
@@ -41,7 +40,7 @@ except ImportError:
     import src
 
 from pyquickhelper.loghelper import fLOG
-from pyquickhelper.pycode import get_temp_folder
+from pyquickhelper.pycode import get_temp_folder, fix_tkinter_issues_virtualenv
 from src.mlstatpy.ml.roc import ROC
 
 
@@ -52,6 +51,9 @@ class TestROC(unittest.TestCase):
             __file__,
             self._testMethodName,
             OutputPrint=__name__ == "__main__")
+
+        fix_tkinter_issues_virtualenv(fLOG=fLOG)
+        import matplotlib.pyplot as plt
 
         temp = get_temp_folder(__file__, "temp_roc")
 
@@ -186,6 +188,8 @@ class TestROC(unittest.TestCase):
         self.assertEqual(list(sorted(values.keys())), [
                          'interval', 'max', 'mean', 'mediane', 'min', 'var', 'y'])
         assert values["min"] <= values["y"] <= values["max"]
+        plt.close('all')
+        fLOG("end")
 
 
 if __name__ == "__main__":
