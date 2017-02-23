@@ -227,7 +227,7 @@ class TestCompletion(unittest.TestCase):
             lines = "\n".join(str(_) for _ in nodes[:5])
             lines2 = "\n".join(str(_) for _ in titles[:5])
             info = ";".join(k for k, v in sorted(trie.children.items()))
-            raise Exception("{0} != {1}\n{2}\nTITLES\n{3}\INFO\n{4}".format(
+            raise Exception("{0} != {1}\n{2}\nTITLES\n{3}\nINFO\n{4}".format(
                 str(nodes[1]), exp_value, lines, lines2, info))
         if str(nodes[-1]) != "[#:grand russe:w=354]":
             lines = "\n".join(str(_) for _ in nodes[-5:])

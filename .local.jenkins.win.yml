@@ -12,8 +12,8 @@ install:
   - pip freeze
   - pip freeze > pip_freeze.txt
 script:
-  - { CMD: "python -u setup.py unittests", NAME: "UT" }
-  - { CMD: "python -u setup.py unittests_LONG", NAME: "UT_LONG", TIMEOUT: 3600 }
+  - { CMD: "python -X faulthandler -X showrefcount -u setup.py unittests", NAME: "UT" }
+  - { CMD: "python -X faulthandler -X showrefcount -u setup.py unittests_LONG", NAME: "UT_LONG", TIMEOUT: 3600 }
 after_script:
   - python -u setup.py bdist_wheel
   - if [ ${DIST} != "conda" and ${VERSION} == "3.5" and ${NAME} == "UT" ] then copy dist\*.whl ..\..\local_pypi\local_pypi_server fi
