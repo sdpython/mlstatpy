@@ -66,11 +66,6 @@ if choice == "bootstrap":
         'navbar_sidebarrel': True,
         'navbar_pagenav': True,
         'navbar_pagenav_name': "Page",
-        'globaltoc_depth': 3,
-        'globaltoc_includehidden': "true",
-        'navbar_class': "navbar navbar-inverse",
-        'navbar_fixed_top': "true",
-        'source_link_position': "nav",
         'bootswatch_theme': "readable",
         # united = weird colors, sandstone=green, simplex=red, paper=trop bleu
         # lumen: OK
