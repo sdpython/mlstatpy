@@ -1,4 +1,7 @@
+bayespy
+cloudpickle
 dask
+mpld3
 scikit-learn
 seaborn
 statsmodels
