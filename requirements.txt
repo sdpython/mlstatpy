@@ -5,7 +5,6 @@ codecov
 entrypoints
 folium
 jyquickhelper
-mechanize
 metakernel
 pkgtools
 plotly
