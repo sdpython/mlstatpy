@@ -16,6 +16,7 @@ jupyter_client
 jupyter_console
 jupyter_core
 line_profiler
+mako
 matplotlib
 memory_profiler
 mpld3
