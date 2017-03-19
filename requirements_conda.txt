@@ -3,6 +3,7 @@ Cython
 cytoolz
 datashader
 datashape
+dill
 flask
 h5py
 ipykernel
