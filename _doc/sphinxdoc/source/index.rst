@@ -74,6 +74,10 @@ Xavier Dupré
     :alt: Waffle
     :target: https://waffle.io/sdpython/mlstatpy
 
+.. image:: https://www.codacy.com/app/sdpython/mlstatpy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sdpython/mlstatpy&amp;utm_campaign=Badge_Grade
+    :alt: Codacy Badge
+    :target: https://www.codacy.com/app/sdpython/mlstatpy?
+
 **Links:** `github <https://github.com/sdpython/mlstatpy/>`_,
 `documentation <http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html>`_,
 :ref:`l-README`,

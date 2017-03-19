@@ -38,9 +38,6 @@ except ImportError:
 from pyquickhelper.loghelper import fLOG
 from pyquickhelper.pycode import get_temp_folder
 
-if sys.version_info[0] == 2:
-    from codecs import open
-
 
 class TestReadme(unittest.TestCase):
 

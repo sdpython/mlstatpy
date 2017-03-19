@@ -145,10 +145,9 @@ class CompletionElement(object):
             log_imp = True
 
             class c:
-
                 def __str__(self):
                     return "{0}-{1}".format(self._completions, self._log_imp)
-                pass
+
             self._info = c()
             self._info._completions = {}
             self._info._log_imp = []
@@ -414,12 +413,12 @@ class CompletionSystem:
         """
         return {el.value: el for el in self}
 
-    def compute_metrics(self, filter: 'func'=None, delta: float=0.8,
+    def compute_metrics(self, ffilter: 'func'=None, delta: float=0.8,
                         details=False, fLOG: 'func'=noLOG) -> int:
         """
         Compute the metric for the completion itself.
 
-        @param      filter      filter function
+        @param      ffilter     filter function
         @param      delta       parameter *delta* in the dynamic modified mks
         @param      details     log more details about displayed completions
         @param      fLOG        logging function
@@ -428,8 +427,8 @@ class CompletionSystem:
         The function ends by sorting the set of completion by alphabetical order.
         """
         self.sort_weight()
-        if filter is not None:
-            raise NotImplementedError("filter not None is not implemented")
+        if ffilter is not None:
+            raise NotImplementedError("ffilter not None is not implemented")
         if details:
             store_completions = {'': []}
 

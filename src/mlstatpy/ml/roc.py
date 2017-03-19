@@ -340,7 +340,7 @@ class ROC:
             ckwargs['legend'] = False
             if 'label' in ckwargs:
                 del ckwargs['label']
-            for l in range(0, bootstrap):
+            for li in range(0, bootstrap):
                 roc = self.compute_roc_curve(nb, curve=curve, bootstrap=True)
                 if thresholds:
                     cols = list(_ for _ in roc.columns if _ != "threshold")

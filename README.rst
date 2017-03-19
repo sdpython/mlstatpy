@@ -38,6 +38,10 @@ README
     :alt: Waffle
     :target: https://waffle.io/mlstatpy/mlstatpy
 
+.. image:: https://www.codacy.com/app/sdpython/mlstatpy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sdpython/mlstatpy&amp;utm_campaign=Badge_Grade
+    :alt: Codacy Badge
+    :target: https://www.codacy.com/app/sdpython/mlstatpy?
+
 **Links:**
 
 * `GitHub/mlstatpy <https://github.com/sdpython/mlstatpy/>`_

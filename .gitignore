@@ -265,3 +265,7 @@ _doc/notebooks/nlp/completion.png
 _doc/notebooks/nlp/completion.pstat
 _doc/sphinxdoc/source/c_dist/edit_bibliographie.rst
 _doc/notebooks/Untitled.ipynb
+_doc/notebooks/ml/*.clean_cache
+_doc/notebooks/ml/img-*.png
+_doc/notebooks/ml/*.pickle
+

@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 """
-@brief      test log(time=33s)
+@brief      test log(time=571s)
 """
 
 import sys
@@ -39,7 +39,7 @@ except ImportError:
     import src
 
 from pyquickhelper.loghelper import fLOG
-from pyquickhelper.pycode import get_temp_folder
+from pyquickhelper.pycode import get_temp_folder, add_missing_development_version
 from pyquickhelper.ipythonhelper import execute_notebook_list
 from pyquickhelper.pycode import compare_module_version
 from pyquickhelper.ipythonhelper import install_python_kernel_for_unittest
@@ -47,6 +47,10 @@ import IPython
 
 
 class TestLONGRunNotebooksNLP(unittest.TestCase):
+
+    def setUp(self):
+        add_missing_development_version(["pymyinstall", "pyensae", "pymmails", "jyquickhelper"],
+                                        __file__, hide=True)
 
     def test_long_run_notebook(self):
         fLOG(
@@ -92,7 +96,9 @@ class TestLONGRunNotebooksNLP(unittest.TestCase):
         addpaths = [os.path.normpath(os.path.join(
             os.path.abspath(os.path.dirname(__file__)), "..", "..", "src")),
             os.path.normpath(os.path.join(
-                os.path.abspath(os.path.dirname(__file__)), "..", "..", "..", "pyquickhelper", "src"))
+                os.path.abspath(os.path.dirname(__file__)), "..", "..", "..", "pyquickhelper", "src")),
+            os.path.normpath(os.path.join(
+                os.path.abspath(os.path.dirname(__file__)), "..", "..", "..", "jyquickhelper", "src"))
         ]
 
         # creation of a kernel

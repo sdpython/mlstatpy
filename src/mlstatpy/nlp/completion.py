@@ -77,7 +77,7 @@ class CompletionTrieNode(object):
         """
         res = [self]
         if self.children is not None:
-            for k, v in sorted(self.children.items()):
+            for _, v in sorted(self.children.items()):
                 r = v.items_list()
                 res.extend(r)
         return res
@@ -126,7 +126,7 @@ class CompletionTrieNode(object):
                 for w_, k_, v_ in iter_local(v):
                     yield w_, k_, v_
 
-        for w, k, v in sorted(iter_local(self)):
+        for w, _, v in sorted(iter_local(self)):
             yield w, v
 
     def leaves(self) -> Iterator['CompletionTrieNode']:
@@ -461,22 +461,22 @@ class CompletionTrieNode(object):
             node.stat.init_dynamic_minimum_keystroke(len(node.value))
             node.stat.iter_ = 0
         updates = 1
-        iter = 0
+        itera = 0
         while updates > 0:
             updates = 0
             stack = []
             stack.append(self)
             while len(stack) > 0:
                 pop = stack.pop()
-                if pop.stat.iter_ > iter:
+                if pop.stat.iter_ > itera:
                     continue
                 updates += pop.stat.update_dynamic_minimum_keystroke(
                     len(pop.value), delta)
                 if pop.children:
                     stack.extend(pop.children.values())
                 pop.stat.iter_ += 1
-            iter += 1
-        return iter
+            itera += 1
+        return itera
 
     ##
     # end of methods, beginning of subclasses

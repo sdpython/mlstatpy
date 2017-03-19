@@ -120,6 +120,7 @@ def verbose():
 # version
 ##########
 
+
 if is_local() and "--help" not in sys.argv and "--help-commands" not in sys.argv:
     def write_version():
         pyquickhelper = import_pyquickhelper()
