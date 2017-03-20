@@ -57,7 +57,7 @@ class TestFlake8(unittest.TestCase):
 
         thi = os.path.abspath(os.path.dirname(__file__))
         src_ = os.path.normpath(os.path.join(thi, "..", "..", "src"))
-        check_pep8(src_, fLOG=fLOG, skip=["ml_grid_benchmark.py:228: [E731]"])
+        check_pep8(src_, fLOG=fLOG, skip=["ml_grid_benchmark.py:229: [E731]"])
 
     def test_flake8_test(self):
         fLOG(
