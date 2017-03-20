@@ -38,7 +38,8 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from pyquickhelper.loghelper import fLOG
+from pyquickhelper.loghelper import fLOG, CustomLog
+from pyquickhelper.pycode import get_temp_folder
 from src.mlstatpy.nlp.completion import CompletionTrieNode
 
 
@@ -55,26 +56,33 @@ class TestLONGCompletion(unittest.TestCase):
         with open(data, "r", encoding="utf-8") as f:
             lines = [_.strip("\n\r\t ") for _ in f.readlines()]
         queries = [(None, _) for _ in lines]
-        fLOG("build trie")
+        temp = get_temp_folder(__file__, "temp_build_dynamic_trie_mks_min")
+        clog = CustomLog(temp)
+        clog("build trie")
         trie = CompletionTrieNode.build(queries)
         fLOG(len(queries), len(set(_[1] for _ in queries)),
              len(list(trie.leaves())), len(set(trie.leaves())))
-        assert "Cannes 2005" in set(_[1] for _ in queries)
-        assert "Cannes 2005" in set(_.value for _ in trie.leaves())
-        fLOG("precompute")
+
+        self.assertTrue("Cannes 2005" in set(_[1] for _ in queries))
+        self.assertTrue("Cannes 2005" in set(_.value for _ in trie.leaves()))
+
+        clog("precompute")
         trie.precompute_stat()
-        fLOG("update")
+        clog("update")
         trie.update_stat_dynamic()
+        clog("loop")
         fLOG("loop")
         for i, q in enumerate(queries):
             if i % 1000 == 0:
+                clog(i)
                 fLOG(i)
             leave = trie.find(q[1])
             if leave.stat is None:
                 raise Exception("None for {0}".format(leave))
-            assert hasattr(leave, "stat")
-            assert hasattr(leave.stat, "mks0")
-            assert hasattr(leave.stat, "mks1")
+
+            self.assertTrue(hasattr(leave, "stat"))
+            self.assertTrue(hasattr(leave.stat, "mks0"))
+            self.assertTrue(hasattr(leave.stat, "mks1"))
 
             sug = leave.all_mks_completions()
             nb_ = [(a.value, len([s.value for _, s in b if s.value == q[1]]))
@@ -110,6 +118,8 @@ class TestLONGCompletion(unittest.TestCase):
                 text2 = leave.str_all_completions(use_precompute=False)
                 raise Exception("weird {0} > {1} -- leave='{2}'\n{3}\n---\n{4}\n---\n{5}".format(
                     mk, mk2, leave.value, st, text, text2))
+        clog("end")
+        fLOG("end")
 
 
 if __name__ == "__main__":
