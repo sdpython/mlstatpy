@@ -209,13 +209,14 @@ class MlGridBenchMark(GridBenchMark):
             for i, btry in enumerate(sorted(btrys)):
                 subset = df[df["_btry"] == btry]
                 if subset.shape[0] > 0:
-                    subset.plot(x=vx, y=vy, kind="scatter",
-                                label=btry, ax=ax, color=colors[i])
-                if text:
                     tx = subset[vx].mean()
                     ty = subset[vy].mean()
-                    ax.text(tx, ty + decy, btry, size='small',
-                            color=colors[i], ha='center', va='bottom')
+                    if not numpy.isnan(tx) and not numpy.isnan(ty):
+                        subset.plot(x=vx, y=vy, kind="scatter",
+                                    label=btry, ax=ax, color=colors[i])
+                        if text:
+                            ax.text(tx, ty + decy, btry, size='small',
+                                    color=colors[i], ha='center', va='bottom')
             ax.set_xlabel(vx)
             ax.set_ylabel(vy)
             return ax
