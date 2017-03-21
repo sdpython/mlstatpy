@@ -38,7 +38,7 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from pyquickhelper.loghelper import fLOG
+from pyquickhelper.loghelper import fLOG, CustomLog
 from pyquickhelper.pycode import get_temp_folder, add_missing_development_version
 from pyquickhelper.ipythonhelper import execute_notebook_list
 from pyquickhelper.pycode import compare_module_version
@@ -106,8 +106,11 @@ class TestLONGRunNotebooksNLP(unittest.TestCase):
             "mlstatpy")
 
         # run the notebooks
-        res = execute_notebook_list(
-            temp, keepnote, fLOG=fLOG, valid=valid, additional_path=addpaths, kernel_name=kernel_name)
+        clog = CustomLog(temp)
+        clog("START")
+        res = execute_notebook_list(temp, keepnote, fLOG=clog, deepfLOG=clog, valid=valid,
+                                    additional_path=addpaths, kernel_name=kernel_name)
+        clog("END")
 
         # final checkings
         assert len(res) > 0
