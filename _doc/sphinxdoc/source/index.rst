@@ -4,8 +4,8 @@
 .. |gitlogo| image:: _static/git_logo.png
              :height: 20
 
-Contenu
-=======
+Les maths d'abord, la programmation ensuite
+===========================================
 
 Le livre `The Elements of Statistical Learning <http://statweb.stanford.edu/~tibs/ElemStatLearn/>`_
 est considéré comme la bible en matière de machine learning. Ce site aborde des sujets connexes.
