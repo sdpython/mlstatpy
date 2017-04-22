@@ -56,7 +56,7 @@ html_sidebars = {}
 
 if choice == "bootstrap":
     html_theme_options = {
-        'navbar_title': "",
+        'navbar_title': ".",
         'navbar_site_name': "Site",
         'navbar_links': [
             ("XD", "http://www.xavierdupre.fr", True),
