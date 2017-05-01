@@ -7,7 +7,9 @@ Formalisation
 Problème d'optimisation
 +++++++++++++++++++++++
 
-Je me réfère pour cela à l'article [Sevenster2013]_ qui introduit différentes façons de construire
+Je me réfère pour cela à l'article [Sevenster2013]_
+(voir aussi [Bampoulidis2017]_)
+qui introduit différentes façons de construire
 un système d'autocompétion et qui les compare à l'usage. Et s'il existe plusieurs façons de faire, il
 faut d'abord mettre au point une façon de les comparer.
 Je me place dans le cadre d'un moteur de recherche car c'est l'usage principal,
@@ -114,6 +116,10 @@ revient au même.
 Où :math:`K=\sum_{i=1}^N l(q_i) w_i` l'ensemble des caractères tapés par les utilisateurs.
 :math:`\frac{G(S)}{K}` est en quelque sorte le ratio de caractères économisés
 par le système de complétion.
+
+.. [Bampoulidis2017] Does Online Evaluation Correspond to Offline Evaluation in Query Auto Completion? (2017)
+    Alexandros Bampoulidis, João PalottiMihai LupuJon BrasseyAllan Hanbury
+    *ECIR 2017: Advances in Information Retrieval*
 
 .. [Sevenster2013] Algorithmic and user study of an autocompletion algorithm on a large
     medical vocabulary (2013),
