@@ -8,7 +8,6 @@ __version__ = "0.1"
 __author__ = "Xavier Dupré"
 __github__ = "https://github.com/sdpython/mlstatpy"
 __url__ = "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html"
-__downloadUrl__ = "https://github.com/sdpython/mlstatpy"
 __license__ = "MIT License"
 __blog__ = """
 <?xml version="1.0" encoding="UTF-8"?>
