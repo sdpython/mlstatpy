@@ -40,43 +40,45 @@ Faire un peu de théorie ça repose.
 
 Xavier Dupré
 
-.. image:: https://travis-ci.org/sdpython/mlstatpy.svg?branch=master
-    :target: https://travis-ci.org/sdpython/mlstatpy
-    :alt: Build status
+.. only:: html
 
-.. image:: https://ci.appveyor.com/api/projects/status/5env33qptorgshaq?svg=true
-    :target: https://ci.appveyor.com/project/sdpython/mlstatpy
-    :alt: Build Status Windows
+    .. image:: https://travis-ci.org/sdpython/mlstatpy.svg?branch=master
+        :target: https://travis-ci.org/sdpython/mlstatpy
+        :alt: Build status
 
-.. image:: https://badge.fury.io/py/mlstatpy.svg
-    :target: http://badge.fury.io/py/mlstatpy
+    .. image:: https://ci.appveyor.com/api/projects/status/5env33qptorgshaq?svg=true
+        :target: https://ci.appveyor.com/project/sdpython/mlstatpy
+        :alt: Build Status Windows
 
-.. image:: https://img.shields.io/badge/license-MIT-blue.svg
-    :alt: MIT License
-    :target: http://opensource.org/licenses/MIT
+    .. image:: https://badge.fury.io/py/mlstatpy.svg
+        :target: http://badge.fury.io/py/mlstatpy
 
-.. image:: https://landscape.io/github/sdpython/mlstatpy/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/sdpython/mlstatpy/master
-   :alt: Code Health
+    .. image:: https://img.shields.io/badge/license-MIT-blue.svg
+        :alt: MIT License
+        :target: http://opensource.org/licenses/MIT
 
-.. image:: https://requires.io/github/sdpython/mlstatpy/requirements.svg?branch=master
-     :target: https://requires.io/github/sdpython/mlstatpy/requirements/?branch=master
-     :alt: Requirements Status
+    .. image:: https://landscape.io/github/sdpython/mlstatpy/master/landscape.svg?style=flat
+       :target: https://landscape.io/github/sdpython/mlstatpy/master
+       :alt: Code Health
 
-.. image:: https://codecov.io/github/sdpython/mlstatpy/coverage.svg?branch=master
-    :target: https://codecov.io/github/sdpython/mlstatpy?branch=master
+    .. image:: https://requires.io/github/sdpython/mlstatpy/requirements.svg?branch=master
+         :target: https://requires.io/github/sdpython/mlstatpy/requirements/?branch=master
+         :alt: Requirements Status
 
-.. image:: http://img.shields.io/github/issues/sdpython/mlstatpy.png
-    :alt: GitHub Issues
-    :target: https://github.com/sdpython/mlstatpy/issues
+    .. image:: https://codecov.io/github/sdpython/mlstatpy/coverage.svg?branch=master
+        :target: https://codecov.io/github/sdpython/mlstatpy?branch=master
 
-.. image:: https://badge.waffle.io/sdpython/mlstatpy.png?label=ready&title=Ready
-    :alt: Waffle
-    :target: https://waffle.io/sdpython/mlstatpy
+    .. image:: http://img.shields.io/github/issues/sdpython/mlstatpy.png
+        :alt: GitHub Issues
+        :target: https://github.com/sdpython/mlstatpy/issues
 
-.. image:: https://api.codacy.com/project/badge/Grade/677db5dda93b40d4ba1ec2f870cfd934
-    :target: https://www.codacy.com/app/sdpython/mlstatpy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sdpython/mlstatpy&amp;utm_campaign=Badge_Grade
-    :alt: Codacy
+    .. image:: https://badge.waffle.io/sdpython/mlstatpy.png?label=ready&title=Ready
+        :alt: Waffle
+        :target: https://waffle.io/sdpython/mlstatpy
+
+    .. image:: https://api.codacy.com/project/badge/Grade/677db5dda93b40d4ba1ec2f870cfd934
+        :target: https://www.codacy.com/app/sdpython/mlstatpy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sdpython/mlstatpy&amp;utm_campaign=Badge_Grade
+        :alt: Codacy
 
 **Links:** `github <https://github.com/sdpython/mlstatpy/>`_,
 `documentation <http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html>`_,
