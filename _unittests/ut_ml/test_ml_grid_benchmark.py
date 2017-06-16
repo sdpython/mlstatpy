@@ -52,7 +52,10 @@ class TestMlGridBenchMark(unittest.TestCase):
             self._testMethodName,
             OutputPrint=__name__ == "__main__")
 
+        fix_tkinter_issues_virtualenv(fLOG=fLOG)
+        import matplotlib.pyplot as plt
         import dill
+        self.assertTrue(plt is not None)
         temp = get_temp_folder(__file__, "temp_ml_grid_benchmark")
 
         params = [dict(model=lambda: KMeans(n_clusters=3), name="KMeans-3", shortname="km-3"),
