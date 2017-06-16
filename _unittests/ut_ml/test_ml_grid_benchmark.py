@@ -38,7 +38,7 @@ except ImportError:
     import pyquickhelper as skip_
 
 from pyquickhelper.loghelper import fLOG
-from pyquickhelper.pycode import get_temp_folder
+from pyquickhelper.pycode import get_temp_folder, fix_tkinter_issues_virtualenv
 from src.mlstatpy.ml import MlGridBenchMark
 from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.datasets import make_blobs
