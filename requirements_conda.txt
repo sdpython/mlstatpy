@@ -19,7 +19,6 @@ line_profiler
 mako
 matplotlib
 memory_profiler
-mpld3
 nbformat
 nbpresent
 networkx
