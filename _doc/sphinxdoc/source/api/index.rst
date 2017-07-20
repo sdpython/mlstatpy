@@ -1,0 +1,10 @@
+
+API Résumé
+==========
+
+.. toctree::
+    :maxdepth: 2
+
+    ml
+    text
+    data
