@@ -1,12 +1,12 @@
 
-Source de données
+Source de donnÃ©es
 =================
 
 .. contents::
     :local:
     :depth: 2
 
-Wikipédia
+WikipÃ©dia
 +++++++++
 
 .. autosignature:: mlstatpy.data.wikipedia.download_dump

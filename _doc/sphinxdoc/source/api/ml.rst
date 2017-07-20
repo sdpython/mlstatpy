@@ -6,7 +6,7 @@ Machine Learning
     :local:
     :depth: 2
 
-Métriques
+MÃ©triques
 +++++++++
 
 .. autosignature:: mlstatpy.ml.ml_grid_benchmark.MlGridBenchMark

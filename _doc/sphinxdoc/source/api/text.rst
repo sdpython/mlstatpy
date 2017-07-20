@@ -6,7 +6,7 @@ Traitement du langage naturel
     :local:
     :depth: 2
 
-Complétion
+ComplÃ©tion
 ++++++++++
 
 .. autosignature:: mlstatpy.nlp.completion_simple.CompletionElement
