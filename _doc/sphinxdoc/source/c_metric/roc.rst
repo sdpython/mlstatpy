@@ -229,7 +229,7 @@ une loi normale lorsque :math:`n` et :math:`m` tendent vers l'infini.
 
 .. mathdef::
     :title: Variance de l'estimateur AUC
-    :tag: Corollair
+    :tag: Corollaire
 
     On note :math:`P_X = \pr{ X < \min\acc{Y_i,Y_j }}` et :math:`P_Y = \pr { \max\acc{X_i,X_j} < Y}`.
     :math:`X_i` et :math:`X_j` sont de même loi que :math:`X`, :math:`Y_i`, :math:`Y_j` sont de même loi que :math:`Y`.
