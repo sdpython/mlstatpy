@@ -14,5 +14,3 @@ Métriques
 
 .. autosignature:: mlstatpy.ml.roc.ROC
     :members:
-
-

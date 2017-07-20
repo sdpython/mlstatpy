@@ -21,4 +21,3 @@ Normalisation
 .. autosignature:: mlstatpy.data.wikipedia.normalize_wiki_text
 
 .. autosignature:: mlstatpy.nlp.normalize.remove_diacritics
-

@@ -23,4 +23,3 @@ Wikipédia
 
 .. autosignature:: mlstatpy.data.wikipedia.download_dump
     :members:
-
