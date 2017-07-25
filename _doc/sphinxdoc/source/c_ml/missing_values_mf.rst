@@ -51,13 +51,62 @@ Quelques cas simples
 
 Le notebook :ref:`valeursmanquantesmfrst` montre la décroissante de l'erreur
 en fonction du rang et l'impact de la corrélation sur cette même erreur.
+Le dernier paragraphe montre qu'il n'existe pas de solution unique à un problème donné.
+L'exemple suivant s'intéresse à une matrice 3x3.
+Les trois points forment un triangle dans un plan.
+
+.. plot::
+    :include-source:
+
+    import numpy
+    W = numpy.array([[0.5, 0.5, 0], [0, 0, 1]]).T
+    H = numpy.array([[1, 1, 0], [0.0, 0.0, 1.0]])
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    wh = W @ H
+    ax.scatter(M[:,0], M[:,1], M[:,2], c='b', marker='o', s=20)
+    ax.scatter(wh[:,0], wh[:,1], wh[:,2], c='r', marker='^')
+    plt.show()
+
+On peut voir la matrice :math:`M` comme un ensemble de :math:`n=3` points dans un espace vectoriel.
+La matrice :math:`W` est un ensemble de :math:`k < n` points dans le même espace.
+La matrice :math:`WH`, de rang :math:`k` est une approximation de cet ensemble
+dans le même espace, c'est aussi :math:`n` combinaisons linéaires de :math:`k`
+points de façon à former :math:`n` points les plus proches proches de
+:math:`n` points de la matrice :math:`M`.
 
 Intuition géométrique
 =====================
 
-Sans valeur manquante, ce problème est équivalent à une
-`Analyse en Composantes Principales (ACP) <https://fr.wikipedia.org/wiki/Analyse_en_composantes_principales>`_.
-Voir aussi [Boutsidis2008]_ (décomposition en valeurs singulières comme algorithme d'initialisation.
+L'exemple précédente suggère une interprétation géométrique d'une factorisation
+de matrice. Sans valeur manquante, ce problème est équivalent à une
+`Analyse en Composantes Principales (ACP) <https://fr.wikipedia.org/wiki/Analyse_en_composantes_principales>`_
+(voir aussi [Boutsidis2008]_ (décomposition en valeurs singulières comme algorithme d'initialisation).
+Nous allons le montrer grâce à un lemme et un théorème.
+
+.. mathdef::
+    :title: Factorisation de matrice contraintes
+    :tag: Lemme
+    :lid: lemme_mf_1
+
+    Soit :math:`M=WH`, les matrices :math:`W` et :math:`H`
+    sont de rang :math:`K`. On note :math:`M=(m_{ij})`,
+    :math:`W=(w_{ik})`, :math:`H=(h_{kj})`. On suppose que les matrices
+    sont solutions du problème d'optimisation
+    :math:`\min_{W,H} \norm{ M - WH }^2`.
+    Alors on peut trouver deux autres matrices :math:`W'` et :math:`H'`
+    telles que:
+
+    .. math::
+
+        \begin{array}{l} \norm{ M - WH }^2 = \norm{ M - W'H' }^2 \\ \forall j, \sum_k h'_{kj} = 1 \end{array}
+
+    On rappelle que les coefficients de la matrice :math:`H` sont positifs.
+
+Avec cette écriture, la matrice :math:`W'H'`
+est une façon de former :math:`n` points dans l'enveloppe convexe déterminée par
+:math:`k` autres.
 
 Quelques résultats
 ==================
