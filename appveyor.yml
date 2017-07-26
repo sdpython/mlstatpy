@@ -22,7 +22,7 @@ install:
   - "%PYTHON%\\Scripts\\pymy_install3 --set=pyensae"
   - "%PYTHON%\\Scripts\\pip install cryptography jyquickhelper"
   - "%PYTHON%\\Scripts\\pip install azure dill mako"
-  - "%PYTHON%\\Scripts\\pymy_install3 pycrypto pyzmq"
+  - "%PYTHON%\\Scripts\\pymy_install3 pycrypto pyzmq statsmodels"
   - "%PYTHON%\\Scripts\\pip install pycryptodomex"
   - "%PYTHON%\\Scripts\\pip install urllib3 tqdm"
   - "%PYTHON%\\Scripts\\pip install pycodestyle prompt_toolkit seaborn"
