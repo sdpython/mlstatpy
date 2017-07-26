@@ -20,7 +20,7 @@ avec des modèles non linéaires.
 \subsection{Principe}
 
 L'algorithme implémentant l'analyse en composantes principales
-est basé sur un réseau linéaire dit "diabolo", ce réseau
+est basé sur un réseau linéaire dit *"diabolo"*, ce réseau
 possède une couche d'entrées à :math:`N` entrées, une couche cachée et une couche
 de sortie à :math:`N` sorties. L'objectif est
 d'apprendre la fonction identité sur l'espace :math:`\R^N`.
@@ -125,7 +125,7 @@ l'une de l'autre, à moins que l'erreur :eq:`rn_equation_acp_error` soit nulle.
 La décompression s'effectue donc avec des pertes d'information.
 L'enjeu de l'ACP est de trouver un bon compromis entre le nombre
 de coefficients et la perte d'information tôlérée.
-Dans le cas de l'ACP, la compression est "linéaire", c'est une projection.
+Dans le cas de l'ACP, la compression est *"linéaire"*, c'est une projection.
 
 .. _par_ACP_un:
 
