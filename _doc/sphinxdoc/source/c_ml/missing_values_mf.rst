@@ -58,8 +58,7 @@ Les trois points forment un triangle dans un plan.
     W = numpy.array([[0.5, 0.5, 0], [0, 0, 1]]).T
     H = numpy.array([[1, 1, 0], [0.0, 0.0, 1.0]])
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    ax = plt.add_subplot(111, projection='3d')
     wh = W @ H
     ax.scatter(M[:,0], M[:,1], M[:,2], c='b', marker='o', s=20)
     ax.scatter(wh[:,0], wh[:,1], wh[:,2], c='r', marker='^')
