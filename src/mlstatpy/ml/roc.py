@@ -33,14 +33,15 @@ class ROC:
 
     def __init__(self, y_true=None, y_score=None, sample_weight=None, df=None):
         """
-        initialisation with a dataframe and two columns:
+        Initialisation with a dataframe and two or three columns:
 
         * column 1: score (y_score)
         * column 2: expected answer (boolean) (y_true)
         * column 3: weight (optional) (sample_weight)
 
         @param  y_true          if *df* is None, *y_true*, *y_score*, *sample_weight* must be filled,
-                                *y_true* is wether or None the answer is true
+                                *y_true* is whether or None the answer is true.
+                                *y_true* means the prediction is right.
         @param  y_score         score prediction
         @param  sample_weight   weights
         @param  df              dataframe or array or list,
@@ -193,14 +194,14 @@ class ROC:
 
     def precision(self):
         """
-        Compute precision
+        Computes the precision.
         """
         score, weight = self.data.columns[0], self.data.columns[2]
         return (self.data[score] * self.data[weight] * 1.0).sum() / self.data[weight].sum()
 
     def compute_roc_curve(self, nb=100, curve=CurveType.ROC, bootstrap=False):
         """
-        Compute a ROC curve with *nb* points avec nb,
+        Computes a ROC curve with *nb* points avec nb,
         if *nb == -1*, there are as many as points as the data contains,
         if *bootstrap == True*, it draws random number to create confidence interval based on bootstrap method.
 
