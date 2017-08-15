@@ -21,7 +21,7 @@ install:
   - "%PYTHON%\\Scripts\\pip install -U git+https://github.com/quantopian/qgrid --no-deps"
   - "%PYTHON%\\Scripts\\pymy_install3 --set=pyensae"
   - "%PYTHON%\\Scripts\\pip install cryptography jyquickhelper"
-  - "%PYTHON%\\Scripts\\pip install azure dill mako"
+  - "%PYTHON%\\Scripts\\pip install azure dill mako semantic_version"
   - "%PYTHON%\\Scripts\\pymy_install3 pycrypto pyzmq statsmodels"
   - "%PYTHON%\\Scripts\\pip install pycryptodomex"
   - "%PYTHON%\\Scripts\\pip install urllib3 tqdm"
