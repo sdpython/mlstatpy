@@ -92,7 +92,7 @@ class TestRunNotebooksDsGarden(unittest.TestCase):
         for f in os.listdir(fnb):
             if os.path.splitext(f)[-1] == ".ipynb" and "long" not in f:
                 keepnote.append(os.path.join(fnb, f))
-        assert len(keepnote) > 0
+        self.assertTrue(len(keepnote) > 0)
 
         # function to tell that a can be run
         def valid(cell):
