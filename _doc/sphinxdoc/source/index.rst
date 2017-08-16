@@ -81,6 +81,10 @@ Xavier Dupré
         :target: https://www.codacy.com/app/sdpython/mlstatpy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sdpython/mlstatpy&amp;utm_campaign=Badge_Grade
         :alt: Codacy
 
+    .. image:: nbcov.png
+        :target: http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/all_notebooks_coverage.html
+        :alt: Notebook Coverage
+
 **Links:** `github <https://github.com/sdpython/mlstatpy/>`_,
 `documentation <http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html>`_,
 :ref:`l-README`,
