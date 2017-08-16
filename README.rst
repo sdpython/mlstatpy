@@ -44,7 +44,7 @@ README
         :target: https://www.codacy.com/app/sdpython/mlstatpy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sdpython/mlstatpy&amp;utm_campaign=Badge_Grade
         :alt: Codacy
 
-.. image:: http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/nbcov.png
+.. image:: http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/_images/nbcov.png
     :target: http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/all_notebooks_coverage.html
     :alt: Notebook Coverage
 
