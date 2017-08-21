@@ -22,6 +22,7 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
     c_nlp/index
     c_metric/index
     c_dist/index
+    c_graph/index
     c_garden/index
     api/index
     end_index
