@@ -5,7 +5,6 @@
 import os
 import sys
 import unittest
-import warnings
 
 
 try:
@@ -54,8 +53,8 @@ class TestGraphviz(unittest.TestCase):
         temp = get_temp_folder(__file__, "temp_graphviz")
         fout = os.path.join(temp, "image.png")
 
-        out = draw_graph_graphviz([(1, "eee", "red")],
-                                  [(1, 2, "blue"), (3, 4), (1, 3)], fout)
+        draw_graph_graphviz([(1, "eee", "red")],
+                            [(1, 2, "blue"), (3, 4), (1, 3)], fout)
 
         self.assertTrue(os.path.exists(fout))
         self.assertTrue(os.path.exists(fout + ".gv"))
