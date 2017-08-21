@@ -10,7 +10,8 @@ without any cycle. This problem is known as *graph similarity*
 or `graph matching <https://en.wikipedia.org/wiki/Graph_matching>`_.
 One of the solution is the
 `Graph Edit Distance <https://en.wikipedia.org/wiki/Graph_edit_distance>`_,
-a better solution is described in [Blondel2004]_.
+a better solution is described in [Blondel2004]_. You can also read
+`Graph similarity <http://www.cs.uoi.gr/~pvassil/downloads/GraphDistance/LauraZager.pdf>`_.
 
 .. contents::
     :local:
