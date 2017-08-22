@@ -1,7 +1,6 @@
 Cython
 cytoolz
 dask
-datashader
 datashape
 dill
 h5py
