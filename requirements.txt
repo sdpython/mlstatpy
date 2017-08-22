@@ -5,6 +5,7 @@ blockdiag
 bokeh
 coverage
 jyquickhelper
+mako
 mutagen
 pycodestyle>=2.0.0
 pydocstyle

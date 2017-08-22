@@ -72,14 +72,6 @@ class TestRunNotebooksDsGarden(unittest.TestCase):
             self._testMethodName,
             OutputPrint=__name__ == "__main__")
 
-        if sys.version_info[0] == 2:
-            # notebooks are not converted into python 2.7, so not tested
-            return
-
-        if compare_module_version(IPython.__version__, "4.0.0") < 0:
-            # IPython is not recnt enough
-            return
-
         kernel_name = None if "travis" in sys.executable else install_python_kernel_for_unittest(
             "python3_module_template")
 
@@ -114,10 +106,6 @@ class TestRunNotebooksDsGarden(unittest.TestCase):
             os.path.normpath(os.path.join(
                 os.path.abspath(os.path.dirname(__file__)), "..", "..", "..", "jyquickhelper", "src"))
         ]
-
-        # creation of a kernel
-        kernel_name = None if "travis" in sys.executable else install_python_kernel_for_unittest(
-            "mlstatpy")
 
         # run the notebooks
         res = execute_notebook_list(
