@@ -8,6 +8,7 @@ jyquickhelper
 mutagen
 pycodestyle>=2.0.0
 pydocstyle
+pyensae
 pyquickhelper>1.5.2122
 semantic_version
 sphinx-bootstrap-theme
