@@ -6,6 +6,7 @@ bokeh
 coverage
 jyquickhelper
 mako
+memory_profiler
 mutagen
 pycodestyle>=2.0.0
 pydocstyle
