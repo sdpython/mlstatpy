@@ -108,9 +108,33 @@ class Edge:
 
 class GraphDistance:
     """
-    defines a graph
+    Defines a graph to compute a distance a distance between two graphs.
 
-    See :ref:`l-graph_distance`.
+    .. exref::
+        :title: Compute a distance between two graphs.
+
+        See :ref:`l-graph_distance`.
+
+        .. runpython::
+            :showcode:
+
+            import copy
+            from mlstatpy.graph import GraphDistance
+
+            # We define two graphs as list of edges.
+            graph1 = [("a", "b"), ("b", "c"), ("b", "X"), ("X", "c"),
+                      ("c", "d"), ("d", "e"), ("0", "b")]
+            graph2 = [("a", "b"), ("b", "c"), ("b", "X"), ("X", "c"),
+                      ("c", "t"), ("t", "d"), ("d", "e"), ("d", "g")]
+
+            # We convert them into objects GraphDistance.
+            graph1 = GraphDistance(graph1)
+            graph2 = GraphDistance(graph2)
+
+            distance, graph = graph1.distance_matching_graphs_paths(graph2, use_min=False)
+
+            print("distance", distance)
+            print("common paths:", graph)
     """
 
     # graph is a dictionary
@@ -515,7 +539,8 @@ class GraphDistance:
                            use_min=False,
                            debug=False):
         """
-        Tries to align two paths from two graphs
+        Tries to align two paths from two graphs.
+
         @param      p1                      path 1 (from g1)
         @param      p2                      path 2 (from g2)
         @param      g1                      graph 1
@@ -637,7 +662,8 @@ class GraphDistance:
                                        weight_vertex=1.,
                                        weight_edge=1.):
         """
-        compute an alignment between two graphs
+        Computes an alignment between two graphs.
+
         @param      graph2                  the other graph
         @param      function_mach_vertices   function which gives a distance bewteen two vertices,
                                             if None, it take the output of @see me get_matching_functions
@@ -649,9 +675,7 @@ class GraphDistance:
         @param      use_min                  @see me edit_distance_path
         @param      weight_vertex            a weight for every vertex
         @param      weight_edge              a weight for every edge
-        @return                 2 tuple:
-                                    - a distance
-                                    - a graph containing the aligned paths between the two graphs
+        @return                             2 tuple (a distance, a graph containing the aligned paths between the two graphs)
 
         See :ref:`l-graph_distance`.
         """

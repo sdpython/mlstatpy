@@ -8,3 +8,4 @@ API Résumé
     ml
     text
     data
+    graph
