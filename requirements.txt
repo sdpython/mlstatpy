@@ -4,6 +4,7 @@ babel!=2.0
 blockdiag
 bokeh
 coverage
+gprof2dot
 jyquickhelper
 line_profiler
 mako
@@ -15,6 +16,7 @@ pyensae
 pyquickhelper>1.5.2122
 semantic_version
 setuptools>=36.0.0
+snakeviz
 sphinx-bootstrap-theme
 sphinx-gallery
 sphinxcontrib-images
@@ -25,4 +27,5 @@ sphinxjp.themes.revealjs
 sphinxjp.themes.sphinxjp
 tqdm
 unify
+vprof
 wheel
