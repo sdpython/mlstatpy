@@ -39,7 +39,7 @@ except ImportError:
     import src
 
 from pyquickhelper.loghelper import fLOG, CustomLog
-from pyquickhelper.pycode import get_temp_folder, add_missing_development_version, is_travis_orappveyor
+from pyquickhelper.pycode import get_temp_folder, add_missing_development_version, is_travis_or_appveyor
 from pyquickhelper.ipythonhelper import execute_notebook_list, execute_notebook_list_finalize_ut
 from pyquickhelper.pycode import compare_module_version
 from pyquickhelper.ipythonhelper import install_python_kernel_for_unittest
@@ -58,7 +58,7 @@ class TestLONGRunNotebooksNLP(unittest.TestCase):
             self._testMethodName,
             OutputPrint=__name__ == "__main__")
 
-        kernel_name = None if is_travis_orappveyor() else install_python_kernel_for_unittest(
+        kernel_name = None if is_travis_or_appveyor() else install_python_kernel_for_unittest(
             "python3_module_template")
 
         temp = get_temp_folder(__file__, "temp_run_notebooks_nlp")
