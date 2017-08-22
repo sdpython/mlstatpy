@@ -19,7 +19,7 @@ pillow
 scikit-learn
 scipy
 seaborn
-setuptools
+setuptools>=36.0.0
 Sphinx
 statsmodels
 xarray

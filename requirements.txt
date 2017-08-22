@@ -11,6 +11,7 @@ pydocstyle
 pyensae
 pyquickhelper>1.5.2122
 semantic_version
+setuptools>=36.0.0
 sphinx-bootstrap-theme
 sphinx-gallery
 sphinxcontrib-images
