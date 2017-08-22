@@ -1,4 +1,0 @@
-pyensae
-pymmails
-pymyinstall
-pyrsslocal
