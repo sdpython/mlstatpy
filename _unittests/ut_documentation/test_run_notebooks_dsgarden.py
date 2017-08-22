@@ -72,7 +72,7 @@ class TestRunNotebooksDsGarden(unittest.TestCase):
             self._testMethodName,
             OutputPrint=__name__ == "__main__")
 
-        kernel_name = None if "travis" in sys.executable else install_python_kernel_for_unittest(
+        kernel_name = None if is_travis_or_appveyor() else install_python_kernel_for_unittest(
             "python3_module_template")
 
         temp = get_temp_folder(__file__, "temp_run_notebooks_dsgarden")
