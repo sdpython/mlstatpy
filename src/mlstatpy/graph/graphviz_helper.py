@@ -48,7 +48,7 @@ def edges2gv(vertices, edges):
     .. runpython::
         :showcode:
 
-        from ensae_teaching_cs.helpers.graphviz_helper import edges2gv
+        from mlstatpy.graph.graphviz_helper import edges2gv
         gv = edges2gv([(1, "eee", "red")],
                       [(1, 2, "blue"), (3, 4), (1, 3)])
         print(gv)
