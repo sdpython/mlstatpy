@@ -13,6 +13,7 @@ mutagen
 pycodestyle>=2.0.0
 pydocstyle
 pyensae
+pyinstrument
 pyquickhelper>1.5.2122
 semantic_version
 setuptools>=36.0.0
