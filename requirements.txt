@@ -5,6 +5,7 @@ blockdiag
 bokeh
 coverage
 jyquickhelper
+line_profiler
 mako
 memory_profiler
 mutagen
