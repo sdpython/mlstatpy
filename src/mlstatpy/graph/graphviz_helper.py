@@ -10,7 +10,7 @@ from pyquickhelper.helpgen.conf_path_tools import find_graphviz_dot
 
 def run_graphviz(filename, image, engine="dot"):
     """
-    run graphviz
+    Run :epkg:`GraphViz`.
 
     @param      filename        filename which contains the graph definition
     @param      image           output image
@@ -37,7 +37,7 @@ def run_graphviz(filename, image, engine="dot"):
 
 def edges2gv(vertices, edges):
     """
-    converts a graph into a graphviz file format
+    Converts a graph into a graphviz file format.
 
     @param      edges           see below
     @param      vertices        see below
@@ -56,10 +56,13 @@ def edges2gv(vertices, edges):
     """
     memovertex = {}
     for v in vertices:
-        if len(v) == 1:
-            memovertex[v[0]] = None
+        if isinstance(v, tuple):
+            if len(v) == 1:
+                memovertex[v[0]] = None
+            else:
+                memovertex[v[0]] = v[1:]
         else:
-            memovertex[v[0]] = v[1:]
+            memovertex[v] = None
     for edge in edges:
         i, j = edge[:2]
         if i not in memovertex:
@@ -98,20 +101,19 @@ def edges2gv(vertices, edges):
 
 def draw_graph_graphviz(vertices, edges, image, engine="dot"):
     """
-    dessine un graph en utilisant `Graphviz <http://www.graphviz.org/>`_,
+    Draw a graph using :epkg:`Graphviz`.
 
     @param      edges           see below
     @param      vertices        see below
     @param      image           output image
     @param      engine          *dot* or *neato*
-    @return                     output of graphviz
+    @return                     :epkg:`Graphviz`
 
     The function creates a file ``<image>.gv``.
-
     ::
 
-        edges    = [ (1,2, label, couleur), (3,4), (1,3), ... ]  , liste d'arcs
-        vertices = [ (1, label, couleur), (2), ... ]  , liste de noeuds
+        edges    = [ (1,2, label, color), (3,4), (1,3), ... ]  , liste d'arcs
+        vertices = [ (1, label, color), (2), ... ]  , liste de noeuds
         image = nom d'image (format png)
 
     """
@@ -120,4 +122,8 @@ def draw_graph_graphviz(vertices, edges, image, engine="dot"):
     with open(filename, "w", encoding="utf-8") as f:
         f.write(text)
 
-    return run_graphviz(filename, image, engine=engine)
+    out = run_graphviz(filename, image, engine=engine)
+    if not os.path.exists(image):
+        raise FileNotFoundError(
+            "GraphViz failed with no reason. '{0}' not found.".format(image))
+    return out

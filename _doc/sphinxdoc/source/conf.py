@@ -75,11 +75,37 @@ if choice == "bootstrap":
     }
 
 language = "fr"
+
+preamble = '''
+\\usepackage{etex}
+\\usepackage{fixltx2e} % LaTeX patches, \\textsubscript
+\\usepackage{cmap} % fix search and cut-and-paste in Acrobat
+\\usepackage[raccourcis]{fast-diagram}
+\\usepackage{titlesec}
+\\usepackage{amsmath}
+\\usepackage{amssymb}
+\\usepackage{amsfonts}
+\\usepackage{graphics}
+\\usepackage{epic}
+\\usepackage{eepic}
+%\\usepackage{pict2e}
+%%% Redefined titleformat
+\\setlength{\\parindent}{0cm}
+\\setlength{\\parskip}{1ex plus 0.5ex minus 0.2ex}
+\\newcommand{\\hsp}{\\hspace{20pt}}
+\\newcommand{\\acc}[1]{\\left\\{#1\\right\\}}
+\\newcommand{\\cro}[1]{\\left[#1\\right]}
+\\newcommand{\\pa}[1]{\\left(#1\\right)}
+\\newcommand{\\R}{\\mathbb{R}}
+\\newcommand{\\HRule}{\\rule{\\linewidth}{0.5mm}}
+%\\titleformat{\\chapter}[hang]{\\Huge\\bfseries\\sffamily}{\\thechapter\\hsp}{0pt}{\\Huge\\bfseries\\sffamily}
+'''
+
 custom_preamble = """\n
+\\usepackage[all]{xy}
 \\newcommand{\\vecteur}[2]{\\pa{#1,\\dots,#2}}
 \\newcommand{\\N}[0]{\\mathbb{N}}
 \\newcommand{\\indicatrice}[1]{\\mathbf{1\\!\\!1}_{\\acc{#1}}}
-\\usepackage[all]{xy}
 \\newcommand{\\infegal}[0]{\\leqslant}
 \\newcommand{\\supegal}[0]{\\geqslant}
 \\newcommand{\\ensemble}[2]{\\acc{#1,\\dots,#2}}
@@ -104,6 +130,6 @@ custom_preamble = """\n
 """
 #\\usepackage{eepic}
 
-imgmath_latex_preamble += custom_preamble
-latex_elements['preamble'] += custom_preamble
+imgmath_latex_preamble = preamble + custom_preamble
+latex_elements['preamble'] = preamble + custom_preamble
 mathdef_link_only = True

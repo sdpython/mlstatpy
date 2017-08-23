@@ -269,3 +269,4 @@ _doc/notebooks/ml/*.clean_cache
 _doc/notebooks/ml/img-*.png
 _doc/notebooks/ml/*.pickle
 
+_doc/sphinxdoc/source/nbcov.png
