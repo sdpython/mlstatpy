@@ -9,6 +9,7 @@ jyquickhelper
 line_profiler
 mako
 memory_profiler
+minepy
 mutagen
 pycodestyle>=2.0.0
 pydocstyle
