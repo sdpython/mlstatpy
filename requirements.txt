@@ -17,7 +17,6 @@ pyensae
 pyinstrument
 pyquickhelper>1.5.2126
 semantic_version
-setuptools>=36.0.0
 snakeviz
 sphinx-bootstrap-theme
 sphinx-gallery
