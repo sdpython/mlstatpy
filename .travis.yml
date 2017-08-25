@@ -8,7 +8,7 @@ env:
 install:
   # We do this conditionally because it saves us some downloading if the
   # version is the same.
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
@@ -17,12 +17,10 @@ install:
   - conda install conda-build
   # Useful for debugging any issues with conda
   - conda info -a
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy scipy nose cython scikit-learn
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy mkl scipy nose cython scikit-learn
   - source activate test-environment
-  - conda install --yes nomkl
   # - make all
   #- conda build build_tools/conda-recipe --quiet
-  - conda install toolz
   - conda install -q --file=requirements_conda.txt
   - pip install -r requirements.txt
   - pip install -U git+https://github.com/quantopian/qgrid --no-deps  

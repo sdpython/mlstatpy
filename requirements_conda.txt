@@ -1,3 +1,4 @@
+bokeh
 Cython
 cytoolz
 dask
@@ -5,7 +6,6 @@ datashape
 dill
 h5py
 ipython
-ipywidgets
 jupyter
 jupyter_client
 jupyter_core

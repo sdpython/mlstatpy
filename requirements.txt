@@ -1,8 +1,6 @@
-ansiconv
 autopep8
 babel!=2.0
 blockdiag
-bokeh
 coverage
 gprof2dot
 jyquickhelper
