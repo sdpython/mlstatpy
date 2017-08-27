@@ -35,6 +35,7 @@ Exemples
 
     gyexamples/index
     all_notebooks
+    blog/blogindex
 
 On fait beaucoup de choses avec l'informatique mais en pratique
 on doit maintenir, on doit réécrire sans cesse.
