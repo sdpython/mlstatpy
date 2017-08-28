@@ -28,7 +28,7 @@ install:
   - "%PYTHON%\\Scripts\\pip install pycodestyle prompt_toolkit seaborn"
   - "%PYTHON%\\Scripts\\pymy_install3 --task=tool --source=zip graphviz"
   - "%PYTHON%\\Scripts\\pip install pyinstrument memory_profiler line_profiler vprof snakeviz gprof2dot"
-  - "%PYTHON%\\Scripts\\pip install -r requirements"
+  - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
   - "set PATH=%PATH%;C:\\projects\\mlstatpy\\build\\update_modules\\Graphviz\\bin"
   - "dir C:\\projects\\mlstatpy\\build\\update_modules\\Graphviz\\bin"
 build: off
