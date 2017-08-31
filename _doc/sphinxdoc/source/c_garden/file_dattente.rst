@@ -136,8 +136,8 @@ Cette constation et l'équation (:eq:`mu_dt_eq`) nous permettent d'écrire que :
     :nowrap:
 
     \begin{eqnarray}
-    \pr{ \text{une personne arrive pendant :math:`dt$} } &=& \lambda dt \; e^{-\lambda dt} \sim \lambda dt + o(dt) \\
-    \pr{ \text{une personne part pendant :math:`dt$} } &=& 1 - e^{-\mu dt} \sim \mu dt + o (dt)
+    \pr{ \text{une personne arrive pendant } dt } &=& \lambda dt \; e^{-\lambda dt} \sim \lambda dt + o(dt) \\
+    \pr{ \text{une personne part pendant } dt } &=& 1 - e^{-\mu dt} \sim \mu dt + o (dt)
     \end{eqnarray}
 
 De plus, pendant la durée :math:`dt`, quatre cas sont possibles :
@@ -363,7 +363,7 @@ depuis l'instant~0 jusqu'à l'instant :math:`t`, par conséquent :
     :nowrap:
 
     \begin{eqnarray}
-    p_0(t) &=& \pr{ \text{ durée de vie des :math:`S` ampoules soient toutes supérieures à } t } \\
+    p_0(t) &=& \pr{ \text{ durée de vie des } S \text{ ampoules soient toutes supérieures à } t } \\
     \Longrightarrow p_0(t) &=& \cro{ \int_t^{\infty} \mu e^{- \mu u} du } ^S \\
     \Longrightarrow	p_0(t) &=& e^{-S\mu t}
     \end{eqnarray}
@@ -514,3 +514,10 @@ La valeur obtenue est proche de :math:`S \mu = 100`.
 .. toctree::
 
     ../notebooks/file_dattente
+
+Bibliographie
+=============
+
+.. [Faure2000]_ Précis de recherche opérationnelle, 5ième édition, 
+    *Robert Faure, Bernard Lemaire, Christophe Picouleau*,
+    Dunod
