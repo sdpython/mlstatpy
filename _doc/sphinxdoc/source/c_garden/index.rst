@@ -14,3 +14,4 @@ découvrir quelques poussières sous le tapis.
     ../notebooks/split_train_test
     ../notebooks/discret_gradient
     ../notebooks/correlation_non_lineaire
+    file_dattente
