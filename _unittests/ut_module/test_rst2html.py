@@ -116,6 +116,11 @@ class TestRst2Html(unittest.TestCase):
         with open(rst, "r", encoding="utf-8") as f:
             content = f.read()
         writer = "html"
+
+        if is_travis_or_appveyor() in ('travis', 'appveyor'):
+            # No latex.
+            return
+
         ht = rst2html(content, writer=writer, layout="sphinx",
                       keep_warnings=True, imgmath_latex_preamble=preamble,
                       outdir=temp)

@@ -45,7 +45,7 @@ from pyquickhelper.ipythonhelper import execute_notebook_list, execute_notebook_
 class TestNotebook123Coverage(unittest.TestCase):
 
     def setUp(self):
-        add_missing_development_version(["pymyinstall", "pyensae", "pymmails", "jyquickhelper"],
+        add_missing_development_version(["pyensae", "jyquickhelper"],
                                         __file__, hide=True)
 
     def a_test_notebook_runner(self, name, folder, valid=None):

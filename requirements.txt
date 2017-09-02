@@ -13,8 +13,6 @@ pycodestyle>=2.0.0
 pydocstyle
 pyensae
 pyinstrument
-pymmails
-pymyinstall
 pyquickhelper>=1.5.2175
 semantic_version
 snakeviz
