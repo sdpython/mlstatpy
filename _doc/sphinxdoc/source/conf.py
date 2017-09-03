@@ -111,7 +111,6 @@ custom_preamble = """\n
 \\newcommand{\\ensemble}[2]{\\acc{#1,\\dots,#2}}
 \\newcommand{\\fleche}[1]{\\overrightarrow{ #1 }}
 \\newcommand{\\intervalle}[2]{\\left\\{#1,\\cdots,#2\\right\\}}
-\\newcommand{\\loinormale}[2]{{\\cal N}\\pa{#1,#2}}
 \\newcommand{\\independant}[0]{\\;\\makebox[3ex]{\\makebox[0ex]{\\rule[-0.2ex]{3ex}{.1ex}}\\!\\!\\!\\!\\makebox[.5ex][l]{\\rule[-.2ex]{.1ex}{2ex}}\\makebox[.5ex][l]{\\rule[-.2ex]{.1ex}{2ex}}} \\,\\,}
 \\newcommand{\\esp}{\\mathbb{E}}
 \\newcommand{\\var}{\\mathbb{V}}
@@ -123,10 +122,14 @@ custom_preamble = """\n
 \\newcommand{\\dans}[0]{\\rightarrow}
 \\newcommand{\\partialfrac}[2]{\\frac{\\partial #1}{\\partial #2}}
 \\newcommand{\\partialdfrac}[2]{\\dfrac{\\partial #1}{\\partial #2}}
-\\newcommand{\\loimultinomiale}[1]{{\\cal M}\\pa{#1}}
 \\newcommand{\\trace}[1]{tr\\pa{#1}}
 \\newcommand{\\sac}[0]{|}
 \\newcommand{\\abs}[1]{\\left|#1\\right|}
+\\newcommand{\\loinormale}[2]{{\\cal N} \\pa{#1,#2}}
+\\newcommand{\\loibinomialea}[1]{{\\cal B} \\pa{#1}}
+\\newcommand{\\loibinomiale}[2]{{\\cal B} \\pa{#1,#2}}
+\\newcommand{\\loimultinomiale}[1]{{\\cal M} \\pa{#1}}
+\\newcommand{\\variance}[1]{\\mathbb{V}\\pa{#1}}
 """
 #\\usepackage{eepic}
 

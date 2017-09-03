@@ -11,7 +11,7 @@ minepy
 mutagen
 pycodestyle>=2.0.0
 pydocstyle
-pyensae
+pyensae>=1.1.665
 pyinstrument
 pyquickhelper>=1.5.2175
 semantic_version
