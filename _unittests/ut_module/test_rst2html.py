@@ -84,6 +84,7 @@ class TestRst2Html(unittest.TestCase):
             {\\;\\makebox[3ex]{\\makebox[0ex]{\\rule[-0.2ex]{3ex}{.1ex}}\\!\\!\\!\\!\\makebox[.5ex][l]
             {\\rule[-.2ex]{.1ex}{2ex}}\\makebox[.5ex][l]{\\rule[-.2ex]{.1ex}{2ex}}} \\,\\,}
             \\newcommand{\\esp}{\\mathbb{E}}
+            \\newcommand{\\espf}[2]{\\mathbb{E}_{#1}\\pa{#2}}
             \\newcommand{\\var}{\\mathbb{V}}
             \\newcommand{\\pr}[1]{\\mathbb{P}\\pa{#1}}
             \\newcommand{\\loi}[0]{{\\cal L}}
