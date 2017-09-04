@@ -35,7 +35,7 @@ deviation, we can use the `central limit theorem <https://en.wikipedia.org/wiki/
 which tells us:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \sqrt{N} \widehat{\theta}_N \underset{N \rightarrow \infty}{\longrightarrow}   \loinormale{0}{\sigma}
@@ -50,7 +50,7 @@ If :math:`Y \sim \loinormale{0}{\sigma}`, then we have
 :math:`\pr{\abs{Y} \infegal 1.96} = 0.95`. That is why we can say:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \widehat{\theta}_N \text{ is not null with 95\% confidence if } \sqrt{N} \frac{|\widehat{\theta}_N|}{\sigma} > 1.96
@@ -59,7 +59,7 @@ If :math:`Y \sim \loinormale{0}{\sigma}`, then we have
 And the confidence intervalle at 95% would be:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \cro{ %\widehat{\theta}_N
@@ -71,7 +71,7 @@ And the confidence intervalle at 95% would be:
 When :math:`\esp{ \widehat{\theta}_N } = \theta_0 \neq 0`, it becomes:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \sqrt{N} \cro{ \widehat{\theta}_N - \theta_0} \underset{N \rightarrow \infty}{\longrightarrow}   \loinormale{0}{\sigma}
@@ -80,7 +80,7 @@ When :math:`\esp{ \widehat{\theta}_N } = \theta_0 \neq 0`, it becomes:
 We usually want to check if the mean is equal to a specific value using a statistical test:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     H0: && \widehat{\theta}_N = \theta_0 \\
@@ -90,7 +90,7 @@ We usually want to check if the mean is equal to a specific value using a statis
 We validate :math:`H0` if:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \widehat{\theta}_N \in \cro{ \theta_0 - \frac{1.96 \sigma}{\sqrt{N}}, \theta_0 + \frac{1.96 \sigma}{\sqrt{N}}}
@@ -110,7 +110,7 @@ Let's consider :math:`Y` following a normal law :math:`\loinormale{0}{1}`.
 We are looking for:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \pr{ \abs{Y} >  \sqrt{N} \frac{|\widehat{\theta}_N|}{\sigma} }  = \alpha
@@ -119,7 +119,7 @@ We are looking for:
 :math:`\alpha` is the p-value.
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \alpha &=& 1-\int_{-\beta_N}^{\beta_N} \frac{1}{\sqrt{2\pi}} e^{\frac{-x^2}{2}} dx =
@@ -143,7 +143,7 @@ same law, we assume the same for :math:`(Y_i)`. We expect the following
 difference to be null.
 
 .. math::
-    :nowarp:
+    :nowrap:
     :label: pvalues_exp2
 
     \begin{eqnarray*}
@@ -152,10 +152,10 @@ difference to be null.
     \end{eqnarray*}
 
 Considering expression :eq:`pvalues_exp2`, we can applying the central limit theorem
-on variable :math:`Z=X-Y`, we get (:math:`eta_0=0`):
+on variable :math:`Z=X-Y`, we get (:math:`\eta_0=0`):
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \sqrt{N} \widehat{\eta}_N \underset{N \rightarrow \infty}{\longrightarrow}
@@ -165,7 +165,7 @@ on variable :math:`Z=X-Y`, we get (:math:`eta_0=0`):
 If both samples do not have the same number of observations, this expression becomes:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \sqrt{N} \widehat{\eta}_N \underset{ \begin{subarray}{c} N_1 \rightarrow \infty \\
@@ -182,7 +182,7 @@ Application on binomial variables
 A binomial variable :math:`X \sim \loibinomialea{p}` is defined by:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \pr{X=0} &=& 1-p \\
@@ -199,7 +199,7 @@ first row contains values for :math:`q-p`. We also assume we have the same numbe
 test cen be defined like following:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     H0: && p = q = p_0 \\
@@ -209,7 +209,7 @@ test cen be defined like following:
 If H0 is true, then:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray}
     \sqrt{N} \widehat{\theta}_N \underset{N \rightarrow \infty}{\longrightarrow}   \loinormale{0}{\sqrt{p_0(1-p_0)}
@@ -217,7 +217,7 @@ If H0 is true, then:
     \end{eqnarray}
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{tabular}{r|r|r|r|r|r|r|r|r|r|r|r|r}
     $p/d$&\textbf{-0.200}&\textbf{-0.100}&\textbf{-0.020}&\textbf{-0.010}&\textbf{-0.002}&\textbf{-0.001}&\textbf{0.001}&\textbf{0.002}&\textbf{0.010}&\textbf{0.020}&\textbf{0.100}&\textbf{0.200}\\\hline
@@ -258,7 +258,7 @@ density function of :math:`X`. We also consider an interval
 :math:`I=\cro{-a,a}`. Then we have :math:`f(a)=f(-a)` and:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \pr{X \in I} = \pr{ \abs{X} \infegal a } = \pr{ f(X) \supegal f(a)}
@@ -268,7 +268,7 @@ This is true because :math:`f` is decreasing for :math:`x>0`.
 The p-value :math:`\alpha` for a estimator :math:`\beta` using Monte Carlo method is:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray}
     \frac{1}{N}\sum_{i=1}^{N} \indicatrice{ f(X_i) < f(\beta)} \longrightarrow \alpha
@@ -285,7 +285,7 @@ drawn following a law :math:`\loinormale{\theta_0}{\Sigma}`.
 The central limit theorem is still valid:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \sqrt{N} \widehat{\theta}_N \underset{N \rightarrow \infty}{\longrightarrow}   \loinormale{\theta_0}{\Sigma}
@@ -294,7 +294,7 @@ The central limit theorem is still valid:
 We know estimators for the average and the covariance matrix defined as follows:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \widehat{\theta_N} &=& \frac{1}{n} \sum_{i=1}^{N} X_i \\
@@ -304,7 +304,7 @@ We know estimators for the average and the covariance matrix defined as follows:
 We usually want to check if:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     H0: && \widehat{\theta}_N = \theta_0 \\
@@ -315,7 +315,7 @@ If :math:`\Lambda` is diagonal matrix of :math:`\Sigma` (diagonal matrix with ei
 All eigen values are real and positive, we then define:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \Sigma &=& P \Lambda P' \text { and } \Sigma^{\frac{1}{2}} =  P \Lambda^{\frac{1}{2}} P'
@@ -360,7 +360,7 @@ Let's :math:`X` be a mixture of two binomial laws of parameters :math:`p`
 and :math:`q`. It is for example the case for a series draws coming from two different coins.
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \pr{X} &=&  \pr{ X | C = a} \pr{C=a} + \pr{X | X =b} \pr{C = b}
@@ -370,7 +370,7 @@ The likelihood of a random sample :math:`(X_1,...X_n)`,
 the class we do not observe are :math:`(C_1,...C_n)`:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray}
     L(\theta) = \prod_i \cro{ p^{X_i}(1-p)^{(1-X_i)} \pi }^{1-C_i} \cro{q^{X_i}(1-q)^{(1-X_i)}  (1-\pi)  }^{C_i}
@@ -382,7 +382,7 @@ to determine the parameters.
 We define at iteration :math:`t`:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     w_i &=& \espf{C_i | X_i, \theta_t }{X_i}  \\
@@ -393,7 +393,7 @@ We define at iteration :math:`t`:
 We then update the parameters:
 
 .. math::
-    :nowarp:
+    :nowrap:
 
     \begin{eqnarray*}
     \widehat{\pi} &=&  \frac{1}{n} \sum_{i = 1}^n w_i \\
