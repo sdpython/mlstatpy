@@ -13,7 +13,7 @@ pycodestyle>=2.0.0
 pydocstyle
 pyensae>=1.1.665
 pyinstrument
-pyquickhelper>=1.5.2175
+pyquickhelper>=1.5.2180
 semantic_version
 snakeviz
 sphinx-bootstrap-theme
