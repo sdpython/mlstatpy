@@ -15,3 +15,4 @@ découvrir quelques poussières sous le tapis.
     ../notebooks/discret_gradient
     ../notebooks/correlation_non_lineaire
     file_dattente
+    strategie_avec_alea

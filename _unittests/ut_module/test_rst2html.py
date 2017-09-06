@@ -114,7 +114,7 @@ class TestRst2Html(unittest.TestCase):
         preamble = TestRst2Html.preamble + TestRst2Html.custom_preamble
         this = os.path.abspath(os.path.dirname(__file__))
         rst = os.path.join(this, "..", "..", "_doc", "sphinxdoc",
-                           "source", "c_metric", "pvalues.rst")
+                           "source", "c_garden", "strategie_avec_alea.rst")
         if not os.path.exists(rst):
             raise FileNotFoundError(rst)
         with open(rst, "r", encoding="utf-8") as f:
@@ -125,9 +125,13 @@ class TestRst2Html(unittest.TestCase):
             # No latex.
             return
 
+        sys.path.append(os.path.abspath(os.path.dirname(src.__file__)))
+
         ht = rst2html(content, writer=writer, layout="sphinx",
                       keep_warnings=True, imgmath_latex_preamble=preamble,
                       outdir=temp)
+        sys.path.pop()
+
         rst = os.path.join(temp, "out.{0}".format(writer))
         with open(rst, "w", encoding="utf-8") as f:
             f.write(ht)
