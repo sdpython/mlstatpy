@@ -298,7 +298,7 @@ variable suivant une loi de Poisson avec :math:`\lambda=10`
 puis on compte le nombre de fois qu'on obtient chaque entier compris
 entre 0 et 40. La figure qui suit permet de comparer les résultats obtenus.
 
-.. figure:: images/poishist.png
+.. figure:: images/poishis.png
 
     Comparaison entre une fonction de densité estimée
     empiriquement pour la loi de Poisson de paramètre
