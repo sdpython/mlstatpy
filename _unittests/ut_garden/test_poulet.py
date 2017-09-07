@@ -75,7 +75,7 @@ class TestPoulet(unittest.TestCase):
         h = proba_poisson_melange([48, 10, 4], [1, 2, 3], 20)
         self.assertEqual(h, 0)
         h = proba_poisson_melange([48, 10, 4], [1, 2, 3], 40)
-        self.assertEqual(h, 0)
+        self.assertTrue(h < 0.1)
 
 
 if __name__ == "__main__":
