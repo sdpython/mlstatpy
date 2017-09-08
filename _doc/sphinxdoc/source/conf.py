@@ -137,3 +137,11 @@ custom_preamble = """\n
 imgmath_latex_preamble = preamble + custom_preamble
 latex_elements['preamble'] = preamble + custom_preamble
 mathdef_link_only = True
+
+epkg_dictionary["R-tree"] = "https://en.wikipedia.org/wiki/R-tree"
+epkg_dictionary["B+ tree"] = "https://en.wikipedia.org/wiki/B%2B_tree"
+epkg_dictionary["R* tree"] = "https://en.wikipedia.org/wiki/R*_tree"
+epkg_dictionary["X-tree"] = "https://en.wikipedia.org/wiki/X-tree"
+epkg_dictionary["Branch and Bound"] = "https://en.wikipedia.org/wiki/Branch_and_bound"
+epkg_dictionary["LAESA"] = "https://tavianator.com/aesa/"
+epkg_dictionary["AESA"] = "https://tavianator.com/aesa/"

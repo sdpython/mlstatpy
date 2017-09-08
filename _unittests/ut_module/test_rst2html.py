@@ -114,7 +114,7 @@ class TestRst2Html(unittest.TestCase):
         preamble = TestRst2Html.preamble + TestRst2Html.custom_preamble
         this = os.path.abspath(os.path.dirname(__file__))
         rst = os.path.join(this, "..", "..", "_doc", "sphinxdoc",
-                           "source", "c_garden", "strategie_avec_alea.rst")
+                           "source", "c_ml", "kppv.rst")
         if not os.path.exists(rst):
             raise FileNotFoundError(rst)
         with open(rst, "r", encoding="utf-8") as f:
