@@ -111,6 +111,11 @@ class TestGraphDistance(unittest.TestCase):
         self.assertTrue(os.path.exists(outfilef))
 
     def test_unittest_GraphDistance2(self):
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
         graph1 = [("a", "b"), ("b", "c"), ("b", "X"), ("X", "c"),
                   ("c", "d"), ("d", "e"), ("0", "b")]
         graph2 = [("a", "b"), ("b", "c"), ("b", "X"), ("X", "c"),
@@ -145,6 +150,28 @@ class TestGraphDistance(unittest.TestCase):
         #GV.drawGraphEdgesVertices (vertices,edges, "unittest_GraphDistance2_sub1.png")
         vertices, edges = graph2.draw_vertices_edges()
         #GV.drawGraphEdgesVertices (vertices,edges, "unittest_GraphDistance2_sub2.png")
+
+    def test_unittest_common_paths(self):
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
+        graph1 = [("a", "b"), ("b", "c"), ("b", "X"), ("X", "c"),
+                  ("c", "d"), ("d", "e"), ("0", "b")]
+        graph2 = graph1
+        graph1 = GraphDistance(graph1)
+        graph2 = GraphDistance(graph2)
+        common12 = graph1.common_paths(graph2)
+        common21 = graph2.common_paths(graph1)
+        s1 = str(common12)
+        s2 = repr(common12)
+        self.assertIn("c-c -> d-d []", s1)
+        self.assertIn("[Edge('0-0', 'b-b', '', 1.0)", s2)
+        self.assertIn("{'0-0': Vertex('0-0', '0', 1.0)", s2)
+        self.assertEqual(len(graph1.vertices), len(common12.vertices))
+        self.assertEqual(len(graph1.vertices), len(common21.vertices))
+        self.assertEqual(len(graph1.edges), len(common21.edges))
 
 
 if __name__ == "__main__":

@@ -89,20 +89,20 @@ un programme informatique qui sera découpé en fonctions comme ceci :
 
     * - fonction
       - objectif
-    * - ``factorielle(x)``
+    * - :func:`factorielle(x) <mlstatpy.garden.poulet.factorielle>`
       - calcule :math:`x!`
-    * - ``profit(N,X,p,q,s)
+    * - :func:`profit(N,X,p,q,s) <mlstatpy.garden.poulet.profit>`
       - calcule la fonction :math:`f`
-    * - ``proba_poisson(l, i)``
+    * - :func:`proba_poisson(l, i) <mlstatpy.garden.poulet.proba_poisson>`
       - calcule la probabilité de Poisson connaissant :math:`\lambda`
         et :math:`i`
-    * - ``esperance(X,p,q,s,l)``
+    * - :func:`esperance(X,p,q,s,l) <mlstatpy.garden.poulet.esperance>`
       - calcule l'espérance (sa moyenne) de la fonction :math:`f`
-    * - ``maximum(p,q,s,l)``
+    * - :func:`maximum(p,q,s,l) <mlstatpy.garden.poulet.maximum>`
       - construit une liste de toutes les valeurs de :math:`f``
-    * - ``find_maximum (res)``
-      - cherche le maxim dans la liste retournée par la
-        fonction ``maximum``
+    * - :func:`find_maximum (res) <mlstatpy.garden.poulet.find_maximum>`
+      - cherche le maximum dans la liste retournée par la
+        fonction :func:`maximum <mlstatpy.garden.poulet.maximum>`
 
 Le programme obtenu ressemble à :py:mod:`poulet.py <mlstatpy.garden.poulet>`,
 les dernières lignes servent à tracer la courbe présentée par la figure qui suit.
@@ -150,8 +150,8 @@ des lois de Poisson de paramètres différents dont il faudra estimer
 les paramètres.
 
 Cette modification implique l'écriture d'une fonction
-:func:`proba_poisson_melange <mlstatpy.proba_poisson_melange>`
-au lieu de :func:`proba_poisson <mlstatpy.garden.proba_poisson>`.
+:func:`proba_poisson_melange <mlstatpy.poulet.proba_poisson_melange>`
+au lieu de :func:`proba_poisson <mlstatpy.garden.poulet.proba_poisson>`.
 La demande n'est plus une loi connue mais un mélange de lois connues
 dont la densité n'a pas d'expression connue : il faut la tabuler.
 Pour cela, on utilise deux propriétés sur les lois exponentielles.
@@ -269,8 +269,8 @@ Or d'après le théorème :ref:`somme de loi exponentielle iid <theoreme_convolu
     \end{eqnarray*}
 
 Il suffit d'utiliser ce théorème pour simuler une loi de Poisson de
-paramètre :math:`\lambda`, ce que fait la fonction ``poisson``
-suivante :
+paramètre :math:`\lambda`, ce que fait la fonction
+:func:`poisson <mlstaty.garden.poulet.poisson>` suivante :
 
 .. runpython::
     :showcode:

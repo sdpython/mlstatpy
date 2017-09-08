@@ -33,7 +33,13 @@ class Vertex:
         """
         usual
         """
-        return self.Label
+        return '{}'.format(self.Label)
+
+    def __repr__(self):
+        """
+        usual
+        """
+        return "Vertex({}, {}, {})".format(repr(self.nb), repr(self.Label), self.weight)
 
     def is_vertex(self):
         """
@@ -84,7 +90,13 @@ class Edge:
         """
         usual
         """
-        return self.Label
+        return "{} -> {} [{}]".format(self.nb[0], self.nb[1], self.Label)
+
+    def __repr__(self):
+        """
+        usual
+        """
+        return "Edge({}, {}, {}, {})".format(repr(self.nb[0]), repr(self.nb[1]), repr(self.Label), self.weight)
 
     def is_vertex(self):
         """
@@ -148,7 +160,7 @@ class GraphDistance:
         vertices.sort()
         return vertices
 
-    def __init__(self, edge_list, vertex_label={}, add_loop=False,
+    def __init__(self, edge_list, vertex_label=None, add_loop=False,
                  weight_vertex=1., weight_edge=1.):
         """
         constructor
@@ -158,6 +170,8 @@ class GraphDistance:
         @param      weight_vertex    weight for every vertex
         @param      weight_edge      weight for every edge
         """
+        if vertex_label is None:
+            vertex_label = dict()
         if type(edge_list) is str:
             self.load_from_file(edge_list, add_loop)
         else:
@@ -269,12 +283,24 @@ class GraphDistance:
         return order
 
     def __str__(self):
+        """
+        usual
+        """
         li = []
         for k, v in self.vertices.items():
             li.append(str(v))
         for k, e in self.edges.items():
             li.append(str(e))
         return "\n".join(li)
+
+    def __repr__(self):
+        """
+        usual
+        """
+        edges = ", ".join(repr(v) for _, v in sorted(self.edges.items()))
+        vertices = ", ".join("'{}': {}".format(k, repr(v))
+                             for k, v in sorted(self.vertices.items()))
+        return "GraphDistance(\n    [{0}],\n    {{{1}}})".format(edges, vertices)
 
     def compute_predecessor(self):
         """
