@@ -120,10 +120,11 @@ We are looking for:
 
 .. math::
     :nowrap:
+    :label: p_value_expression
 
     \begin{eqnarray*}
     \alpha &=& 1-\int_{-\beta_N}^{\beta_N} \frac{1}{\sqrt{2\pi}} e^{\frac{-x^2}{2}} dx =
-                                2 \int_{\beta_N}^{\infty} \frac{1}{\sqrt{2\pi}} e^{\frac{-x^2}{2}} dx \label{p_value_expression}\\
+                                2 \int_{\beta_N}^{\infty} \frac{1}{\sqrt{2\pi}} e^{\frac{-x^2}{2}} dx \\
     \text{where } \beta_N &=& \sqrt{N} \frac{|\widehat{\theta}_N|}{\sigma}
     \end{eqnarray*}
 
@@ -333,9 +334,8 @@ two variables correlated such as
 
 We assume we observe two `Bernouilli <https://en.wikipedia.org/wiki/Bernoulli_distribution>`_
 variables correlated. Red points represents the area
-for which we would accept hypothesis H0 in case both variables are independant.
+for which we would accept hypothesis *H0* in case both variables are independant.
 Blue area represents the same but with the correlation.
-    		
 But that would not be the best way to do it. The confidence interval for a couple
 of indenpendant gaussian :math:`(N_1,N_2)` variables is an ellipse.
 Two independent normal variables :math:`N_1^2+N_2^2` with a null mean
@@ -347,7 +347,7 @@ Next figure shows this zone for a non-correlated couple and a correlated couple
 .. image:: images/pvaluescor2.png
 
 We assume we observe two Bernouilli variables correlated. Red points represents the area
-for which we would accept hypothesis H0 in case both variables are independant.
+for which we would accept hypothesis *H0* in case both variables are independant.
 Blue area represents the same but with the correlation.
 
 .. _l-section_pvalues_table_em:
