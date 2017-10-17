@@ -251,10 +251,10 @@ factorisation de matrice en deux dimensions.
 Prolongements
 =============
 
-Tous les résultats montrés ici ne sont valables que si la norme math:`L_2`
+Tous les résultats montrés ici ne sont valables que si la norme :math:`L_2`
 est utilisée. Cela permet de mieux comprendre
 les références proposées dans la documentation de
-`Non-negative matrix factorization (NMF or NNMF) <http://scikit-learn.org/stable/modules/decomposition.html#nmf>`.
+`Non-negative matrix factorization (NMF or NNMF) <http://scikit-learn.org/stable/modules/decomposition.html#nmf>`_.
 Si l'ACP et la factorisation de matrices sont équivalentes, les algorithmes pour
 trouver le minimum diffèrent et sont plus ou moins appropriés dans
 certaines configurations.
@@ -275,7 +275,11 @@ Le problème le plus souvent évoqué est celui de la factorisation
 non-négative : `NMF <https://www.math.univ-toulouse.fr/~besse/Wikistat/pdf/st-m-explo-nmf.pdf>`_.
 Ce problème est une optimisation avec contrainte : les coefficients doivent
 tous être positifs ou nuls. Il n'est bien sûr plus équivalent
-à une ACP.
+à une ACP. En revanche, la factorisation de matrice est un problème
+équivalent à celui résolu par la
+`Décomposition en Valeur Singulière (SVD) <https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res>`_
+qui cherche à décomposer une matrice :math:`M=U\Sigma V^*`. La matrice :math:`\Sigma`
+est une matrice diagonale.
 
 Norme
 +++++
