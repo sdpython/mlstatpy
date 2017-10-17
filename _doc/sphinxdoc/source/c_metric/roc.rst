@@ -100,6 +100,9 @@ avec les notations *TP*, *FP*, *FN*, *TN*, cela revient à :
 On remarque que :math:`\forall s, \; TP(s) + TN(s)` est constant.
 De même pour :math:`FP(s) + FN(s)`.
 
+.. image:: rocimg/rocwi.png
+    :width: 500
+
 On remarque que les fonctions :math:`s \longrightarrow E(s)` et :math:`s \longrightarrow R(s)`
 sont décroissantes toutes deux. Elles sont donc inversibles.
 Dans le cas où la variable aléatoire :math:`\theta` est indépendante de
