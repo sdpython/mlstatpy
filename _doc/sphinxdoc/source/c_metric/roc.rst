@@ -22,7 +22,7 @@ Définitions
 Supposons que nous avons un classifieur qui classe des observations en un ensemble de
 classes. De plus, il donne cette réponse accompagnée d'un score de pertinence.
 Deux cas sont possibles : soit la réponse est bonne (1), soit la réponse est fausse (0).
-Pour chaque observations, on associe un couple :math:`(r,x)` où :math:`r` est égal à 0 ou 1.
+Pour chaque observation, on associe un couple :math:`(r,x)` où :math:`r` est égal à 0 ou 1.
 :math:`x` est le score de pertinence. On cherche à déterminer à partir de quel
 seuil de pertinence, la réponse du classifieuur est fiable.
 En faisant varier :math:`x`, on obtient une courbe
@@ -582,6 +582,11 @@ Le premier cas correspond par exemple à des problèmes de
 `détection de fraude <https://en.wikipedia.org/wiki/Predictive_analytics#Fraud_detection>`_.
 Le second cas correspond à taux de classification globale : toutes les classes
 ont la même importance.
+
+Exemple
+=======
+
+Voir `ROC <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/antiseches/ml_basic/plot_regression.html#sphx-glr-antiseches-ml-basic-plot-roc-py>`_.
 
 .. [Agarwal2005] Generalization Bounds for the Area Under the ROC Curve (2005),
    Shivani Agarwal, Thore Graepel, Ralf Herbich, Sariel Har-Peled, Dan Roth
