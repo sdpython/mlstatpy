@@ -350,6 +350,18 @@ We assume we observe two Bernouilli variables correlated. Red points represents 
 for which we would accept hypothesis *H0* in case both variables are independant.
 Blue area represents the same but with the correlation.
 
+Multiple comparisons problem
+============================
+
+The problem of `Multiple comparisons <https://en.wikipedia.org/wiki/Multiple_comparisons_problem>`_
+happens when dealing with many metrics measyring a change.
+That's allways the case when two version of the sam websire are compared
+in a test `A/B <https://fr.wikipedia.org/wiki/Test_A/B>`_.
+The metrics are correlated but it is unlikely that all metrics
+differences will be significant or not.
+The `Holm–Bonferroni method <https://en.wikipedia.org/wiki/Holm%E2%80%93Bonferroni_method>`_
+proposes a way to define an hypthesis on the top of the existing ones.
+
 .. _l-section_pvalues_table_em:
 
 Algorithm Expectation-Maximization
@@ -417,3 +429,4 @@ Bibliographie
 
 * `p-Value and Statistical Practice <http://www.stat.columbia.edu/~gelman/research/published/pvalues3.pdf>`_
 * `An investigation of the false discovery rate and the misinterpretation of p-values <http://rsos.royalsocietypublishing.org/content/royopensci/1/3/140216.full.pdf>`_
+* `Holm–Bonferroni method <https://en.wikipedia.org/wiki/Holm%E2%80%93Bonferroni_method>`_
