@@ -72,6 +72,14 @@ class TestNotebook123Coverage(unittest.TestCase):
 
         self.a_test_notebook_runner("roc", "metric")
 
+    def test_notebook_pvalue(self):
+        fLOG(
+            __file__,
+            self._testMethodName,
+            OutputPrint=__name__ == "__main__")
+
+        self.a_test_notebook_runner("pvalue", "metric")
+
 
 if __name__ == "__main__":
     unittest.main()
