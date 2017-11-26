@@ -16,3 +16,4 @@ découvrir quelques poussières sous le tapis.
     ../notebooks/correlation_non_lineaire
     file_dattente
     strategie_avec_alea
+    ../notebooks/regression_lineaire
