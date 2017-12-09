@@ -2,6 +2,9 @@
 Problème d'optimisation
 =======================
 
+.. contents::
+    :local:
+
 Enoncé 1
 ++++++++
 
@@ -155,13 +158,15 @@ permettre de procéder par sous-ensemble pour trouver l'ordre optimal.
     On note l'ensemble :math:`S'(q[1..k]) = \acc{ q[k+1..len(q)] \in S }` :
 
     alors :
+    
+    .. math::
 
         \forall k, \; M'(q[1..k], S) = M'(q[k+1..l(q)], S'(q[1..k]) + M'(q[1..k], S)
 
 Ceci découle de l'application du lemme précédent.
 Ce théorème permet presque de déterminer le meilleur ordre `\sigma` parmi ceux qui
 vérifie la contrainte :eq:`best-order-lemme-completion`, à savoir
-une requête courte est toujours affichée avant celles qui la complète.
+une requête courte est toujours affichée avant celles qui la complètent.
 On procède par récurrence, on suppose connu les ordres :math:`\sigma(q)`
 pour l'ensemble des complétions qui commencent par le préfixe :math:`p = q[1..k]`,
 :math:`S'(q[1..k]) = \acc{ q | q[1..k] = p, q \in S }`. Pour :math:`i =k-1`,

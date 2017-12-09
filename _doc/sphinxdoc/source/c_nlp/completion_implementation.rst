@@ -2,6 +2,9 @@
 Implémentation
 ==============
 
+.. contents::
+    :local:
+
 .. _trie: https://fr.wikipedia.org/wiki/Trie_(informatique)
 
 J'allais vous raconter en détail ce qu'est un trie_ et le paragraphe suivant
@@ -69,5 +72,3 @@ L'algorithme est implémenté dans le module
 :mod:`completion_simple <mlstatpy.nlp.completion_simple>` et plus particulièrement la fonction
 :meth:`CompletionSystem.compute_metrics <mlstatpy.nlp.completion_simple.CompletionSystem.compute_metrics>`.
 
-Calcul de gain
-++++++++++++++

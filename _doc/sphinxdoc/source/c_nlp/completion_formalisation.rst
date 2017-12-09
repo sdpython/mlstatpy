@@ -2,6 +2,9 @@
 Formalisation
 =============
 
+.. contents::
+    :local:
+
 .. _l-completion-optim:
 
 Problème d'optimisation
@@ -80,7 +83,7 @@ Où :math:`S(q[1..k])` est le sous-ensemble ordonné de :math:`S` des complétio
 qui commencent par les :math:`k` premières lettres de :math:`q` et de longueur supérieure strictement à :math:`k`.
 :math:`position(q, S(q[1..k]))` est la position de :math:`q` dans cet ensemble ordonné
 ou :math:`\infty` si elle n'y est pas. Cette position est strictement positive
-:math:`K(q, k, S) \supegal 1` sauf si :math`k=l(q)` auquel cas, elle est nulle.
+:math:`K(q, k, S) \supegal 1` sauf si :math:`k=l(q)` auquel cas, elle est nulle.
 Cela signifie que l'utilisateur doit descendre d'au moins un cran
 pour sélectionner une complétion.
 On note :math:`\sigma(q)` la position de la complétion :math:`q` dans l'ensemble :math:`S`.

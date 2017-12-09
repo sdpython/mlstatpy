@@ -6,6 +6,9 @@ On s'intéresse principalement à la métrique :math:`M'` définie par
 :ref:`Dynamic Minimum Keystroke <completion-metric2>` mais les résultats
 seront étendues aux autres quand cela est possible.
 
+.. contents::
+    :local:
+
 Calcul pour une complétion
 ++++++++++++++++++++++++++
 
@@ -53,7 +56,7 @@ des complétions, :math:`q_1 \preceq q_2 \Longrightarrow M'(q_1, S) \infegal M'(
 Le lemme suivant précise pourquoi
 
 .. mathdef::
-    :title: calcul de :math:`M'(q, S)`
+    :title: calcul de *M'(q, S)*
     :tag: Lemme
     :lid: lemme-nlp-long-completion
 
@@ -108,7 +111,7 @@ de la métrique montre que :math:`M'` et :math:`M"` sont très souvent égales.
 Je vais laisser ce :math:`\delta` sous forme de poésie pour le moment.
 
 .. todoext::
-    :title: terminer la démonstration pour :math:`M`
+    :title: terminer la démonstration pour *M*
 
     La côte anglaise.
 

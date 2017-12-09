@@ -2,6 +2,9 @@
 Fausses idées reçues
 ====================
 
+.. contents::
+    :local:
+
 Il faut trier les complétions par fréquence décroissante
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -131,7 +134,7 @@ A l'intérieur des blocs, les règles seront les mêmes.
 .. image:: completion_img/trieex.png
 
 En résumé, si on connaît le meilleur ordre pour toutes les mots sur les noeuds
-temrinaux dans les bulles rouges, dans la bulle verte, le meilleur ordre
+terminaux dans les bulles rouges, dans la bulle verte, le meilleur ordre
 sera une fusion des deux listes ordonnées.
 
 Quelques essais sur le notebook ont tendance à montrer que l'ordre

@@ -2,6 +2,9 @@
 Nouvelle métrique
 =================
 
+.. contents::
+    :local:
+
 Intuitions
 ++++++++++
 
@@ -54,8 +57,10 @@ bas         actuellement
 
 Dans cet exemple aussi petit, on ne gagnerait pas grand-chose
 mais cela vaut le coup d'étudier cette piste pour des vocabulaires plus
-grand : se servir des préfixes commun comme tremplin pour les mots
+grand : se servir des préfixes commun comme `tremplin` pour les mots
 plus grand. L'effect position perdrait un peu de son influence.
+
+.. _mp-completion-metrique-formalisation:
 
 Formalisation
 +++++++++++++
@@ -76,8 +81,9 @@ La fonction :math:`K(q, k, S)` est définie par :eq:`nlp-comp-k`.
     :tag: Définition
     :lid: def-mks2
 
-    On définit la façon optimale de saisir une requête sachant un système de complétion
-    :math:`S` comme étant le minimum obtenu :
+    On définit la façon optimale de saisir une requête sachant
+    un système de complétion :math:`S` comme étant le
+    minimum obtenu :
 
     .. math::
         :label: completion-metric2
@@ -138,8 +144,9 @@ considéré comme préfixe. C'est ce que prend en compte la définition suivante
     :tag: Définition
     :lid: def-mks3
 
-    On définit la façon optimale de saisir une requête sachant un système de complétion
-    :math:`S` comme étant le minimum obtenu :
+    On définit la façon optimale de saisir une requête sachant
+    un système de complétion :math:`S` comme étant le
+    minimum obtenu :
 
     .. math::
         :label: completion-metric3
