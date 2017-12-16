@@ -71,4 +71,3 @@ pour que les métriques :math:`M'` convergent pour l'ensemble des complétions. 
 L'algorithme est implémenté dans le module
 :mod:`completion_simple <mlstatpy.nlp.completion_simple>` et plus particulièrement la fonction
 :meth:`CompletionSystem.compute_metrics <mlstatpy.nlp.completion_simple.CompletionSystem.compute_metrics>`.
-

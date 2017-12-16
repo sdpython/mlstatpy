@@ -158,7 +158,7 @@ permettre de procéder par sous-ensemble pour trouver l'ordre optimal.
     On note l'ensemble :math:`S'(q[1..k]) = \acc{ q[k+1..len(q)] \in S }` :
 
     alors :
-    
+
     .. math::
 
         \forall k, \; M'(q[1..k], S) = M'(q[k+1..l(q)], S'(q[1..k]) + M'(q[1..k], S)

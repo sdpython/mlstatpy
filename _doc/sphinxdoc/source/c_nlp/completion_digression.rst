@@ -108,13 +108,13 @@ La modélisation mathématique aboutit à l'optimisation
 d'une métrique qui ne coïncide pas forcément à la logique
 de l'utilisateur. Le fait de montrer une suggestion dans la liste
 donne en quelques sortes un signal qui indique que cette requête
-a une bonne d'aboutir. C'est en particulier vrai si elle est identique 
+a une bonne d'aboutir. C'est en particulier vrai si elle est identique
 à celle que l'utilisateur est en train de saisir quand même même elle
 n'aurait aucun sens. La présence d'une suggestion conforte l'utilisateur
 dans le chemin qu'il choisit.
 
 Un autre aspect est le fait qu'une suggestion, la première par exemple,
-doit rester à l'écran si celle-ci inclut le préfixe saisit 
+doit rester à l'écran si celle-ci inclut le préfixe saisit
 par l'utilisateur. Supposons que ce dernier saisisse *fac*,
 le moteur de suggestions lui montrera en premier *facebook*.
 Il faudra que *facebook* demeure en première position jusqu'à ce
@@ -149,13 +149,13 @@ On note la métrique :math:`M'_b`.
                 \min_{0 \infegal k < l(q)} \acc{ M'_b(q[1..k], S) +
                     \min( K(q, k, S), l(q) - k) } \\
                 \min_{s \succ q} \acc{ M'_b(s, S) + l(s) - l(q) }
-                \end{array} }                    
+                \end{array} }
         \end{eqnarray*}
 
-Le second terme de la métrique nécessite de considérer 
+Le second terme de la métrique nécessite de considérer
 toutes les suggestions dans *S* qui commencent par le préfixe *q*.
 Le calcul de la métrique peut être fait en adaptant l'algorithme
-reprend les idées du paragraphe :ref:`mp-completion-metrique-formalisation` 
+reprend les idées du paragraphe :ref:`mp-completion-metrique-formalisation`
 mais il faudra parcourir les suggestions dans l'ordre alphabétique
 puis mettre à jour la métrique en les parcourant dans l'autre sens.
 On recommence jusqu'à convergence.
