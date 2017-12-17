@@ -76,6 +76,8 @@ class TestRunNotebooksNLP(unittest.TestCase):
                 return False
             if "completion.dot" in cell and is_travis_or_appveyor() == "travis":
                 return False
+            if 'Image("completion.png")' in cell and is_travis_or_appveyor() == "travis":
+                return False
             return True
 
         # additionnal path to add
