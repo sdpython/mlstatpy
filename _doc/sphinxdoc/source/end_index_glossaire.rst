@@ -3,8 +3,17 @@
 README
 ======
 
-.. toctree::
+.. only:: html
 
-    glossary
-    README
-    license
+    .. toctree::
+
+        glossary
+        README
+        license
+
+.. only:: not html
+
+    .. toctree::
+
+        glossary
+        license
