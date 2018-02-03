@@ -142,7 +142,7 @@ s'applique dans le cas réel afin d'ordonner
 des nombres dans un arbre de sorte que chaque noeud ait un
 père et pas plus de :math:`n` fils.
 
-.. image:: images/knnimg/btree.png
+.. image:: knnimg/btree.png
 
 .. mathdef::
     :title: B+ tree
@@ -191,8 +191,8 @@ Toutefois, ces méthodes sont resteintes à des espaces vectoriels.
         :header-rows: 0
         :widths: auto
 
-        * - .. image:: images/knnimg/rtree1.png
-          - .. image:: images/knnimg/rtree2.png
+        * - .. image:: knnimg/rtree1.png
+          - .. image:: knnimg/rtree2.png
 
     	Illustration d'un :epkg:`R-tree` en deux dimensions,
         figure extraite de [Sellis1987]_, la première image montre des rectangles
