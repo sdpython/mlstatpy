@@ -7,4 +7,5 @@ Bases de Machine Learning
     :maxdepth: 1
 
     rn/rn
+    kppv
     missing_values_mf
