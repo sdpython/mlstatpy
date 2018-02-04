@@ -2,6 +2,9 @@
 Descente de gradient
 ====================
 
+.. contents::
+    :local:
+
 Lorsqu'un problème d'optimisation n'est pas soluble de manière déterministe,
 il existe des algorithmes permettant de trouver une solution approchée
 à condition toutefois que la fonction à maximiser ou minimiser soit dérivable,

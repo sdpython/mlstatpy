@@ -2,6 +2,9 @@
 Apprentissage d'un réseau de neurones
 =====================================
 
+.. contents::
+    :local:
+
 Le terme apprentissage est encore inspiré de la biologie et se traduit
 par la minimisation de la fonction :eq:`equation_fonction_erreur_g` où
 :math:`f` est un réseau de neurone défini par un :ref:`perceptron <rn_definition_perpception_1>`.

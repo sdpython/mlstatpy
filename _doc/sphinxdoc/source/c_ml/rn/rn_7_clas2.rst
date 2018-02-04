@@ -4,6 +4,9 @@
 Classification
 ==============
 
+.. contents::
+    :local:
+
 Vraisemblance d'un échantillon de variable suivant une loi multinomiale
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
