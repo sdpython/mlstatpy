@@ -34,7 +34,7 @@ def download_pageviews(dt, folder=".", unzip=True, timeout=-1, overwrite=False, 
         get_url_content_timeout(url, timeout=timeout,
                                 encoding=None, output=name, chunk=2**20, fLOG=fLOG)
     if unzip and not os.path.exists(unzipname):
-        names = ungzip_files(name, unzip=False)
+        names = ungzip_files(name, unzip=False, where_to=folder)
         os.remove(name)
         if isinstance(names, list):
             if len(names) != 1:
