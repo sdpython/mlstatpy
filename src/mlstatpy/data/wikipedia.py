@@ -10,7 +10,7 @@ from .data_exceptions import DataException
 
 def download_pageviews(dt, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG):
     """
-    download wikipedia pagacount for a precise date (up to the hours),
+    Downloads wikipedia pagacount for a precise date (up to the hours),
     the url follows the pattern::
 
         https://dumps.wikimedia.org/other/pageviews/%Y/%Y-%m/pagecounts-%Y%m%d-%H0000.gz
@@ -49,7 +49,7 @@ def download_pageviews(dt, folder=".", unzip=True, timeout=-1, overwrite=False, 
 
 def download_dump(country, name, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG):
     """
-    download wikipedia dumps from ``https://dumps.wikimedia.org/frwiki/latest/``
+    Downloads *wikipedia dumps* from ``https://dumps.wikimedia.org/frwiki/latest/``.
 
     @param      country     country
     @param      name        name of the stream to download
@@ -68,7 +68,7 @@ def download_dump(country, name, folder=".", unzip=True, timeout=-1, overwrite=F
         get_url_content_timeout(url, timeout=timeout,
                                 encoding=None, output=name, chunk=2**20, fLOG=fLOG)
     if unzip and not os.path.exists(unzipname):
-        names = ungzip_files(name, unzip=False)
+        names = ungzip_files(name, unzip=False, where_to=folder)
         os.remove(name)
         if isinstance(names, list):
             if len(names) != 1:
@@ -83,7 +83,7 @@ def download_dump(country, name, folder=".", unzip=True, timeout=-1, overwrite=F
 
 def download_titles(country, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG):
     """
-    download wikipedia titles from ``https://dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz``
+    Downloads wikipedia titles from ``https://dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz``.
 
     @param      country     country
     @param      folder      where to download
@@ -98,7 +98,7 @@ def download_titles(country, folder=".", unzip=True, timeout=-1, overwrite=False
 
 def normalize_wiki_text(text):
     """
-    normalize a text such as a wikipedia title
+    Normalizes a text such as a wikipedia title.
 
     @param      text        text to normalize
     @return                 normalized text
@@ -108,7 +108,7 @@ def normalize_wiki_text(text):
 
 def enumerate_titles(filename, norm=True, encoding="utf8"):
     """
-    enumerate titles from a file
+    Enumerates titles from a file.
 
     @param      filename        filename
     @param      norm            normalize in the function
