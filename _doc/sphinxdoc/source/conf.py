@@ -52,8 +52,6 @@ html_context = {
 
 html_logo = "project_ico_small.png"
 
-html_sidebars = {}
-
 if choice == "bootstrap":
     html_theme_options = {
         'navbar_title': ".",
