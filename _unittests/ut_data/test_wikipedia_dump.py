@@ -39,11 +39,11 @@ except ImportError:
     import src
 
 from pyquickhelper.loghelper import fLOG
-from pyquickhelper.pycode import get_temp_folder
+from pyquickhelper.pycode import get_temp_folder, ExtTestCase
 from src.mlstatpy.data.wikipedia import download_dump
 
 
-class TestWikipediaDump(unittest.TestCase):
+class TestWikipediaDump(ExtTestCase):
 
     def test_wikipedia_dump(self):
         fLOG(
@@ -51,12 +51,12 @@ class TestWikipediaDump(unittest.TestCase):
             self._testMethodName,
             OutputPrint=__name__ == "__main__")
 
-        temp = get_temp_folder(__file__, "temp_wikipedia_dump")
+        temp = get_temp_folder(__file__, "temp_wikipedia_abstract_gz")
         name = download_dump("fr", "latest-abstract.xml.gz-rss.xml",
                              folder=temp, fLOG=fLOG, unzip=False)
         fLOG(name)
-        assert name is not None
-        assert os.path.exists(name)
+        self.assertTrue(name is not None)
+        self.assertExists(name)
 
     def test_wikipedia_dump_zipped(self):
         fLOG(
@@ -68,9 +68,9 @@ class TestWikipediaDump(unittest.TestCase):
         name = download_dump("fr", "latest-site_stats.sql.gz",
                              folder=temp, fLOG=fLOG, unzip=True)
         fLOG(name)
-        assert name is not None
-        assert os.path.exists(name)
-        assert not name.endswith("gz")
+        self.assertTrue(name is not None)
+        self.assertExists(name)
+        self.assertNotEndsWith(name, "gz")
 
 
 if __name__ == "__main__":

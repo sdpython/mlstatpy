@@ -16,7 +16,7 @@ README
     :target: https://circleci.com/gh/sdpython/mlstatpy/tree/master
 
 .. image:: https://badge.fury.io/py/mlstatpy.svg
-    :target: http://badge.fury.io/py/mlstatpy
+    :target: https://pypi.org/project/mlstatpy/
 
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
     :alt: MIT License
