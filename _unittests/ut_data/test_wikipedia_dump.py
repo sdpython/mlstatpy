@@ -52,7 +52,7 @@ class TestWikipediaDump(unittest.TestCase):
             OutputPrint=__name__ == "__main__")
 
         temp = get_temp_folder(__file__, "temp_wikipedia_dump")
-        name = download_dump("fr", "latest-abstract.xml-rss.xml",
+        name = download_dump("fr", "latest-abstract.xml.gz-rss.xml",
                              folder=temp, fLOG=fLOG, unzip=False)
         fLOG(name)
         assert name is not None
