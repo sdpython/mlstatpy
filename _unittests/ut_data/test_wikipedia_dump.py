@@ -70,7 +70,7 @@ class TestWikipediaDump(ExtTestCase):
         fLOG(name)
         self.assertTrue(name is not None)
         self.assertExists(name)
-        self.assertNotEndsWith(name, "gz")
+        self.assertTrue(not name.endswith("gz"))
 
 
 if __name__ == "__main__":
