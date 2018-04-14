@@ -9,7 +9,7 @@ minepy
 mutagen
 pyensae>=1.1.687
 pyinstrument
-pyquickhelper>=1.7.2438
+pyquickhelper>=1.7.2539
 snakeviz
 sphinx-bootstrap-theme
 sphinxjp.themes.basicstrap
