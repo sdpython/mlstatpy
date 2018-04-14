@@ -34,7 +34,7 @@ class CompletionElement(object):
                  'mks2', 'mks2_',
                  'prefix', '_info']
 
-    def __init__(self, value: str, weight: float=1.0, disp=None):
+    def __init__(self, value: str, weight=1.0, disp=None):
         """
         constructor
 
@@ -131,7 +131,7 @@ class CompletionElement(object):
             rows.append("NO INFO")
         return "\n".join(rows)
 
-    def init_metrics(self, position: int, completions: List['CompletionElement']=None):
+    def init_metrics(self, position: int, completions: List['CompletionElement'] = None):
         """
         initiate the metrics
 
@@ -185,7 +185,7 @@ class CompletionElement(object):
             return True
 
     def update_metrics(self, prefix: str, position: int, improved: dict, delta: float,
-                       completions: List['CompletionElement']=None, iteration: int=-1):
+                       completions: List['CompletionElement'] = None, iteration=-1):
         """
         update the metrics
 
@@ -371,7 +371,7 @@ class CompletionSystem:
         self._elements = list(
             _[-1] for _ in sorted((e.weight, e.value, e) for e in self))
 
-    def compare_with_trie(self, delta: float=0.8, fLOG: 'func'=noLOG):
+    def compare_with_trie(self, delta=0.8, fLOG=noLOG):
         """
         compare the results with the other implementation
 
@@ -413,8 +413,8 @@ class CompletionSystem:
         """
         return {el.value: el for el in self}
 
-    def compute_metrics(self, ffilter: 'func'=None, delta: float=0.8,
-                        details=False, fLOG: 'func'=noLOG) -> int:
+    def compute_metrics(self, ffilter=None, delta=0.8,
+                        details=False, fLOG=noLOG) -> int:
         """
         Compute the metric for the completion itself.
 

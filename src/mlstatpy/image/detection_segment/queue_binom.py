@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 @file
 @brief Ce module construit les probabilités d'une loi binomiale :math:`B(n,p)`.

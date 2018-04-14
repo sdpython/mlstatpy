@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import sys
 import os
 import datetime
@@ -130,7 +130,7 @@ custom_preamble = """\n
 \\newcommand{\\loimultinomiale}[1]{{\\cal M} \\pa{#1}}
 \\newcommand{\\variance}[1]{\\mathbb{V}\\pa{#1}}
 """
-#\\usepackage{eepic}
+# \\usepackage{eepic}
 
 imgmath_latex_preamble = preamble + custom_preamble
 latex_elements['preamble'] = preamble + custom_preamble
