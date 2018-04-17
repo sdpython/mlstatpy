@@ -7,10 +7,8 @@ parcourir tous les segments de l'image.
 import numpy
 import math
 import copy
-# import detection_nfa as DN
 from .detection_segment_bord import SegmentBord_Commun
 from .geometrie import Point
-from .detection_params import NFADefaultParameter
 
 
 class SegmentBord(SegmentBord_Commun):
@@ -39,7 +37,7 @@ class SegmentBord(SegmentBord_Commun):
     # voir la remarque de la classe Point a propos de __slots__
     __slots__ = "angle", "fin", "vecteur", "bord1", "dangle"
 
-    def __init__(self, dim, dangle=NFADefaultParameter.angle):
+    def __init__(self, dim, dangle=math.pi / 24.0):
         """initialise les dimensions et
         fait sorte que la classe contienne le premier segment"""
         SegmentBord_Commun.__init__(self, dim)
@@ -62,18 +60,22 @@ class SegmentBord(SegmentBord_Commun):
         self.calcul_vecteur()
 
     def milieu(self):
-        """un autre segment, pour débugger le programme,
+        """
+        Un autre segment, pour débugger le programme,
         choisit une orientation pour laquelle on sait que le
         résultat doit être un segment significatif,
-        la methode *next* ira plus vite au dernier segment"""
+        la methode *next* ira plus vite au dernier segment.
+        """
         self.angle = math.pi / 2
         self.calcul_vecteur()
 
     def calcul_vecteur(self):
-        """en fonction de l'angle, calcule le vecteur direction du segment,
+        """
+        En fonction de l'angle, calcule le vecteur direction du segment,
         ensuite fixe la première extrémité du segment ``self.a``
         et détermine la dernière des premières extremités pour
-        un segment de cette orientation (angle)"""
+        un segment de cette orientation (angle).
+        """
         self.vecteur = Point(math.cos(self.angle), math.sin(self.angle))
 
         # le vecteur est horizontal

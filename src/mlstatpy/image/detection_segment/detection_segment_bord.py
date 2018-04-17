@@ -10,11 +10,7 @@ orthogonaux à l'image.
 import numpy
 import math
 import copy
-# import detection_nfa as DN
 from .geometrie import Segment, Point
-# import detection_param as DP
-
-# param = DP.Parametre ()
 
 
 class SegmentBord_Commun (Segment):

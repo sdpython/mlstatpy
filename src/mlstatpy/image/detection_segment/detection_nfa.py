@@ -9,14 +9,16 @@ from .geometrie import Segment
 
 
 class SegmentNFA (Segment):
-    """un segment + un nombre de fausses alarmes,
-    servira a memoriser les segments significatifs"""
+    """
+    Un segment + un nombre de fausses alarmes,
+    servira a memoriser les segments significatifs.
+    """
 
     # voir la classe Point pour __slots__
     __slots__ = "nfa"
 
     def __init__(self, p1, p2, nfa):
-        """constructeur, segment + nombre de fausses alarmes"""
+        """segment + nombre de fausses alarmes"""
         Segment.__init__(self, p1, p2)
         self.nfa = nfa
 
@@ -25,6 +27,12 @@ class SegmentNFA (Segment):
         s = Segment.__str__(self)
         s += "  nfa = " + str(self.nfa)
         return s
+
+    def __lt__(self, o):
+        if self.nfa < o.nfa:
+            return True
+        else:
+            return False
 
 
 class InformationPoint (object):
