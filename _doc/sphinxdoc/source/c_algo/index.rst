@@ -6,9 +6,9 @@ Algorithmes
 ###########
 
 Le machine learning propose un grand nombre
-de modèles pour des problèmes standardisés.
-Au delà, il faut savoir être inventifs,
-c'est-à-dire la grande majorité des cas.
+de modÃ¨les pour des problÃ¨mes standardisÃ©s.
+Au delÃ , il faut savoir Ãªtre inventifs,
+c'est-Ã -dire la grande majoritÃ© des cas.
 
 .. toctree::
     :maxdepth: 1

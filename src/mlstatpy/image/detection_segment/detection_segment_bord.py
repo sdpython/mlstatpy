@@ -83,7 +83,7 @@ class SegmentBord_Commun (Segment):
             t.pos.x = p.x
             t.pos.y = p.y
 
-            # si la norme est positive, le gradient a une direction
+            # si la norme est positive, le gradient à une direction
             # on regarde s'il est dans le meme secteur angulaire (proba_bin)
             # que le vecteur normal au segment (nor)
             if t.norme > seuil_norme:

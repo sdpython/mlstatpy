@@ -37,7 +37,16 @@ des anomalies par rapport à un champ de pixels aléatoire.
 
 .. image:: seg.png
 
-Suite :
+Illustration
+============
+
+.. toctree::
+    :maxdepth: 1
+
+    ../notebooks/segment_detection
+
+Explications
+============
 
 * `Détection des images dans les images digitales <https://github.com/sdpython/mlstatpy/blob/master/_todo/segment_detection/presentation.pdf>`_
 * :func:`detect_segments <mlstatpy.image.detection_segment.detection_segment.detect_segments>`

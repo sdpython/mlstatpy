@@ -66,7 +66,7 @@ class LigneGradient:
 
     A partir de là, un segment significatif a deux extrémités
     dont le gradient est dans le bon sens, on parcourt donc
-    tous les couples d'extremites possibles,
+    tous les couples d'extrémités possibles,
     d'abord la première (méthode @see me premier_chemin),
     puis les suivant (méthode @see me next_chemin)
     jusqu'au dernier couple.
@@ -87,17 +87,24 @@ class LigneGradient:
         """
         return self.nb
 
+    def has_aligned_point(self):
+        """
+        Dit s'il existe des points alignés sur le segment.
+        """
+        return any(filter(lambda _: _.aligne, self.info_ligne))
+
     def extremite(self):
         """
         Comptabilise les indices des extremites possibles,
         les pixels choisis ont un gradient de la bonne orientation.
         """
         ext = []
-        for i in range(0, len(self)):
-            if self.info_ligne[i].aligne and \
-                    (i == 0 or i == len(self) - 1 or not self.info_ligne[i - 1].aligne or
-                     not self.info_ligne[i + 1].aligne):
-                ext.append(i)
+        if self.has_aligned_point():
+            for i in range(0, len(self)):
+                if self.info_ligne[i].aligne and \
+                        (i == 0 or i == len(self) - 1 or not self.info_ligne[i - 1].aligne or
+                         not self.info_ligne[i + 1].aligne):
+                    ext.append(i)
         return ext
 
     def premier_chemin(self, ext):
@@ -144,15 +151,15 @@ class LigneGradient:
         et les mémorise.
         """
 
-        # on recense les extremites possibles
+        # on recense les extrémités possibles
         ext = self.extremite()
 
         if len(ext) < 2:
-            # s'il n'y a qu'une extremite possible,
+            # s'il n'y a qu'une extrémité possible,
             # ce n'est pas suffisant pour faire un segment
             return []
 
-        # premier couple d'extremites
+        # premier couple d'extrémités
         ij = self.premier_chemin(ext)
         res = []       # pour memoriser les segments significatifs
 

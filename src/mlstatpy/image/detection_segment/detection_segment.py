@@ -16,12 +16,46 @@ from .detection_segment_segangle import SegmentBord
 from .detection_nfa import LigneGradient, InformationPoint
 
 
-def _load_image(img, format='PIL'):
+def convert_array2PIL(img, mode=None):
+    """
+    Convertit une image donnée sous la forme d'un array
+    au format :epkg:`numpy:array`.
+
+    @param      img     :epkg:`numpy:array`
+    @param      mode    voir `modes <https://pillow.readthedocs.io/en/3.1.x/handbook/concepts.html#modes>`_,
+                        si None, essaye de deviner.
+    @return             *PIL*
+
+    Le mode ``'binary'`` convertit une image issue
+    de la fonction @see fn random_noise_image.
+    """
+    if mode == 'binary':
+        fimg = img.astype(numpy.float32)
+        img255 = (- fimg + 1) * 255
+        img = img255.astype(numpy.uint8)
+        mode = None
+    return _load_image(img, 'PIL', mode=mode)
+
+
+def convert_PIL2array(img):
+    """
+    Convertit une image donnée sous la forme d'une image :epkg:`Pillow`
+    au format :epkg:`numpy:array`.
+
+    @param      img     :epkg:`Pillow`
+    @return             :epkg:`numpy:array`
+    """
+    return _load_image(img, 'array')
+
+
+def _load_image(img, format='PIL', mode=None):
     """
     Charge une image en différents formats.
 
     @param      img     image (*array*, *PIL*, filename)
     @param      format  *array* ou *PIL*
+    @param      mode    voir `modes <https://pillow.readthedocs.io/en/3.1.x/handbook/concepts.html#modes>`_,
+                        si None, essaye de deviner.
     @return             *PIL*
     """
     if isinstance(img, str):
@@ -49,11 +83,11 @@ def _load_image(img, format='PIL'):
         else:
             raise ValueError(
                 "Unexpected value for fomat: '{0}'".format(format))
-    elif isinstance(image, numpy.array):
+    elif isinstance(img, numpy.ndarray):
         if format == 'array':
             return img
         elif format == 'PIL':
-            return Image.fromarray(img)
+            return Image.fromarray(img, mode=mode)
         else:
             raise ValueError(
                 "Unexpected value for fomat: '{0}'".format(format))
@@ -61,11 +95,18 @@ def _load_image(img, format='PIL'):
         raise TypeError("numpy array expected not {0}".format(type(image)))
 
 
+def compute_gradient(img, color=None):
+    """
+    Retourne le gradient d'une image sous forme d'une matrice
+    de Point, consideres ici comme des vecteurs.
+    """
+    return _calcule_gradient(img, color=color)
+
+
 def _calcule_gradient(img, color=None):
     """
     Retourne le gradient d'une image sous forme d'une matrice
     de Point, consideres ici comme des vecteurs.
-    La méthode n'est pas efficace.
 
     @param      img     *fichier*, *array*, *PIL* (image en niveau de gris)
     @param      method  ``'fast'`` or not
@@ -237,6 +278,7 @@ def detect_segments(image, proba_bin=1.0 / 16,
     # autres variables a decouvrir en cours de route
     clast = 0
     nblast = 0
+    not_aligned = 0
 
     # tant qu'on a pas fini
     while cont:
@@ -245,15 +287,17 @@ def detect_segments(image, proba_bin=1.0 / 16,
         # position des pixels, norme du gradient, alignement avec le segment
         seg.decoupe_gradient(grad, cos_angle, ligne, seuil_norme)
 
-        if len(ligne) > 3:
+        if len(ligne) > 3 and ligne.has_aligned_point():
             # si le segment contient plus de trois pixels
             # alors on peut se demander s'il inclut des sous-segments significatifs
             res = ligne.segments_significatifs(binomiale, nb_seg)
 
-            # on ajoute les resultats a la liste
+            # on ajoute les resultats à la liste
             segment.extend(res)
             if stop > 0 and len(segment) >= stop:
                 break
+        else:
+            not_aligned += 1
 
         # on passe au segment suivant
         cont = seg.next()
@@ -262,6 +306,6 @@ def detect_segments(image, proba_bin=1.0 / 16,
         # pour verifier que cela avance
         if verbose and n % 1000 == 0:
             print("n = ", n, " ... ", len(segment), " temps ",
-                  "%2.2f" % (time.clock() - ti), " sec")
+                  "%2.2f" % (time.clock() - ti), " sec", "nalign", not_aligned)
 
     return segment
