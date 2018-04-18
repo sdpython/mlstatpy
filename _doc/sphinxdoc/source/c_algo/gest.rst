@@ -45,8 +45,26 @@ Illustration
 
     ../notebooks/segment_detection
 
+La fonction
+:func:`detect_segments <mlstatpy.image.detection_segment.detection_segment.detect_segments>`
+lance la détection des segments.
+
 Explications
 ============
 
-* `Détection des images dans les images digitales <https://github.com/sdpython/mlstatpy/blob/master/_todo/segment_detection/presentation.pdf>`_
-* :func:`detect_segments <mlstatpy.image.detection_segment.detection_segment.detect_segments>`
+La présentation
+`Détection des images dans les images digitales <https://github.com/sdpython/mlstatpy/blob/master/_todo/segment_detection/presentation.pdf>`_
+détaille le principe de l'algorithme. L'idée de l'algorithme est assez
+proche de la `transformée de Hough <https://fr.wikipedia.org/wiki/Transform%C3%A9e_de_Hough>`_.
+Celle-ci est implémentée dans le module
+`scikit-image <http://scikit-image.org/docs/dev/api/skimage.transform.html>`_ ou
+`opencv <https://docs.opencv.org/2.4.13.6/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html?highlight=hough>`_.
+
+Bibliographie
++++++++++++++
+
+* `From Gestalt Theory to Image Analysis <http://www.math-info.univ-paris5.fr/~moisan/papers/2006-9.pdf>`_,
+  Agnès Desolneux, Lionel Moisan, Jean-Michel Morel
+* `Learning Equivariant Functions with Matrix Valued Kernels <http://www.jmlr.org/papers/volume8/reisert07a/reisert07a.pdf>`_
+* `The Hough Transform Estimator <https://arxiv.org/pdf/math/0503668.pdf>`_
+* `An Extension to Hough Transform Based on Gradient Orientation <https://arxiv.org/ftp/arxiv/papers/1510/1510.04863.pdf>`_
