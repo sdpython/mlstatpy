@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@brief      test log(time=38s)
+@brief      test log(time=10s)
 """
 
 import sys
@@ -45,6 +45,7 @@ from src.mlstatpy.image.detection_segment.detection_segment_segangle import Segm
 from src.mlstatpy.image.detection_segment.detection_segment_bord import SegmentBord_Commun
 from src.mlstatpy.image.detection_segment.detection_segment import detect_segments, plot_segments
 from src.mlstatpy.image.detection_segment.detection_segment import _calcule_gradient, plot_gradient
+from src.mlstatpy import __file__ as rootfile
 
 
 class TestSegments(ExtTestCase):
@@ -145,11 +146,21 @@ class TestSegments(ExtTestCase):
         self.assertEqual(seg.b.x, 286)
         self.assertEqual(seg.b.y, 122)
 
+    def test_gradient_profile(self):
+        img = os.path.join(os.path.dirname(__file__),
+                           "data", "eglise_zoom2.jpg")
+        rootrem = os.path.normpath(os.path.abspath(
+            os.path.join(os.path.dirname(rootfile), '..')))
+        ps, res = self.profile(lambda: _calcule_gradient(img, color=0),
+                               rootrem=rootrem)
+        short = "\n".join(res.split('\n')[:15])
+        self.assertIn("_calcule_gradient", short)
+
     def test_gradient(self):
         temp = get_temp_folder(__file__, "temp_segment_gradient")
         img = os.path.join(temp, "..", "data", "eglise_zoom2.jpg")
-        grad = _calcule_gradient(img)
-        self.assertEqual(grad.shape, (308, 408))
+        grad = _calcule_gradient(img, color=0)
+        self.assertEqual(grad.shape, (308, 408, 2))
         for d in [-2, -1, 0, 1, 2]:
             imgrad = plot_gradient(img, grad, direction=d)
             grfile = os.path.join(temp, "gradient-%d.png" % d)
@@ -162,19 +173,28 @@ class TestSegments(ExtTestCase):
             c2 = f.read()
         self.assertEqual(c1, c2)
 
-    def _test_segment_detection(self):
+    def test_segment_detection_profile(self):
+        img = os.path.join(os.path.dirname(__file__),
+                           "data", "eglise_zoom2.jpg")
+        rootrem = os.path.normpath(os.path.abspath(
+            os.path.join(os.path.dirname(rootfile), '..')))
+        ps, res = self.profile(lambda: detect_segments(img, stop=100),
+                               rootrem=rootrem)
+        short = "\n".join(res.split('\n')[:25])
+        if __name__ == "__main__":
+            print(short)
+        self.assertIn("_calcule_gradient", short)
+
+    def test_segment_detection(self):
         temp = get_temp_folder(__file__, "temp_segment_detection")
         img = os.path.join(temp, "..", "data", "eglise_zoom2.jpg")
         outfile = os.path.join(temp, "seg.png")
-        seg = detect_segments(img, stop=1000)
+        seg = detect_segments(img, stop=100)
         plot_segments(img, seg, outfile=outfile)
         self.assertIsInstance(seg, list)
-        self.assertEqual(len(seg), 2099)
+        self.assertEqual(len(seg), 107)
         seg.sort()
-        for s in seg[:50]:
-            print(s)
-        for s in seg[-50:]:
-            print(s)
+        self.assertGreater(len(seg), 0)
 
 
 if __name__ == "__main__":

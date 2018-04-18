@@ -16,7 +16,7 @@ from .geometrie import Segment, Point
 class SegmentBord_Commun (Segment):
     """
     Définit un segment allant d'un bord a un autre de l'image,
-    la methode importante est decoupe_gradient
+    la méthode importante est @see me decoupe_gradient.
 
         dim     est la dimension de l'image"""
 
@@ -44,39 +44,40 @@ class SegmentBord_Commun (Segment):
     def decoupe_gradient(self, gradient, cos_angle, ligne_gradient, seuil_norme):
         """
         Pour un segment donne joignant deux bords de l'image,
-        cette fonction recupere le gradient et construit une liste
+        cette fonction récupère le gradient et construit une liste
         contenant des informations pour un pixel sur deux du segment,
 
-        * norme* : memorise la norme du gradient en ce point de l'image
-        * *pos* : memorise la position du pixel
-        * *aligne* : est vrai si le gradient est presque orthogonal au segment,
-          ce resultat est relie au parametre proba_bin,
+        * norme* : mémorise la norme du gradient en ce point de l'image
+        * *pos* : mémorise la position du pixel
+        * *aligne* : est vrai si le gradient est presque orthogonale au segment,
+          ce resultat est relié au paramètre proba_bin,
           deux vecteurs sont proches en terme de direction,
-          s'ils font partie du secteur angulaire defini par proba_bin
+          s'ils font partie du secteur angulaire défini par *proba_bin*.
 
         Le parcours du segment commence à son origine ``self.a``,
-        et on ajoute à chaque iteration deux fois le vecteur normal
-        jusqu'a sortir du cadre de l'image,
+        et on ajoute à chaque itération deux fois le vecteur normal
+        jusqu'à sortir du cadre de l'image,
         les informations sont stockées dans ``ligne_gradient`` qui a une liste
         d'informations préalablement créée au debut du programme
         de facon à gagner du temps.
         """
         n = self.directeur()
-        nor = self.normal()
+        nor = self.normal().as_array()
         n.scalairek(2.0)
         p = copy.copy(self.a)
         a = p.arrondi()
 
         i = 0
         while a.x >= 0 and a.y >= 0 and a.x < self.dim.x and a.y < self.dim.y:
-            # on recupere l'element dans ligne ou doivent etre stockees les informations (ligne_gradient)
+            # on recupere l'élément dans ligne ou doivent être
+            # stockées les informations (ligne_gradient)
             t = ligne_gradient.info_ligne[i]
 
             # on recupere le gradient de l'image au pixel a
-            g = gradient[(a.x, a.y)]
+            g = gradient[a.y, a.x]
 
             # on calcul sa norme
-            t.norme = g.norme()
+            t.norme = (g[0] ** 2 + g[1]**2) ** 0.5
 
             # on place les coordonnees du pixel dans t
             t.pos.x = p.x
@@ -86,7 +87,7 @@ class SegmentBord_Commun (Segment):
             # on regarde s'il est dans le meme secteur angulaire (proba_bin)
             # que le vecteur normal au segment (nor)
             if t.norme > seuil_norme:
-                t.aligne = g.scalaire(nor) > cos_angle * t.norme
+                t.aligne = numpy.dot(g, nor) > cos_angle * t.norme
             else:
                 t.aligne = False
 

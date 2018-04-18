@@ -7,6 +7,7 @@ telles le produit scalaire entre deux vecteurs, ...
 """
 import math
 import copy
+import numpy
 
 
 class Point (object):
@@ -52,6 +53,12 @@ class Point (object):
         @return         float (norm)
         """
         return math.sqrt(self.x * self.x + self.y * self.y)
+
+    def as_array(self):
+        """
+        Convertit en array.
+        """
+        return numpy.array([self.x, self.y])
 
     def scalaire(self, k: 'Point') -> float:
         """

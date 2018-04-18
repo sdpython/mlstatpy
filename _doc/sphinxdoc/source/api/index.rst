@@ -9,3 +9,4 @@ API Résumé
     text
     data
     graph
+    image

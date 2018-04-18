@@ -62,7 +62,7 @@ class LigneGradient:
     """
     Stocke toutes les informations relatives à un segment de l'image
     reliant deux points du contour, reçoit les informations
-    de la methode decoupe_gradient.
+    de la methode @see me decoupe_gradient.
 
     A partir de là, un segment significatif a deux extrémités
     dont le gradient est dans le bon sens, on parcourt donc
@@ -82,8 +82,8 @@ class LigneGradient:
     def __len__(self):
         """
         Retourne le nombre de pixels dans le segment,
-        peut etre different de la liste self.info_ligne,
-        ``self.nb`` est determine par decoupe_gradient.
+        peut etre different de la liste ``self.info_ligne``,
+        ``self.nb`` est déterminé par @see me decoupe_gradient.
         """
         return self.nb
 

@@ -61,7 +61,7 @@ def _load_image(img, format='PIL'):
         raise TypeError("numpy array expected not {0}".format(type(image)))
 
 
-def _calcule_gradient(img):
+def _calcule_gradient(img, color=None):
     """
     Retourne le gradient d'une image sous forme d'une matrice
     de Point, consideres ici comme des vecteurs.
@@ -69,24 +69,28 @@ def _calcule_gradient(img):
 
     @param      img     *fichier*, *array*, *PIL* (image en niveau de gris)
     @param      method  ``'fast'`` or not
-    @return             dictionary of ``(x, y) -> Point(dx, dy)``
+    @param      color   calcule le gradient pour cette couleur, None
+                        si l'image est en niveau de gris
+    @return             array of *shape (y, x, 2)*, first dimension is *dx*,
+                        second one is *dy*
     """
     img = _load_image(img, 'array')
     img = img.astype(numpy.float32)
+    if color is not None:
+        img = img[:, :, color]
     size = img.shape[:2]
     X, Y = size
-    m = [[Point(0, 0) for i in range(0, Y)] for j in range(0, X)]
-    res = numpy.array(m)
 
-    for x in range(0, size[0] - 1):
-        for y in range(0, size[1] - 1):
-            ij = img[x, y][0]
-            Ij = img[x + 1, y][0]
-            iJ = img[x, y + 1][0]
-            IJ = img[x + 1, y + 1][0]
-            gx = 0.5 * (IJ - iJ + Ij - ij)
-            gy = 0.5 * (IJ - Ij + iJ - ij)
-            res[(x, y)] = Point(gx, gy)
+    dx1 = img[:, 1:-1] - img[:, :-2]
+    dx2 = img[:, 2:] - img[:, 1:-1]
+    dx = (dx1 + dx2) / 2
+
+    dy1 = img[1:-1, :] - img[:-2, :]
+    dy2 = img[2:, :] - img[1:-1, :]
+    dy = (dy1 + dy2) / 2
+    res = numpy.zeros(img.shape + (2,))
+    res[:, 1:-1, 0] = dx
+    res[1:-1, :, 1] = dy
     return res
 
 
@@ -106,11 +110,11 @@ def plot_gradient(image, gradient, more=None, direction=-1):
             for y in range(0, Y - 1):
                 n = gradient[y, x]
                 if more is None:
-                    v = int(n.norme() + 0.5)
+                    v = int((n[0]**2 + n[1] ** 2)**0.5 + 0.5)
                 elif more == "x":
-                    v = int(n.x / 2 + 127 + 0.5)
+                    v = int(n[0] / 2 + 127 + 0.5)
                 else:
-                    v = int(n.y / 2 + 127 + 0.5)
+                    v = int(n[1] / 2 + 127 + 0.5)
                 image.line([(x, y), (x, y)], fill=(v, v, v))
     if direction in (0, -1):
         pass
@@ -119,17 +123,17 @@ def plot_gradient(image, gradient, more=None, direction=-1):
         for x in range(0, X, direction):
             for y in range(0, Y, direction):
                 n = gradient[y, x]
-                t = n.norme()
+                t = (n[0]**2 + n[1] ** 2)**0.5
                 if t == 0:
                     continue
                 m = copy.copy(n)
-                m.scalairek(1.0 / t)
+                m /= t
                 if t > direction:
                     t = direction
                 if t < 2:
                     t = 2
-                m.scalairek(t)
-                image.line([(x, y), (x + int(m.x), y + int(m.y))],
+                m *= t
+                image.line([(x, y), (x + int(m[0]), y + int(m[1]))],
                            fill=(255, 255, 0))
     elif direction == -2:
         # derniere solution, la couleur represente l'orientation
@@ -137,8 +141,8 @@ def plot_gradient(image, gradient, more=None, direction=-1):
         for x in range(0, X):
             for y in range(0, Y):
                 n = gradient[y, x]
-                i = int(-n.x * 10 + 128)
-                j = int(n.y * 10 + 128)
+                i = int(-n[0] * 10 + 128)
+                j = int(n[1] * 10 + 128)
                 i, j = min(i, 255), min(j, 255)
                 i, j = max(i, 0), max(j, 0)
                 image.line([(x, y), (x, y)], fill=(0, j, i))
@@ -161,14 +165,14 @@ def plot_segments(image, segments, outfile=None, color=(255, 0, 0)):
     @return             nom de fichier ou image
     """
     image = _load_image(image, 'PIL')
-    draw = ImageDraw.Draw(img)
+    draw = ImageDraw.Draw(image)
     for seg in segments:
         draw.line([(seg.a.x, seg.a.y), (seg.b.x, seg.b.y)], fill=color)
     if outfile is not None:
-        img.save(outfile)
+        image.save(outfile)
         return outfile
     else:
-        return img
+        return image
 
 
 def detect_segments(image, proba_bin=1.0 / 16,
@@ -198,7 +202,7 @@ def detect_segments(image, proba_bin=1.0 / 16,
 
     # on calcule les tables de la binomiale pour eviter d'avoir a le fait a
     # chaque fois qu'on en a besoin
-    xx, yy = img.shape[:2]
+    yy, xx = grad.shape[:2]
     nbbin = int(math.ceil(math.sqrt(xx * xx + yy * yy)))
     binomiale = tabule_queue_binom(nbbin, proba_bin)
 
