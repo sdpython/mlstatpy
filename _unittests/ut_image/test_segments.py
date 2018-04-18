@@ -183,7 +183,7 @@ class TestSegments(ExtTestCase):
         short = "\n".join(res.split('\n')[:25])
         if __name__ == "__main__":
             print(short)
-        self.assertIn("_calcule_gradient", short)
+        self.assertIn("detect_segments", short)
 
     def test_segment_detection(self):
         temp = get_temp_folder(__file__, "temp_segment_detection")
