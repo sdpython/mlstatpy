@@ -40,10 +40,10 @@ except ImportError:
 
 from pyquickhelper.loghelper import fLOG
 from pyquickhelper.helpgen import rst2html
-from pyquickhelper.pycode import get_temp_folder, is_travis_or_appveyor
+from pyquickhelper.pycode import get_temp_folder, skipif_travis, skipif_appveyor, ExtTestCase
 
 
-class TestRst2Html(unittest.TestCase):
+class TestDocPage(ExtTestCase):
 
     preamble = '''
             \\usepackage{etex}
@@ -102,39 +102,32 @@ class TestRst2Html(unittest.TestCase):
             \\newcommand{\\loibinomiale}[2]{{\\cal B} \\pa{#1,#2}}
             \\newcommand{\\loimultinomiale}[1]{{\\cal M} \\pa{#1}}
             \\newcommand{\\variance}[1]{\\mathbb{V}\\pa{#1}}
+            \\newcommand{\\scal}[2]{\\left<#1,#2\\right>}
             """.replace("            ", "")
 
-    def test_rst_syntax(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
-        temp = get_temp_folder(__file__, "temp_rst_syntax")
-        preamble = TestRst2Html.preamble + TestRst2Html.custom_preamble
+    @skipif_travis("latex is not installed")
+    @skipif_appveyor("latex is not installed")
+    def test_doc_page(self):
+        temp = get_temp_folder(__file__, "temp_doc_page")
+        preamble = TestDocPage.preamble + TestDocPage.custom_preamble
         this = os.path.abspath(os.path.dirname(__file__))
         rst = os.path.join(this, "..", "..", "_doc", "sphinxdoc",
-                           "source", "c_ml", "kppv.rst")
-        if not os.path.exists(rst):
-            raise FileNotFoundError(rst)
-        with open(rst, "r", encoding="utf-8") as f:
-            content = f.read()
-        writer = "html"
+                           "source", "c_ml", "lr_voronoi.rst")
+        content = self.read_file(rst)
 
-        if is_travis_or_appveyor() in ('travis', 'appveyor'):
-            # No latex.
-            return
-
-        sys.path.append(os.path.abspath(os.path.dirname(src.__file__)))
-
-        ht = rst2html(content, writer=writer, layout="sphinx",
-                      keep_warnings=True, imgmath_latex_preamble=preamble,
-                      outdir=temp)
-        sys.path.pop()
-
+        writer = 'html'
+        ht = rst2html(content, writer=writer, layout="sphinx", keep_warnings=True,
+                      imgmath_latex_preamble=preamble, outdir=temp,
+                      epkg_dictionary={'XD': 'http://www.xavierdupre.fr'})
+        ht = ht.replace('src="_images/', 'src="')
+        ht = ht.replace('/scripts\\bokeh', '../bokeh_plot\\bokeh')
+        ht = ht.replace('/scripts/bokeh', '../bokeh_plot/bokeh')
         rst = os.path.join(temp, "out.{0}".format(writer))
-        with open(rst, "w", encoding="utf-8") as f:
-            f.write(ht)
+        self.write_file(rst, ht)
+
+        # Tests the content.
+        self.assertNotIn('runpythonerror', ht)
+        self.assertNotIn('WARNING', ht)
 
 
 if __name__ == "__main__":
