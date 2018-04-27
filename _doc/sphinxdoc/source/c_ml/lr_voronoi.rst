@@ -202,11 +202,38 @@ soit équidistant de la frontière qui sépare leurs classes :
     \end{array}
 
 Chaque frontière entre deux classes est la médiatrice d'un segment
-:math:`[P_i, P_j]`. Comment retrouvez les points qui auraient permis
-de retrouver ces frontières ?
+:math:`[P_i, P_j]`. Le dessin suivant trace un diagramme de Voronoï à
+trois points. L'intersection est le centre des médiatrices du triangle
+formé par les points de Voronoï. Pour les trouver, on trace un cercle,
+n'importe lequel, puis une droite perpendiculaire à l'une des médiatrice.
+On obtient deux points. Le troisième est obtenu en traçant une seconde
+perpendiculaire et par construsction, la troisième droite est perpendiculaire
+à la troisième médiatrice.
 
 .. image:: lrvor/vor2.png
     :width: 200
+
+On nomme les angles.
+
+.. image:: lrvor/vor4.png
+    :width: 200
+
+Les triangles formés par les côtés jaunes sont isocèles. On en déduit que
+:math:`a + b + c = 2\pi = 2(x + y + z)`. On en déduit aussi que :
+
+.. math::
+
+    \begin{array}{rcl}
+    x + y &=& a \\
+    y + z &=& c \\
+    x + z &=& b
+    \end{array}
+
+On en conclut que :math:`a + b + c = 2\pi = 2(x + y + z) = 2(x + c)` et
+:math:`x = \pi - c`. Il existe une infinité de triplets de 3 points
+qui aboutissent à ce diagramme de Voronoï. Il suffit de changer
+la taille du cercle. On montre aussi qu'en dimension 2 et 3 classes,
+il existe toujours une solution au problème posé.
 
 Notebooks
 =========
