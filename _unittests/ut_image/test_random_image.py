@@ -88,8 +88,9 @@ class TestRandomImage(ExtTestCase):
         random_segment_image(img, density=3., lmin=0.3)
         random_segment_image(img, density=5., lmin=0.3)
         random_segment_image(img, density=5., lmin=0.3)
-        seg = detect_segments(img, seuil_nfa=10, seuil_norme=1, verbose=1)
-        print(seg)
+        seg = detect_segments(img, seuil_nfa=10, seuil_norme=1, verbose=0)
+        # self.assertNotEmpty(seg)
+        self.assertTrue(seg is not None)
 
 
 if __name__ == "__main__":

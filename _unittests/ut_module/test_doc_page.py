@@ -125,6 +125,8 @@ class TestDocPage(ExtTestCase):
         rst = os.path.join(temp, "out.{0}".format(writer))
         self.write_file(rst, ht)
 
+        ht = ht.split('<div class="section" id="notebooks">')[0]
+
         # Tests the content.
         self.assertNotIn('runpythonerror', ht)
         self.assertNotIn('WARNING', ht)
