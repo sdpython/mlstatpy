@@ -208,15 +208,13 @@ formé par les points de Voronoï. Pour les trouver, on trace un cercle,
 n'importe lequel, puis une droite perpendiculaire à l'une des médiatrice.
 On obtient deux points. Le troisième est obtenu en traçant une seconde
 perpendiculaire et par construsction, la troisième droite est perpendiculaire
-à la troisième médiatrice.
+à la troisième médiatrice. Et on nomme les angles.
 
 .. image:: lrvor/vor2.png
     :width: 200
 
-On nomme les angles.
-
 .. image:: lrvor/vor4.png
-    :width: 200
+    :width: 300
 
 Les triangles formés par les côtés jaunes sont isocèles. On en déduit que
 :math:`a + b + c = 2\pi = 2(x + y + z)`. On en déduit aussi que :
@@ -234,6 +232,19 @@ On en conclut que :math:`a + b + c = 2\pi = 2(x + y + z) = 2(x + c)` et
 qui aboutissent à ce diagramme de Voronoï. Il suffit de changer
 la taille du cercle. On montre aussi qu'en dimension 2 et 3 classes,
 il existe toujours une solution au problème posé.
+Maintenant, si on considère la configuration suivante avec des points
+disposés de telle sorte que le diagramme de Voronoï est un maillage
+hexagonal. :math:`a=b=c=\frac{2\pi}{3}` et :math:`x=y=z=\frac{\pi}{3}`.
+Il n'existe qu'un ensemble de points qui peut produire ce maillage
+comme diagramme de Voronoï. Mais si on ajoute une petite zone
+(dans le cercle vert ci-dessous), il est impossible que ce diagramme
+soit un diagramme de Voronoï bien que cela soit une partition convexe.
+
+.. image:: lrvor/hexa.png
+    :width: 200
+
+.. image:: lrvor/hexa2.png
+    :width: 200
 
 Notebooks
 =========

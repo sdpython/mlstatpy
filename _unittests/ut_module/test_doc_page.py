@@ -41,6 +41,7 @@ except ImportError:
 from pyquickhelper.loghelper import fLOG
 from pyquickhelper.helpgen import rst2html
 from pyquickhelper.pycode import get_temp_folder, skipif_travis, skipif_appveyor, ExtTestCase
+from pyquickhelper.filehelper import synchronize_folder
 
 
 class TestDocPage(ExtTestCase):
@@ -111,9 +112,12 @@ class TestDocPage(ExtTestCase):
         temp = get_temp_folder(__file__, "temp_doc_page")
         preamble = TestDocPage.preamble + TestDocPage.custom_preamble
         this = os.path.abspath(os.path.dirname(__file__))
-        rst = os.path.join(this, "..", "..", "_doc", "sphinxdoc",
-                           "source", "c_ml", "lr_voronoi.rst")
+        root = os.path.join(this, "..", "..", "_doc",
+                            "sphinxdoc", "source", "c_ml")
+        rst = os.path.join(root, "lr_voronoi.rst")
+        imgs = os.path.join(root, "lrvor")
         content = self.read_file(rst)
+        synchronize_folder(imgs, os.path.join(temp, "lrvor"), create_dest=True)
 
         writer = 'html'
         ht = rst2html(content, writer=writer, layout="sphinx", keep_warnings=True,
