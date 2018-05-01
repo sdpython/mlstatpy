@@ -1,11 +1,15 @@
 
+.. _l-HISTORY:
+
 =======
 History
 =======
 
-current - 2018-04-14 - 0.00Mb
+current - 2018-05-01 - 0.00Mb
 =============================
 
+* `11`: logistic regression and voronoi (2018-05-01)
+* `10`: add code on segment detection written a while ago (2018-04-18)
 * `9`: fix unittest on wikipedia_dump after a change on wikipedia website (2018-04-01)
 
 0.1.335 - 2018-02-24 - 0.04Mb
