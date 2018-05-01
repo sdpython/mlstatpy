@@ -351,5 +351,5 @@ Bibliographie
     ArXiv `1401.5226 <https://arxiv.org/abs/1401.5226>`_
 
 .. [Gupta2010] Additive Non-negative Matrix Factorization for Missing Data,
-    Mithun Das Gupta,
-   ArXiv `1007.0380 <https://arxiv.org/abs/1007.0380>`_
+    *Mithun Das Gupta*,
+    ArXiv `1007.0380 <https://arxiv.org/abs/1007.0380>`_

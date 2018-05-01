@@ -3,6 +3,8 @@
 Régression logistique, diagramme de Voronoï, k-Means
 ====================================================
 
+.. index:: régression logistique, diagramme de Voronoï, Voronoï
+
 Ce qui suit explore les liens entre une régression logistique,
 les diagrammes de Voronoï pour construire un classifieur
 qui allient la régression logistique et les clustering type k-means.
@@ -134,73 +136,43 @@ des features.
     L'application *f* définit une partition convexe
     de l'espace vectoriel :math:`\mathbb{R}^d`.
 
-Revenons au cas de Voronoï. La classe prédite dépend de :math:`\max_k (Ax + B)_k`,
-on peut aussi considérer que la classe prédite dépend de :math:`\min_k -(Ax + B)_k`.
-On peut également déplacer les points et considérer que la classe dépend de
-:math:`\min_k -\left(A(x-G\right) + B)_k` où *G* est un point de l'espace
-des variables. Il faut trouver *n* points tels que la partition décrite
-par le diagramme de Voronoï de ces points correspondent à la partition
-convexe définie par la régression logistique. Autrement dit,
-il faut trouver *n* points :math:`(P_1, ..., P_n)` tels que les
-:math:`\frac{n(n-1)}{2}` droites soient équivalentes :
+Revenons au cas de Voronoï. La classe prédite dépend de
+:math:`\max_k (Ax + B)_k`. On veut trouver *n* points
+:math:`(P_1, ..., P_n)` tels que chaque couple :math:`(P_i, P_j)`
+soit équidistant de la frontière qui sépare leurs classes.
+Il faut également les projections des deux points sur
+la frontière se confondent et donc que les vecteurs
+:math:`P_i - P_j` et :math:`L_i - L_j` sont colinéaires.
 
 .. math::
 
     \begin{array}{ll}
-    & \scal{x - \frac{P_i + P_j}{2}}{P_i - P_j} = 0  \\
-    \Longleftrightarrow & \scal{x - \frac{L_i + L_j}{2}}{L_i - L_j} + \frac{1}{2}\norme{L_i}^2 + B_i - (\frac{1}{2}\norme{L_j}^2 + B_j) = 0
+    &\left\{\begin{array}{l}\scal{L_i - L_j}{P_i} + B_i - B_j = - \pa{ \scal{L_i - L_j}{P_j} + B_i - B_j } \\
+    P_i-  P_j - \scal{P_i - P_j}{\frac{L_i-L_j}{\norm{L_i-L_j}}} \frac{L_i-L_j}{\norm{L_i-L_j}}=0 \end{array} \right.
+    \\
+    \Longleftrightarrow & \left\{\begin{array}{l}\scal{L_i - L_j}{P_i + P_j} + 2 (B_i - B_j) = 0 \\
+    P_i-  P_j - \scal{P_i - P_j}{\frac{L_i-L_j}{\norm{L_i-L_j}}} \frac{L_i-L_j}{\norm{L_i-L_j}}=0 \end{array} \right.
     \end{array}
 
-On essaye de trouver des points :math:`P_i=L_i + G` où *G*
-est un vecteur constant. On vérifie que :math:`P_i - P_j = L_i - L_j`.
+La seconde équation en cache en fait plusieurs puisqu'elle est valable
+sur plusieurs dimensions mais elles sont redondantes.
+Il suffit de choisir un vecteur :math:`u_{ij}` non perpendiculaire
+à :math:`L_i - L_j` de sorte que
+qui n'est pas perpendiculaire au vecteur :math:`L_i - L_j` et de
+considérer la projection de cette équation sur ce vecteur.
+C'est pourquoi on réduit le système au suivant qui est
+équivalent au précédent si le vecteur :math:`u_{ij}` est bien choisi.
 
 .. math::
 
     \begin{array}{ll}
-    & \scal{x - \frac{L_i + L_j}{2}}{L_i - L_j} + \frac{1}{2}\norme{L_i}^2 + B_i - (\frac{1}{2}\norme{L_j}^2 + B_j) = 0 \\
-    \Longleftrightarrow & \scal{x - \frac{P_i + P_j}{2} + G}{L_i - L_j} + \frac{1}{2}\norme{L_i}^2 + B_i - (\frac{1}{2}\norme{L_j}^2 + B_j) = 0 \\
-    \Longleftrightarrow & \scal{x - \frac{P_i + P_j}{2}}{P_i - P_j} + \scal{G}{L_i} +  \frac{1}{2}\norme{L_i}^2 + B_i - (\frac{1}{2}\norme{L_j}^2 + B_j + \scal{G}{L_j}) = 0
+    \Longrightarrow & \left\{\begin{array}{l}\scal{L_i - L_j}{P_i + P_j} + 2 (B_i - B_j) = 0 \\
+    \scal{P_i-  P_j}{u_{ij}} - \scal{P_i - P_j}{\frac{L_i-L_j}{\norm{L_i-L_j}}} \scal{\frac{L_i-L_j}{\norm{L_i-L_j}}}{u_{ij}}=0
+    \end{array} \right.
     \end{array}
 
-Il faudrait pouvoir choisir *G* de telle sorte que :
-
-.. math::
-
-    \forall i, \scal{G}{L_i} +  \frac{1}{2}\norme{L_i}^2 + B_i = 0 \Longleftrightarrow \forall i,  \scal{L_i}{G}  + B_i= - \frac{1}{2}\norme{L_i}^2
-
-Autrement dit, le point *G* vérifie : :math:`AG + B = -\frac{1}{2}N` avec :math:`N=(n_i)_i`
-et :math:`n_i = \norme{L_i}^2 = \scal{L_i}{L_i}`. La matrice *A* n'est pas nécessairement
-carrée mais s'il y a autant de classes que de dimensions et que la matrice *A* est
-inversible alors il existe une solution. Nous ne traiterons pas le cas
-où le nombre de classes est plus petit que le nombre de dimensions car la solution
-existe aussi. Nous considérons le cas où le nombre de classes *c* est plus grand
-que le nombre de dimension *d*. Dans ce cas, :math:`rang(A)=d`.
-On décompose *A* en `valeurs singulières <https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res>`_ :
-:math:`A = U \Sigma V'` où :math:`\Sigma` est une matrice diagonale de dimension :math:`c \times d`
-*U* est une matrice :math:`c \times c` et *V* est une matrice :math:`d \times d`.
-
-.. math::
-
-    AG = - B -\frac{1}{2}N \Longleftrightarrow U \Sigma V' G = - B -\frac{1}{2}N \Longleftrightarrow \Sigma V' G = - U^{-1}(B + \frac{1}{2}N)
-
-Ce système n'a pas de solution puisqu'il y a *c* équations pour
-*d < c* inconnues sauf s'il existe :math:`c-d` classes pour lesquelles
-:math:`B_i + \frac{1}{2}\norme{L_i}^2`. Rien n'empêche de chercher
-*G* comme solution du problème de minimisation
-:math:`\min_G \norme{AG + B + \frac{1}{2}N}^2`
-mais cela n'aurait pas réellement de signification mathématique.
-Il faut revenir à la définition initiale : trouver
-*n* points :math:`(P_1, ..., P_n)` tels que chaque couple :math:`(P_i, P_j)`
-soit équidistant de la frontière qui sépare leurs classes :
-
-.. math::
-
-    \begin{array}{ll}
-    & \forall j > i, \, (L_i - L_j) P_i + B_i - B_j = - \pa{ (L_i - L_j) P_j + B_i - B_j } \\
-    \Longleftrightarrow & \forall j > i, \, (L_i - L_j) (P_i + P_j) + 2 (B_i - B_j) = 0 \\
-    \Longleftrightarrow & \forall j > i, \, \scal{L_i - L_j}{\frac{P_i + P_j}{2} - \frac{L_i + L_j}{2}} + \frac{1}{2}\norme{L_i}^2 + B_i - (\frac{1}{2}\norme{L_j}^2 + B_j) = 0
-    \end{array}
-
+Faisons un peu de géométrie avant de résoudre ce problème car celui-ci
+a dans la plupart des cas plus d'équations que d'inconnues.
 Chaque frontière entre deux classes est la médiatrice d'un segment
 :math:`[P_i, P_j]`. Le dessin suivant trace un diagramme de Voronoï à
 trois points. L'intersection est le centre des médiatrices du triangle
@@ -246,10 +218,23 @@ soit un diagramme de Voronoï bien que cela soit une partition convexe.
 .. image:: lrvor/hexa2.png
     :width: 200
 
+On revient à la détermination du diagramme de Voronoï associé à
+une régression logistique. On a montré qu'il n'existe pas tout le temps,
+qu'il peut y avoir une infinité de solutions et qu'il est la solution
+d'un système d'équations linéaires.
+
 Notebooks
 =========
 
-Quelques errances.
+.. index:: boule unité
+
+Le notebook qui suit reprend les différents
+éléments théoriques présentés ci-dessus. Il
+continue l'étude d'une régression logistique
+et donne une intuition de ce qui marche ou pas
+avec un tel modèle. Notamment, le modèle est plus
+performant si les classes sont situées sur la boule
+unité de l'espace des features.
 
 .. toctree::
     :maxdepth: 1
