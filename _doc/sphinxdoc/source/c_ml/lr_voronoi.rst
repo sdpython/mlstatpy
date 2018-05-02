@@ -9,7 +9,7 @@ Ce qui suit explore les liens entre une régression logistique,
 les diagrammes de Voronoï pour construire un classifieur
 qui allient la régression logistique et les clustering type k-means.
 Le point de départ est une conjecture : les régions
-créées par une régression logisitique sont convexes.
+créées par une régression logistique sont convexes.
 
 .. contents::
     :local:
@@ -49,9 +49,9 @@ de ces droites. On peut retourner le problème. On suppose
 qu'il existe :math:`\frac{n(n-1)}{2}` hyperplans,
 existe-t-il *n* points de telle sorte que les hyperplans
 initiaux sont les frontières du diagramme de Voronoï formé
-par ces *n* points ?
-
-**à compléter**
+par ces *n* points ? La réponse est pas dans tous les cas
+ce qui veut dire non dans le cas générique. Les paragraphes
+qui suivent expliquent pourquoi.
 
 Régression logistique
 =====================
@@ -126,6 +126,7 @@ des features.
 .. mathdef::
     :title: convexité des classes formées par une régression logistique
     :tag: Théorème
+    :lid: th-thlogregpartconv
 
     On définit l'application :math:`\mathbb{R}^d \rightarrow \mathbb{N}`
     qui associe la plus grande coordonnées
@@ -222,6 +223,40 @@ On revient à la détermination du diagramme de Voronoï associé à
 une régression logistique. On a montré qu'il n'existe pas tout le temps,
 qu'il peut y avoir une infinité de solutions et qu'il est la solution
 d'un système d'équations linéaires.
+
+Partition convexe
+=================
+
+On a montré que la régression logistique réalise une
+partition convexe de l'espace vectoriel des variables.
+On peut se poser la question de la réciproque : est-ce
+que toute partition convexe d'un espace vectoriel peut
+être décrite avec une régression logistique ou plus
+précisément par la fonction décrite par le théorème
+:ref:`convexité des classes formées par une régression logistique <th-thlogregpartconv>`.
+Considérons d'abord deux parties voisines d'une partition convexe.
+
+.. image:: lrvor/partabc.png
+
+L'image qui précède montre une partition qui n'est pas convexe.
+La partie *A* l'est mais pas la partie *B*. En fait, il est facile
+de montrer que la seule frontière admissible entre deux parties convexe
+est un hyperplan. Si la partition contient *n* partie,
+il y a au pire :math:`\frac{n(n-1)}{2}` frontières,
+ce qui correspond également au nombre d'hyperplans définis
+par la fonction de prédiction associée à la régression logistique.
+
+.. image:: lrvor/zoneangle.png
+    :width: 300
+
+L'image qui précède présente une classification en trois
+zones (droites noires). On a choisi une droite bleue au hasard.
+En prenant son symétrique par rapport à une des droites noires (*D*),
+on a deux droites :math:`D_1`, :math:`D_2`. L'ensemble des points
+:math:`\acc{x | d(x, D_1) = d(x, D_2)}` correspond à la droite noire.
+Il doit être de même pour les trois droites bleues, autrement
+dit, l'intersection des droites est le centre du cercle inscrit
+dans le triangle bleu ce qui n'est visiblement pas le cas sur l'image.
 
 Notebooks
 =========
