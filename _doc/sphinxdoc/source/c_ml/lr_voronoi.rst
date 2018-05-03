@@ -49,9 +49,8 @@ de ces droites. On peut retourner le problème. On suppose
 qu'il existe :math:`\frac{n(n-1)}{2}` hyperplans,
 existe-t-il *n* points de telle sorte que les hyperplans
 initiaux sont les frontières du diagramme de Voronoï formé
-par ces *n* points ? La réponse est pas dans tous les cas
-ce qui veut dire non dans le cas générique. Les paragraphes
-qui suivent expliquent pourquoi.
+par ces *n* points ? Les paragraphes qui suivent expliquent
+explorent cette hypothèse.
 
 Régression logistique
 =====================
@@ -93,7 +92,7 @@ de classes. L'équation de l'hyperplan entre deux classes devient :
 
     \begin{array}{ll}
     & L_i X + B_i = L_j X + B_j \\
-    \Longleftrightarrow & (L_i - L_j) X + B_i - B_j = 0 \\
+    \Longleftrightarrow & \scal{L_i - L_j}{X} + B_i - B_j = 0 \\
     \Longleftrightarrow & \scal{L_i - L_j}{X} + B_i - B_j = 0 \\
     \Longleftrightarrow & \scal{L_i - L_j}{X - \frac{L_i + L_j}{2}} + \scal{L_i - L_j}{\frac{L_i + L_j}{2}} + B_i - B_j = 0 \\
     \Longleftrightarrow & \scal{L_i - L_j}{X - \frac{L_i + L_j}{2}} + \frac{1}{2}\norme{L_i}^2 - \frac{1}{2}\norme{L_j}^2 + B_i - B_j = 0 \\
@@ -172,6 +171,9 @@ C'est pourquoi on réduit le système au suivant qui est
     \end{array} \right.
     \end{array}
 
+Diagramme de Voronoï et partition convexe
+=========================================
+
 Faisons un peu de géométrie avant de résoudre ce problème car celui-ci
 a dans la plupart des cas plus d'équations que d'inconnues.
 Chaque frontière entre deux classes est la médiatrice d'un segment
@@ -220,21 +222,26 @@ soit un diagramme de Voronoï bien que cela soit une partition convexe.
     :width: 200
 
 On revient à la détermination du diagramme de Voronoï associé à
-une régression logistique. On a montré qu'il n'existe pas tout le temps,
-qu'il peut y avoir une infinité de solutions et qu'il est la solution
-d'un système d'équations linéaires.
+une régression logistique. On a montré qu'il n'existe pas tout le temps
+pour n'importe quelle partition convexe. Mais cela ne veut pas dire que
+tel est le cas pour une régression logistique.
 
-Partition convexe
-=================
+Régression logistique et partition convexe
+==========================================
 
 On a montré que la régression logistique réalise une
 partition convexe de l'espace vectoriel des variables.
-On peut se poser la question de la réciproque : est-ce
-que toute partition convexe d'un espace vectoriel peut
-être décrite avec une régression logistique ou plus
-précisément par la fonction décrite par le théorème
+On note *L(n)* l'ensemble des partitions à *n* classes.
+Le diagramme de Voronoï correspondent également à un
+sous-ensemble *V(n)*. :math:`L(n) = V(n)`, that is the
+question.
+
+On peut se poser la question de savoir si *L(n)* un sous-ensemble
+ou tout l'ensemble auquel cas la réponse à la question précédente
+est triviale.
+Considérons d'abord deux parties voisines d'une partition convexe formée
+par une fonction telle que celle décrite par le théorème sur la
 :ref:`convexité des classes formées par une régression logistique <th-thlogregpartconv>`.
-Considérons d'abord deux parties voisines d'une partition convexe.
 
 .. image:: lrvor/partabc.png
 
@@ -257,6 +264,32 @@ on a deux droites :math:`D_1`, :math:`D_2`. L'ensemble des points
 Il doit être de même pour les trois droites bleues, autrement
 dit, l'intersection des droites est le centre du cercle inscrit
 dans le triangle bleu ce qui n'est visiblement pas le cas sur l'image.
+Il paraît vraisemblable de dire les régressions logisitiques ne permettent
+pas de former toutes les partitions convexes. On pourrait le montrer mais
+cela ne permettrait pas de répondre à la question initiale
+:math:`L(n) = V(n)` ?
+
+Voronoï et régression logistique
+================================
+
+On sait que :math:`L(2)=V(2)` quelque soit la dimension,
+que :math:`L(3)=V(3)` en dimension 2. La matrice *L*
+définit une régression logistique. Le diagramme de Voronoï qui
+lui correspond est solution du système d'équations qui suit :
+
+.. math::
+
+    \begin{array}{ll}
+    \Longrightarrow & \left\{\begin{array}{l}\scal{\frac{L_i-L_j}{\norm{L_i-L_j}}}{P_i + P_j} + 2 \frac{B_i - B_j}{\norm{L_i-L_j}} = 0 \\
+    \scal{P_i-  P_j}{u_{ij}} - \scal{P_i - P_j}{\frac{L_i-L_j}{\norm{L_i-L_j}}} \scal{\frac{L_i-L_j}{\norm{L_i-L_j}}}{u_{ij}}=0
+    \end{array} \right.
+    \end{array}
+
+Avec :math:`u_{ij}` choisi de telle sorte que
+:math:`\scal{L_i-L_j}{u_{ij}} \neq 0`.
+Ce système inclut des équations entre classes ou régions qui
+ne sont pas voisines. Il y a potentiellement :math:`\frac{n(n-1)}{2}`
+équations pour *n* inconnues.
 
 Notebooks
 =========
