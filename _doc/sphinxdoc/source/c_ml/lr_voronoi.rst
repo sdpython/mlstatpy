@@ -278,18 +278,84 @@ définit une régression logistique. Le diagramme de Voronoï qui
 lui correspond est solution du système d'équations qui suit :
 
 .. math::
+    :label: eq-lrvor-system
 
-    \begin{array}{ll}
-    \Longrightarrow & \left\{\begin{array}{l}\scal{\frac{L_i-L_j}{\norm{L_i-L_j}}}{P_i + P_j} + 2 \frac{B_i - B_j}{\norm{L_i-L_j}} = 0 \\
+    \begin{array}{rcl}
+    & \Longrightarrow & \left\{\begin{array}{l}\scal{\frac{L_i-L_j}{\norm{L_i-L_j}}}{P_i + P_j} + 2 \frac{B_i - B_j}{\norm{L_i-L_j}} = 0 \\
     \scal{P_i-  P_j}{u_{ij}} - \scal{P_i - P_j}{\frac{L_i-L_j}{\norm{L_i-L_j}}} \scal{\frac{L_i-L_j}{\norm{L_i-L_j}}}{u_{ij}}=0
     \end{array} \right.
     \end{array}
 
-Avec :math:`u_{ij}` choisi de telle sorte que
-:math:`\scal{L_i-L_j}{u_{ij}} \neq 0`.
-Ce système inclut des équations entre classes ou régions qui
-ne sont pas voisines. Il y a potentiellement :math:`\frac{n(n-1)}{2}`
-équations pour *n* inconnues.
+Avec :math:`u_{ij}` choisi de telle sorte que les
+vecteur :math:`L_i-L_j` et :math:`u_{ij}` ne soit pas
+coliénaires. Ce système inclut des équations
+entre classes ou régions qui ne sont pas voisines.
+Il y a potentiellement :math:`\frac{n(n-1)}{2}`
+équations pour *n* inconnues. Il n'est pas évident de dire
+si ce système à une solution. Voyons plutôt l'ensemble des droites
+formées par un diagramme de Voronoï. Un point appartient à un segment
+s'il est à égale distance de deux points.
+
+.. math::
+
+    \begin{array}{ll}
+    &\forall i<j, \, d(X, P_i) = d(X, P_j) \\
+    \Longleftrightarrow & \forall i<j, \, \norm{X-P_i}^2 = \norm{X-P_j}^2 \\
+    \Longleftrightarrow & \forall i<j, \, \scal{(X-P_i)+(X-P_j)}{(X-P_i)-(X-P_j)} \\
+    \Longleftrightarrow & \forall i<j, \, \scal{X-\frac{P_i+P_j}{2}}{P_j-P_i}=0 \\
+    \Longleftrightarrow & \forall i<j, \, \scal{X}{P_j-P_i} + \frac{\norm{P_i}^2}{2} - \frac{\norm{P_j}^2}{2}=0
+    \end{array}
+
+Pour une partition convexe formée à partir de droite,
+comme c'est le cas d'une régression linéaire, un point
+appartient à un segment s'il est à égale distance de deux
+droites. L'ensemble de ces points correspond à deux droites,
+les deux bissectrices.
+
+.. image:: lrvor/biss.png
+    :width: 150
+
+Seule l'une de ces droites est la bonne.
+L'équation d'une droite est donnée par
+:math:`\scal{X}{L_i} +B_i=0`.
+
+.. math::
+
+    \scal{X}{\frac{L_i}{\norm{L_i}}} + \frac{B_i}{\norm{L_i}} = \scal{X}{\frac{L_j}{\norm{L_j}}} + \frac{B_j}{\norm{L_j}} \text{ ou }
+    \scal{X}{\frac{L_i}{\norm{L_i}}} + \frac{B_i}{\norm{L_i}} = - \scal{X}{\frac{L_j}{\norm{L_j}}} - \frac{B_j}{\norm{L_j}}
+
+On choisit l'une de ces droites.
+
+.. math::
+
+    \forall i<j, \, \scal{X}{\frac{L_j}{\norm{L_j}} -\frac{L_i}{\norm{L_i}}} + \frac{B_j}{\norm{L_j}} - \frac{B_i}{\norm{L_i}} = 0
+
+On peut voir que si tous les points sont situés
+sur la boule unité, à savoir :math:`\norm{P_i}=1`,
+la régression logistique s'écrit simplement avec
+:math:`L_i=P_i` et :math:`B_i=-\frac{1}{2}`.
+On revient au système d'équations :eq:`eq-lrvor-system`
+et la première équation.
+
+.. math::
+
+    \begin{array}{l}
+    \scal{L_i-L_j}{P_i + P_j} + 2 (B_i - B_j) = 0 \\
+    \scal{L_j-L_k}{P_j + P_k} + 2 (B_j - B_k) = 0
+    \end{array}
+
+On somme.
+
+.. math::
+
+    \begin{array}{ll}
+    &\scal{L_i-L_k}{P_i + P_k} + 2 (B_i - B_k) +
+    \scal{L_i}{P_j} - \scal{L_j}{P_i} + \scal{L_j}{P_k} - \scal{L_k}{P_j} = 0 \\
+    \Longrightarrow & \scal{L_i-L_k}{P_i + P_k} + 2 (B_i - B_k) +
+    -\scal{L_j}{P_i-P_k} + \scal{L_i-L_k}{P_j} = 0
+    \end{array}
+
+à continuer.
 
 Notebooks
 =========
