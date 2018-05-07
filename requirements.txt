@@ -6,6 +6,7 @@ line_profiler
 mako
 memory_profiler
 minepy
+mlinsights
 mutagen
 opencv-python
 pyensae>=1.1.687

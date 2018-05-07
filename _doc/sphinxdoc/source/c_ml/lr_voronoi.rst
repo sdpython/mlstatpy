@@ -1,4 +1,6 @@
 
+.. _l-lrvor-connection:
+
 ====================================================
 Régression logistique, diagramme de Voronoï, k-Means
 ====================================================
@@ -334,28 +336,14 @@ On peut voir que si tous les points sont situés
 sur la boule unité, à savoir :math:`\norm{P_i}=1`,
 la régression logistique s'écrit simplement avec
 :math:`L_i=P_i` et :math:`B_i=-\frac{1}{2}`.
-On revient au système d'équations :eq:`eq-lrvor-system`
-et la première équation.
-
-.. math::
-
-    \begin{array}{l}
-    \scal{L_i-L_j}{P_i + P_j} + 2 (B_i - B_j) = 0 \\
-    \scal{L_j-L_k}{P_j + P_k} + 2 (B_j - B_k) = 0
-    \end{array}
-
-On somme.
-
-.. math::
-
-    \begin{array}{ll}
-    &\scal{L_i-L_k}{P_i + P_k} + 2 (B_i - B_k) +
-    \scal{L_i}{P_j} - \scal{L_j}{P_i} + \scal{L_j}{P_k} - \scal{L_k}{P_j} = 0 \\
-    \Longrightarrow & \scal{L_i-L_k}{P_i + P_k} + 2 (B_i - B_k) +
-    -\scal{L_j}{P_i-P_k} + \scal{L_i-L_k}{P_j} = 0
-    \end{array}
-
-à continuer.
+On revient au système d'équations linéaires
+:eq:`eq-lrvor-system` et on en cherche une solution
+approchée un peu à la façon
+`RANSAC <http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html>`_
+avec une régression linéaire et la norme *L1*.
+Si la solution est approchée, on aura montré que dans le cas
+générique, une régression logistique n'est pas équivalente
+à un diagramme de Voronoï.
 
 Notebooks
 =========

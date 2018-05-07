@@ -148,13 +148,13 @@ if is_local():
     from pyquickhelper.pycode import process_standard_options_for_setup
     r = process_standard_options_for_setup(
         sys.argv, __file__, project_var_name,
-        unittest_modules=["pyquickhelper", "jyquickhelper"],
+        unittest_modules=["pyquickhelper", "jyquickhelper", "mlinsights"],
         additional_notebook_path=["pyquickhelper", "pyensae",
-                                  "pymyinstall", "jyquickhelper"],
+                                  "pymyinstall", "jyquickhelper", "mlinsights"],
         additional_local_path=["pyquickhelper", "pyensae",
-                               "pymyinstall", "jyquickhelper"],
+                               "pymyinstall", "jyquickhelper", "mlinsights"],
         requirements=["pyquickhelper", "pymyinstall",
-                      "jyquickhelper", "pyensae"],
+                      "jyquickhelper", "pyensae", "mlinsights"],
         add_htmlhelp=sys.platform.startswith("win"),
         coverage_options=dict(omit=["*exclude*.py"]),
         github_owner="sdpython",
