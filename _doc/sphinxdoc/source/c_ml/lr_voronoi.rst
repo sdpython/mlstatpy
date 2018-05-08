@@ -341,9 +341,18 @@ On revient au système d'équations linéaires
 approchée un peu à la façon
 `RANSAC <http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html>`_
 avec une régression linéaire et la norme *L1*.
-Si la solution est approchée, on aura montré que dans le cas
-générique, une régression logistique n'est pas équivalente
-à un diagramme de Voronoï.
+Il n'existe pas toujours de diagramme de Voronoï équivalent
+à la partition convexe réalisée par une regréssion logistique.
+Il est facile de trouver un contre-exemple en essayant de résoudre
+le système précédent. C'est ce que fait la fonction
+:func:`voronoi_estimation_from_lr <mlstatpy.ml.voronoi.voronoi_estimation_from_lr>`.
+La fonction essaye avec quelques approximations et heuristiques
+de déterminer les points du diagramme de Voronoï. Si elle réussit
+du premier coup, c'est qu'il y avait équivalence ce qui arrive peu souvent.
+Il faudrait refaire les calculs à la main et non de façon approchée pour
+valider un contre exemple. Une prochaine fois peut-être.
+Ce qu'il faut retenir est que la régression logistique
+réalise une partition convexe de l'espace des variables.
 
 Notebooks
 =========

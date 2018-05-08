@@ -10,7 +10,7 @@ Métriques
 +++++++++
 
 .. autosignature:: mlstatpy.ml.ml_grid_benchmark.MlGridBenchMark
-    :members:
 
 .. autosignature:: mlstatpy.ml.roc.ROC
-    :members:
+
+.. autosignature:: mlstatpy.ml.voronoi.voronoi_estimation_from_lr
