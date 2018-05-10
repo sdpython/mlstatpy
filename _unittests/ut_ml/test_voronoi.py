@@ -103,8 +103,8 @@ class TestVoronoi(ExtTestCase):
         self.assertEqual(points.shape, (3, 4))
         points2 = voronoi_estimation_from_lr(
             clr.coef_, clr.intercept_, C, D, qr=True)
-        self.assertEqual(points.shape, (3, 4))
-        self.assertEqualArray(points, points, decimal=5)
+        self.assertEqual(points2.shape, (3, 4))
+        self.assertEqualArray(points2, points2, decimal=5)
 
     def test_square(self):
         from src.mlstatpy.ml.voronoi import voronoi_estimation_from_lr
