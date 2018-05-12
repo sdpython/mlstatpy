@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
-import datetime
-import re
-# import sphinx_clatex
-# import hbp_sphinx_theme as sphtheme
 
 choice = "bootstrap"
 
