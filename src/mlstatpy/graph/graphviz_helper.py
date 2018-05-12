@@ -21,11 +21,11 @@ def run_graphviz(filename, image, engine="dot"):
     if ext != ".png":
         raise Exception("extension should be .png not " + str(ext))
     if sys.platform.startswith("win"):
-        bin = os.path.dirname(find_graphviz_dot())
+        bin_ = os.path.dirname(find_graphviz_dot())
         # if bin not in os.environ["PATH"]:
         #    os.environ["PATH"] = os.environ["PATH"] + ";" + bin
         cmd = '"{0}\\{3}" -Tpng "{1}" -o "{2}"'.format(
-            bin, filename, image, engine)
+            bin_, filename, image, engine)
     else:
         cmd = '"{0}" -Tpng "{1}" -o "{2}"'.format(engine, filename, image)
     out, err = run_cmd(cmd, wait=True)

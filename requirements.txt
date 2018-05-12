@@ -11,7 +11,7 @@ mutagen
 opencv-python
 pyensae>=1.1.687
 pyinstrument
-pyquickhelper>=1.7.2581
+pyquickhelper>=1.8
 snakeviz
 sphinx-bootstrap-theme
 sphinxjp.themes.basicstrap

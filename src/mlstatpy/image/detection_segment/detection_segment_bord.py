@@ -6,14 +6,12 @@ en plus d'être un segment, cette classe inclut la dimension de l'image,
 et une fonction repérant sur ce segment les gradients presque
 orthogonaux à l'image.
 """
-
-import numpy
-import math
 import copy
+import numpy
 from .geometrie import Segment, Point
 
 
-class SegmentBord_Commun (Segment):
+class SegmentBord_Commun(Segment):
     """
     Définit un segment allant d'un bord a un autre de l'image,
     la méthode importante est @see me decoupe_gradient.
@@ -21,13 +19,12 @@ class SegmentBord_Commun (Segment):
         dim     est la dimension de l'image"""
 
     # voir la remarque dans la classe Point a propos de __slots__
-    __slots__ = "dim"
+    __slots__ = ("dim",)
 
     def __init__(self, dim):
         """constructeur, definit la definition de l'image"""
         Segment.__init__(self, Point(0, 0), Point(0, 0))
         self.dim = dim
-        self.premier()
 
     def copy(self):
         """

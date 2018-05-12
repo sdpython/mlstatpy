@@ -6,25 +6,8 @@
 import sys
 import os
 import unittest
-import math
 import numpy
-
-
-try:
-    import pyquickhelper as skip_
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..",
-                "..",
-                "pyquickhelper",
-                "src")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import pyquickhelper as skip_
+from pyquickhelper.pycode import ExtTestCase, get_temp_folder
 
 
 try:
@@ -40,7 +23,6 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from pyquickhelper.pycode import ExtTestCase, get_temp_folder
 from src.mlstatpy.image.detection_segment.random_image import random_noise_image, random_segment_image
 from src.mlstatpy.image.detection_segment import convert_array2PIL, convert_PIL2array
 from src.mlstatpy.image.detection_segment.detection_segment import detect_segments
@@ -76,7 +58,7 @@ class TestRandomImage(ExtTestCase):
         img3 = convert_PIL2array(pil2)
         self.assertEqual(timg255, img3)
 
-        for i in range(0, 100):
+        for _ in range(0, 100):
             seg = random_segment_image(img, lmin=0.5, density=2.)
             self.assertGreater(seg['x1'], 0)
             self.assertGreater(seg['y1'], 0)

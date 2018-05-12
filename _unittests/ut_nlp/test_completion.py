@@ -7,23 +7,7 @@ import sys
 import os
 import unittest
 import itertools
-
-
-try:
-    import pyquickhelper as skip_
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..",
-                "..",
-                "pyquickhelper",
-                "src")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import pyquickhelper as skip_
+from pyquickhelper.loghelper import fLOG
 
 
 try:
@@ -39,7 +23,6 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from pyquickhelper.loghelper import fLOG
 from src.mlstatpy.nlp.completion import CompletionTrieNode
 from src.mlstatpy.data.wikipedia import normalize_wiki_text, enumerate_titles
 from src.mlstatpy.nlp.normalize import remove_diacritics
@@ -70,7 +53,7 @@ class TestCompletion(unittest.TestCase):
         assert node is not None
         assert node.leave
         self.assertEqual(node.value, 'ab')
-        for k, word in queries:
+        for _, word in queries:
             ks = trie.min_keystroke(word)
             self.assertEqual(ks[0], ks[1])
 
@@ -161,19 +144,19 @@ class TestCompletion(unittest.TestCase):
             for n in trie.leaves():
                 fLOG("   ", n.value, n.stat.str_mks())
                 assert n.stat.mks1 <= n.stat.mks0
-                a, b, c = trie.min_dynamic_keystroke(n.value)
+                a = trie.min_dynamic_keystroke(n.value)[0]
                 self.assertEqual(a, n.stat.mks1)
-                a, b = trie.min_keystroke(n.value)
+                a = trie.min_keystroke(n.value)[0]
                 if a != n.stat.mks0:
                     mes = [str(per)]
-                    for n in trie.leaves():
-                        mes.append("{0} - {1} || {2}".format(n.value,
-                                                             n.stat.str_mks(), trie.min_keystroke(n.value)))
+                    for n2 in trie.leaves():
+                        mes.append("{0} - {1} || {2}".format(n2.value,
+                                                             n2.stat.str_mks(), trie.min_keystroke(n2.value)))
                     mes.append("---")
-                    for n in trie:
+                    for n2 in trie:
                         mes.append("{0} || {1}".format(
-                            n.value, n.stat.str_mks()))
-                        for i, s in enumerate(n.stat.completions):
+                            n2.value, n2.stat.str_mks()))
+                        for i, s in enumerate(n2.stat.completions):
                             mes.append(
                                 "  {0} - {1}:{2}".format(i, s[0], s[1].value))
                     raise Exception("difference\n{0}".format("\n".join(mes)))

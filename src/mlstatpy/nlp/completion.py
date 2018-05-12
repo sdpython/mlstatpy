@@ -14,8 +14,8 @@ class CompletionTrieNode(object):
     It should be done another way (cython, C++).
     """
 
-    __slots__ = ["value", "children", "weight",
-                 "leave", "stat", "parent", "disp"]
+    __slots__ = ("value", "children", "weight",
+                 "leave", "stat", "parent", "disp")
 
     def __init__(self, value, leave, weight=1.0, disp=None):
         """

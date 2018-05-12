@@ -7,24 +7,7 @@ import sys
 import os
 import unittest
 import math
-
-
-try:
-    import pyquickhelper as skip_
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..",
-                "..",
-                "pyquickhelper",
-                "src")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import pyquickhelper as skip_
-
+from pyquickhelper.pycode import ExtTestCase, get_temp_folder
 
 try:
     import src
@@ -39,10 +22,8 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from pyquickhelper.pycode import ExtTestCase, get_temp_folder
 from src.mlstatpy.image.detection_segment.geometrie import Point
 from src.mlstatpy.image.detection_segment.detection_segment_segangle import SegmentBord
-from src.mlstatpy.image.detection_segment.detection_segment_bord import SegmentBord_Commun
 from src.mlstatpy.image.detection_segment.detection_segment import detect_segments, plot_segments
 from src.mlstatpy.image.detection_segment.detection_segment import _calcule_gradient, plot_gradient
 from src.mlstatpy import __file__ as rootfile
@@ -77,7 +58,6 @@ class TestSegments(ExtTestCase):
                 """attend la pression d'un clic de souris
                 avant de continuer l'execution du programme,
                 methode pour pygame"""
-                color = 0, 0, 0
                 pygame.display.flip()
                 reste = True
                 while reste:
@@ -151,8 +131,8 @@ class TestSegments(ExtTestCase):
                            "data", "eglise_zoom2.jpg")
         rootrem = os.path.normpath(os.path.abspath(
             os.path.join(os.path.dirname(rootfile), '..')))
-        ps, res = self.profile(lambda: _calcule_gradient(img, color=0),
-                               rootrem=rootrem)
+        _, res = self.profile(lambda: _calcule_gradient(
+            img, color=0), rootrem=rootrem)
         short = "\n".join(res.split('\n')[:15])
         self.assertIn("_calcule_gradient", short)
 
@@ -178,8 +158,8 @@ class TestSegments(ExtTestCase):
                            "data", "eglise_zoom2.jpg")
         rootrem = os.path.normpath(os.path.abspath(
             os.path.join(os.path.dirname(rootfile), '..')))
-        ps, res = self.profile(lambda: detect_segments(img, stop=100),
-                               rootrem=rootrem)
+        _, res = self.profile(lambda: detect_segments(
+            img, stop=100), rootrem=rootrem)
         short = "\n".join(res.split('\n')[:25])
         if __name__ == "__main__":
             print(short)

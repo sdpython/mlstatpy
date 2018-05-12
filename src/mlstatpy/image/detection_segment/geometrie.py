@@ -12,8 +12,8 @@ import numpy
 
 class Point (object):
     """
-    définit un point de l'image ou un vecteur,
-    deux coordonnées x et y qui sont réelles
+    Définit un point de l'image ou un vecteur,
+    deux coordonnées *x* et *y* qui sont réelles.
     """
     __slots__ = "x", "y"
 
@@ -40,7 +40,7 @@ class Point (object):
 
     def scalairek(self, k: float):
         """
-        mulitplication par un scalaire
+        Mulitplication par un scalaire.
 
         @param      k       float
         """
@@ -48,7 +48,8 @@ class Point (object):
         self.y *= k
 
     def norme(self) -> float:
-        """retourne la norme
+        """
+        Retourne la norme.
 
         @return         float (norm)
         """
@@ -62,15 +63,15 @@ class Point (object):
 
     def scalaire(self, k: 'Point') -> float:
         """
-        calcule le produit scalaire
+        Calcule le produit scalaire.
 
-        @param      k       Point
+        @param      k       @see cl Point
         @return             float
         """
         return self.x * k.x + self.y * k.y
 
     def __iadd__(self, ad):
-        """ajoute un vecteur a celui-ci"""
+        """ajoute un vecteur à celui-ci"""
         self.x += ad.x
         self.y += ad.y
         return self
@@ -99,9 +100,9 @@ class Point (object):
         return self.x == a.x and self.y == a.y
 
 
-class Segment (object):
+class Segment(object):
     """
-    définit un segment, soit deux Point
+    Définit un segment, soit deux @see cl Point.
     """
 
     # voir le commentaire associees a la ligne contenant __slots__
@@ -133,3 +134,11 @@ class Segment (object):
         p = Point(self.a.y - self.b.y, self.b.x - self.a.x)
         p.normalise()
         return p
+
+    def first(self):
+        """Retourne la première extrémité."""
+        return self.a
+
+    def last(self):
+        """Retourne la seconde extrémité."""
+        return self.b

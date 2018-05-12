@@ -3,12 +3,11 @@
 @file
 @brief About Voronoi Diagram
 """
-import numpy
 import warnings
+import numpy
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics.pairwise import pairwise_distances
 from mlinsights.mlmodel import QuantileLinearRegression
-from statsmodels.regression.quantile_regression import QuantReg
 
 
 class VoronoiEstimationError(Exception):
@@ -45,7 +44,8 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
     .. math::
 
         \\begin{array}{rcl}
-        & \\Longrightarrow & \\left\\{\\begin{array}{l}\\scal{\\frac{L_i-L_j}{\\norm{L_i-L_j}}}{P_i + P_j} + 2 \\frac{B_i - B_j}{\\norm{L_i-L_j}} = 0 \\\\
+        & \\Longrightarrow & \\left\\{\\begin{array}{l}\\scal{\\frac{L_i-L_j}{\\norm{L_i-L_j}}}{P_i + P_j} +
+        2 \\frac{B_i - B_j}{\\norm{L_i-L_j}} = 0 \\\\
         \\scal{P_i-  P_j}{u_{ij}} - \\scal{P_i - P_j}{\\frac{L_i-L_j}{\\norm{L_i-L_j}}} \\scal{\\frac{L_i-L_j}{\\norm{L_i-L_j}}}{u_{ij}}=0
         \\end{array} \\right.
         \\end{array}
@@ -178,7 +178,7 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
 
         # test equal points
         if dist[-1][0] < tol:
-            dmin, i, j = dist[-1]
+            _, i, j = dist[-1]
             eq1 = labels_inv[i, j, 'eq1']
             eq2 = labels_inv[i, j, 'eq2']
             if sample_weight[eq1] == 0 and sample_weight[eq2] == 0:

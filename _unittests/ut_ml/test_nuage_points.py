@@ -7,23 +7,9 @@ import sys
 import os
 import unittest
 import numpy
-
-
-try:
-    import pyquickhelper as skip_
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..",
-                "..",
-                "pyquickhelper",
-                "src")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import pyquickhelper as skip_
+from numpy.testing import assert_array_equal
+from sklearn.neighbors import NearestNeighbors
+from pyquickhelper.loghelper import fLOG
 
 
 try:
@@ -39,9 +25,6 @@ except ImportError:
         sys.path.append(path)
     import src
 
-from sklearn.neighbors import NearestNeighbors
-from numpy.testing import assert_array_equal
-from pyquickhelper.loghelper import fLOG
 from src.mlstatpy.ml.kppv import NuagePoints
 from src.mlstatpy.ml.kppv_laesa import NuagePointsLaesa
 

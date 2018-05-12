@@ -123,8 +123,8 @@ def poisson_melange(params, coef):
     @return                 valeur simulée
     """
     s = 0
-    for i in range(0, len(params)):
-        p = poisson(params[i])
+    for i, pa in enumerate(params):
+        p = poisson(pa)
         s += p * coef[i]
     return s
 
@@ -156,8 +156,7 @@ def f_proba_poisson_melange():
 
     proba_poisson_melange_tableau = []
 
-    def proba_poisson_melange(params, coef, i,
-                              proba_poisson_melange_tableau=proba_poisson_melange_tableau):
+    def local_proba_poisson_melange(params, coef, i):
         """
         Calcule la probabilité :math:`\\pr{X=i}``
         lorsque :math:`X` suit un mélange de lois.
@@ -174,7 +173,7 @@ def f_proba_poisson_melange():
         else:
             return proba_poisson_melange_tableau[i]
 
-    return proba_poisson_melange
+    return local_proba_poisson_melange
 
 
 proba_poisson_melange = f_proba_poisson_melange()

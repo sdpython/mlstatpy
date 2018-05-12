@@ -7,28 +7,12 @@ import sys
 import os
 import math
 import unittest
-import random
-import numpy
 from io import StringIO
 from contextlib import redirect_stdout
+import numpy
 from sklearn.datasets import load_iris
-
-
-try:
-    import pyquickhelper as skip_
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..",
-                "..",
-                "pyquickhelper",
-                "src")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import pyquickhelper as skip_
+from sklearn.linear_model import LogisticRegression
+from pyquickhelper.pycode import ExtTestCase, add_missing_development_version
 
 
 try:
@@ -43,9 +27,6 @@ except ImportError:
     if path not in sys.path:
         sys.path.append(path)
     import src
-
-from pyquickhelper.pycode import ExtTestCase, add_missing_development_version
-from sklearn.linear_model import LogisticRegression
 
 
 class TestVoronoi(ExtTestCase):
@@ -120,7 +101,6 @@ class TestVoronoi(ExtTestCase):
                 Ys.extend([i * 3 + j] * n)
         X = numpy.vstack(Xs)
         Y = numpy.array(Ys)
-        X.shape, Y.shape
 
         clr = LogisticRegression()
         clr.fit(X, Y)
@@ -141,7 +121,7 @@ class TestVoronoi(ExtTestCase):
         for i in range(n):
             for j in range(n):
                 dil = ((i + 1) ** 2 + (j + 1) ** 2) ** 0.6
-                for k in range(0, 20):
+                for _ in range(0, 20):
                     x = i + j * math.cos(a)
                     y = j * math.sin(a)
                     points.append([x * dil, y * dil])
@@ -149,8 +129,8 @@ class TestVoronoi(ExtTestCase):
                     mi = 0.5
                     for r in [0.1, 0.3, mi]:
                         nb = 6 if r == mi else 12
-                        for k in range(0, nb):
-                            ang = math.pi * 2 / nb * k + math.pi / 6
+                        for k2 in range(0, nb):
+                            ang = math.pi * 2 / nb * k2 + math.pi / 6
                             x = i + j * math.cos(a) + r * math.cos(ang)
                             y = j * math.sin(a) + r * math.sin(ang)
                             points.append([x * dil, y * dil])

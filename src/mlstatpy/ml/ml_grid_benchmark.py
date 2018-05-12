@@ -3,13 +3,13 @@
 @file
 @brief About Machine Learning Benchmark
 """
-import numpy
 import os
-from pyquickhelper.loghelper import noLOG
-from pyquickhelper.benchhelper import GridBenchMark
+import numpy
 from sklearn.model_selection import train_test_split
 from sklearn.base import ClusterMixin
 from sklearn.metrics import silhouette_score
+from pyquickhelper.loghelper import noLOG
+from pyquickhelper.benchhelper import GridBenchMark
 
 
 class MlGridBenchMark(GridBenchMark):
@@ -204,7 +204,7 @@ class MlGridBenchMark(GridBenchMark):
             if len(btrys) == 0:
                 raise ValueError("The benchmark is empty.")
             if ax is None:
-                fig, ax = plt.subplots(1, 1, figsize=figsize)
+                _, ax = plt.subplots(1, 1, figsize=figsize)
                 ax.grid(True)
             for i, btry in enumerate(sorted(btrys)):
                 subset = df[df["_btry"] == btry]
@@ -267,7 +267,7 @@ class MlGridBenchMark(GridBenchMark):
         if grid is None:
             import matplotlib.pyplot as plt
             fg = kwargs.get('figsize', (5 * size[0], 10))
-            fig, grid = plt.subplots(size[0], size[1], figsize=fg)
+            _, grid = plt.subplots(size[0], size[1], figsize=fg)
             if 'figsize' in kwargs:
                 del kwargs['figsize']
         else:

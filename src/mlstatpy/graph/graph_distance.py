@@ -172,7 +172,7 @@ class GraphDistance:
         """
         if vertex_label is None:
             vertex_label = dict()
-        if type(edge_list) is str:
+        if isinstance(edge_list, str):
             self.load_from_file(edge_list, add_loop)
         else:
             self.vertices = {}
@@ -231,7 +231,7 @@ class GraphDistance:
 
     def _private__init__(self, add_loop, weight_vertex, weight_edge):
         if add_loop:
-            for k, v in self.vertices.items():
+            for k in self.vertices:
                 if k != self.labelBegin and k != self.labelEnd:
                     self.edges[k, k] = Edge(k, k, "", weight_edge)
         self.connect_root_and_leave(weight_vertex, weight_edge)
@@ -244,7 +244,7 @@ class GraphDistance:
         vert = {}
         for o in order:
             vert[o] = 0
-        for k, v in self.edges.items():
+        for k in self.edges:
             if k[0] != k[1]:
                 vert[k[0]] += 1
         for r in roots:
@@ -267,14 +267,14 @@ class GraphDistance:
     def get_order_vertices(self):
         edges = self.edges
         order = {}
-        for k, v in edges.items():
+        for k in edges:
             order[k[0]] = 0
             order[k[1]] = 0
 
         modif = 1
         while modif > 0:
             modif = 0
-            for k, v in edges.items():
+            for k in edges:
                 i, j = k
                 if i != j and order[j] <= order[i]:
                     order[j] = order[i] + 1
@@ -287,7 +287,7 @@ class GraphDistance:
         usual
         """
         li = []
-        for k, v in self.vertices.items():
+        for v in self.vertices.values():
             li.append(str(v))
         for k, e in self.edges.items():
             li.append(str(e))
@@ -423,14 +423,16 @@ class GraphDistance:
                 function_match_edges = tempF2
         else:
             if function_mach_vertices is None:
-                def function_mach_vertices(v1, v2, g1, g2, w1, w2):
-                    return v1.label == v2.label
+                function_mach_vertices = \
+                    lambda v1, v2, g1, g2, w1, w2: \
+                    v1.label == v2.label
             if function_match_edges is None:
-                def function_match_edges(e1, e2, g1, g2, w1, w2):
-                    return e1.label == e2.label and \
-                        (e1.from_ != e1.to or e2.from_ != e2.to) and \
-                        (e1.from_ != self.labelBegin or e1.to != self.labelBegin) and \
-                        (e1.from_ != self.labelEnd or e1.to != self.labelEnd)
+                function_match_edges = \
+                    lambda e1, e2, g1, g2, w1, w2: \
+                    e1.label == e2.label and \
+                    (e1.from_ != e1.to or e2.from_ != e2.to) and \
+                    (e1.from_ != self.labelBegin or e1.to != self.labelBegin) and \
+                    (e1.from_ != self.labelEnd or e1.to != self.labelEnd)
         return function_mach_vertices, function_match_edges
 
     def common_paths(self, graph2,
@@ -530,7 +532,9 @@ class GraphDistance:
             self.vertices = {}
             self.edges = {}
 
-    def enumerate_all_paths(self, edges_and_vertices, begin=[]):
+    def enumerate_all_paths(self, edges_and_vertices, begin=None):
+        if begin is None:
+            begin = []
         if len(self.vertices) > 0 and len(self.edges) > 0:
             if edges_and_vertices:
                 last = begin[-1] if len(begin) > 0 \
@@ -735,7 +739,7 @@ class GraphDistance:
         pair_count_edge = {}
         pair_count_vertex = {}
         for k, v in reduction:
-            res, path = matrix_distance[v]
+            path = matrix_distance[v][1]
             for el in path:
                 n1, n2 = el[2]
                 if n1 is not None and n2 is not None:

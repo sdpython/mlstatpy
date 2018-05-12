@@ -28,11 +28,7 @@ class CompletionElement(object):
     * *mks2_*: length of the prefix to obtain *mks2*
     """
 
-    __slots__ = ["value", "weight", "disp",
-                 'mks0', 'mks0_',
-                 'mks1', 'mks1_',
-                 'mks2', 'mks2_',
-                 'prefix', '_info']
+    __slots__ = "value", "weight", "disp", 'mks0', 'mks0_', 'mks1', 'mks1_', 'mks2', 'mks2_', 'prefix', '_info'
 
     def __init__(self, value: str, weight=1.0, disp=None):
         """
@@ -122,10 +118,10 @@ class CompletionElement(object):
                 rows.append("------------------")
                 rows.append("i={0} - {1}".format(i, prefix))
                 completions = self._info._completions.get(prefix, [])
-                for i, el in enumerate(completions):
+                for i2, el in enumerate(completions):
                     ar = "   " if el.value != self.value else "-> "
                     add = "{5}{0}:{1} -- {2}{4}-- {3}".format(
-                        i, el.weight, el.value, el.str_mks(), " " * (20 - len(el.value)), ar)
+                          i2, el.weight, el.value, el.str_mks(), " " * (20 - len(el.value)), ar)
                     rows.append(add)
         else:
             rows.append("NO INFO")
@@ -558,7 +554,7 @@ class CompletionSystem:
         res["hist"] = hist
         res["histnow"] = wei
 
-        for el, found in self.enumerate_test_metric(qset):
+        for el, _ in self.enumerate_test_metric(qset):
             le = len(el.value)
             w = el.weight
             res["mks0"] += w * el.mks0

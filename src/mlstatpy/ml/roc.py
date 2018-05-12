@@ -3,11 +3,11 @@
 @file
 @brief About ROC
 """
-import pandas
-import numpy
 import math
 import itertools
 from enum import Enum
+import pandas
+import numpy
 
 
 class ROC:
@@ -23,7 +23,9 @@ class ROC:
         * *ERRPREC*: error / recall
         * *RECPREC*: precision / recall
         * *ROC*: False Positive / True Positive
-        * *SKROC*: False Positive / True Positive (`scikit-learn <http://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_curve.html>`_)
+        * *SKROC*: False Positive / True Positive
+          (`scikit-learn
+          <http://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_curve.html>`_)
         """
         PROBSCORE = 2
         ERRREC = 3
@@ -341,7 +343,7 @@ class ROC:
             ckwargs['legend'] = False
             if 'label' in ckwargs:
                 del ckwargs['label']
-            for li in range(0, bootstrap):
+            for _ in range(0, bootstrap):
                 roc = self.compute_roc_curve(nb, curve=curve, bootstrap=True)
                 if thresholds:
                     cols = list(_ for _ in roc.columns if _ != "threshold")
@@ -436,7 +438,7 @@ class ROC:
         if bootstrap <= 1:
             raise ValueError("Use auc instead, bootstrap < 2")
         rate = []
-        for i in range(0, bootstrap):
+        for _ in range(0, bootstrap):
             cloud = self.random_cloud()
             auc = self.auc(cloud)
             rate.append(auc)
@@ -495,7 +497,7 @@ class ROC:
         """
 
         rate = []
-        for i in range(0, bootstrap):
+        for _ in range(0, bootstrap):
             roc = self.compute_roc_curve(nb, curve=curve, bootstrap=True)
             r = self.roc_intersect(roc, x)
             rate.append(r)

@@ -4,18 +4,17 @@
 @brief Ce module determine si un segment est significatif, c'est à dire
 si le nombre de fausses alarmes n'est pas trop élevé.
 """
-import copy
 from .geometrie import Segment
 
 
-class SegmentNFA (Segment):
+class SegmentNFA(Segment):
     """
     Un segment + un nombre de fausses alarmes,
     servira a memoriser les segments significatifs.
     """
 
     # voir la classe Point pour __slots__
-    __slots__ = "nfa"
+    __slots__ = ("nfa",)
 
     def __init__(self, p1, p2, nfa):
         """segment + nombre de fausses alarmes"""
@@ -29,10 +28,7 @@ class SegmentNFA (Segment):
         return s
 
     def __lt__(self, o):
-        if self.nfa < o.nfa:
-            return True
-        else:
-            return False
+        return self.nfa < o.nfa
 
 
 class InformationPoint (object):

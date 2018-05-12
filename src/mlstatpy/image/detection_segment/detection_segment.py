@@ -4,14 +4,12 @@
 @brief Détecte les segments dans une image.
 """
 import math
-import numpy
 import copy
 import time
-import sys
-import os
+import numpy
 from PIL import Image, ImageDraw
 from .queue_binom import tabule_queue_binom
-from .geometrie import Point, Segment
+from .geometrie import Point
 from .detection_segment_segangle import SegmentBord
 from .detection_nfa import LigneGradient, InformationPoint
 
@@ -92,7 +90,7 @@ def _load_image(img, format='PIL', mode=None):
             raise ValueError(
                 "Unexpected value for fomat: '{0}'".format(format))
     else:
-        raise TypeError("numpy array expected not {0}".format(type(image)))
+        raise TypeError("numpy array expected not {0}".format(type(img)))
 
 
 def compute_gradient(img, color=None):
@@ -119,8 +117,6 @@ def _calcule_gradient(img, color=None):
     img = img.astype(numpy.float32)
     if color is not None:
         img = img[:, :, color]
-    size = img.shape[:2]
-    X, Y = size
 
     dx1 = img[:, 1:-1] - img[:, :-2]
     dx2 = img[:, 2:] - img[:, 1:-1]
@@ -145,7 +141,7 @@ def plot_gradient(image, gradient, more=None, direction=-1):
     """
     image_ = _load_image(image, 'PIL')
     image = ImageDraw.Draw(image_)
-    size = X, Y = image_.size
+    X, Y = image_.size
     if direction != -1:
         for x in range(0, X - 1):
             for y in range(0, Y - 1):
@@ -251,9 +247,6 @@ def detect_segments(image, proba_bin=1.0 / 16,
     # il y a xx * yy pixels possibles dont (xx*yy)^2 couples de pixels (donc de segments)
     nb_seg = xx * xx * yy * yy
 
-    # couleurs possibles pour afficher des segments
-    couleur = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
-
     # on cree une instance de la classe permettant de parcourir
     # tous les segments de l'image reliant deux points du contour
     seg = SegmentBord(Point(xx, yy))
@@ -276,8 +269,6 @@ def detect_segments(image, proba_bin=1.0 / 16,
     seg.premier()
 
     # autres variables a decouvrir en cours de route
-    clast = 0
-    nblast = 0
     not_aligned = 0
 
     # tant qu'on a pas fini

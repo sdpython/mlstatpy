@@ -7,11 +7,12 @@ import sys
 import unittest
 import copy
 import warnings
+from pyquickhelper.loghelper import fLOG
+from pyquickhelper.pycode import get_temp_folder, is_travis_or_appveyor
 
 
 try:
     import src
-    import pyquickhelper as skip_
 except ImportError:
     path = os.path.normpath(
         os.path.abspath(
@@ -21,23 +22,9 @@ except ImportError:
                 "..")))
     if path not in sys.path:
         sys.path.append(path)
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..",
-                "..",
-                "pyquickhelper",
-                "src")))
-    if path not in sys.path:
-        sys.path.append(path)
     import src
-    import pyquickhelper as skip_
 
 
-from pyquickhelper.loghelper import fLOG
-from pyquickhelper.pycode import get_temp_folder, is_travis_or_appveyor
 from src.mlstatpy.graph.graph_distance import GraphDistance
 from src.mlstatpy.graph.graphviz_helper import draw_graph_graphviz
 
@@ -138,13 +125,6 @@ class TestGraphDistance(unittest.TestCase):
         if None in node.pair:
             raise RuntimeError(
                 "unexpected, this node should be part of the common set")
-
-        if False:
-            print("distance", distance)
-            for k, v in store.items():
-                print(k, len(v))
-                for _ in v:
-                    print("  ", _)
 
         vertices, edges = graph1.draw_vertices_edges()
         #GV.drawGraphEdgesVertices (vertices,edges, "unittest_GraphDistance2_sub1.png")

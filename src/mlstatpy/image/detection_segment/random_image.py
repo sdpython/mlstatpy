@@ -3,8 +3,8 @@
 @file
 @brief Génère des images aléatoires.
 """
-import numpy
 import math
+import numpy
 
 
 def random_noise_image(size, ratio=0.1):
