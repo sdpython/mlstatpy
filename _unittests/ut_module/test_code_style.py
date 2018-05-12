@@ -49,6 +49,7 @@ class TestCodeStyle(ExtTestCase):
                          "Unused variable 'k' ",
                          "Redefining built-in 'format'",
                          "poulet.py:146: C0200",
+                         "Unable to import 'pygame'",
                          ])
 
     def test_style_test(self):
