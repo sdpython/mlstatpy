@@ -71,6 +71,7 @@ class TestCodeStyle(ExtTestCase):
                          "Module 'pygame' has no 'MOUSEBUTTONUP' member",
                          "test_graph_distance.py:122: W0612",
                          "Instance of 'tuple' has no '",
+                         "Unable to import 'pygame'",
                          ])
 
 
