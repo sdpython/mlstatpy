@@ -370,6 +370,9 @@ class ROC:
             cols = list(_ for _ in roc.columns if _ != "threshold")
             final = 0
             if thresholds:
+                if 'label' in kwargs and len(cols) != len(kwargs['label']):
+                    raise ValueError(
+                        'label must have {0} values'.format(len(cols)))
                 roc = roc.sort_values("threshold").reset_index(drop=True)
                 ax = roc.plot(x="threshold", y=cols, ax=ax, **kwargs)
                 ax.set_ylim([0, 1])
@@ -377,6 +380,9 @@ class ROC:
                 final += len(cols)
                 diag = 0
             else:
+                if 'label' in kwargs and len(cols) - 1 != len(kwargs['label']):
+                    raise ValueError(
+                        'label must have {0} values'.format(len(cols) - 1))
                 final += len(cols) - 1
                 roc = roc.sort_values(cols[0]).reset_index(drop=True)
                 ax = roc.plot(x=cols[0], y=cols[1:], ax=ax, **kwargs)
