@@ -94,11 +94,13 @@ class TestDocPage(ExtTestCase):
         preamble = TestDocPage.preamble + TestDocPage.custom_preamble
         this = os.path.abspath(os.path.dirname(__file__))
         root = os.path.join(this, "..", "..", "_doc",
-                            "sphinxdoc", "source", "c_ml")
-        rst = os.path.join(root, "lr_voronoi.rst")
-        imgs = os.path.join(root, "lrvor")
+                            "sphinxdoc", "source", "c_garden")
+        image_path = "images"
+        rst = os.path.join(root, "regression_quantile.rst")
+        imgs = os.path.join(root, image_path)
         content = self.read_file(rst)
-        synchronize_folder(imgs, os.path.join(temp, "lrvor"), create_dest=True)
+        synchronize_folder(imgs, os.path.join(
+            temp, image_path), create_dest=True)
 
         writer = 'html'
         ht = rst2html(content, writer=writer, layout="sphinx", keep_warnings=True,

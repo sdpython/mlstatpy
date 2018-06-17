@@ -12,8 +12,10 @@ découvrir quelques poussières sous le tapis.
     :maxdepth: 1
 
     ../notebooks/split_train_test
-    ../notebooks/discret_gradient
+    ../notebooks/quantile_regression
     ../notebooks/correlation_non_lineaire
     file_dattente
     strategie_avec_alea
     ../notebooks/regression_lineaire
+    ../notebooks/discret_gradient
+    regression_quantile
