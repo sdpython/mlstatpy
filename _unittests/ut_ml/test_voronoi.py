@@ -147,7 +147,7 @@ class TestVoronoi(ExtTestCase):
                                                 verbose=True, max_iter=20)
         self.assertEqual(points.shape, (16, 2))
         self.assertGreater(points.ravel().min(), -15)
-        self.assertLesser(points.ravel().max(), 15)
+        self.assertLesser(points.ravel().max(), 16)
         std = std.getvalue()
         self.assertIn('del P', std)
         self.assertIn('[voronoi_estimation_from_lr] iter', std)
