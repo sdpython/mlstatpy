@@ -209,8 +209,7 @@ de `Mann-Whitney <https://fr.wikipedia.org/wiki/Test_de_Wilcoxon-Mann-Whitney>`_
     .. math::
         :label: estimateur_roc
 
-        \hat{A} = \frac{1}{nm} \; \sum_{i=1}^{m}\sum_{j=1}^{n} \indicatrice{ Y_j > X_i} +
-                                    \frac{1}{2} \indicatrice{ Y_j = X_i}
+        \hat{A} = \frac{1}{nm} \; \sum_{i=1}^{m}\sum_{j=1}^{n} \pa{\indicatrice{ Y_j > X_i} + \frac{1}{2} \indicatrice{ Y_j = X_i}}
 
 **Démonstration**
 
@@ -219,7 +218,7 @@ La démonstration est évidente :
 .. math::
 
     \esp\pa{\hat{A}} = \frac{1}{nm} \; \sum_{i=1}^{m}\sum_{j=1}^{n}
-                    \pr{ Y_j > X_i} + \frac{1}{2} \pr{X=Y} = \pr{ Y > X} + \frac{1}{2}\pr{ Y = X}
+                    \pa{\pr{ Y_j > X_i} + \frac{1}{2} \pr{X_i=Y_j}} = \pr{ Y > X} + \frac{1}{2}\pr{ Y = X}
 
 Dans le cas où :math:`X` ou :math:`Y` sont continues, :math:`\pr{X=Y} = 0`.
 

@@ -50,9 +50,9 @@ class ROC:
                                 it must contains 2 or 3 columns always in the same order
         """
         if df is None:
-            df = pandas.DataFrame({"label": y_true})
-            # df["label"] = y_true
+            df = pandas.DataFrame()
             df["score"] = y_score
+            df["label"] = y_true
             if sample_weight is not None:
                 df["weight"] = sample_weight
             self.data = df
@@ -409,11 +409,14 @@ class ROC:
 
     def auc(self, cloud=None):
         """
-        computes the area under the curve
+        Computes the area under the curve.
 
         @param      cloud       data or None to use ``self.data``, the function
-                                assumes the data is sorted
+                                assumes the data is sorted.
         @return                 AUC
+
+        The first column is the label, the second one is the score,
+        the third one is the weight.
         """
         if cloud is None:
             cloud = self.data
@@ -467,7 +470,7 @@ class ROC:
 
     def roc_intersect(self, roc, x):
         """
-        ROC curve is defined by a set of points.
+        The :epkg:`ROC` curve is defined by a set of points.
         This function interpolates those points to determine
         *y* for any *x*.
 
@@ -493,7 +496,7 @@ class ROC:
 
     def roc_intersect_interval(self, x, nb, curve=CurveType.ROC, bootstrap=10, alpha=0.05):
         """
-        computes a confidence interval for the value returned by
+        Computes a confidence interval for the value returned by
         @see me roc_intersect.
 
         @param      roc         ROC curve
