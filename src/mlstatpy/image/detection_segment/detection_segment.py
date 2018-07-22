@@ -285,7 +285,7 @@ def detect_segments(image, proba_bin=1.0 / 16,
 
             # on ajoute les resultats à la liste
             segment.extend(res)
-            if stop > 0 and len(segment) >= stop:
+            if len(segment) >= stop > 0:
                 break
         else:
             not_aligned += 1

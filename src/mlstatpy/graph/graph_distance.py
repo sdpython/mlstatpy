@@ -232,7 +232,7 @@ class GraphDistance:
     def _private__init__(self, add_loop, weight_vertex, weight_edge):
         if add_loop:
             for k in self.vertices:
-                if k != self.labelBegin and k != self.labelEnd:
+                if k not in (self.labelBegin, self.labelEnd):
                     self.edges[k, k] = Edge(k, k, "", weight_edge)
         self.connect_root_and_leave(weight_vertex, weight_edge)
         self.compute_predecessor()

@@ -192,7 +192,7 @@ class MlGridBenchMark(GridBenchMark):
         @return     list of tuple (image_name, function to create the graph)
         """
         import matplotlib.pyplot as plt
-        import matplotlib.cm as cm
+        import matplotlib.cm as mcm
         df = self.to_df()
 
         def local_graph(vx, vy, ax=None, text=True, figsize=(5, 5)):
@@ -200,7 +200,7 @@ class MlGridBenchMark(GridBenchMark):
             ymin = df[vy].min()
             ymax = df[vy].max()
             decy = (ymax - ymin) / 50
-            colors = cm.rainbow(numpy.linspace(0, 1, len(btrys)))
+            colors = mcm.rainbow(numpy.linspace(0, 1, len(btrys)))
             if len(btrys) == 0:
                 raise ValueError("The benchmark is empty.")
             if ax is None:
