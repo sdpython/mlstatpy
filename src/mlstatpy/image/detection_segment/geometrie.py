@@ -10,7 +10,7 @@ import copy
 import numpy
 
 
-class Point (object):
+class Point:
     """
     Définit un point de l'image ou un vecteur,
     deux coordonnées *x* et *y* qui sont réelles.
@@ -100,7 +100,7 @@ class Point (object):
         return self.x == a.x and self.y == a.y
 
 
-class Segment(object):
+class Segment:
     """
     Définit un segment, soit deux @see cl Point.
     """

@@ -8,7 +8,7 @@ import numpy.linalg
 from scipy.spatial.distance import euclidean
 
 
-class NuagePoints(object):
+class NuagePoints:
     """
     Définit une classe de nuage de points.
     On suppose qu'ils sont définis par une matrice,

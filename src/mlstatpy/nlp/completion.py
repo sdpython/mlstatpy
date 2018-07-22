@@ -6,7 +6,7 @@ from typing import Tuple, List, Iterator
 from collections import deque
 
 
-class CompletionTrieNode(object):
+class CompletionTrieNode:
     """
     Node definition in a trie used to do completion, see :ref:`l-completion0`.
     This implementation is not very efficient about memmory consumption,

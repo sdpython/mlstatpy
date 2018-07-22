@@ -8,7 +8,7 @@ from pyquickhelper.loghelper import noLOG
 from .completion import CompletionTrieNode
 
 
-class CompletionElement(object):
+class CompletionElement:
     """
     Definition of an element in a completion system,
     it contains the following members:

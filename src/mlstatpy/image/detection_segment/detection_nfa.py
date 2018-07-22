@@ -31,7 +31,7 @@ class SegmentNFA(Segment):
         return self.nfa < o.nfa
 
 
-class InformationPoint (object):
+class InformationPoint:
     """
     Pour retenir toutes les informations relatives a un segment,
     une position (pos),
