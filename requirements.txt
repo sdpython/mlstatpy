@@ -8,7 +8,6 @@ memory_profiler
 minepy
 mlinsights>=0.1.75
 mutagen
-opencv-python
 pyensae>=1.1.687
 pyinstrument
 pyquickhelper>=1.8
