@@ -8,8 +8,8 @@ environment:
 
   matrix:
 
-    - PYTHON: "C:\\Python37-x64"
-      PYTHON_VERSION: "3.7.x"
+    - PYTHON: "C:\\Python36-x64"
+      PYTHON_VERSION: "3.6.x"
       PYTHON_ARCH: "64"
 
 init:
@@ -19,14 +19,9 @@ install:
   - "%PYTHON%\\python -m pip install --upgrade pip"
   - "%PYTHON%\\Scripts\\pip install pymyinstall"
   - "%PYTHON%\\Scripts\\pymy_install3 --set=pyensae"
-  - "%PYTHON%\\Scripts\\pip install cryptography jyquickhelper"
-  - "%PYTHON%\\Scripts\\pip install azure dill mako semantic_version"
   - "%PYTHON%\\Scripts\\pymy_install3 pycrypto pyzmq statsmodels minepy opencv_python"
-  - "%PYTHON%\\Scripts\\pip install pycryptodomex"
-  - "%PYTHON%\\Scripts\\pip install urllib3 tqdm"
-  - "%PYTHON%\\Scripts\\pip install pycodestyle prompt_toolkit seaborn"
   - "%PYTHON%\\Scripts\\pymy_install3 --task=tool --source=zip graphviz"
-  - "%PYTHON%\\Scripts\\pip install pyinstrument memory_profiler line_profiler vprof snakeviz gprof2dot"
+  - "%PYTHON%\\Scripts\\pip install -r requirements_conda.txt"
   - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
   - "set PATH=%PATH%;C:\\projects\\mlstatpy\\build\\update_modules\\Graphviz\\bin"
   - "dir C:\\projects\\mlstatpy\\build\\update_modules\\Graphviz\\bin"
