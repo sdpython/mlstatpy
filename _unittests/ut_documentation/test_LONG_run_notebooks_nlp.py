@@ -7,9 +7,8 @@ import sys
 import os
 import unittest
 from pyquickhelper.loghelper import fLOG, CustomLog
-from pyquickhelper.pycode import get_temp_folder, add_missing_development_version, is_travis_or_appveyor
+from pyquickhelper.pycode import get_temp_folder, add_missing_development_version
 from pyquickhelper.ipythonhelper import execute_notebook_list, execute_notebook_list_finalize_ut
-from pyquickhelper.ipythonhelper import install_python_kernel_for_unittest
 
 try:
     import src
@@ -38,9 +37,6 @@ class TestLONGRunNotebooksNLP(unittest.TestCase):
             __file__,
             self._testMethodName,
             OutputPrint=__name__ == "__main__")
-
-        kernel_name = None if is_travis_or_appveyor() else install_python_kernel_for_unittest(
-            "python3_module_template")
 
         temp = get_temp_folder(__file__, "temp_run_notebooks_nlp")
 
@@ -77,7 +73,7 @@ class TestLONGRunNotebooksNLP(unittest.TestCase):
         clog = CustomLog(temp)
         clog("START")
         res = execute_notebook_list(temp, keepnote, fLOG=clog, deepfLOG=clog, valid=valid,
-                                    additional_path=addpaths, kernel_name=kernel_name)
+                                    additional_path=addpaths)
         clog("END")
         execute_notebook_list_finalize_ut(
             res, fLOG=fLOG, dump=src.mlstatpy)
