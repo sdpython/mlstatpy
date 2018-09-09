@@ -9,9 +9,9 @@ Régression logistique, diagramme de Voronoï, k-Means
 
 Ce qui suit explore les liens entre une régression logistique,
 les diagrammes de Voronoï pour construire un classifieur
-qui allient la régression logistique et les clustering type k-means.
-Le point de départ est une conjecture : les régions
-créées par une régression logistique sont convexes.
+qui allie la régression logistique et les clustering type
+:ref:`l-k-means`. Le point de départ est une conjecture :
+les régions créées par une régression logistique sont convexes.
 
 .. contents::
     :local:
@@ -76,8 +76,8 @@ en fonction des dimensions de leurs pétales.
     clr = LogisticRegression()
     clr.fit(X, y)
 
-    print(clr.coef_)
-    print(clr.intercept_)
+    print("coef_", clr.coef_)
+    print("intercept_", clr.intercept_)
 
 La fonction de prédiction est assez simple :
 :math:`f(x) = Ax + B`. La classe d'appartenance
@@ -107,7 +107,7 @@ aux classes sont convexes. C'est une condition nécessaire mais
 pas suffisante pour avoir un diagramme de Voronoï.
 
 Soit :math:`X_1` et :math:`X_2` appartenant à la classe *i*.
-On sait que que :math:`\forall k, L_i X_1 + B_i \geqslant L_k X_1 + B_k`
+On sait que :math:`\forall k, L_i X_1 + B_i \geqslant L_k X_1 + B_k`
 et :math:`\forall k, L_i X_2 + B_i \geqslant L_k X_2 + B_k`.
 On considère un point :math:`X` sur le segment :math:`[X_1, X_2]`, donc il existe
 :math:`\alpha, \beta \geqslant 0` tel que :math:`X = \alpha X_1 + \beta X_2` et
@@ -130,7 +130,7 @@ des features.
     :lid: th-thlogregpartconv
 
     On définit l'application :math:`\mathbb{R}^d \rightarrow \mathbb{N}`
-    qui associe la plus grande coordonnées
+    qui associe la plus grande coordonnée
     :math:`f(X) = \arg \max_k (AX + B)_k`.
     *A* est une matrice :math:`\mathcal{M}_{dc}`,
     *B* est un vecteur de :math:`\mathbb{R}^d`,
@@ -160,7 +160,7 @@ La seconde équation en cache en fait plusieurs puisqu'elle est valable
 sur plusieurs dimensions mais elles sont redondantes.
 Il suffit de choisir un vecteur :math:`u_{ij}` non perpendiculaire
 à :math:`L_i - L_j` de sorte que
-qui n'est pas perpendiculaire au vecteur :math:`L_i - L_j` et de
+qu'il n'est pas perpendiculaire au vecteur :math:`L_i - L_j` et de
 considérer la projection de cette équation sur ce vecteur.
 C'est pourquoi on réduit le système au suivant qui est
 équivalent au précédent si le vecteur :math:`u_{ij}` est bien choisi.
@@ -266,7 +266,7 @@ on a deux droites :math:`D_1`, :math:`D_2`. L'ensemble des points
 Il doit être de même pour les trois droites bleues, autrement
 dit, l'intersection des droites est le centre du cercle inscrit
 dans le triangle bleu ce qui n'est visiblement pas le cas sur l'image.
-Il paraît vraisemblable de dire les régressions logisitiques ne permettent
+Il paraît vraisemblable de dire que les régressions logisitiques ne permettent
 pas de former toutes les partitions convexes. On pourrait le montrer mais
 cela ne permettrait pas de répondre à la question initiale
 :math:`L(n) = V(n)` ?
@@ -364,7 +364,7 @@ Le notebook qui suit reprend les différents
 continue l'étude d'une régression logistique
 et donne une intuition de ce qui marche ou pas
 avec un tel modèle. Notamment, le modèle est plus
-performant si les classes sont situées sur la boule
+performant si les classes sont réparties sur la boule
 unité de l'espace des features.
 
 .. toctree::
