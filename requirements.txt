@@ -10,7 +10,7 @@ mlinsights>=0.1.75
 mutagen
 pyensae>=1.2.788
 pyinstrument
-pyquickhelper>=1.8
+pyquickhelper>=1.8.2814
 snakeviz
 sphinx-bootstrap-theme
 sphinxjp.themes.basicstrap
