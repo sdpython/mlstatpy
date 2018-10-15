@@ -109,7 +109,7 @@ class TestVoronoi(ExtTestCase):
                                             verbose=False)
         self.assertEqual(points.shape, (12, 2))
         self.assertGreater(points.ravel().min(), -8)
-        self.assertLesser(points.ravel().max(), 4)
+        self.assertLesser(points.ravel().max(), 5)
 
     def test_hexa_scale(self):
         from src.mlstatpy.ml.voronoi import voronoi_estimation_from_lr
