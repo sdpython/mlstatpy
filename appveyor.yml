@@ -21,6 +21,7 @@ install:
   - "%PYTHON%\\Scripts\\pymy_install3 --set=pyensae"
   - "%PYTHON%\\Scripts\\pymy_install3 pycrypto pyzmq statsmodels minepy opencv_python"
   - "%PYTHON%\\Scripts\\pymy_install3 --task=tool --source=zip graphviz"
+  - conda install -c conda-forge xgboost
   - "%PYTHON%\\Scripts\\pip install -r requirements_conda.txt"
   - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
   - "set PATH=%PATH%;C:\\projects\\mlstatpy\\build\\update_modules\\Graphviz\\bin"
