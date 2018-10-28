@@ -54,14 +54,14 @@ class TestVoronoi(ExtTestCase):
             self.assertEqual(points.shape, (3, 2))
             expected_values = numpy.array(
                 [[3., 4.137], [5.044, 0.281], [5.497, 0.184]])
-            self.assertEqualArray(expected_values, points, decimal=3)
+            self.assertEqualArray(expected_values, points, decimal=2)
 
             points = voronoi_estimation_from_lr(
                 clr.coef_, clr.intercept_, C, D, qr=True, verbose=True)
             self.assertEqual(points.shape, (3, 2))
             expected_values = numpy.array(
                 [[3., 4.137], [5.044, 0.281], [5.497, 0.184]])
-            self.assertEqualArray(expected_values, points, decimal=3)
+            self.assertEqualArray(expected_values, points, decimal=2)
         std = std.getvalue()
         self.assertIn('[voronoi_estimation_from_lr] iter=', std)
 
