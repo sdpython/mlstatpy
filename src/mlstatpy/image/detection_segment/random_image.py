@@ -67,10 +67,10 @@ def random_segment_image(image, lmin=0.1, lmax=1., noise=0.01, density=1.):
         xs.shape[0] * 2).reshape(xs.shape[0], 2) * noise * mind
     xs += noise[:, 0]
     ys += noise[:, 1]
-    xs = numpy.maximum(xs, numpy.zeros(xs.shape[0]))
-    ys = numpy.maximum(ys, numpy.zeros(xs.shape[0]))
-    xs = numpy.minimum(xs, numpy.zeros(xs.shape[0]) + image.shape[1] - 1)
-    ys = numpy.minimum(ys, numpy.zeros(xs.shape[0]) + image.shape[0] - 1)
+    xs = numpy.maximum(xs, numpy.zeros(xs.shape[0]))  # pylint: disable=E1111
+    ys = numpy.maximum(ys, numpy.zeros(xs.shape[0]))  # pylint: disable=E1111
+    xs = numpy.minimum(xs, numpy.zeros(xs.shape[0]) + image.shape[1] - 1)  # pylint: disable=E1111
+    ys = numpy.minimum(ys, numpy.zeros(xs.shape[0]) + image.shape[0] - 1)  # pylint: disable=E1111
     xs = xs.astype(numpy.int32)
     ys = ys.astype(numpy.int32)
     image[ys, xs] = 1
