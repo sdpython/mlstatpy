@@ -333,7 +333,7 @@ class CompletionSystem:
         for e in self._elements:
             yield e.value, e
 
-    def tuples(self) ->Iterator[Tuple[float, str]]:
+    def tuples(self) -> Iterator[Tuple[float, str]]:
         """
         iterate on ``(e.weight, e.value)``
         """
