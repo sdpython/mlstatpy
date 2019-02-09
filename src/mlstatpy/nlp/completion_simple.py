@@ -305,13 +305,13 @@ class CompletionSystem:
 
     def __getitem__(self, i):
         """
-        return ``elements[i]``
+        Returns ``elements[i]``.
         """
         return self._elements[i]
 
     def find(self, value: str, is_sorted=False) -> CompletionElement:
         """
-        not very efficient, find an item in a the list
+        Not very efficient, finds an item in a the list.
 
         @param      value       string to find
         @param      is_sorted   the function will assume the elements are sorted by
@@ -320,35 +320,34 @@ class CompletionSystem:
         """
         if is_sorted:
             raise NotImplementedError()
-        else:
-            for e in self:
-                if e.value == value:
-                    return e
-            return None
+        for e in self:
+            if e.value == value:
+                return e
+        return None
 
     def items(self) -> Iterator[Tuple[str, CompletionElement]]:
         """
-        iterate on ``(e.value, e)``
+        Iterates on ``(e.value, e)``.
         """
         for e in self._elements:
             yield e.value, e
 
     def tuples(self) -> Iterator[Tuple[float, str]]:
         """
-        iterate on ``(e.weight, e.value)``
+        Iterates on ``(e.weight, e.value)``.
         """
         for e in self._elements:
             yield e.weight, e.value
 
     def __len__(self) -> int:
         """
-        number of elements
+        Number of elements.
         """
         return len(self._elements)
 
     def __iter__(self) -> Iterator[CompletionElement]:
         """
-        iterates over elements
+        Iterates over elements.
         """
         for e in self._elements:
             yield e
@@ -362,14 +361,14 @@ class CompletionSystem:
 
     def sort_weight(self):
         """
-        sort the elements by value
+        Sorts the elements by value.
         """
         self._elements = list(
             _[-1] for _ in sorted((e.weight, e.value, e) for e in self))
 
     def compare_with_trie(self, delta=0.8, fLOG=noLOG):
         """
-        compare the results with the other implementation
+        Compares the results with the other implementation.
 
         @param      delta       parameter *delta* in the dynamic modified mks
         @param      fLOG        logging function
@@ -405,14 +404,14 @@ class CompletionSystem:
 
     def to_dict(self) -> Dict[str, CompletionElement]:
         """
-        return a dictionary
+        Returns a dictionary.
         """
         return {el.value: el for el in self}
 
     def compute_metrics(self, ffilter=None, delta=0.8,
                         details=False, fLOG=noLOG) -> int:
         """
-        Compute the metric for the completion itself.
+        Computes the metric for the completion itself.
 
         @param      ffilter     filter function
         @param      delta       parameter *delta* in the dynamic modified mks
@@ -477,10 +476,10 @@ class CompletionSystem:
 
     def enumerate_test_metric(self, qset: Iterator[Tuple[str, float]]) -> Iterator[Tuple[CompletionElement, CompletionElement]]:
         """
-        Evaluate the completion set on a set of queries,
+        Evaluates the completion set on a set of queries,
         the function returns a list of @see cl CompletionElement
         with the three metrics :math:`M`, :math:`M'`, :math:`M"`
-        for these particular queries
+        for these particular queries.
 
         @param      qset        list of tuple(str, float) = (query, weight)
         @return                 list of tuple of @see cl CompletionElement,
@@ -537,9 +536,9 @@ class CompletionSystem:
 
     def test_metric(self, qset: Iterator[Tuple[str, float]]) -> Dict[str, float]:
         """
-        evaluate the completion set on a set of queries,
+        Evaluates the completion set on a set of queries,
         the function returns a dictionary with the aggregated metrics and
-        some statisitcs about them
+        some statistics about them.
 
         @param      qset        list of tuple(str, float) = (query, weight)
         @return                 list of @see cl CompletionElement

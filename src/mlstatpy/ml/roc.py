@@ -12,12 +12,12 @@ import numpy
 
 class ROC:
     """
-    Helper to draw a ROC curve
+    Helper to draw a :epkg:`ROC` curve.
     """
 
     class CurveType(Enum):
         """
-        Curve types
+        Curve types:
 
         * *PROBSCORE*: 1 - False Positive / True Positive
         * *ERRPREC*: error / recall
@@ -81,7 +81,7 @@ class ROC:
     @property
     def Data(self):
         """
-        returns the underlying dataframe
+        Returns the underlying dataframe.
         """
         return self.data
 
@@ -93,13 +93,13 @@ class ROC:
 
     def __repr__(self):
         """
-        show first elements, precision rate
+        Shows first elements, precision rate.
         """
         return self.__str__()
 
     def __str__(self):
         """
-        show first elements, precision rate
+        Shows first elements, precision rate.
         """
         rows = []
         rows.append("Overall precision: %3.2f - AUC=%f" %
@@ -205,7 +205,8 @@ class ROC:
         """
         Computes a ROC curve with *nb* points avec nb,
         if *nb == -1*, there are as many as points as the data contains,
-        if *bootstrap == True*, it draws random number to create confidence interval based on bootstrap method.
+        if *bootstrap == True*, it draws random number to create confidence
+        interval based on bootstrap method.
 
         @param      nb          number of points for the curve
         @param      curve       see :class:`CurveType <mlstatpy.ml.roc.ROC.CurveType>`
@@ -302,17 +303,14 @@ class ROC:
             roc.iloc[pos_roc:, 1] = sum_weights_ans / sum_weights
             roc.iloc[pos_roc:, 2] = cloud.iloc[-1, 0]
 
-        elif curve is ROC.CurveType.F1:
-            raise NotImplementedError()
-
         else:
-            raise NotImplementedError()
+            raise NotImplementedError("Unknown curve type '{}'.".format(curve))
 
         return roc
 
     def random_cloud(self):
         """
-        resample among the data
+        Resamples among the data.
 
         @return      DataFrame
         """
@@ -323,7 +321,7 @@ class ROC:
     def plot(self, nb=100, curve=CurveType.ROC, bootstrap=0,
              ax=None, thresholds=False, **kwargs):
         """
-        Plot a ROC curve.
+        Plots a :epkg:`ROC` curve.
 
         @param      nb          number of points
         @param      curve       see :class:`CurveType <mlstatpy.ml.roc.ROC.CurveType>`
@@ -409,7 +407,7 @@ class ROC:
 
     def auc(self, cloud=None):
         """
-        Computes the area under the curve.
+        Computes the area under the curve (:epkg:`AUC`).
 
         @param      cloud       data or None to use ``self.data``, the function
                                 assumes the data is sorted.
@@ -438,7 +436,7 @@ class ROC:
 
     def auc_interval(self, bootstrap=10, alpha=0.95):
         """
-        Determines a confidence interval for the AUC with bootstrap.
+        Determines a confidence interval for the :epkg:`AUC` with bootstrap.
 
         @param      bootstrap       number of random estimation
         @param      alpha           define the confidence interval

@@ -11,7 +11,7 @@ class CompletionTrieNode:
     Node definition in a trie used to do completion, see :ref:`l-completion0`.
     This implementation is not very efficient about memmory consumption,
     it does not hold above 200.000 words.
-    It should be done another way (cython, C++).
+    It should be done another way (:epkg:`cython`, :epkg:`C++`).
     """
 
     __slots__ = ("value", "children", "weight",
@@ -38,7 +38,7 @@ class CompletionTrieNode:
     @property
     def root(self):
         """
-        return the initial node with no parent
+        Returns the initial node with no parent.
         """
         node = self
         while node.parent is not None:
@@ -53,7 +53,7 @@ class CompletionTrieNode:
 
     def _add(self, key, child):
         """
-        add a child
+        Adds a child.
 
         @param      key         one letter of the word
         @param      child       child
@@ -71,7 +71,7 @@ class CompletionTrieNode:
 
     def items_list(self) -> List['CompletionTrieNode']:
         """
-        all children nodes inluding itself in a list
+        All children nodes inluding itself in a list.
 
         @return          list[
         """
@@ -84,7 +84,7 @@ class CompletionTrieNode:
 
     def __iter__(self):
         """
-        iterates on all nodes (sorted)
+        Iterates on all nodes (sorted).
         """
         stack = [self]
         while len(stack) > 0:
@@ -96,7 +96,7 @@ class CompletionTrieNode:
 
     def unsorted_iter(self):
         """
-        iterates on all nodes
+        Iterates on all nodes.
         """
         stack = [self]
         while len(stack) > 0:
@@ -107,7 +107,7 @@ class CompletionTrieNode:
 
     def items(self) -> Iterator[Tuple[float, str, 'CompletionTrieNode']]:
         """
-        iterates on children, iterates on weight, key, child
+        Iterates on children, iterates on weight, key, child.
         """
         if self.children is not None:
             for k, v in self.children.items():
@@ -115,7 +115,7 @@ class CompletionTrieNode:
 
     def iter_leaves(self, max_weight=None) -> Iterator[Tuple[float, str]]:
         """
-        iterators on leaves sorted per weight, yield weight, value
+        Iterators on leaves sorted per weight, yield weight, value.
 
         @param      max_weight  keep all value under this threshold or None for all
         """
@@ -131,7 +131,7 @@ class CompletionTrieNode:
 
     def leaves(self) -> Iterator['CompletionTrieNode']:
         """
-        iterators on leaves
+        Iterators on leaves.
         """
         stack = [self]
         while len(stack) > 0:
@@ -143,8 +143,8 @@ class CompletionTrieNode:
 
     def all_completions(self) -> List[Tuple['CompletionTrieNone', List[str]]]:
         """
-        retrieve all completions for a node,
-        the method does not need @see me precompute_stat to be run first
+        Retrieves all completions for a node,
+        the method does not need @see me precompute_stat to be run first.
         """
         word = self.value
         nodes = [self.root]
@@ -163,8 +163,8 @@ class CompletionTrieNode:
 
     def all_mks_completions(self) -> List[Tuple['CompletionTrieNone', List['CompletionTrieNone']]]:
         """
-        retrieve all completions for a node,
-        the method assumes @see me precompute_stat was run
+        Retrieves all completions for a node,
+        the method assumes @see me precompute_stat was run.
         """
         res = []
         node = self
@@ -178,8 +178,8 @@ class CompletionTrieNode:
 
     def str_all_completions(self, maxn=10, use_precompute=True) -> str:
         """
-        builds a string with all completions for all
-        prefixes along the paths
+        Builds a string with all completions for all
+        prefixes along the paths.
 
         @param      maxn            maximum number of completions to show
         @param      use_precompute  use intermediate results built by @see me precompute_stat
@@ -203,7 +203,7 @@ class CompletionTrieNode:
     @staticmethod
     def build(words) -> 'CompletionTrieNode':
         """
-        builds a trie
+        Builds a trie.
 
         @param  words       list of ``(word)`` or ``(weight, word)`` or ``(weight, word, display string)``
         @return             root of the trie (CompletionTrieNode)
@@ -245,8 +245,7 @@ class CompletionTrieNode:
                 if node.leave:
                     raise ValueError(
                         "Value '{0}' appears twice in the input list (not allowed).".format(word))
-                else:
-                    new_node = node
+                new_node = node
             new_node.leave = True
             new_node.weight = w
             if disp is not None:
@@ -257,7 +256,7 @@ class CompletionTrieNode:
 
     def find(self, prefix: str) -> 'CompletionTrieNode':
         """
-        returns the node which holds all completions starting with a given prefix
+        Returns the node which holds all completions starting with a given prefix.
 
         @param      prefix      prefix
         @return                 node or None for no result
@@ -321,7 +320,7 @@ class CompletionTrieNode:
 
     def min_keystroke0(self, word: str) -> Tuple[int, int]:
         """
-        returns the minimum keystrokes for a word
+        Returns the minimum keystrokes for a word.
 
         @param      word        word
         @return                 number, length of best prefix, iteration it stops moving
@@ -352,7 +351,7 @@ class CompletionTrieNode:
 
     def min_dynamic_keystroke(self, word: str) -> Tuple[int, int]:
         """
-        returns the dynamic minimum keystrokes for a word,
+        Returns the dynamic minimum keystrokes for a word.
 
         @param      word        word
         @return                 number, length of best prefix, iteration it stops moving
@@ -382,7 +381,7 @@ class CompletionTrieNode:
 
     def min_dynamic_keystroke2(self, word: str) -> Tuple[int, int]:
         """
-        returns the modified dynamic minimum keystrokes for a word,
+        Returns the modified dynamic minimum keystrokes for a word.
 
         @param      word        word
         @return                 number, length of best prefix, iteration it stops moving
@@ -415,8 +414,8 @@ class CompletionTrieNode:
 
     def precompute_stat(self):
         """
-        computes and stores list of completions for each node,
-        computes mks
+        Computes and stores list of completions for each node,
+        computes *mks*.
 
         @param      clean   clean stat
         """
@@ -450,8 +449,8 @@ class CompletionTrieNode:
 
     def update_stat_dynamic(self, delta=0.8):
         """
-        must be called after @see me precompute_stat
-        and computes dynamic mks (see :ref:`Dynamic Minimum Keystroke <def-mks2>`)
+        Must be called after @see me precompute_stat
+        and computes dynamic mks (see :ref:`Dynamic Minimum Keystroke <def-mks2>`).
 
         @param      delta       parameter :math:`\\delta` in defintion
                                 :ref:`Modified Dynamic KeyStroke <def-mks3>`
@@ -503,8 +502,8 @@ class CompletionTrieNode:
 
         def merge_completions(self, prefix: int, nodes: '[CompletionTrieNode]'):
             """
-            merges list of completions and cut the list, we assume
-            given lists are sorted
+            Merges list of completions and cut the list, we assume
+            given lists are sorted.
             """
             class Fake:
                 pass
@@ -542,7 +541,7 @@ class CompletionTrieNode:
 
         def update_minimum_keystroke(self, lw):
             """
-            update minimum keystroke for the completions
+            Updates minimum keystroke for the completions.
 
             @param      lw      prefix length
             """
@@ -555,7 +554,7 @@ class CompletionTrieNode:
 
         def update_dynamic_minimum_keystroke(self, lw, delta):
             """
-            update dynamic minimum keystroke for the completions
+            Updates dynamic minimum keystroke for the completions.
 
             @param      lw      prefix length
             @param      delta   parameter :math:`\\delta` in defintion
@@ -624,7 +623,7 @@ class CompletionTrieNode:
 
         def init_dynamic_minimum_keystroke(self, lw):
             """
-            initializes mks and mks2 from from mks0
+            Initializes *mks* and *mks2* from from *mks0*.
 
             @param      lw      length of the prefix
             """
@@ -649,7 +648,7 @@ class CompletionTrieNode:
 
         def str_mks0(self) -> str:
             """
-            return a string with metric information
+            Returns a string with metric information.
             """
             if hasattr(self, "mks0"):
                 return "MKS={0} *={1}".format(self.mks0, self.mks0_)
@@ -658,7 +657,7 @@ class CompletionTrieNode:
 
         def str_mks(self) -> str:
             """
-            return a string with metric information
+            Returns a string with metric information.
             """
             s0 = self.str_mks0()
             if hasattr(self, "mks1"):
