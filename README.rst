@@ -1,9 +1,4 @@
 
-.. _l-README:
-
-README
-======
-
 .. image:: https://travis-ci.org/sdpython/mlstatpy.svg?branch=master
     :target: https://travis-ci.org/sdpython/mlstatpy
     :alt: Build status
@@ -45,12 +40,23 @@ README
     :target: http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/all_notebooks_coverage.html
     :alt: Notebook Coverage
 
-**Links:**
+.. _l-README:
+
+mlstatpy
+========
+
+Le module contient essentiellement des digressions mathématiques
+autour du machine learning. Parmi les choses intéressantes,
+une courbe *ROC* avec intervalle de confiance, détection
+automatique de segment dans une image, un algorithme
+d'autocomplétion, une distance d'édition entre graphes,
+des petites choses pour les données de Wikipedia.
+
+The package mostly contains documentation. It also implements
+some code rarely needed such as ROC curve with bandwidth,
+automated segment detection in a image, some simple autocomplete
+algorithm, a graph edit distance, some helpers on Wikipedia data.
 
 * `GitHub/mlstatpy <https://github.com/sdpython/mlstatpy/>`_
 * `documentation <http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html>`_
 * `Blog <http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/blog/main_0000.html#ap-main-0>`_
-
-**mlstatpy**
-
-Computer Science en français.
