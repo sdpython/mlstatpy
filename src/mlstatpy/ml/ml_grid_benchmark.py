@@ -20,8 +20,6 @@ class MlGridBenchMark(GridBenchMark):
     def __init__(self, name, datasets, clog=None, fLOG=noLOG, path_to_images=".",
                  cache_file=None, progressbar=None, graphx=None, graphy=None, **params):
         """
-        initialisation
-
         @param      name            name of the test
         @param      datasets        list of dictionary of dataframes
         @param      clog            see @see cl CustomLog or string
@@ -52,7 +50,7 @@ class MlGridBenchMark(GridBenchMark):
 
     def preprocess_dataset(self, dsi, **params):
         """
-        split the dataset into train and test
+        Splits the dataset into train and test.
 
         @param      params      additional parameters
         @return                 dataset (like info), dictionary for metrics
@@ -148,7 +146,7 @@ class MlGridBenchMark(GridBenchMark):
 
     def score(self, ds, model, **params):
         """
-        Score a model
+        Scores a model.
         """
         X = ds["X"]
         Y = ds.get("Y", None)
@@ -186,7 +184,7 @@ class MlGridBenchMark(GridBenchMark):
 
     def graphs(self, path_to_images):
         """
-        Plot multiples graphs.
+        Plots multiples graphs.
 
         @param      path_to_images  where to store images
         @return     list of tuple (image_name, function to create the graph)
