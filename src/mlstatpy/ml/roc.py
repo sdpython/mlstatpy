@@ -242,9 +242,10 @@ class ROC:
                                              sample_weight=cloud[cloud.columns[2]])
             roc = pandas.DataFrame(0, index=numpy.arange(len(fpr)),
                                    columns=["False Positive Rate", "True Positive Rate", "threshold"])
-            roc[roc.columns[0]] = fpr
-            roc[roc.columns[1]] = tpr
-            roc[roc.columns[2]] = thresholds
+            roc_cols = list(roc.columns[:3])
+            roc[roc_cols[0]] = fpr
+            roc[roc_cols[1]] = tpr
+            roc[roc_cols[2]] = thresholds
             return roc
 
         sum_weights = cloud[cloud.columns[2]].sum()
