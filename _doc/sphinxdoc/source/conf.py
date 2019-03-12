@@ -132,4 +132,3 @@ epkg_dictionary.update({
     'ROC': 'https://fr.wikipedia.org/wiki/Courbe_ROC',
     "X-tree": "https://en.wikipedia.org/wiki/X-tree",
 })
-
