@@ -10,3 +10,4 @@ Bases de Machine Learning
     kppv
     missing_values_mf
     lr_voronoi
+    piecewise
