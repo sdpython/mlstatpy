@@ -8,6 +8,7 @@ memory_profiler
 minepy
 mlinsights>=0.1.75
 mutagen
+git+https://github.com/sdpython/nbconvert.git@fixes
 pyensae>=1.2.788
 pyinstrument
 pyquickhelper>=1.8.2814
