@@ -22,7 +22,7 @@ un peu de mathématiques.
 
 .. contents::
     :local:
-    
+
 Le problème
 ===========
 
@@ -33,9 +33,8 @@ implémentée selon l'API de :epkg:`scikit-learn`.
 
 .. toctree::
     :maxdepth: 1
-    
-    ../notebooks/piecewise_linear_simple
 
+    ../notebooks/piecewise_linear_regression
 
 Régression linéaire et corrélation
 ==================================
@@ -45,4 +44,3 @@ Idée de l'algorithme
 
 Implémentation
 ==============
-

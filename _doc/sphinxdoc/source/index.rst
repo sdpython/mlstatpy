@@ -75,10 +75,6 @@ Xavier Dupré
         :alt: GitHub Issues
         :target: https://github.com/sdpython/mlstatpy/issues
 
-    .. image:: https://badge.waffle.io/sdpython/mlstatpy.png?label=ready&title=Ready
-        :alt: Waffle
-        :target: https://waffle.io/sdpython/mlstatpy
-
     .. image:: https://api.codacy.com/project/badge/Grade/677db5dda93b40d4ba1ec2f870cfd934
         :target: https://www.codacy.com/app/sdpython/mlstatpy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sdpython/mlstatpy&amp;utm_campaign=Badge_Grade
         :alt: Codacy
