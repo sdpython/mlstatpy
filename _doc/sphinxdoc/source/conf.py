@@ -127,6 +127,7 @@ epkg_dictionary.update({
     "B+ tree": "https://en.wikipedia.org/wiki/B%2B_tree",
     "R-tree": "https://en.wikipedia.org/wiki/R-tree",
     "Branch and Bound": "https://en.wikipedia.org/wiki/Branch_and_bound",
+    'ICML 2016': 'https://icml.cc/2016/index.html',
     "LAESA": "https://tavianator.com/aesa/",
     "R* tree": "https://en.wikipedia.org/wiki/R*_tree",
     'ROC': 'https://fr.wikipedia.org/wiki/Courbe_ROC',
