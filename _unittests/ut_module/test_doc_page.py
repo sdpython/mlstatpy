@@ -94,9 +94,9 @@ class TestDocPage(ExtTestCase):
         preamble = TestDocPage.preamble + TestDocPage.custom_preamble
         this = os.path.abspath(os.path.dirname(__file__))
         root = os.path.join(this, "..", "..", "_doc",
-                            "sphinxdoc", "source", "c_garden")
-        image_path = "images"
-        rst = os.path.join(root, "regression_quantile.rst")
+                            "sphinxdoc", "source", "c_ml")
+        image_path = "piecewise"
+        rst = os.path.join(root, "piecewise.rst")
         imgs = os.path.join(root, image_path)
         content = self.read_file(rst)
         synchronize_folder(imgs, os.path.join(
