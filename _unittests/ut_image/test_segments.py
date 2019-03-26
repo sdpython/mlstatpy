@@ -2,31 +2,15 @@
 """
 @brief      test log(time=10s)
 """
-
-import sys
 import os
 import unittest
 import math
 from pyquickhelper.pycode import ExtTestCase, get_temp_folder
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.mlstatpy.image.detection_segment.geometrie import Point
-from src.mlstatpy.image.detection_segment.detection_segment_segangle import SegmentBord
-from src.mlstatpy.image.detection_segment.detection_segment import detect_segments, plot_segments
-from src.mlstatpy.image.detection_segment.detection_segment import _calcule_gradient, plot_gradient
-from src.mlstatpy import __file__ as rootfile
+from mlstatpy.image.detection_segment.geometrie import Point
+from mlstatpy.image.detection_segment.detection_segment_segangle import SegmentBord
+from mlstatpy.image.detection_segment.detection_segment import detect_segments, plot_segments
+from mlstatpy.image.detection_segment.detection_segment import _calcule_gradient, plot_gradient
+from mlstatpy import __file__ as rootfile
 
 
 class TestSegments(ExtTestCase):

@@ -53,7 +53,7 @@ sur l'intervalle considéré. On note l'erreur quadratique :
     E_(i,j) &=& \frac{1}{j - i + 1} \sum_{i \leqslant k \leqslant j} ( Y_i - C(i,j))^2 =
     \frac{1}{j - i + 1} \sum_{i \leqslant k \leqslant j} Y_i^2 - C(i,j)^2 = D(i,j) - C(i,j)^2
     \end{array}
-    
+
 La dernière ligne applique la formule :math:`\var{X} = \esp{X^2} - \esp{X}^2`
 qui est facile à redémontrer.
 L'algorithme de l'arbre de décision coupe un intervalle en
@@ -112,7 +112,7 @@ On en déduit que :
     \end{array}
 
 On voit que cette formule ne fait intervenir que :math:`C(1,k-1), D(1,k-1), Y_k`,
-elle est donc très rapide à calculer et c'est pour cela qu'apprendre un arbre 
+elle est donc très rapide à calculer et c'est pour cela qu'apprendre un arbre
 de décision peut s'apprendre en un temps raisonnable. Cela repose sur la possibilité
 de calculer le critère optimisé par récurrence. On voit également que ces formules
 ne font pas intervenir *X*, elles sont donc généralisables au cas
@@ -121,16 +121,16 @@ selon chaque dimension et déterminer le meilleur seuil de coupure
 d'abord sur chacune des dimensions puis de prendre le meilleur
 de ces seuils sur toutes les dimensions. Le problème est résolu.
 
-Le notebook
-`Custom Criterion for DecisionTreeRegressor 
-<http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html>`_
+Le notebook :epkg:`Custom Criterion for DecisionTreeRegressor`
 implémente une version pas efficace du critère
 `MSE <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html>`_
 et compare la vitesse d'exécution avec l'implémentation de :epkg:`scikit-learn`.
-Le résultat est sans équivoque. Cette implémentation n'implémente pas
+Il implémente ensuite le calcul rapide de *scikit-learn* pour
+montrer qu'on obtient un temps comparable.
+Le résultat est sans équivoque. La version rapide n'implémente pas
 :math:`\Delta_{k} - \Delta_{k-1}` mais plutôt les sommes
 :math:`\sum_1^k w_i Y_i`, :math:`\sum_1^k w_i Y_i^2` dans un sens
-et dans l'autre. En gros, 
+et dans l'autre. En gros,
 le code stocke les séries des numérateurs et des dénominateurs
 pour les diviser au dernier moment.
 
@@ -166,7 +166,7 @@ avec cette fonction de coût, il faut pouvoir calculer
 :math:`a(1, k)` en fonction de :math:`a(1, k-1), b(1, k-1), X_k, Y_k`
 ou d'autres quantités intermédiaires qui ne font pas intervenir
 les valeurs :math:`X_{i<k} < Y_{i<k}`. D'après ce qui précède,
-cela paraît tout-à-fait possible. Mais dans le 
+cela paraît tout-à-fait possible. Mais dans le
 `cas multidimensionnel
 <https://fr.wikipedia.org/wiki/R%C3%A9gression_lin%C3%A9aire#Estimateur_des_moindres_carr%C3%A9s>`_,
 il faut déterminer la vecteur *A* qui minimise :math:`\sum_{k=1}^n \norme{Y - XA}^2`
@@ -183,13 +183,27 @@ Pas simple... La documentation de :epkg:`sklearn:tree:DecisionTreeRegressor`
 ne mentionne que deux critères pour apprendre un abre de décision
 de régression, *MSE* pour
 :epkg:`sklearn:metrics:mean_squared_error` et *MAE* pour
-:epkg:`sklearn:metrics:mean_absolute_error`. Les autres critères n'ont 
-probablement pas été envisagé car il n'existe pas de façon efficace
+:epkg:`sklearn:metrics:mean_absolute_error`. Les autres critères n'ont
+probablement pas été envisagés car il n'existe pas de façon efficace
 de les implémenter. L'article [Acharya2016]_ étudie la possibilité
 de ne pas calculer la matrice :math:`A_k` pour tous les *k*.
-Mais peut-être qu'il n'est pas nécessaire de calculer la solution
-du problème d'optimisation pour obtenir l'erreur minimale mais cette
-direction ne paraît pas plus facile.
+Mais ce n'est pas la direction choisie pour cet exposé.
+
+Implémentation naïve d'une régression linéaire par morceaux
+===========================================================
+
+On part du cas général qui écrit la solution d'une régression
+linéaire comme étant la matrice :math:`A = (X'X)^{-1} X' Y`
+et on adapte l'implémentation de :epkg:`scikit-learn` pour
+optimiser l'erreur quadratique obtenue. Ce n'est pas simple mais
+pas impossible. Il faut entrer dans du code :epkg:`cython` et, pour
+éviter de réécrire une fonction qui multiplie et inverse uen matrice,
+on peut utiliser la librairie :epkg:`LAPACK`. Je ne vais pas plus loin
+ici car cela serait un peu hors sujet mais ce n'était pas une partie
+de plaisir. Cela donne :
+`piecewise_tree_regression_criterion_linear.pyx
+<https://github.com/sdpython/mlinsights/blob/master/src/mlinsights/mlmodel/piecewise_tree_regression_criterion_linear.pyx>`_
+C'est illustré toujours par le notebook :epkg:`Custom Criterion for DecisionTreeRegressor`.
 
 Régression linéaire et corrélation
 ==================================
@@ -217,12 +231,10 @@ Idée de l'algorithme
 ====================
 
 Implémentation
-============== 
+==============
 
 Bilbiographie
 =============
 
 .. [Acharya2016] `Fast Algorithms for Segmented Regression <https://arxiv.org/abs/1607.03990>`_,
     Jayadev Acharya, Ilias Diakonikolas, Jerry Li, Ludwig Schmidt, :epkg:`ICML 2016`
-
-

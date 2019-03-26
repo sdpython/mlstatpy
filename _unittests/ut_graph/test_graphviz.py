@@ -3,40 +3,14 @@
 
 """
 import os
-import sys
 import unittest
-from pyquickhelper.loghelper import fLOG
-from pyquickhelper.pycode import get_temp_folder, is_travis_or_appveyor
-
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-
-from src.mlstatpy.graph.graphviz_helper import draw_graph_graphviz
+from pyquickhelper.pycode import get_temp_folder
+from mlstatpy.graph.graphviz_helper import draw_graph_graphviz
 
 
 class TestGraphviz(unittest.TestCase):
 
     def test_make_video(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
-        if is_travis_or_appveyor() == "travis":
-            return
-
         temp = get_temp_folder(__file__, "temp_graphviz")
         fout = os.path.join(temp, "image.png")
 

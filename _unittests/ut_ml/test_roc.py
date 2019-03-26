@@ -2,28 +2,12 @@
 """
 @brief      test log(time=70s)
 """
-
-import sys
 import os
 import unittest
 import random
 from pyquickhelper.loghelper import fLOG
 from pyquickhelper.pycode import get_temp_folder, fix_tkinter_issues_virtualenv, ExtTestCase
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.mlstatpy.ml.roc import ROC
+from mlstatpy.ml.roc import ROC
 
 
 class TestROC(ExtTestCase):

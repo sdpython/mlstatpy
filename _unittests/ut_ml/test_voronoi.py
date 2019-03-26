@@ -2,9 +2,6 @@
 """
 @brief      test log(time=6s)
 """
-
-import sys
-import os
 import math
 import unittest
 from io import StringIO
@@ -13,20 +10,6 @@ import numpy
 from sklearn.datasets import load_iris
 from sklearn.linear_model import LogisticRegression
 from pyquickhelper.pycode import ExtTestCase, add_missing_development_version
-
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
 
 
 class TestVoronoi(ExtTestCase):

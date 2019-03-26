@@ -2,41 +2,17 @@
 """
 @brief      test log(time=1s)
 """
-
-import sys
-import os
 import unittest
 import numpy
 from numpy.testing import assert_array_equal
 from sklearn.neighbors import NearestNeighbors
-from pyquickhelper.loghelper import fLOG
-
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.mlstatpy.ml.kppv import NuagePoints
-from src.mlstatpy.ml.kppv_laesa import NuagePointsLaesa
+from mlstatpy.ml.kppv import NuagePoints
+from mlstatpy.ml.kppv_laesa import NuagePointsLaesa
 
 
 class TestNuagePoints(unittest.TestCase):
 
     def test_nuage_points_1d(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         X = numpy.array([[0], [3], [1]])
         neigh = NearestNeighbors(n_neighbors=1)
         neigh.fit(X)
@@ -50,11 +26,6 @@ class TestNuagePoints(unittest.TestCase):
         assert_array_equal(dist.ravel(), dist2.ravel())
 
     def test_nuage_points_1d_leasa(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         X = numpy.array([[0], [3], [1]])
         neigh = NearestNeighbors(n_neighbors=1)
         neigh.fit(X)
@@ -68,11 +39,6 @@ class TestNuagePoints(unittest.TestCase):
         assert_array_equal(dist.ravel(), dist2.ravel())
 
     def test_nuage_points_2d(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         X = numpy.array([[0, 0], [3, 3], [1, 1]])
         neigh = NearestNeighbors(n_neighbors=1)
         neigh.fit(X)
@@ -86,11 +52,6 @@ class TestNuagePoints(unittest.TestCase):
         assert_array_equal(dist.ravel(), dist2.ravel())
 
     def test_nuage_points_2d_leasa(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         X = numpy.array([[0, 0], [3, 3], [1, 1]])
         neigh = NearestNeighbors(n_neighbors=1)
         neigh.fit(X)

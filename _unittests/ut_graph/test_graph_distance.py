@@ -3,40 +3,17 @@
 
 """
 import os
-import sys
 import unittest
 import copy
 import warnings
-from pyquickhelper.loghelper import fLOG
-from pyquickhelper.pycode import get_temp_folder, is_travis_or_appveyor
+from pyquickhelper.pycode import get_temp_folder, is_travis_or_appveyor, ExtTestCase
+from mlstatpy.graph.graph_distance import GraphDistance
+from mlstatpy.graph.graphviz_helper import draw_graph_graphviz
 
 
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-
-from src.mlstatpy.graph.graph_distance import GraphDistance
-from src.mlstatpy.graph.graphviz_helper import draw_graph_graphviz
-
-
-class TestGraphDistance(unittest.TestCase):
+class TestGraphDistance(ExtTestCase):
 
     def test_graph_load(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         this = os.path.abspath(os.path.dirname(__file__))
         graph = os.path.join(this, "data", "graph.gv")
         g = GraphDistance.load_from_file(graph, False)
@@ -44,10 +21,6 @@ class TestGraphDistance(unittest.TestCase):
         self.assertTrue(len(paths) > 0)
 
     def test_image_video_kohonen(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
         temp = get_temp_folder(__file__, "temp_graph_distance")
 
         graph1 = [("a", "b"), ("b", "c"), ("b", "d"), ("d", "e"),
@@ -87,22 +60,23 @@ class TestGraphDistance(unittest.TestCase):
             return
 
         vertices, edges = graph1.draw_vertices_edges()
+        self.assertNotEmpty(vertices)
+        self.assertNotEmpty(edges)
         draw_graph_graphviz(vertices, edges, outfile1)
 
         vertices, edges = graph2.draw_vertices_edges()
+        self.assertNotEmpty(vertices)
+        self.assertNotEmpty(edges)
         draw_graph_graphviz(vertices, edges, outfile2)
         self.assertTrue(os.path.exists(outfile2))
 
         vertices, edges = graph.draw_vertices_edges()
+        self.assertNotEmpty(vertices)
+        self.assertNotEmpty(edges)
         draw_graph_graphviz(vertices, edges, outfilef)
         self.assertTrue(os.path.exists(outfilef))
 
     def test_unittest_GraphDistance2(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         graph1 = [("a", "b"), ("b", "c"), ("b", "X"), ("X", "c"),
                   ("c", "d"), ("d", "e"), ("0", "b")]
         graph2 = [("a", "b"), ("b", "c"), ("b", "X"), ("X", "c"),
@@ -120,6 +94,8 @@ class TestGraphDistance(unittest.TestCase):
         if distance == 0:
             raise ValueError("expecting a distance > 0")
         vertices, edges = graph.draw_vertices_edges()
+        self.assertNotEmpty(vertices)
+        self.assertNotEmpty(edges)
         #GV.drawGraphEdgesVertices (vertices,edges, "unittest_GraphDistance2.png")
         node = graph.vertices["X"]
         if None in node.pair:
@@ -127,16 +103,13 @@ class TestGraphDistance(unittest.TestCase):
                 "unexpected, this node should be part of the common set")
 
         vertices, edges = graph1.draw_vertices_edges()
+        self.assertNotEmpty(vertices)
         #GV.drawGraphEdgesVertices (vertices,edges, "unittest_GraphDistance2_sub1.png")
         vertices, edges = graph2.draw_vertices_edges()
+        self.assertNotEmpty(vertices)
         #GV.drawGraphEdgesVertices (vertices,edges, "unittest_GraphDistance2_sub2.png")
 
     def test_unittest_common_paths(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         graph1 = [("a", "b"), ("b", "c"), ("b", "X"), ("X", "c"),
                   ("c", "d"), ("d", "e"), ("0", "b")]
         graph2 = graph1

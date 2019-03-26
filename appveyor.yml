@@ -26,6 +26,7 @@ install:
   - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
   - "set PATH=%PATH%;C:\\projects\\mlstatpy\\build\\update_modules\\Graphviz\\bin"
   - "dir C:\\projects\\mlstatpy\\build\\update_modules\\Graphviz\\bin"
+  - set PYTHONPATH=src
 build: off
 
 test_script:

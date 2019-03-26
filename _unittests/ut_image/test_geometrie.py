@@ -2,38 +2,14 @@
 """
 @brief      test log(time=38s)
 """
-
-import sys
-import os
 import unittest
 import math
-from pyquickhelper.loghelper import fLOG
-
-
-try:
-    import src
-except ImportError:
-    path = os.path.normpath(
-        os.path.abspath(
-            os.path.join(
-                os.path.split(__file__)[0],
-                "..",
-                "..")))
-    if path not in sys.path:
-        sys.path.append(path)
-    import src
-
-from src.mlstatpy.image.detection_segment import Point, Segment
+from mlstatpy.image.detection_segment import Point, Segment
 
 
 class TestGeometrie(unittest.TestCase):
 
     def test_point(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
-
         p = Point(2, 2)
         pp = Point(3, 5)
         pp += p
@@ -55,7 +31,6 @@ class TestGeometrie(unittest.TestCase):
         dd = d - math.pi / 2
         assert abs(dd) < 1e-5
         seg = Segment(Point(0, 0), p)
-        fLOG(seg)
         self.assertEqual(str(seg), "[(0,0),(2,2)]")
         n = seg.directeur().norme()
         assert abs(n - 1) < 1e-8
