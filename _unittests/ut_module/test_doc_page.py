@@ -106,7 +106,7 @@ class TestDocPage(ExtTestCase):
                 if "contains reference to nonexisting document" in lines[i + 1]:
                     continue
                 else:
-                    mes = 'WARNING isuse\n  File "{0}", line {1}'.format(
+                    mes = 'WARNING issue\n  File "{0}", line {1}'.format(
                         rst, i + 1)
                     raise Exception(mes)
 

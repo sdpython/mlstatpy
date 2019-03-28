@@ -230,6 +230,66 @@ pour laquelle les variables sont corrélées. Il suffit d'appliquer d'abord une
 Idée de l'algorithme
 ====================
 
+On s'intéresser d'abord à la recherche d'un meilleur point de coupure.
+Pour ce faire, les éléments :math:`(X_i, y_i)` sont triés le plus souvent
+selon l'ordre défini par une dimension. On note *E* l'erreur de prédiction
+sur cette échantillon :math:`E = \min_\beta \sum_k (X_k \beta - y_k)^2`.
+On définit ensuite :math:`E(i, j) = \min_\beta \sum_{k=i}^j (X_k \beta - y_k)^2`.
+D'après cette notation, :math:`E = E(1,n)`. La construction de l'arbre
+de décision passe par la détermination de :math:`k^*` qui vérifie :
+
+.. math::
+
+    \begin{array}{rcl}
+    E(1,k^*) + E(k^*+1, n) &=& \min_k E(1,k) + E(k+1, n) \\
+    &=& \min_k \pa{ \min_{\beta_1} \sum_{l=1}^k (X_l \beta_1 - y_l)^2 +
+    \min_{\beta_2} \sum_{l=k+1}^n (X_l \beta_2 - y_l)^2}
+    \end{array}
+
+Autrement dit, on cherche le point de coupure qui maximise la différence
+entre la prédiction obtenue avec deux régressions linéaires plutôt qu'une.
+On sait qu'il existe une matrice *P* qui vérifie :
+
+.. math::
+
+    PP' = 1 \text{ et } (XP)'(XP) = P'X'XP = D = Z'Z
+    
+Où :math:`D=diag(d_1, ..., d_C)` est une matrice
+diagonale. On a posé :math:`Z = XP`, donc :math:`d_a = \
+On peut réécrire le problème
+de régression comme ceci :
+
+.. math::
+
+    \beta_* = \arg\min_\beta \sum_i \norm{ y_i - X_i\beta} =
+    \arg\min_\beta \norm{Y - X\beta}
+
+Comme :math:`X = ZP'` :
+
+.. math::
+
+    \norm{Y - X\beta} = \norm{Y - X\beta} = \norm{Y - ZP'\beta} =
+    \norm{Y - Z\gamma}
+
+Avec :math:`\gamma = P'\beta`. C'est la même régression
+après un changement de repère et on la résoud de la même manière :
+
+.. math::
+
+    \gamma^* = (Z'Z)^{-1}Z'Y = D^{-1}Z'Y
+
+On en déduit que le coefficient de la régression :math:`\gamma_k` est égal à :
+
+.. math::
+
+    \gamma_k = \frac{<Z_k,Y>}{<Z_k,Z_k>} = \frac{<(XP')_k,Y>}{<(XP')_k,(XP')_k>}
+
+
+
+    
+
+
+
 Implémentation
 ==============
 
