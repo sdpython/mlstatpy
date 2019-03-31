@@ -86,10 +86,18 @@ class TestDocPage(ExtTestCase):
         synchronize_folder(imgs, os.path.join(
             temp, image_path), create_dest=True)
 
+        epkg_dictionary = {
+            'XD': 'http://www.xavierdupre.fr',
+            'scikit-learn': 'https://scikit-learn.org/stable/',
+            'sklearn': ('http://scikit-learn.org/stable/',
+                        ('http://scikit-learn.org/stable/modules/generated/{0}.html', 1),
+                        ('http://scikit-learn.org/stable/modules/generated/{0}.{1}.html', 2)),
+            'ICML 2016': 'link',
+        }
         writer = 'html'
         ht = rst2html(content, writer=writer, layout="sphinx", keep_warnings=True,
                       imgmath_latex_preamble=preamble, outdir=temp,
-                      epkg_dictionary={'XD': 'http://www.xavierdupre.fr'})
+                      epkg_dictionary=epkg_dictionary)
         ht = ht.replace('src="_images/', 'src="')
         ht = ht.replace('/scripts\\bokeh', '../bokeh_plot\\bokeh')
         ht = ht.replace('/scripts/bokeh', '../bokeh_plot/bokeh')

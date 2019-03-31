@@ -120,7 +120,7 @@ class MlGridBenchMark(GridBenchMark):
 
     def fit(self, ds, model, **params):
         """
-        Train a model.
+        Trains a model.
 
         @param      ds          dictionary with the data to use for training
         @param      model       model to train

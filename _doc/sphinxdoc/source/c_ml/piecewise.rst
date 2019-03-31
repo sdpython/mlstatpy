@@ -253,15 +253,16 @@ On sait qu'il existe une matrice *P* qui vérifie :
 .. math::
 
     PP' = 1 \text{ et } (XP)'(XP) = P'X'XP = D = Z'Z
-    
+
 Où :math:`D=diag(d_1, ..., d_C)` est une matrice
-diagonale. On a posé :math:`Z = XP`, donc :math:`d_a = \
+diagonale. On a posé :math:`Z = XP`,
+donc :math:`d_a = <Z_a, Z_a>`.
 On peut réécrire le problème
 de régression comme ceci :
 
 .. math::
 
-    \beta_* = \arg\min_\beta \sum_i \norm{ y_i - X_i\beta} =
+    \beta^* = \arg\min_\beta \sum_i \norm{ y_i - X_i\beta} =
     \arg\min_\beta \norm{Y - X\beta}
 
 Comme :math:`X = ZP'` :
@@ -284,11 +285,39 @@ On en déduit que le coefficient de la régression :math:`\gamma_k` est égal à
 
     \gamma_k = \frac{<Z_k,Y>}{<Z_k,Z_k>} = \frac{<(XP')_k,Y>}{<(XP')_k,(XP')_k>}
 
+On en déduit que :
 
+.. math::
 
-    
+    \norm{Y - X\beta} = \norm{Y - \sum_{k=1}^{C}Z_k\frac{<Z_k,Y>}{<Z_k,Z_k>}} =
+    \norm{Y - \sum_{k=1}^{C}(XP')_k\frac{<(XP')_k,Y>}{<(XP')_k,(XP')_k>}}
 
+.. mathdef::
+    :title: Arbre de décision optimisé pour les régressions linéaires
+    :tag: Algorithme
+    :lid: algo_decision_tree_mselin
 
+    On dipose qu'un nuage de points :math:`(X_i, y_i)` avec
+    :math:`X_i \in \R^d` et :math:`y_i \in \R`. Les points sont
+    triés selon une dimension. On note *X* la matrice composées
+    des lignes :math:`X_1, ..., X_n` et le vecteur colonne
+    :math:`(y_1, ..., y_n)`.
+    Il existe une matrice :math:`P` telle que :math:`P'P = I`
+    et :math:`X'X = P'DP` avec *D* une matrice diagonale.
+    On note :math:`X_{a..b}` la matrice constituée des lignes
+    *a* à *b*. On calcule :
+
+    .. math::
+
+        MSE(X, y, a, b) = \norm{Y - \sum_{k=1}^{C}(X_{a..b}P')_k
+        \frac{<(X_{a..b}P')_k,Y>}{<(X_{a..b}P')_k,(X_{a..b}P')_k>}}^2
+
+    Un noeud de l'arbre est construit en choisissant le point
+    de coupure qui maximise :
+
+    .. math::
+
+        MSE(X, y, 1, t) + MSE(X, y, t+1, n)
 
 Implémentation
 ==============
