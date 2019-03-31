@@ -20,22 +20,24 @@ class TestRunNotebooksML(unittest.TestCase):
 
         temp = get_temp_folder(__file__, "temp_run_notebooks_ml")
 
+        try:
+            from mlinsights.mlmodel import PiecewiseRegressor  # pylint: disable=W0611
+            piecewise = True
+        except ImportError:
+            piecewise = False
+
         # selection of notebooks
         fnb = os.path.normpath(os.path.join(
             os.path.abspath(os.path.dirname(__file__)), "..", "..", "_doc", "notebooks", "ml"))
         keepnote = []
         for f in os.listdir(fnb):
+            if "piecewise_linear_regression" in f and not piecewise:
+                continue
             if os.path.splitext(f)[-1] == ".ipynb" and "_long" not in f:
                 keepnote.append(os.path.join(fnb, f))
 
         # function to tell that a can be run
         def valid(cell):
-            if "open_html_form" in cell:
-                return False
-            if "open_window_params" in cell:
-                return False
-            if '<div style="position:absolute' in cell:
-                return False
             return True
 
         # additionnal path to add
