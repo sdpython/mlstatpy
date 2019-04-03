@@ -203,7 +203,45 @@ ici car cela serait un peu hors sujet mais ce n'était pas une partie
 de plaisir. Cela donne :
 `piecewise_tree_regression_criterion_linear.pyx
 <https://github.com/sdpython/mlinsights/blob/master/src/mlinsights/mlmodel/piecewise_tree_regression_criterion_linear.pyx>`_
-C'est illustré toujours par le notebook :epkg:`Custom Criterion for DecisionTreeRegressor`.
+C'est illustré toujours par le notebook :epkg:`DecisionTreeRegressor optimized for Linear Regression`.
+
+Aparté sur la continuité de la régression linéaire par morceaux
+===============================================================
+
+.. index:: optimisation sous contrainte, continuité
+
+Approcher la fonction :math:`y=f(x) + \epsilon` quand *x* et *y*
+sont réels est un problème facile, trop facile... A voir le dessin,
+précédent, il est naturel de vouloir recoller les morceaux lorsqu'on
+passe d'un segment à l'autre. Il s'agit d'une optimisation sous contrainte.
+Il est possible également d'ajouter une contrainte de régularisation
+qui tient compte de cela. On exprime cela comme suit avec une régression
+linéaire à deux morceaux.
+
+.. math::
+
+    E = \sum_{X_i \leqslant t} (a_1 X_i + b_1 - y)^2 +
+    \sum_{X_i \geqslant t} (a_2 X_i + b_2 - y)^2 +
+    \lambda (a_1 t + b_1 - a_2 t - b)^2
+
+Le cas multidimensionnel est loin d'être aussi simple. Avec une
+dimension, chaque zone a deux voisines. En deux dimensions,
+chaque zone peut en avoir plus de deux. La figure suivante
+montre une division de l'espace dans laquelle la zone centrale
+a cinq voisins.
+
+.. image:: piecewise/voisin.png
+
+Peut-on facilement approcher une fonction :math:`z = f(x,y) + \epsilon`
+par un plan en trois dimensions ? A moins que tous les sommets soient
+déjà dans le même plan, c'est impossible. La zone en question n'est
+peut-être même pas convexe. Une régression linéaire par morceaux
+et continue en plusieurs dimensions n'est pas un problème facile.
+Cela n'empêche pas pour autant d'influencer la détermination de chaque 
+morceaux avec une contrainte du type de celle évoquée plus haut
+mais pour écrire la contrainte lorsque les zones sont construites
+à partir des feuilles d'un arbre de décision, il faut déterminer
+quelles sont les feuilles voisines. Et ça c'est un problème intéressant !
 
 Régression linéaire et corrélation
 ==================================
