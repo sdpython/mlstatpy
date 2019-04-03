@@ -85,7 +85,7 @@ linéaire parce qu'il est difficile de simplifier la différence :
 
     \begin{array}{rcl}
     \Delta_{k} - \Delta_{k-1} &=&  - (E(1, k) + E(k+1, n)) + (E(1, k-1) + E(k, n)) \\
-                              &=&  E(1, k-1) - E(1, k) + E(k, n) - E(k+1, n)
+    &=&  E(1, k-1) - E(1, k) + E(k, n) - E(k+1, n)
     \end{array}
 
 On s'intéresse au terme :math:`E(1, k-1) - E(1, k)` :
@@ -180,7 +180,7 @@ calculer rapidement :
     (X_{1..k}'X_{1..k})^{-1} X'_{1..k} Y_{1..k}
 
 Pas simple... La documentation de :epkg:`sklearn:tree:DecisionTreeRegressor`
-ne mentionne que deux critères pour apprendre un abre de décision
+ne mentionne que deux critères pour apprendre un arbre de décision
 de régression, *MSE* pour
 :epkg:`sklearn:metrics:mean_squared_error` et *MAE* pour
 :epkg:`sklearn:metrics:mean_absolute_error`. Les autres critères n'ont
@@ -241,7 +241,8 @@ Cela n'empêche pas pour autant d'influencer la détermination de chaque
 morceaux avec une contrainte du type de celle évoquée plus haut
 mais pour écrire la contrainte lorsque les zones sont construites
 à partir des feuilles d'un arbre de décision, il faut déterminer
-quelles sont les feuilles voisines. Et ça c'est un problème intéressant !
+quelles sont les feuilles voisines.
+Et ça c'est un problème intéressant !
 
 Régression linéaire et corrélation
 ==================================
@@ -351,7 +352,7 @@ On en déduit que :
         \frac{<(X_{a..b}P')_k,Y>}{<(X_{a..b}P')_k,(X_{a..b}P')_k>}}^2
 
     Un noeud de l'arbre est construit en choisissant le point
-    de coupure qui maximise :
+    de coupure qui minimise :
 
     .. math::
 
