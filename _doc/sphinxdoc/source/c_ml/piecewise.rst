@@ -358,6 +358,26 @@ On en déduit que :
 
         MSE(X, y, 1, t) + MSE(X, y, t+1, n)
 
+Un peu plus en détail dans l'algorithme
+=======================================
+
+J'ai pensé à plein de choses pour aller plus loin car l'idée
+est de quantifier à peu près combien on pert en précision en utilisant
+des vecteurs propres estimés avec l'ensemble des données sur une partie
+seulement. Je me suis demandé si les vecteurs propres d'une matrice
+pouvait être construit à partir d'une fonction continue de la matrice 
+symétrique de départ. A peu près vrai mais je ne voyais pas une façon
+de majorer cette continuité. Ensuite, je me suis dit que les vecteurs 
+propres de :math:`X'X` ne devait pas être loin de ceux de :math:`X_\sigma'X_\sigma`
+où :math:`\sigma` est un sous-échantillon aléatoire de l'ensemble 
+de départ. Donc comme il faut juste avoir une base de vecteurs
+orthogonaux, je suis passé à l'`orthonormalisation de Gram-Schmidt
+<https://fr.wikipedia.org/wiki/Algorithme_de_Gram-Schmidt>`_.
+Il n'a pas non plus ce défaut de permuter les dimensions ce qui rend
+l'observation de la continuité a little bit more complicated comme
+le max dans l'`algorithme de Jacobi
+<https://en.wikipedia.org/wiki/Jacobi_eigenvalue_algorithm>`_.
+
 Implémentation
 ==============
 
