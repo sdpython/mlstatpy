@@ -124,11 +124,14 @@ mathdef_link_only = True
 
 epkg_dictionary.update({
     "AESA": "https://tavianator.com/aesa/",
-    "Custom Criterion for DecisionTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
+    'cython': 'https://cython.org/',
     "B+ tree": "https://en.wikipedia.org/wiki/B%2B_tree",
     "Branch and Bound": "https://en.wikipedia.org/wiki/Branch_and_bound",
+    "Custom Criterion for DecisionTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
+    'DecisionTreeRegressor optimized for Linear Regression': "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
     'ICML 2016': 'https://icml.cc/2016/index.html',
     "LAESA": "https://tavianator.com/aesa/",
+    'LAPACK': 'http://www.netlib.org/lapack/',
     "R-tree": "https://en.wikipedia.org/wiki/R-tree",
     "R* tree": "https://en.wikipedia.org/wiki/R*_tree",
     'ROC': 'https://fr.wikipedia.org/wiki/Courbe_ROC',

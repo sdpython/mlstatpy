@@ -37,6 +37,7 @@ implémentée selon l'API de :epkg:`scikit-learn`.
     ../notebooks/piecewise_linear_regression
 
 .. image:: piecewise/piecenaive.png
+    :width: 250
 
 Cette régression par morceaux est obtenue grâce à un arbre
 de décision. Celui-ci trie le nuage de points :math:`(X_i, Y_i)`
@@ -70,6 +71,7 @@ choisit une erreur quadratique qui correspondent aux traits
 oranges.
 
 .. image:: piecewise/piecenaive2.png
+    :width: 250
 
 Il suffirait donc de remplacer l'erreur *E* par celle obtenue
 par une régression linéaire. Mais si c'était aussi simple,
@@ -203,7 +205,8 @@ ici car cela serait un peu hors sujet mais ce n'était pas une partie
 de plaisir. Cela donne :
 `piecewise_tree_regression_criterion_linear.pyx
 <https://github.com/sdpython/mlinsights/blob/master/src/mlinsights/mlmodel/piecewise_tree_regression_criterion_linear.pyx>`_
-C'est illustré toujours par le notebook :epkg:`DecisionTreeRegressor optimized for Linear Regression`.
+C'est illustré toujours par le notebook
+:epkg:`DecisionTreeRegressor optimized for Linear Regression`.
 
 Aparté sur la continuité de la régression linéaire par morceaux
 ===============================================================
@@ -231,6 +234,7 @@ montre une division de l'espace dans laquelle la zone centrale
 a cinq voisins.
 
 .. image:: piecewise/voisin.png
+    :width: 200
 
 Peut-on facilement approcher une fonction :math:`z = f(x,y) + \epsilon`
 par un plan en trois dimensions ? A moins que tous les sommets soient
@@ -318,18 +322,22 @@ après un changement de repère et on la résoud de la même manière :
 
     \gamma^* = (Z'Z)^{-1}Z'Y = D^{-1}Z'Y
 
-On en déduit que le coefficient de la régression :math:`\gamma_k` est égal à :
+La notation :math:`M_i` désigne la ligne *i* et
+:math:`M_[k]` désigne la colonne.
+On en déduit que le coefficient de la régression 
+:math:`\gamma_k` est égal à :
 
 .. math::
 
-    \gamma_k = \frac{<Z_k,Y>}{<Z_k,Z_k>} = \frac{<(XP')_k,Y>}{<(XP')_k,(XP')_k>}
+    \gamma_k = \frac{<Z_{[k]},Y>}{<Z_{[k]},Z_{[k]}>} =
+    \frac{<(XP')_{[k]},Y>}{<(XP')_{[k]},(XP')_{[k]}>}
 
 On en déduit que :
 
 .. math::
 
-    \norm{Y - X\beta} = \norm{Y - \sum_{k=1}^{C}Z_k\frac{<Z_k,Y>}{<Z_k,Z_k>}} =
-    \norm{Y - \sum_{k=1}^{C}(XP')_k\frac{<(XP')_k,Y>}{<(XP')_k,(XP')_k>}}
+    \norm{Y - X\beta} = \norm{Y - \sum_{k=1}^{C}Z_{[k]}\frac{<Z_{[k]},Y>}{<Z_{[k]},Z_{[k]}>}} =
+    \norm{Y - \sum_{k=1}^{C}(XP')_{[k]}\frac{<(XP')_{[k]},Y>}{<(XP')_{[k]},(XP')_{[k]}>}}
 
 .. mathdef::
     :title: Arbre de décision optimisé pour les régressions linéaires
@@ -348,8 +356,8 @@ On en déduit que :
 
     .. math::
 
-        MSE(X, y, a, b) = \norm{Y - \sum_{k=1}^{C}(X_{a..b}P')_k
-        \frac{<(X_{a..b}P')_k,Y>}{<(X_{a..b}P')_k,(X_{a..b}P')_k>}}^2
+        MSE(X, y, a, b) = \norm{Y - \sum_{k=1}^{C}(X_{a..b}P')_{[k]}
+        \frac{<(X_{a..b}P')_{[k]},Y>}{<(X_{a..b}P')_{[k]},(X_{a..b}P')_{[k]}>}}^2
 
     Un noeud de l'arbre est construit en choisissant le point
     de coupure qui minimise :
@@ -377,6 +385,22 @@ Il n'a pas non plus ce défaut de permuter les dimensions ce qui rend
 l'observation de la continuité a little bit more complicated comme
 le max dans l'`algorithme de Jacobi
 <https://en.wikipedia.org/wiki/Jacobi_eigenvalue_algorithm>`_.
+L'idée est se servir cette orthonormalisation pour construite
+la matrice *P* de l'algortihme.
+
+La matrice :math:`P \in \mathcal{M}_{CC}` est constitué de 
+*C* vecteurs propres :math:`(P_1, ..., P_C)`. Avec les notations que
+j'ai utilisées jusqu'à présent :
+:math:`X'X_{[k]} = (<X_{[1]}, X_{[k]}>, ..., <X_{[C]}, X_{[k]}>)`.
+
+.. math::
+
+    \begin{array}{rcl}
+    P_1 &=& \frac{ X'X_{[1]} }{ \norme{X'X_{[1]}} } \\
+    P_2 &=& \frac{ X'X_{[2]} - <X'X_{[2]}, P_1> P_1 }
+    { \norme{X'X_{[2]} - <X'X_{[2]}, P_1> P_1} } \\
+    ... &&
+    \end{array}
 
 Implémentation
 ==============
