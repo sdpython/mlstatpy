@@ -133,9 +133,11 @@ class TestSegments(ExtTestCase):
 
         with open(os.path.join(temp, "..", "data", "gradient--2.png"), 'rb') as f:
             c1 = f.read()
+        with open(os.path.join(temp, "..", "data", "gradient--2b.png"), 'rb') as f:
+            c1b = f.read()
         with open(os.path.join(temp, "gradient--2.png"), 'rb') as f:
             c2 = f.read()
-        self.assertEqual(c1, c2)
+        self.assertIn(c2, (c1, c1b))
 
     def test_segment_detection_profile(self):
         img = os.path.join(os.path.dirname(__file__),
