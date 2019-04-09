@@ -2,7 +2,6 @@ blockdiag
 coverage
 gprof2dot
 jyquickhelper
-line_profiler
 mako
 memory_profiler
 minepy

@@ -241,7 +241,7 @@ par un plan en trois dimensions ? A moins que tous les sommets soient
 déjà dans le même plan, c'est impossible. La zone en question n'est
 peut-être même pas convexe. Une régression linéaire par morceaux
 et continue en plusieurs dimensions n'est pas un problème facile.
-Cela n'empêche pas pour autant d'influencer la détermination de chaque 
+Cela n'empêche pas pour autant d'influencer la détermination de chaque
 morceaux avec une contrainte du type de celle évoquée plus haut
 mais pour écrire la contrainte lorsque les zones sont construites
 à partir des feuilles d'un arbre de décision, il faut déterminer
@@ -324,7 +324,7 @@ après un changement de repère et on la résoud de la même manière :
 
 La notation :math:`M_i` désigne la ligne *i* et
 :math:`M_[k]` désigne la colonne.
-On en déduit que le coefficient de la régression 
+On en déduit que le coefficient de la régression
 :math:`\gamma_k` est égal à :
 
 .. math::
@@ -373,11 +373,11 @@ J'ai pensé à plein de choses pour aller plus loin car l'idée
 est de quantifier à peu près combien on pert en précision en utilisant
 des vecteurs propres estimés avec l'ensemble des données sur une partie
 seulement. Je me suis demandé si les vecteurs propres d'une matrice
-pouvait être construit à partir d'une fonction continue de la matrice 
+pouvait être construit à partir d'une fonction continue de la matrice
 symétrique de départ. A peu près vrai mais je ne voyais pas une façon
-de majorer cette continuité. Ensuite, je me suis dit que les vecteurs 
-propres de :math:`X'X` ne devait pas être loin de ceux de :math:`X_\sigma'X_\sigma`
-où :math:`\sigma` est un sous-échantillon aléatoire de l'ensemble 
+de majorer cette continuité. Ensuite, je me suis dit que les vecteurs
+propres de :math:`X'X` ne devaient pas être loin de ceux de :math:`X_\sigma'X_\sigma`
+où :math:`\sigma` est un sous-échantillon aléatoire de l'ensemble
 de départ. Donc comme il faut juste avoir une base de vecteurs
 orthogonaux, je suis passé à l'`orthonormalisation de Gram-Schmidt
 <https://fr.wikipedia.org/wiki/Algorithme_de_Gram-Schmidt>`_.
@@ -388,19 +388,24 @@ le max dans l'`algorithme de Jacobi
 L'idée est se servir cette orthonormalisation pour construite
 la matrice *P* de l'algortihme.
 
-La matrice :math:`P \in \mathcal{M}_{CC}` est constitué de 
+La matrice :math:`P \in \mathcal{M}_{CC}` est constituée de
 *C* vecteurs propres :math:`(P_1, ..., P_C)`. Avec les notations que
 j'ai utilisées jusqu'à présent :
-:math:`X'X_{[k]} = (<X_{[1]}, X_{[k]}>, ..., <X_{[C]}, X_{[k]}>)`.
+:math:`(X'X)_{[k]} = (<X_{[1]}, X_{[k]}>, ..., <X_{[C]}, X_{[k]}>)`.
 
 .. math::
 
     \begin{array}{rcl}
-    P_1 &=& \frac{ X'X_{[1]} }{ \norme{X'X_{[1]}} } \\
-    P_2 &=& \frac{ X'X_{[2]} - <X'X_{[2]}, P_1> P_1 }
-    { \norme{X'X_{[2]} - <X'X_{[2]}, P_1> P_1} } \\
+    P_1 &=& \frac{ (X'X)_{[1]} }{ \norme{(X'X)_{[1]}} } \\
+    P_2 &=& \frac{ (X'X)_{[2]} - <(X'X)_{[2]}, P_1> P_1 }
+    { \norme{X'X_{[2]} - <(X'X)_{[2]}, P_1> P_1} } \\
     ... &&
+    P_k &=& \frac{ (X'X)_{[2]} - \sum_{i=1}^{k-1} <(X'X)_{[k]}, P_i> P_i }
+    { \norme{ (X'X)_{[2]} - \sum_{i=1}^{k-1} <(X'X)_{[k]}, P_i> P_i } } \\
     \end{array}
+
+La matrice *P* vérifie :math:`P'P` puisque les vecteurs sont
+construits de façon à être orthonormés.
 
 Implémentation
 ==============
