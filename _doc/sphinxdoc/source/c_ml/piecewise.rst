@@ -323,7 +323,7 @@ après un changement de repère et on la résoud de la même manière :
     \gamma^* = (Z'Z)^{-1}Z'Y = D^{-1}Z'Y
 
 La notation :math:`M_i` désigne la ligne *i* et
-:math:`M_[k]` désigne la colonne.
+:math:`M_{[k]}` désigne la colonne.
 On en déduit que le coefficient de la régression
 :math:`\gamma_k` est égal à :
 
@@ -385,27 +385,68 @@ Il n'a pas non plus ce défaut de permuter les dimensions ce qui rend
 l'observation de la continuité a little bit more complicated comme
 le max dans l'`algorithme de Jacobi
 <https://en.wikipedia.org/wiki/Jacobi_eigenvalue_algorithm>`_.
-L'idée est se servir cette orthonormalisation pour construite
+L'idée est se servir cette orthonormalisation pour construire
 la matrice *P* de l'algortihme.
 
 La matrice :math:`P \in \mathcal{M}_{CC}` est constituée de
-*C* vecteurs propres :math:`(P_1, ..., P_C)`. Avec les notations que
+*C* vecteurs propres :math:`(P_{[1]}, ..., P_{[C]})`. Avec les notations que
 j'ai utilisées jusqu'à présent :
-:math:`(X'X)_{[k]} = (<X_{[1]}, X_{[k]}>, ..., <X_{[C]}, X_{[k]}>)`.
+:math:`X_{[k]} = (X_{1k}, ..., X_{nk})`.
+On note la matrice identité :math:`I_C=I`.
 
 .. math::
 
     \begin{array}{rcl}
-    P_1 &=& \frac{ (X'X)_{[1]} }{ \norme{(X'X)_{[1]}} } \\
-    P_2 &=& \frac{ (X'X)_{[2]} - <(X'X)_{[2]}, P_1> P_1 }
-    { \norme{X'X_{[2]} - <(X'X)_{[2]}, P_1> P_1} } \\
+    U_{[1]} &=& \frac{ X_{[1]} }{ \norme{X_{[1]}} } \\
+    P_{[1]} &=& \frac{ I_{[1]} }{ \norme{X_{[1]}} } \\
+    U_{[2]} &=& \frac{ X_{[2]} - <X_{[2]}, U_{[1]}> U_{[1]} }
+    { \norme{X_{[2]} - <X_{[2]}, U_{[1]}> U_{[1]}} } \\
+    P_{[2]} &=& \frac{ I_{[2]} - <X_{[2]}, U_{[1]}> U_{[1]} }
+    { \norme{X_{[2]} - <X_{[2]}, U_{[1]}> U_{[1]}} } \\
     ... &&
-    P_k &=& \frac{ (X'X)_{[2]} - \sum_{i=1}^{k-1} <(X'X)_{[k]}, P_i> P_i }
-    { \norme{ (X'X)_{[2]} - \sum_{i=1}^{k-1} <(X'X)_{[k]}, P_i> P_i } } \\
+    U_{[k]} &=& \frac{ X_{[k]} - \sum_{i=1}^{k-1} <X_{[k]}, U_{[i]}> U_{[i]} }
+    { \norme{ X_{[2]} - \sum_{i=1}^{k-1} <X_{[k]}, U_{[i]}> U_{[i]} } } \\
+    P_{[k]} &=& \frac{ I_{[k]} - \sum_{i=1}^{k-1} <X_{[k]}, U_{[i]}> U_{[i]} }
+    { \norme{ X_{[2]} - \sum_{i=1}^{k-1} <X_{[k]}, U_{[i]}> U_{[i]} } } \\
     \end{array}
 
-La matrice *P* vérifie :math:`P'P` puisque les vecteurs sont
-construits de façon à être orthonormés.
+La matrice *U* vérifie :math:`U'U` puisque les vecteurs sont
+construits de façon à être orthonormés. Et on vérifie que
+:math:`XP = U` et donc :math:`PXX'P' = I`.
+C'est implémenté par la fonction
+:func:`gram_schmidt <mlstatpy.ml.matrices.gram_schmidt>`.
+
+.. runpython::
+    :showcode:
+
+    import numpy
+    from mlstatpy.ml.matrices import gram_schmidt
+
+    X = numpy.array([[1, 0.5, 0], [0, 0.4, 2]], dtype=float).T
+    U, P = gram_schmidt(X.T, change=True)
+    U, P = U.T, P.T
+    m = X @ P
+    D = m.T @ m
+    print(D)
+
+Cela débouche sur une autre formulation du calcul
+d'une régression linéaire à partir d'une orthornormalisation
+de Gram-Schmidt qui est implémentée dans la fonction
+:func:`linear_regression <mlstatpy.ml.matrices.linear_regression>`.
+
+.. runpython::
+    :showcode:
+
+    import numpy
+    from mlstatpy.ml.matrices import linear_regression
+
+    X = numpy.array([[1, 0.5, 0], [0, 0.4, 2]], dtype=float).T
+    y = numpy.array([1, 1.3, 3.9])
+    beta = linear_regression(X, y, algo="gram")
+    print(beta)
+
+L'avantage est que cette formulation s'exprime
+uniquement à partir de produits scalaires.
 
 Implémentation
 ==============
