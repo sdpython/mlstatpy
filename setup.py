@@ -113,11 +113,11 @@ if is_local():
     r = process_standard_options_for_setup(
         sys.argv, __file__, project_var_name,
         unittest_modules=["pyquickhelper", "jyquickhelper", "mlinsights"],
-        additional_notebook_path=["pyquickhelper", "pyensae",
+        additional_notebook_path=["pyquickhelper", "pyensae", "cpyquickhelper",
                                   "pymyinstall", "jyquickhelper", "mlinsights"],
-        additional_local_path=["pyquickhelper", "pyensae",
+        additional_local_path=["pyquickhelper", "pyensae", "cpyquickhelper",
                                "pymyinstall", "jyquickhelper", "mlinsights"],
-        requirements=["pyquickhelper", "pymyinstall",
+        requirements=["pyquickhelper", "pymyinstall", "cpyquickhelper",
                       "jyquickhelper", "pyensae", "mlinsights"],
         add_htmlhelp=sys.platform.startswith("win"),
         coverage_options=dict(omit=["*exclude*.py"]),
@@ -158,5 +158,5 @@ if not r:
         package_dir=package_dir,
         package_data=package_data,
         setup_requires=["pyquickhelper"],
-        install_requires=['numpy', 'mlinsights'],
+        install_requires=['numpy', 'mlinsights', 'cpyquickhelper'],
     )

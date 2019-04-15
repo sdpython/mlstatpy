@@ -60,9 +60,7 @@ def linear_regression(X, y, algo=None):
     elif algo == "gram":
         U, P = gram_schmidt(X.T, change=True)
         U, P = U.T, P.T
-        gamma = numpy.zeros((X.shape[1], 1))
-        for i in range(0, gamma.shape[0]):
-            gamma[i, 0] = numpy.dot(U[:, i], y)
+        gamma = y.flatten() @ U
         return (P @ gamma).ravel()
     else:
         raise ValueError("Unknwown algo='{}'.".format(algo))

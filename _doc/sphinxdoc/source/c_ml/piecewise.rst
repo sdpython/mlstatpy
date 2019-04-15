@@ -403,7 +403,7 @@ On note la matrice identité :math:`I_C=I`.
     { \norme{X_{[2]} - <X_{[2]}, U_{[1]}> U_{[1]}} } \\
     P_{[2]} &=& \frac{ I_{[2]} - <X_{[2]}, U_{[1]}> U_{[1]} }
     { \norme{X_{[2]} - <X_{[2]}, U_{[1]}> U_{[1]}} } \\
-    ... &&
+    ... && \\
     U_{[k]} &=& \frac{ X_{[k]} - \sum_{i=1}^{k-1} <X_{[k]}, U_{[i]}> U_{[i]} }
     { \norme{ X_{[2]} - \sum_{i=1}^{k-1} <X_{[k]}, U_{[i]}> U_{[i]} } } \\
     P_{[k]} &=& \frac{ I_{[k]} - \sum_{i=1}^{k-1} <X_{[k]}, U_{[i]}> U_{[i]} }
@@ -447,6 +447,7 @@ de Gram-Schmidt qui est implémentée dans la fonction
 
 L'avantage est que cette formulation s'exprime
 uniquement à partir de produits scalaires.
+Voir le notebook :ref:`regressionnoinversionrst`.
 
 Implémentation
 ==============

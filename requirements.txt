@@ -1,5 +1,6 @@
 blockdiag
 coverage
+cpyquickhelper
 gprof2dot
 jyquickhelper
 mako
