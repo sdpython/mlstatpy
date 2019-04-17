@@ -16,6 +16,10 @@ def gram_schmidt(mat, change=False):
     @param      mat     matrix
     @param      change  returns the matrix to change the basis
     @return             new matrix or (new matrix, change matrix)
+
+    .. note::
+        The implementation could be improved
+        by directly using :epkg:`BLAS` function.
     """
     if len(mat.shape) != 2:
         raise ValueError("mat must be a matrix.")
