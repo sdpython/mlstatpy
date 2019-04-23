@@ -39,18 +39,11 @@ class TestCodeStyle(ExtTestCase):
         check_pep8(test, fLOG=fLOG, neg_pattern="temp_.*",
                    pylint_ignore=('C0103', 'C1801', 'R0201', 'R1705', 'W0108', 'W0613',
                                   'C0111', 'W0212', 'W0212', 'W0107'),
-                   skip=["src' imported but unused",
-                         "skip_' imported but unused",
-                         "skip__' imported but unused",
-                         "skip___' imported but unused",
-                         "Unused variable 'skip_'",
-                         "imported as skip_",
-                         "Module 'pygame' has no 'init' member",
+                   skip=["Module 'pygame' has no 'init' member",
                          "Module 'pygame' has no 'MOUSEBUTTONUP' member",
                          "test_graph_distance.py:122: W0612",
                          "Instance of 'tuple' has no '",
                          "Unable to import 'pygame'",
-                         "Unused import src",
                          ])
 
 
