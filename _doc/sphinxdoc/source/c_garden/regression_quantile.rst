@@ -291,5 +291,13 @@ Notebook
 Bilbiographie
 =============
 
+Des références sont disponibles sur la page de :epkg:`statsmodels` :
+`statsmodels <http://www.statsmodels.org/stable/generated/statsmodels.regression.quantile_regression.QuantReg.html>`_ ou
+là : `Régression quantile <https://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/ml2a/td2a_mlplus_regression_quantile.html>`_.
+
+.. [Koenker2017] `Quantile Regression, 40 years on <http://www.econ.uiuc.edu/~roger/courses/NIPE/handouts/QR40.pdf>`_,
+    Roger Koenker
+
 .. [Chen2014] `Fast Iteratively Reweighted Least Squares Algorithms for Analysis-Based Sparsity Reconstruction <https://arxiv.org/abs/1411.5057>`_
     Chen Chen, Junzhou Huang, Lei He, Hongsheng Li
+

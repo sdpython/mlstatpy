@@ -18,7 +18,7 @@ class TestVoronoi(ExtTestCase):
         add_missing_development_version(["mlinsights"], __file__, hide=True)
 
     def test_iris(self):
-        from src.mlstatpy.ml import voronoi_estimation_from_lr
+        from mlstatpy.ml import voronoi_estimation_from_lr
         data = load_iris()
         X, y = data.data[:, :2], data.target
         clr = LogisticRegression()
@@ -49,7 +49,7 @@ class TestVoronoi(ExtTestCase):
         self.assertIn('[voronoi_estimation_from_lr] iter=', std)
 
     def test_iris_dim4(self):
-        from src.mlstatpy.ml.voronoi import voronoi_estimation_from_lr
+        from mlstatpy.ml.voronoi import voronoi_estimation_from_lr
         data = load_iris()
         X, y = data.data[:, :4], data.target
         clr = LogisticRegression()
@@ -71,7 +71,7 @@ class TestVoronoi(ExtTestCase):
         self.assertEqualArray(points2, points2, decimal=5)
 
     def test_square(self):
-        from src.mlstatpy.ml.voronoi import voronoi_estimation_from_lr
+        from mlstatpy.ml.voronoi import voronoi_estimation_from_lr
 
         Xs = []
         Ys = []
@@ -95,7 +95,7 @@ class TestVoronoi(ExtTestCase):
         self.assertLesser(points.ravel().max(), 5)
 
     def test_hexa_scale(self):
-        from src.mlstatpy.ml.voronoi import voronoi_estimation_from_lr
+        from mlstatpy.ml.voronoi import voronoi_estimation_from_lr
 
         n = 4
         a = math.pi * 2 / 3
