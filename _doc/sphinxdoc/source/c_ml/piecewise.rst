@@ -14,7 +14,7 @@ cherche à découper en segment en approximant
 la variable à régresser *Y* par une constante sur chaque
 morceaux et non une droite.
 On peut se poser la question de comment faire
-pour construire à un algorithme qui découpe en approximant
+pour construire un algorithme qui découpe en approximant
 *Y* par une droite et non une constante. Le plus dur
 n'est pas de le faire mais de le faire efficacement.
 Et pour comprendre là où je veux vous emmener, il faudra
@@ -22,6 +22,17 @@ un peu de mathématiques.
 
 .. contents::
     :local:
+
+Une implémentation de ce type de méthode est proposée
+dans la pull request `Model trees (M5P and co)
+<https://github.com/scikit-learn/scikit-learn/issues/13106>`_
+qui répond à au problème posée dans
+`Model trees (M5P) <https://github.com/scikit-learn/scikit-learn/pull/13732>`_
+et originellement implémentée dans 
+`Building Model Trees <https://github.com/ankonzoid/LearningX/tree/master/advanced_ML/model_tree>`_.
+Cette dernière implémentation réestime les modèles comme l'implémentation
+décrite au paragraphe :ref:`l-decisiontree-reglin-piecewise-naive`
+qui extension à tout type de modèle.
 
 Problème et regréssion linéaire dans un espace à une dimension
 ==============================================================
@@ -190,6 +201,8 @@ probablement pas été envisagés car il n'existe pas de façon efficace
 de les implémenter. L'article [Acharya2016]_ étudie la possibilité
 de ne pas calculer la matrice :math:`A_k` pour tous les *k*.
 Mais ce n'est pas la direction choisie pour cet exposé.
+
+.. _l-decisiontree-reglin-piecewise-naive:
 
 Implémentation naïve d'une régression linéaire par morceaux
 ===========================================================
