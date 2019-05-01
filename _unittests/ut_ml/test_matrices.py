@@ -4,6 +4,7 @@
 """
 import unittest
 import numpy
+import numpy.random as rnd
 from pyquickhelper.pycode import ExtTestCase
 from mlstatpy.ml.matrices import gram_schmidt, linear_regression
 
@@ -51,12 +52,40 @@ class TestMatrices(ExtTestCase):
         z2 = m.T @ m
         self.assertEqual(z2, numpy.identity(2))
 
-    def test_lineear_regression(self):
+    def test_linear_regression(self):
         X = numpy.array([[1, 0.5, 0], [0, 0.4, 2]], dtype=float).T
         y = numpy.array([1, 1.3, 3.9])
         b1 = linear_regression(X, y)
         b2 = linear_regression(X, y, algo="gram")
         self.assertEqualArray(b1, b2)
+
+    def test_linear_regression_qr(self):
+        X = numpy.array([[1, 0.5, 0], [0, 0.4, 2]], dtype=float).T
+        y = numpy.array([1, 1.3, 3.9])
+        b1 = linear_regression(X, y)
+        b3 = linear_regression(X, y, algo="gram")
+        b2 = linear_regression(X, y, algo="qr")
+        self.assertEqualArray(b1, b3)
+        self.assertEqualArray(b1, b2)
+    
+    def test_linear_regression_qr3(self):
+        X = numpy.array([[1, 0.5, 0], [0, 0.4, 2], [0, 0.4, 2.1]], dtype=float).T
+        y = numpy.array([1, 1.3, 3.9])
+        b1 = linear_regression(X, y)
+        b3 = linear_regression(X, y, algo="gram")
+        b2 = linear_regression(X, y, algo="qr")
+        self.assertEqualArray(b1, b3)
+        self.assertEqualArray(b1, b2)
+    
+    def test_dim_lin_reg(self):
+        X = rnd.randn(100, 7)
+        eps = rnd.randn(100, 1) / 3
+        y = X.sum(axis=1).reshape((X.shape[0], 1)) + eps
+        b1 = linear_regression(X, y)
+        b3 = linear_regression(X, y, algo="gram")
+        b2 = linear_regression(X, y, algo="qr")
+        self.assertEqualArray(b1.ravel(), b3.ravel())
+        self.assertEqualArray(b1.ravel(), b2.ravel())
 
 
 if __name__ == "__main__":

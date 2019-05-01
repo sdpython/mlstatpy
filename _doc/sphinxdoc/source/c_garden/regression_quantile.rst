@@ -300,4 +300,3 @@ là : `Régression quantile <https://www.xavierdupre.fr/app/ensae_teaching_cs/he
 
 .. [Chen2014] `Fast Iteratively Reweighted Least Squares Algorithms for Analysis-Based Sparsity Reconstruction <https://arxiv.org/abs/1411.5057>`_
     Chen Chen, Junzhou Huang, Lei He, Hongsheng Li
-

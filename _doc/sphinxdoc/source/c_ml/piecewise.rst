@@ -28,7 +28,7 @@ dans la pull request `Model trees (M5P and co)
 <https://github.com/scikit-learn/scikit-learn/issues/13106>`_
 qui répond à au problème posée dans
 `Model trees (M5P) <https://github.com/scikit-learn/scikit-learn/pull/13732>`_
-et originellement implémentée dans 
+et originellement implémentée dans
 `Building Model Trees <https://github.com/ankonzoid/LearningX/tree/master/advanced_ML/model_tree>`_.
 Cette dernière implémentation réestime les modèles comme l'implémentation
 décrite au paragraphe :ref:`l-decisiontree-reglin-piecewise-naive`
