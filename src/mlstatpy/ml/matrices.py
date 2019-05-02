@@ -77,20 +77,73 @@ def linear_regression(X, y, algo=None):
     @param      y       targets
     @param      algo    None to use the standard algorithm
                         :math:`\\beta = (X'X)^{-1} X'y`,
-                        `'gram'`, `'qr'`, `'qr2'`
+                        `'gram'`, `'gramT'`, `'qr'`, `'qr2'`
     @return             beta
     """
     if algo is None:
         inv = numpy.linalg.inv(X.T @ X)
         return inv @ (X.T @ y)
     elif algo == "gram":
-        U, P = gram_schmidt(X.T, change=True)
-        gamma = U @ y
+        T, P = gram_schmidt(X.T, change=True)
+        gamma = T @ y
         return (gamma.T @ P).ravel()
     elif algo == "qr":
-        U, P = numpy.linalg.qr(X, "full")
-        P = numpy.linalg.inv(P)
-        gamma = (y.T @ U).ravel()
-        return (gamma @ P.T).ravel()
+        Q, R = numpy.linalg.qr(X, "full")
+        R = numpy.linalg.inv(R)
+        gamma = (y.T @ Q).ravel()
+        return (gamma @ R.T).ravel()
     else:
         raise ValueError("Unknwown algo='{}'.".format(algo))
+
+
+def norm2(X):
+    """
+    Computes the square norm for all rows of a
+    matrix.
+    """
+    return numpy.array([numpy.dot(X[i], X[i]) for i in range(X.shape[1])])
+
+
+def streaming_linear_regression(X, y, start=None, step=None):
+    """
+    Solves the linear regression problem,
+    find :math:`\\beta` which minimizes
+    :math:`\\norme{y - X\\beta}`, based on
+    the algorithm
+    :ref:`Streaming Linear Regression
+    <algo_reg_lin_gram_schmidt_streaming>`.
+
+    @param      X       features
+    @param      y       targets
+    @param      start   first row to start iteration
+    @param      step    streaming step
+    @return             beta
+    """
+    if start is None:
+        n = X.shape[0]
+        d = n % X.shape[1]
+        start = d + X.shape[1]
+    if step is None:
+        step = X.shape[1]
+    elif step < X.shape[1]:
+        raise ValueError("step={} must be >= X.shape[1]={}".format(
+            step, X.shape[1]))
+    Xs = X[:start]
+    Ts, Ps = gram_schmidt(Xs.T, change=True)
+    yi = y[:start]
+    Tys = Ts @ ys
+    beta = Tys.T @ Ps
+    yield beta.ravel()
+
+    pos = start + step
+    Tyi = Tys
+    while pos < X.shape[0]:
+        Xi = X[start:pos]
+        yi = y[start:pos]
+        Ti, Pi = gram_schmidt(Xi.T, change=True)
+        Tyi = (Ti @ yi / step + Tyi / start) * pos
+        beta = Tyi.T @ Pi
+        yield beta.ravel()
+        start = pos
+        pos += step
+        # not finished.

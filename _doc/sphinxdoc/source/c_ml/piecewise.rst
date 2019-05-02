@@ -359,9 +359,9 @@ On en déduit que :
 
     On dipose qu'un nuage de points :math:`(X_i, y_i)` avec
     :math:`X_i \in \R^d` et :math:`y_i \in \R`. Les points sont
-    triés selon une dimension. On note *X* la matrice composées
+    triés selon une dimension. On note *X* la matrice composée
     des lignes :math:`X_1, ..., X_n` et le vecteur colonne
-    :math:`(y_1, ..., y_n)`.
+    :math:`y=(y_1, ..., y_n)`.
     Il existe une matrice :math:`P` telle que :math:`P'P = I`
     et :math:`X'X = P'DP` avec *D* une matrice diagonale.
     On note :math:`X_{a..b}` la matrice constituée des lignes
@@ -402,7 +402,8 @@ L'idée est se servir cette orthonormalisation pour construire
 la matrice *P* de l'algortihme.
 
 La matrice :math:`P \in \mathcal{M}_{CC}` est constituée de
-*C* vecteurs propres :math:`(P_{[1]}, ..., P_{[C]})`. Avec les notations que
+*C* vecteurs ortonormaux :math:`(P_{[1]}, ..., P_{[C]})`.
+Avec les notations que
 j'ai utilisées jusqu'à présent :
 :math:`X_{[k]} = (X_{1k}, ..., X_{nk})`.
 On note la matrice identité :math:`I_C=I`.
@@ -410,22 +411,22 @@ On note la matrice identité :math:`I_C=I`.
 .. math::
 
     \begin{array}{rcl}
-    U_{[1]} &=& \frac{ X_{[1]} }{ \norme{X_{[1]}} } \\
+    T_{[1]} &=& \frac{ X_{[1]} }{ \norme{X_{[1]}} } \\
     P_{[1]} &=& \frac{ I_{[1]} }{ \norme{X_{[1]}} } \\
-    U_{[2]} &=& \frac{ X_{[2]} - <X_{[2]}, U_{[1]}> U_{[1]} }
-    { \norme{X_{[2]} - <X_{[2]}, U_{[1]}> U_{[1]}} } \\
-    P_{[2]} &=& \frac{ I_{[2]} - <X_{[2]}, U_{[1]}> U_{[1]} }
-    { \norme{X_{[2]} - <X_{[2]}, U_{[1]}> U_{[1]}} } \\
+    T_{[2]} &=& \frac{ X_{[2]} - <X_{[2]}, T_{[1]}> T_{[1]} }
+    { \norme{X_{[2]} - <X_{[2]}, T_{[1]}> T_{[1]}} } \\
+    P_{[2]} &=& \frac{ I_{[2]} - <X_{[2]}, T_{[1]}> T_{[1]} }
+    { \norme{X_{[2]} - <X_{[2]}, T_{[1]}> T_{[1]}} } \\
     ... && \\
-    U_{[k]} &=& \frac{ X_{[k]} - \sum_{i=1}^{k-1} <X_{[k]}, U_{[i]}> U_{[i]} }
-    { \norme{ X_{[2]} - \sum_{i=1}^{k-1} <X_{[k]}, U_{[i]}> U_{[i]} } } \\
-    P_{[k]} &=& \frac{ I_{[k]} - \sum_{i=1}^{k-1} <X_{[k]}, U_{[i]}> U_{[i]} }
-    { \norme{ X_{[2]} - \sum_{i=1}^{k-1} <X_{[k]}, U_{[i]}> U_{[i]} } } \\
+    T_{[k]} &=& \frac{ X_{[k]} - \sum_{i=1}^{k-1} <X_{[k]}, T_{[i]}> T_{[i]} }
+    { \norme{ X_{[2]} - \sum_{i=1}^{k-1} <X_{[k]}, T_{[i]}> T_{[i]} } } \\
+    P_{[k]} &=& \frac{ I_{[k]} - \sum_{i=1}^{k-1} <X_{[k]}, T_{[i]}> T_{[i]} }
+    { \norme{ X_{[2]} - \sum_{i=1}^{k-1} <X_{[k]}, T_{[i]}> T_{[i]} } } \\
     \end{array}
 
-La matrice *U* vérifie :math:`U'U` puisque les vecteurs sont
+La matrice *T* vérifie :math:`T'T=I` puisque les vecteurs sont
 construits de façon à être orthonormés. Et on vérifie que
-:math:`XP = U` et donc :math:`PXX'P' = I`.
+:math:`XP = T` et donc :math:`PXX'P' = I`.
 C'est implémenté par la fonction
 :func:`gram_schmidt <mlstatpy.ml.matrices.gram_schmidt>`.
 
@@ -461,6 +462,64 @@ de Gram-Schmidt qui est implémentée dans la fonction
 L'avantage est que cette formulation s'exprime
 uniquement à partir de produits scalaires.
 Voir le notebook :ref:`regressionnoinversionrst`.
+On résume l'algorithme de la régression avec l'orthonormalisation
+de Gram-Schmidt :
+
+.. mathdef::
+    :title: Régression linéaire avec Gram-Schmidt
+    :tag: Algorithme
+    :lid: algo_reg_lin_gram_schmidt
+
+    On dipose qu'un nuage de points :math:`(X_i, y_i)` avec
+    :math:`X_i \in \R^d` et :math:`y_i \in \R`. Les points sont
+    triés selon une dimension. On note *X* la matrice composée
+    des lignes :math:`X_1, ..., X_n` et le vecteur colonne
+    :math:`y=(y_1, ..., y_n)`. On cherche :math:`\beta^*` tel
+    qu'il minimise :math:`\min_\beta \sum_{i=1}^n (y_i - X_i \beta)^2`.
+
+    Soit :math:`T, P` les matrices qui résultent de l'orthonormalisation
+    de Gram-Schmidt de la matrice :math:`X'`,
+    alors :math:`X'P=T` et :math:`TT'=I` et
+    :math:`T` est une matrice triangulaire. On peut exprimer
+    :math:`\beta^*` comme :
+
+    .. math::
+
+        \beta^* = (X'X)^{-1} X' y = P' T y
+
+Streaming Linear Regression
+===========================
+
+Je ne sais pas vraiment comment le dire en français,
+peut-être *régression linéaire mouvante*. Même Google ou Bing
+garde le mot *streaming*... C'est néanmoins l'idée qu'il faut
+réussir à mettre en place d'une façon ou d'une autre car pour
+choisir le bon point de coupure pour un arbre de décision.
+On note :math:`X_{1..k}` la matrice composée
+des lignes :math:`X_1, ..., X_k` et le vecteur colonne
+:math:`y_{1..k}=(y_1, ..., y_k)`.
+L'apprentissage de l'arbre de décision
+faut calculer des régressions pour les problèmes
+:math:`(X_{1..i}, y_{1..i}), (X_{1..i+1}, y_{1..i+1})...`.
+L'idée que je propose n'est pas parfaite mais elle fonctionne
+à partir de l'idée de l'algorithme avec :ref:`Gram-Schmidt
+<algo_decision_tree_mselin>`.
+
+Tout d'abord, il faut imaginer un pseudo algorithme
+de Gram-Schmidt version streaming. Pour la matrice
+:math:`X'_{1..k}`, celui-ci produit deux matrices
+:math:`T_{1..k}` et :math:`P_{1..k}` telles que :
+:math:`X'_{1..k}P_{1..k}=T_{1..k}`. On note *d* la dimension
+des observations. On applique l'algorithme de
+*Gram-Schmidt* sur les *d* observations suivantes pour trouver
+:math:`X'_{k+1..k+d}P_{k+1..k+d}=T_{k+1..k+d}`.
+Les matrices *P* sont vérifient que :
+:math:`T_{1..k}T'_{1..k}=I_k` et
+:math:`T_{k+1..k+d}T'_{k+1..k+d}=I_d`.
+On construit la matrice *S* comme la concaténation
+des matrices :math:`S=[\frac{k}{k+d}T_{1..k}, \frac{d}{k+d}T_{k+1..k+d}]`.
+Cette nouvelle matrice n'est plus triangulaire mais elle
+vérifie :math:`S'S=I_{k+d}`.
 
 Implémentation
 ==============

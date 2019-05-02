@@ -41,14 +41,14 @@ class TestMatrices(ExtTestCase):
 
     def test_gram_schmidt_xx(self):
         X = numpy.array([[1, 0.5, 0], [0, 0.4, 2]], dtype=float).T
-        U, P = gram_schmidt(X.T, change=True)
+        T, P = gram_schmidt(X.T, change=True)
         P = P.T
-        U = U.T
+        T = T.T
         m = P.T @ X.T
         z = m @ m.T
         self.assertEqual(z, numpy.identity(2))
         m = X @ P
-        self.assertEqual(m, U)
+        self.assertEqual(m, T)
         z2 = m.T @ m
         self.assertEqual(z2, numpy.identity(2))
 
@@ -67,16 +67,17 @@ class TestMatrices(ExtTestCase):
         b2 = linear_regression(X, y, algo="qr")
         self.assertEqualArray(b1, b3)
         self.assertEqualArray(b1, b2)
-    
+
     def test_linear_regression_qr3(self):
-        X = numpy.array([[1, 0.5, 0], [0, 0.4, 2], [0, 0.4, 2.1]], dtype=float).T
+        X = numpy.array([[1, 0.5, 0], [0, 0.4, 2], [
+                        0, 0.4, 2.1]], dtype=float).T
         y = numpy.array([1, 1.3, 3.9])
         b1 = linear_regression(X, y)
         b3 = linear_regression(X, y, algo="gram")
         b2 = linear_regression(X, y, algo="qr")
         self.assertEqualArray(b1, b3)
         self.assertEqualArray(b1, b2)
-    
+
     def test_dim_lin_reg(self):
         X = rnd.randn(100, 7)
         eps = rnd.randn(100, 1) / 3
