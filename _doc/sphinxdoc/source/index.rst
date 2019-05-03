@@ -19,6 +19,7 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
     introduction
     c_clus/index
     c_ml/index
+    c_ml/index_reglin
     c_nlp/index
     c_metric/index
     c_dist/index

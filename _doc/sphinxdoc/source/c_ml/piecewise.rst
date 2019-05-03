@@ -34,8 +34,11 @@ Cette dernière implémentation réestime les modèles comme l'implémentation
 décrite au paragraphe :ref:`l-decisiontree-reglin-piecewise-naive`
 qui extension à tout type de modèle.
 
+Exploration
+===========
+
 Problème et regréssion linéaire dans un espace à une dimension
-==============================================================
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Tout d'abord, une petite
 illustration du problème avec la classe
@@ -205,7 +208,7 @@ Mais ce n'est pas la direction choisie pour cet exposé.
 .. _l-decisiontree-reglin-piecewise-naive:
 
 Implémentation naïve d'une régression linéaire par morceaux
-===========================================================
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 On part du cas général qui écrit la solution d'une régression
 linéaire comme étant la matrice :math:`A = (X'X)^{-1} X' Y`
@@ -222,7 +225,7 @@ C'est illustré toujours par le notebook
 :epkg:`DecisionTreeRegressor optimized for Linear Regression`.
 
 Aparté sur la continuité de la régression linéaire par morceaux
-===============================================================
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: optimisation sous contrainte, continuité
 
@@ -262,7 +265,7 @@ quelles sont les feuilles voisines.
 Et ça c'est un problème intéressant !
 
 Régression linéaire et corrélation
-==================================
+++++++++++++++++++++++++++++++++++
 
 On reprend le calcul multidimensionnel mais on s'intéresse au
 cas où la matrice :math:`X'X` est diagonale qui correspond au cas
@@ -284,7 +287,7 @@ pour laquelle les variables sont corrélées. Il suffit d'appliquer d'abord une
 :math:`X'X = P'DP` où la matrice *P* vérifie :math:`P'P = I`.
 
 Idée de l'algorithme
-====================
+++++++++++++++++++++
 
 On s'intéresser d'abord à la recherche d'un meilleur point de coupure.
 Pour ce faire, les éléments :math:`(X_i, y_i)` sont triés le plus souvent
@@ -380,7 +383,7 @@ On en déduit que :
         MSE(X, y, 1, t) + MSE(X, y, t+1, n)
 
 Un peu plus en détail dans l'algorithme
-=======================================
++++++++++++++++++++++++++++++++++++++++
 
 J'ai pensé à plein de choses pour aller plus loin car l'idée
 est de quantifier à peu près combien on pert en précision en utilisant
@@ -462,37 +465,129 @@ de Gram-Schmidt qui est implémentée dans la fonction
 L'avantage est que cette formulation s'exprime
 uniquement à partir de produits scalaires.
 Voir le notebook :ref:`regressionnoinversionrst`.
-On résume l'algorithme de la régression avec l'orthonormalisation
-de Gram-Schmidt :
+
+Synthèse mathématique
+=====================
 
 .. mathdef::
-    :title: Régression linéaire avec Gram-Schmidt
+    :title: Orthonormalisation de Gram-Schmidt
     :tag: Algorithme
-    :lid: algo_reg_lin_gram_schmidt
+    :lid: algo_gram_schmidt
 
-    On dipose qu'un nuage de points :math:`(X_i, y_i)` avec
-    :math:`X_i \in \R^d` et :math:`y_i \in \R`. Les points sont
-    triés selon une dimension. On note *X* la matrice composée
-    des lignes :math:`X_1, ..., X_n` et le vecteur colonne
-    :math:`y=(y_1, ..., y_n)`. On cherche :math:`\beta^*` tel
-    qu'il minimise :math:`\min_\beta \sum_{i=1}^n (y_i - X_i \beta)^2`.
-
-    Soit :math:`T, P` les matrices qui résultent de l'orthonormalisation
-    de Gram-Schmidt de la matrice :math:`X'`,
-    alors :math:`X'P=T` et :math:`TT'=I` et
-    :math:`T` est une matrice triangulaire. On peut exprimer
-    :math:`\beta^*` comme :
+    Soit une matrice :math:`X \in \mathcal{M}_{nd}` avec
+    :math:`n \supegal d`. Il existe deux matrices telles que
+    :math:`X P = T` ou :math:`P' X' = T'`.
+    :math:`P \in \mathcal{M}_{dd}` et :math:`T \in \mathcal{M}_{nd}`.
+    La matrice *T* est triangulaire supérieure
+    et vérifie :math:`T'T = I_d` (:math:`I_d`
+    est la matrice identité). L'algorithme se décrit
+    comme suit :
 
     .. math::
 
-        \beta^* = (X'X)^{-1} X' y = P' T y
+        \begin{array}{l}
+        \forall i \\
+        \quad x = X_{[i]} - \sum_{j < i} <T_{[j]}, X_{[i]}> T_{[j]} \\
+        \quad p = P_{[i]} - \sum_{j < i} <T_{[j]}, X_{[i]}> P_{[j]} \\
+        \quad T_{[i]} = \frac{x}{\norme{x}} \\
+        \quad P_{[i]} = \frac{p}{\norme{p}}
+        \end{array}
+
+.. mathdef::
+    :title: Régression linéaire après Gram-Schmidt
+    :tag: Théorème
+    :lid: algo_gram_schmidt_reglin
+
+    Soit une matrice :math:`X \in \mathcal{M}_{nd}` avec
+    :math:`n \supegal d`. Et un vecteur :math:`y \in \R^n`.
+    D'après l':ref:`algorithme de Gram-Schmidt <algo_gram_schmidt>`,
+    il existe deux matrices telles que
+    :math:`X P = T` ou :math:`P' X' = T'`.
+    :math:`P \in \mathcal{M}_{dd}` et :math:`T \in \mathcal{M}_{nd}`.
+    La matrice *T* est triangulaire supérieure
+    et vérifie :math:`T'T = I_d` (:math:`I_d`
+    est la matrice identité). Alors
+    :math:`\beta = T' y P' = (X'X)^{-1}X'y`.
+    :math:`\beta` est la solution du problème d'optimisation
+    :math:`\min_\beta \norme{y - X\beta}^2`.
+
+La démonstration est géométrique et reprend l'idée
+du paragraphe précédent. La solution de la régression
+peut être vu comme la projection du vecteur *y*
+sur l'espace vectoriel engendré par les vecteurs
+:math:`X_{[1]}, ..., X_{[d]}`.
+Par construction, cet espace est le même que celui
+engendré par :math:`T_{[1]}, ..., T_{[d]}`. Dans cette base,
+la projection de *y* a pour coordoonées
+:math:`<y, T_{[1]}>, ..., <y, T_{[d]}> = T' y`.
+On en déduit que la projection de *y* s'exprimer comme :
+
+.. math::
+
+    \hat{y} = \sum_{k=1}^d <y, T_{[k]}> T_{[k]}
+
+Il ne reste plus qu'à expremier cette projection
+dans la base initial *X*. On sait que
+:math:`T_{[k]} = X P_{[k]}`. On en déduit que ;
+
+.. math::
+
+    \begin{array}{rcl}
+    \hat{y} &=& \sum_{k=1}^d <y, T_{[k]}> X P_{[k]} \\
+    &=& \sum_{k=1}^d <y, T_{[k]}> \sum_{l=1}^d X_{[l]} P_{lk} \\
+    &=& \sum_{l=1}^d X_{[l]} \sum_{k=1}^d <y, T_{[k]}>  P_{lk} \\
+    &=& \sum_{l=1}^d X_{[l]} (T' y P_l) \\
+    &=& \sum_{l=1}^d X_{[l]} \beta_l
+    \end{array}
+
+D'où :math:`\beta = T' y P'`.
+L'implémentation suit :
+
+.. runpython::
+    :showcode:
+
+    import numpy
+    X = numpy.array([[1., 2., 3., 4.],
+                     [5., 6., 6., 6.],
+                     [5., 6., 7., 8.]]).T
+    Xt = X.T
+    Tt = numpy.empty(Xt.shape)
+    Pt = numpy.identity(X.shape[1])
+    for i in range(0, Xt.shape[0]):
+        Tt[i, :] = Xt[i, :]
+        for j in range(0, i):
+            d = numpy.dot(Tt[j, :], Xt[i, :])
+            Tt[i, :] -= Tt[j, :] * d
+            Pt[i, :] -= Pt[j, :] * d
+        d = numpy.dot(Tt[i, :], Tt[i, :])
+        if d > 0:
+            d **= 0.5
+            Tt[i, :] /= d
+            Pt[i, :] /= d
+
+    print("X")
+    print(X)
+    print("T")
+    print(Tt.T)
+    print("X P")
+    print(X @ Pt.T)
+    print("T T'")
+    print(Tt @ Tt.T)
+
+    beta1 = numpy.linalg.inv(Xt @ X) @ Xt @ y
+    beta2 = Tt @ y @ Pt
+    print("beta1")
+    print(beta1)
+    print("beta2")
+    print(beta2)
 
 Streaming Linear Regression
 ===========================
 
 Je ne sais pas vraiment comment le dire en français,
 peut-être *régression linéaire mouvante*. Même Google ou Bing
-garde le mot *streaming*... C'est néanmoins l'idée qu'il faut
+garde le mot *streaming* dans leur traduction...
+C'est néanmoins l'idée qu'il faut
 réussir à mettre en place d'une façon ou d'une autre car pour
 choisir le bon point de coupure pour un arbre de décision.
 On note :math:`X_{1..k}` la matrice composée
@@ -502,24 +597,28 @@ L'apprentissage de l'arbre de décision
 faut calculer des régressions pour les problèmes
 :math:`(X_{1..i}, y_{1..i}), (X_{1..i+1}, y_{1..i+1})...`.
 L'idée que je propose n'est pas parfaite mais elle fonctionne
-à partir de l'idée de l'algorithme avec :ref:`Gram-Schmidt
+pour l'idée de l'algorithme avec :ref:`Gram-Schmidt
 <algo_decision_tree_mselin>`.
 
-Tout d'abord, il faut imaginer un pseudo algorithme
+Tout d'abord, il faut imaginer un algorithme
 de Gram-Schmidt version streaming. Pour la matrice
 :math:`X'_{1..k}`, celui-ci produit deux matrices
 :math:`T_{1..k}` et :math:`P_{1..k}` telles que :
 :math:`X'_{1..k}P_{1..k}=T_{1..k}`. On note *d* la dimension
-des observations. On applique l'algorithme de
-*Gram-Schmidt* sur les *d* observations suivantes pour trouver
-:math:`X'_{k+1..k+d}P_{k+1..k+d}=T_{k+1..k+d}`.
-Les matrices *P* sont vérifient que :
-:math:`T_{1..k}T'_{1..k}=I_k` et
-:math:`T_{k+1..k+d}T'_{k+1..k+d}=I_d`.
-On construit la matrice *S* comme la concaténation
-des matrices :math:`S=[\frac{k}{k+d}T_{1..k}, \frac{d}{k+d}T_{k+1..k+d}]`.
-Cette nouvelle matrice n'est plus triangulaire mais elle
-vérifie :math:`S'S=I_{k+d}`.
+des observations. Comment faire pour ajouter une observation
+:math:`(X_{k+1}, y_{k+1})` ? L'idée d'un algorithme au format streaming
+est que le coût de la mise à jour pour l'itération *k+1*
+ne dépend pas de *k*.
+
+On suppose donc que :math:`(T_k, P_k)` sont les deux matrices
+retournées par l'algorithme de :ref:`algo_gram_schmidt <Gram-Schmidt>`.
+On construit la matrice :math:`V_{k+1} = [ T_k, X_{k+1} P_k ]` :
+on ajoute une ligne à la matrice :math:`T_k`. On applique
+une itération de algorithme de :ref:`algo_gram_schmidt <Gram-Schmidt>`
+pour obtenir :math:`(T_{k+1}, P)`. On en déduit que
+:math:`(T_{k+1}, P_{k+1}) = (T_{k+1}, P_k P)`. L'expression
+de la régression ne change pas mais il reste à l'expression
+de telle sorte que les expressions ne dépendent pas de *k*.
 
 Implémentation
 ==============

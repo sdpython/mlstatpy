@@ -104,7 +104,7 @@ def norm2(X):
     return numpy.array([numpy.dot(X[i], X[i]) for i in range(X.shape[1])])
 
 
-def streaming_linear_regression(X, y, start=None, step=None):
+def streaming_gram_schmidt(X, y, start=None):
     """
     Solves the linear regression problem,
     find :math:`\\beta` which minimizes
@@ -116,34 +116,16 @@ def streaming_linear_regression(X, y, start=None, step=None):
     @param      X       features
     @param      y       targets
     @param      start   first row to start iteration
-    @param      step    streaming step
     @return             beta
     """
     if start is None:
         n = X.shape[0]
         d = n % X.shape[1]
         start = d + X.shape[1]
-    if step is None:
-        step = X.shape[1]
-    elif step < X.shape[1]:
-        raise ValueError("step={} must be >= X.shape[1]={}".format(
-            step, X.shape[1]))
     Xs = X[:start]
-    Ts, Ps = gram_schmidt(Xs.T, change=True)
-    yi = y[:start]
-    Tys = Ts @ ys
-    beta = Tys.T @ Ps
-    yield beta.ravel()
+    Tk, Pk = gram_schmidt(Xs.T, change=True)
+    yield Tk, Pk
 
-    pos = start + step
-    Tyi = Tys
-    while pos < X.shape[0]:
-        Xi = X[start:pos]
-        yi = y[start:pos]
-        Ti, Pi = gram_schmidt(Xi.T, change=True)
-        Tyi = (Ti @ yi / step + Tyi / start) * pos
-        beta = Tyi.T @ Pi
-        yield beta.ravel()
-        start = pos
-        pos += step
-        # not finished.
+    k = start
+    while k < X.shape[0]:
+        raise NotImplementedError("to be finished soon")

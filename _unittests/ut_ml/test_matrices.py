@@ -88,6 +88,37 @@ class TestMatrices(ExtTestCase):
         self.assertEqualArray(b1.ravel(), b3.ravel())
         self.assertEqualArray(b1.ravel(), b2.ravel())
 
+    def test_inner_code(self):
+
+        X = numpy.array([[1., 2., 3., 4.],
+                         [5., 6., 6., 6.],
+                         [5., 6., 7., 8.]]).T
+        y = numpy.array([0.1, 0.2, 0.19, 0.29])
+        Xt = X.T
+        Tt = numpy.empty(Xt.shape)
+        Pt = numpy.identity(X.shape[1])
+        for i in range(0, Xt.shape[0]):
+            Tt[i, :] = Xt[i, :]
+            for j in range(0, i):
+                d = numpy.dot(Tt[j, :], Xt[i, :])
+                Tt[i, :] -= Tt[j, :] * d
+                Pt[i, :] -= Pt[j, :] * d
+            d = numpy.dot(Tt[i, :], Tt[i, :])
+            if d > 0:
+                d **= 0.5
+                Tt[i, :] /= d
+                Pt[i, :] /= d
+
+        self.assertEqual(Tt.shape, Xt.shape)
+        self.assertEqual(Pt.shape, (X.shape[1], X.shape[1]))
+        _Tt = Pt @ Xt
+        self.assertEqualArray(_Tt, Tt)
+        self.assertEqualArray(Tt @ Tt.T, numpy.identity(Tt.shape[0]))
+
+        beta1 = numpy.linalg.inv(Xt @ X) @ Xt @ y
+        beta2 = Tt @ y @ Pt
+        self.assertEqualArray(beta1, beta2)
+
 
 if __name__ == "__main__":
     unittest.main()
