@@ -6,7 +6,7 @@ import unittest
 import numpy
 import numpy.random as rnd
 from pyquickhelper.pycode import ExtTestCase
-from mlstatpy.ml.matrices import gram_schmidt, linear_regression
+from mlstatpy.ml.matrices import gram_schmidt, linear_regression, streaming_gram_schmidt
 
 
 class TestMatrices(ExtTestCase):
@@ -118,6 +118,33 @@ class TestMatrices(ExtTestCase):
         beta1 = numpy.linalg.inv(Xt @ X) @ Xt @ y
         beta2 = Tt @ y @ Pt
         self.assertEqualArray(beta1, beta2)
+
+    def test_streaming_gram_schmidt(self):
+        X = numpy.array([[1, 0.5, 10., 5., -2.],
+                         [0, 0.4, 20, 4., 2.]], dtype=float).T
+        Xt = X.T
+        algo1 = []
+        algo1_t = []
+        for i in range(2, Xt.shape[1] + 1):
+            t, p = gram_schmidt(Xt[:, :i], change=True)
+            algo1_t.append(t)
+            algo1.append(p)
+        algo2 = []
+        for i, p in enumerate(streaming_gram_schmidt(Xt)):
+            p2 = p.copy()
+            print("******", i, "**", p2.shape, Xt[:, :i + 2].shape)
+            print(algo1[i])
+            print(p2)
+            print("*")
+            print(algo1_t[i])
+            print(p2 @ Xt[:, :i + 2])
+            algo2.append(p2)
+            #self.assertEqualArray(p2, algo1[i])
+            t2 = p2 @ Xt[:, :i + 2]
+            #self.assertEqualArray(algo1_t[i], t)
+            self.assertNotEmpty(t2)
+            self.assertNotEmpty(p2)
+        self.assertEqual(len(algo1), len(algo2))
 
 
 if __name__ == "__main__":

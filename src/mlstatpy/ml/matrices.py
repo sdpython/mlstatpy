@@ -7,7 +7,7 @@ import numpy
 import numpy.linalg
 
 
-def gram_schmidt(mat, change=False, modified=True):
+def gram_schmidt(mat, change=False):
     """
     Applies the `Gram–Schmidt process
     <https://en.wikipedia.org/wiki/Gram%E2%80%93Schmidt_process>`_.
@@ -15,16 +15,33 @@ def gram_schmidt(mat, change=False, modified=True):
 
     @param      mat         matrix
     @param      change      returns the matrix to change the basis
-    @param      modified    modified version,
-                            normalize each time it is possible
     @return                 new matrix or (new matrix, change matrix)
+
+    The function assumes the matrix *mat* is
+    horizontal: it has more columns than rows.
 
     .. note::
         The implementation could be improved
         by directly using :epkg:`BLAS` function.
+
+    .. runpython::
+        :showcode:
+
+        import numpy
+        from mlstatpy.ml.matrices import gram_schmidt
+
+        X = numpy.array([[1., 2., 3., 4.],
+                         [5., 6., 6., 6.],
+                         [5., 6., 7., 8.]])
+        T, P = gram_schmidt(X, change=True)
+        print(T)
+        print(P)
     """
     if len(mat.shape) != 2:
         raise ValueError("mat must be a matrix.")
+    if mat.shape[1] < mat.shape[0]:
+        raise RuntimeError("The function only works if the number of rows is less "
+                           "than the number of column.")
     if change:
         base = numpy.identity(mat.shape[0])
     # The following code is equivalent to:
@@ -79,6 +96,19 @@ def linear_regression(X, y, algo=None):
                         :math:`\\beta = (X'X)^{-1} X'y`,
                         `'gram'`, `'gramT'`, `'qr'`, `'qr2'`
     @return             beta
+
+    .. runpython::
+        :showcode:
+
+        import numpy
+        from mlstatpy.ml.matrices import linear_regression
+
+        X = numpy.array([[1., 2., 3., 4.],
+                         [5., 6., 6., 6.],
+                         [5., 6., 7., 8.]]).T
+        y = numpy.array([0.1, 0.2, 0.19, 0.29])
+        beta = linear_regression(X, y)
+        print(beta)
     """
     if algo is None:
         inv = numpy.linalg.inv(X.T @ X)
@@ -104,28 +134,62 @@ def norm2(X):
     return numpy.array([numpy.dot(X[i], X[i]) for i in range(X.shape[1])])
 
 
-def streaming_gram_schmidt(X, y, start=None):
+def streaming_gram_schmidt_update(Xi, Pk):
+    """
+    Updates matrix :math:`P_k` to produce :math:`P_{k+1}`
+    which is the matrix *P* in algorithm
+    :ref:`Streaming Linear Regression
+    <algo_reg_lin_gram_schmidt_streaming>`.
+    The function modifies the matrix *Pk*
+    given as an input.
+
+    @param      Xi      ith row
+    @param      Pk      matrix *P* at iteration *k*
+    """
+    pxi = Pk @ Xi
+    tki = numpy.empty(Xi.shape)
+
+    for i in range(0, Pk.shape[0]):
+        tki[i] = pxi[i]
+        for j in range(0, i):
+            d = tki[j] * pxi[i]
+            tki[i] -= tki[j] * d
+            Pk[i, :] -= Pk[j, :] * d
+        d = tki[i] ** 2 + 1
+        if d > 0:
+            d **= 0.5
+            tki[i] /= d
+            Pk[i, :] /= d
+
+
+def streaming_gram_schmidt(mat, start=None):
     """
     Solves the linear regression problem,
     find :math:`\\beta` which minimizes
     :math:`\\norme{y - X\\beta}`, based on
-    the algorithm
-    :ref:`Streaming Linear Regression
+    algorithm :ref:`Streaming Linear Regression
     <algo_reg_lin_gram_schmidt_streaming>`.
 
-    @param      X       features
-    @param      y       targets
-    @param      start   first row to start iteration
-    @return             beta
+    @param      mat     matrix
+    @param      start   first row to start iteration, ``X.shape[1]`` by default
+    @return             iterator on
+
+    The function assumes the matrix *mat* is
+    horizontal: it has more columns than rows.
     """
+    if len(mat.shape) != 2:
+        raise ValueError("mat must be a matrix.")
+    if mat.shape[1] < mat.shape[0]:
+        raise RuntimeError("The function only works if the number of rows is less "
+                           "than the number of column.")
     if start is None:
-        n = X.shape[0]
-        d = n % X.shape[1]
-        start = d + X.shape[1]
-    Xs = X[:start]
-    Tk, Pk = gram_schmidt(Xs.T, change=True)
-    yield Tk, Pk
+        start = mat.shape[0]
+    mats = mat[:, :start]
+    _, Pk = gram_schmidt(mats, change=True)
+    yield Pk
 
     k = start
-    while k < X.shape[0]:
-        raise NotImplementedError("to be finished soon")
+    while k < mat.shape[1]:
+        streaming_gram_schmidt_update(mat[:, k], Pk)
+        yield Pk
+        k += 1

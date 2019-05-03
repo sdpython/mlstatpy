@@ -507,7 +507,7 @@ Synthèse mathématique
     La matrice *T* est triangulaire supérieure
     et vérifie :math:`T'T = I_d` (:math:`I_d`
     est la matrice identité). Alors
-    :math:`\beta = T' y P' = (X'X)^{-1}X'y`.
+    :math:`\beta = T' y P' = X P y P' = (X'X)^{-1}X'y`.
     :math:`\beta` est la solution du problème d'optimisation
     :math:`\min_\beta \norme{y - X\beta}^2`.
 
@@ -574,12 +574,18 @@ L'implémentation suit :
     print("T T'")
     print(Tt @ Tt.T)
 
+    y = numpy.array([0.1, 0.2, 0.19, 0.29])
     beta1 = numpy.linalg.inv(Xt @ X) @ Xt @ y
     beta2 = Tt @ y @ Pt
     print("beta1")
     print(beta1)
     print("beta2")
     print(beta2)
+
+La librairie implémente ces deux algorithmes de manière un peu
+plus efficace dans les fonctions
+:func:`gram_schmidt <mlstatpy.ml.matrices.gram_schmidt>` et
+:func:`linear_regression <mlstatpy.ml.matrices.linear_regression>`.
 
 Streaming Linear Regression
 ===========================
@@ -619,6 +625,8 @@ pour obtenir :math:`(T_{k+1}, P)`. On en déduit que
 :math:`(T_{k+1}, P_{k+1}) = (T_{k+1}, P_k P)`. L'expression
 de la régression ne change pas mais il reste à l'expression
 de telle sorte que les expressions ne dépendent pas de *k*.
+Comme :math:`T_k = X P_k`, la seule matrice qui nous intéresse
+véritablement est :math:`P_k`.
 
 Implémentation
 ==============
