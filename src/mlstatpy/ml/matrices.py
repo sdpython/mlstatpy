@@ -146,20 +146,24 @@ def streaming_gram_schmidt_update(Xi, Pk):
     @param      Xi      ith row
     @param      Pk      matrix *P* at iteration *k*
     """
-    pxi = Pk @ Xi
-    tki = numpy.empty(Xi.shape)
+    tki = Pk @ Xi
+    idi = numpy.identity(Pk.shape[0])
 
     for i in range(0, Pk.shape[0]):
-        tki[i] = pxi[i]
+        val = tki[i]
         for j in range(0, i):
-            d = tki[j] * pxi[i]
+            d = tki[j] * val
             tki[i] -= tki[j] * d
             Pk[i, :] -= Pk[j, :] * d
-        d = tki[i] ** 2 + 1
+            idi[i, :] -= idi[j, :] * d
+
+        d = numpy.square(idi[i, :]).sum()
+        d = tki[i] ** 2 + d
         if d > 0:
             d **= 0.5
             tki[i] /= d
             Pk[i, :] /= d
+            idi[i, :] /= d
 
 
 def streaming_gram_schmidt(mat, start=None):

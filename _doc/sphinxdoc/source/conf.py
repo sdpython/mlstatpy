@@ -132,8 +132,11 @@ epkg_dictionary.update({
     'ICML 2016': 'https://icml.cc/2016/index.html',
     "LAESA": "https://tavianator.com/aesa/",
     'LAPACK': 'http://www.netlib.org/lapack/',
+    'Predictable t-SNE': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/predictable_tsne.html',
     "R-tree": "https://en.wikipedia.org/wiki/R-tree",
     "R* tree": "https://en.wikipedia.org/wiki/R*_tree",
+    'Regression with confidence interval': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/regression_confidence_interval.html',
     'ROC': 'https://fr.wikipedia.org/wiki/Courbe_ROC',
+    'Visualize a scikit-learn pipeline': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/visualize_pipeline.html',
     "X-tree": "https://en.wikipedia.org/wiki/X-tree",
 })

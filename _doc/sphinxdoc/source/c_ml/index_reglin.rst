@@ -1,4 +1,6 @@
 
+.. _l-reglin-variations:
+
 ##########################################
 Régressions linéaires et autres variations
 ##########################################

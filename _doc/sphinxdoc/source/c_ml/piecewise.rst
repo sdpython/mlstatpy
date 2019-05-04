@@ -485,12 +485,12 @@ Synthèse mathématique
 
     .. math::
 
-        \begin{array}{l}
-        \forall i \\
-        \quad x = X_{[i]} - \sum_{j < i} <T_{[j]}, X_{[i]}> T_{[j]} \\
-        \quad p = P_{[i]} - \sum_{j < i} <T_{[j]}, X_{[i]}> P_{[j]} \\
-        \quad T_{[i]} = \frac{x}{\norme{x}} \\
-        \quad P_{[i]} = \frac{p}{\norme{p}}
+        \begin{array}{ll}
+        \forall i \in & range(1, d) \\
+        & x_i = X_{[i]} - \sum_{j < i} <T_{[j]}, X_{[i]}> T_{[j]} \\
+        & p_i = P_{[i]} - \sum_{j < i} <T_{[j]}, X_{[i]}> P_{[j]} \\
+        & T_{[i]} = \frac{x_i}{\norme{x_i}} \\
+        & P_{[i]} = \frac{p_i}{\norme{p_i}}
         \end{array}
 
 .. mathdef::
@@ -625,8 +625,43 @@ pour obtenir :math:`(T_{k+1}, P)`. On en déduit que
 :math:`(T_{k+1}, P_{k+1}) = (T_{k+1}, P_k P)`. L'expression
 de la régression ne change pas mais il reste à l'expression
 de telle sorte que les expressions ne dépendent pas de *k*.
-Comme :math:`T_k = X P_k`, la seule matrice qui nous intéresse
+Comme :math:`T_k = X_{[1..k]} P_k`, la seule matrice qui nous intéresse
 véritablement est :math:`P_k`.
+
+Maintenant, on considère la matrice :math:`T_{[1..k]}` qui vérifie
+:math:`T_k'T_k = I_d` et on ajoute une ligne
+:math:`X_{k+1} P_k` pour former
+:math:`[ [T_k] [X_{k+1} P_k] ] = [ [X_{[1..k]} P_k] [X_{k+1} P_k] ]`.
+La fonction :func:`streaming_gram_schmidt_update
+<mlstatpy.ml.matrices.streaming_gram_schmidt_update>`
+implémente la mise à jour. Le coût de la fonction est en
+:math:`O(d^2)`.
+
+.. runpython::
+    :showcode:
+
+    import numpy
+    from mlstatpy.ml.matrices import streaming_gram_schmidt_update, gram_schmidt
+
+    X = numpy.array([[1, 0.5, 10., 5., -2.],
+                     [0, 0.4, 20, 4., 2.],
+                     [0, 0.7, 20, 4., 2.]], dtype=float).T
+    Xt = X.T
+
+    Tk, Pk = gram_schmidt(X[:3].T, change=True)
+    print("k={}".format(3))
+    print(Pk)
+    Tk = X[:3] @ Pk.T
+    print(Tk.T @ Tk)
+
+    k = 3
+    while k < X.shape[0]:
+        streaming_gram_schmidt_update(Xt[:, k], Pk)
+        k += 1
+        print("k={}".format(k))
+        print(Pk)
+        Tk = X[:k] @ Pk.T
+        print(Tk.T @ Tk)
 
 Implémentation
 ==============
