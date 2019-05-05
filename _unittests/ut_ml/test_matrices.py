@@ -140,7 +140,7 @@ class TestMatrices(ExtTestCase):
                 self.assertEqualArray(t @ t.T, idd)
                 self.assertEqualArray(t_.T @ t_, idd)
             algo2 = []
-            self.assertRaise(lambda: list(streaming_gram_schmidt(X)),
+            self.assertRaise(lambda: list(streaming_gram_schmidt(X)),  # pylint: disable=W0640
                              RuntimeError)
             for i, p in enumerate(streaming_gram_schmidt(Xt)):
                 p2 = p.copy()
@@ -166,7 +166,7 @@ class TestMatrices(ExtTestCase):
                 bk = linear_regression(X[:i], y[:i])
                 algo1.append(bk)
             algo2 = []
-            self.assertRaise(lambda: list(streaming_linear_regression(X.T, y)),
+            self.assertRaise(lambda: list(streaming_linear_regression(X.T, y)),  # pylint: disable=W0640
                              RuntimeError)
             for i, bk in enumerate(streaming_linear_regression(X, y)):
                 algo2.append(bk.copy())
@@ -189,7 +189,7 @@ class TestMatrices(ExtTestCase):
                 bk = linear_regression(X[:i], y[:i])
                 algo1.append(bk)
             algo2 = []
-            self.assertRaise(lambda: list(streaming_linear_regression_gram_schmidt(X.T, y)),
+            self.assertRaise(lambda: list(streaming_linear_regression_gram_schmidt(X.T, y)),  # pylint: disable=W0640
                              RuntimeError)
             for i, bk in enumerate(streaming_linear_regression_gram_schmidt(X, y)):
                 algo2.append(bk.copy())

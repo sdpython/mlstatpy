@@ -158,11 +158,19 @@ def streaming_gram_schmidt_update(Xk, Pk):
 
     for i in range(0, Pk.shape[0]):
         val = tki[i]
-        for j in range(0, i):
-            d = tki[j] * val
-            tki[i] -= tki[j] * d
-            Pk[i, :] -= Pk[j, :] * d
-            idi[i, :] -= idi[j, :] * d
+
+        if i > 0:
+            # for j in range(0, i):
+            #    d = tki[j] * val
+            #    tki[i] -= tki[j] * d
+            #    Pk[i, :] -= Pk[j, :] * d
+            #    idi[i, :] -= idi[j, :] * d
+
+            dv = tki[:i] * val
+            tki[i] -= numpy.dot(dv, tki[:i])
+            dv = dv.reshape((i, 1))
+            Pk[i, :] -= numpy.multiply(Pk[:i, :], dv).sum(axis=0)
+            idi[i, :] -= numpy.multiply(idi[:i, :], dv).sum(axis=0)
 
         d = numpy.square(idi[i, :]).sum()
         d = tki[i] ** 2 + d
