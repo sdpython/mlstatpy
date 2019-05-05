@@ -208,7 +208,7 @@ def streaming_gram_schmidt(mat, start=None):
                          [0, 0.7, 20, 4., 2.]], dtype=float).T
 
         for i, p in enumerate(streaming_gram_schmidt(X.T)):
-            print("iteration", i, "\n", p)
+            print("iteration", i, "\\n", p)
             t = X[:i+3] @ p.T
             print(t.T @ t)
     """
