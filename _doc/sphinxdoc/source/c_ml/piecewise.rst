@@ -1,4 +1,6 @@
 
+.. _l-reglin-piecewise-streaming:
+
 ================================
 Régression linéaire par morceaux
 ================================
@@ -185,7 +187,7 @@ les valeurs :math:`X_{i<k} < Y_{i<k}`. D'après ce qui précède,
 cela paraît tout-à-fait possible. Mais dans le
 `cas multidimensionnel
 <https://fr.wikipedia.org/wiki/R%C3%A9gression_lin%C3%A9aire#Estimateur_des_moindres_carr%C3%A9s>`_,
-il faut déterminer la vecteur *A* qui minimise :math:`\sum_{k=1}^n \norme{Y - XA}^2`
+il faut déterminer le vecteur *A* qui minimise :math:`\sum_{k=1}^n \norme{Y - XA}^2`
 ce qui donne :math:`A = (X'X)^{-1} X' Y`. Si on note :math:`M_{1..k}` la matrice
 *M* tronquée pour ne garder que ses *k* premières lignes, il faudrait pouvoir
 calculer rapidement :
@@ -195,15 +197,18 @@ calculer rapidement :
     A_{k-1} - A_k = (X_{1..k-1}'X_{1..k-1})^{-1} X'_{1..k-1} Y_{1..k-1} -
     (X_{1..k}'X_{1..k})^{-1} X'_{1..k} Y_{1..k}
 
-Pas simple... La documentation de :epkg:`sklearn:tree:DecisionTreeRegressor`
+La documentation de :epkg:`sklearn:tree:DecisionTreeRegressor`
 ne mentionne que deux critères pour apprendre un arbre de décision
 de régression, *MSE* pour
 :epkg:`sklearn:metrics:mean_squared_error` et *MAE* pour
 :epkg:`sklearn:metrics:mean_absolute_error`. Les autres critères n'ont
-probablement pas été envisagés car il n'existe pas de façon efficace
-de les implémenter. L'article [Acharya2016]_ étudie la possibilité
+probablement pas été envisagés. L'article [Acharya2016]_ étudie la possibilité
 de ne pas calculer la matrice :math:`A_k` pour tous les *k*.
-Mais ce n'est pas la direction choisie pour cet exposé.
+Le paragraphe :ref:`l-piecewise-linear-regression` utilise
+le fait que la matrice *A* est la solution d'un problème d'optimisation
+quadratique et propose un algorithme de mise à jour de la matrice *A*
+(cas unidimensionnel). Cet exposé va un peu plus loin
+pour proposer une version qui ne calcule pas de matrices inverses.
 
 .. _l-decisiontree-reglin-piecewise-naive:
 
@@ -220,7 +225,7 @@ on peut utiliser la librairie :epkg:`LAPACK`. Je ne vais pas plus loin
 ici car cela serait un peu hors sujet mais ce n'était pas une partie
 de plaisir. Cela donne :
 `piecewise_tree_regression_criterion_linear.pyx
-<https://github.com/sdpython/mlinsights/blob/master/src/mlinsights/mlmodel/piecewise_tree_regression_criterion_linear.pyx>`_
+<https://github.com/sdpython/mlinsights/blob/master/mlinsights/mlmodel/piecewise_tree_regression_criterion_linear.pyx>`_
 C'est illustré toujours par le notebook
 :epkg:`DecisionTreeRegressor optimized for Linear Regression`.
 
@@ -382,6 +387,10 @@ On en déduit que :
 
         MSE(X, y, 1, t) + MSE(X, y, t+1, n)
 
+Par la suite on verra que le fait que la matrice soit diagonale est l'élément
+principal mais la matrice *P* ne doit pas nécessairement
+vérifier :math:`P'P=I`.
+
 Un peu plus en détail dans l'algorithme
 +++++++++++++++++++++++++++++++++++++++
 
@@ -435,6 +444,7 @@ C'est implémenté par la fonction
 
 .. runpython::
     :showcode:
+    :warningout: RuntimeWarning
 
     import numpy
     from mlstatpy.ml.matrices import gram_schmidt
@@ -507,7 +517,7 @@ Synthèse mathématique
     La matrice *T* est triangulaire supérieure
     et vérifie :math:`T'T = I_d` (:math:`I_d`
     est la matrice identité). Alors
-    :math:`\beta = T' y P' = X P y P' = (X'X)^{-1}X'y`.
+    :math:`\beta = T' y P' = P' X' y P' = (X'X)^{-1}X'y`.
     :math:`\beta` est la solution du problème d'optimisation
     :math:`\min_\beta \norme{y - X\beta}^2`.
 
@@ -587,8 +597,13 @@ plus efficace dans les fonctions
 :func:`gram_schmidt <mlstatpy.ml.matrices.gram_schmidt>` et
 :func:`linear_regression <mlstatpy.ml.matrices.linear_regression>`.
 
-Streaming Linear Regression
-===========================
+Streaming
+=========
+
+.. _l-stream-gram-schmidt:
+
+Streaming Gram-Schmidt
+++++++++++++++++++++++
 
 Je ne sais pas vraiment comment le dire en français,
 peut-être *régression linéaire mouvante*. Même Google ou Bing
@@ -663,8 +678,153 @@ implémente la mise à jour. Le coût de la fonction est en
         Tk = X[:k] @ Pk.T
         print(Tk.T @ Tk)
 
-Implémentation
-==============
+.. _l-piecewise-linear-regression:
+
+Streaming Linear Regression
++++++++++++++++++++++++++++
+
+Je reprends l'idée introduite dans l'article
+`Efficient online linear regression
+<https://stats.stackexchange.com/questions/6920/efficient-online-linear-regression>`_.
+On cherche à minimiser :math:`L(\beta)=\norme{y - X\beta}^2` et le vecteur
+solution annuler le gradient : :math:`\nabla(\beta) = -2X'(y - X\beta) = 0`.
+On note le vecteur :math:`\beta_k` qui vérifie
+:math:`\nabla(\beta_k) = -2X_{1..k}'(y_{1..k} - X_{1..k}\beta_k) = 0`.
+Qu'en est-il de :math:`\beta_{k+1}` ?
+On note :math:`\beta_{k+1} = \beta_k + d\beta`.
+
+.. math::
+
+    \begin{array}{rcl}
+    \nabla(\beta_{k+1}) &=& -2X_{1..k+1}'(y_{1..k+1} - X_{1..k+1}(\beta_k + d\beta)) \\
+    &=& -2 [ X_{1..k}' X_{k+1}' ] ( [ y_{1..k} y_{k+1} ] - [ X_{1..k} X_{k+1} ]'(\beta_k + d\beta)) \\
+    &=& -2 X_{1..k}' ( y_{1..k} - X_{1..k} (\beta_k + d\beta))
+    -2 X_{k+1}' ( y_{k+1} - X_{k+1} (\beta_k + d\beta)) \\
+    &=& 2 X_{1..k}' X_{1..k} d\beta -2 X_{k+1}' ( y_{k+1} - X_{k+1} (\beta_k + d\beta)) \\
+    &=& 2 (X_{1..k}' X_{1..k} + X_{k+1}' X_{k+1}) d\beta - 2 X_{k+1}' (y_{k+1} - X_{k+1} \beta_k)
+    \end{array}
+
+On en déduit la valeur :math:`d\beta` qui annule le gradient.
+On peut décliner cette formule en version streaming.
+C'est ce qu'implémente la fonction
+:func:`streaming_linear_regression_update
+<mlstatpy.ml.matrices.streaming_linear_regression_update>`.
+Le coût de l'algorithme est en :math:`O(d^3)`.
+L'inconvénient de cet algorithme est qu'il requiert des
+matrices inversibles. C'est souvent le cas et la probabilité
+que cela ne le soit pas décroît avec *k*. C'est un petit
+inconvénient compte tenu de la simplicité de l'implémentation.
+On vérifie que tout fonction bien sur un exemple.
+
+.. runpython::
+    :showcode:
+
+    import numpy
+
+    def linear_regression(X, y):
+        inv = numpy.linalg.inv(X.T @ X)
+        return inv @ (X.T @ y)
+
+    def streaming_linear_regression_update(Xk, yk, XkXk, bk):
+        Xk = Xk.reshape((1, XkXk.shape[0]))
+        xxk = Xk.T @ Xk
+        XkXk += xxk
+        err = Xk.T * (yk - Xk @ bk)
+        bk[:] += (numpy.linalg.inv(XkXk) @ err).flatten()
+
+    def streaming_linear_regression(mat, y, start=None):
+        if start is None:
+            start = mat.shape[1]
+
+        Xk = mat[:start]
+        XkXk = Xk.T @ Xk
+        bk = numpy.linalg.inv(XkXk) @ (Xk.T @ y[:start])
+        yield bk
+
+        k = start
+        while k < mat.shape[0]:
+            streaming_linear_regression_update(mat[k], y[k:k+1], XkXk, bk)
+            yield bk
+            k += 1
+
+    X  = numpy.array([[1, 0.5, 10., 5., -2.],
+                      [0, 0.4, 20, 4., 2.],
+                      [0, 0.7, 20, 4., 3.]], dtype=float).T
+    y  = numpy.array([1., 0.3, 10, 5.1, -3.])
+
+    for i, bk in enumerate(streaming_linear_regression(X, y)):
+        bk0 = linear_regression(X[:i+3], y[:i+3])
+        print("iteration", i, bk, bk0)
+
+.. _l-piecewise-linear-regression-gram_schmidt:
+
+Streaming Linear Regression version Gram-Schmidt
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+L'algorithme reprend le théorème
+:ref:`Régression linéaire après Gram-Schmidt <algo_gram_schmidt_reglin>`
+et l'algorithme :ref:`l-stream-gram-schmidt`. Tout tient dans cette formule :
+:math:`\beta_k = P_k' X_{1..k}' y_{1..k} P_k'` qu'on écrit différemment
+en considérent l'associativité de la multiplication des matrices :
+:math:`\beta_k = P_k' (X_{1..k}' y_{1..k}) P_k'`. La matrice centrale
+a pour dimension *d*. L'exemple suivant implémente cette idée.
+Il s'appuie sur les fonctions :func:`streaming_gram_schmidt_update
+<mlstatpy.ml.matrices.streaming_gram_schmidt_update>` et
+:func:`gram_schmidt <mlstatpy.ml.matrices.gram_schmidt>`.
+
+.. runpython::
+    :showcode:
+
+    import numpy
+    from mlstatpy.ml.matrices import gram_schmidt, streaming_gram_schmidt_update
+
+    def linear_regression(X, y):
+        inv = numpy.linalg.inv(X.T @ X)
+        return inv @ (X.T @ y)
+
+    def streaming_linear_regression_gram_schmidt_update(Xk, yk, Xkyk, Pk, bk):
+        Xk = Xk.T
+        streaming_gram_schmidt_update(Xk, Pk)
+        Xkyk += (Xk * yk).reshape(Xkyk.shape)
+        bk[:] = Pk @ Xkyk @ Pk
+
+    def streaming_linear_regression_gram_schmidt(mat, y, start=None):
+        if start is None:
+            start = mat.shape[1]
+
+        Xk = mat[:start]
+        xyk = Xk.T @ y[:start]
+        _, Pk = gram_schmidt(Xk.T, change=True)
+        bk = Pk @ xyk @ Pk
+        yield bk
+
+        k = start
+        while k < mat.shape[0]:
+            streaming_linear_regression_gram_schmidt_update(mat[k], y[k], xyk, Pk, bk)
+            yield bk
+            k += 1
+
+    X  = numpy.array([[1, 0.5, 10., 5., -2.],
+                      [0, 0.4, 20, 4., 2.],
+                      [0, 0.7, 20, 4., 3.]], dtype=float).T
+    y  = numpy.array([1., 0.3, 10, 5.1, -3.])
+
+    for i, bk in enumerate(streaming_linear_regression_gram_schmidt(X, y)):
+        bk0 = linear_regression(X[:i+3], y[:i+3])
+        print("iteration", i, bk, bk0)
+
+Ces deux fonctions sont implémentées dans le module par
+:func:`streaming_linear_regression_gram_schmidt_update
+<mlstatpy.ml.matrices.streaming_linear_regression_gram_schmidt_update>`
+et :func:`streaming_linear_regression_gram_schmidt
+<mlstatpy.ml.matrices.streaming_linear_regression_gram_schmidt>`.
+Le coût de l'algorithme est en :math:`O(d^3)` mais n'inclut pas
+d'inversion de matrices.
+
+Notebooks
+=========
+
+Voir :ref:`regressionnoinversionrst`.
 
 Bilbiographie
 =============

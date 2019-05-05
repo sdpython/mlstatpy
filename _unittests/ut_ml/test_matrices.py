@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-@brief      test log(time=6s)
+@brief      test log(time=2s)
 """
 import unittest
 import numpy
 import numpy.random as rnd
 from pyquickhelper.pycode import ExtTestCase
 from mlstatpy.ml.matrices import gram_schmidt, linear_regression, streaming_gram_schmidt
+from mlstatpy.ml.matrices import streaming_linear_regression, streaming_linear_regression_gram_schmidt
 
 
 class TestMatrices(ExtTestCase):
@@ -82,6 +83,7 @@ class TestMatrices(ExtTestCase):
         X = rnd.randn(100, 7)
         eps = rnd.randn(100, 1) / 3
         y = X.sum(axis=1).reshape((X.shape[0], 1)) + eps
+        y = y.ravel()
         b1 = linear_regression(X, y)
         b3 = linear_regression(X, y, algo="gram")
         b2 = linear_regression(X, y, algo="qr")
@@ -122,8 +124,9 @@ class TestMatrices(ExtTestCase):
     def test_streaming_gram_schmidt(self):
         X0 = numpy.array([[1, 0.5, 10., 5., -2.],
                           [0, 0.4, 20, 4., 2.],
-                          [0, 0.7, 20, 4., 2.]], dtype=float).T
-        for dim in (2, 3):
+                          [0, 0.4, 19, 4.2, 2.],
+                          [0, 0.7, 18, 4.1, 1.4]], dtype=float).T
+        for dim in (3, 2, 4):
             X = X0[:, :dim]
             Xt = X.T
             algo1 = []
@@ -137,6 +140,8 @@ class TestMatrices(ExtTestCase):
                 self.assertEqualArray(t @ t.T, idd)
                 self.assertEqualArray(t_.T @ t_, idd)
             algo2 = []
+            self.assertRaise(lambda: list(streaming_gram_schmidt(X)),
+                             RuntimeError)
             for i, p in enumerate(streaming_gram_schmidt(Xt)):
                 p2 = p.copy()
                 t2 = X[:i + dim] @ p2.T
@@ -145,6 +150,68 @@ class TestMatrices(ExtTestCase):
                 self.assertNotEmpty(p2)
                 self.assertEqualArray(t2.T @ t2, idd)
             self.assertEqual(len(algo1), len(algo2))
+
+    def test_streaming_linear_regression(self):
+        X0 = numpy.array([[1, 0.5, 10., 5., -2.],
+                          [0, 0.4, 20, 4., 2.],
+                          [0, 0.4, 19, 4.2, 2.],
+                          [0, 0.7, 18, 4.1, 1.4]], dtype=float).T
+        y0 = numpy.array([1., 2.1, 3.1, 3.9, 5.])
+
+        for dim in (2, 3, 4):
+            X = X0[:, :dim]
+            y = y0
+            algo1 = []
+            for i in range(dim, X.shape[0] + 1):
+                bk = linear_regression(X[:i], y[:i])
+                algo1.append(bk)
+            algo2 = []
+            self.assertRaise(lambda: list(streaming_linear_regression(X.T, y)),
+                             RuntimeError)
+            for i, bk in enumerate(streaming_linear_regression(X, y)):
+                algo2.append(bk.copy())
+                self.assertNotEmpty(bk)
+                self.assertEqualArray(algo1[i], algo2[i])
+            self.assertEqual(len(algo1), len(algo2))
+
+    def test_streaming_linear_regression_graph_schmidt(self):
+        X0 = numpy.array([[1, 0.5, 10., 5., -2.],
+                          [0, 0.4, 20, 4., 2.],
+                          [0, 0.4, 19, 4.2, 2.],
+                          [0, 0.7, 18, 4.1, 1.4]], dtype=float).T
+        y0 = numpy.array([1., 2.1, 3.1, 3.9, 5.])
+
+        for dim in (3, 2, 4):
+            X = X0[:, :dim]
+            y = y0
+            algo1 = []
+            for i in range(dim, X.shape[0] + 1):
+                bk = linear_regression(X[:i], y[:i])
+                algo1.append(bk)
+            algo2 = []
+            self.assertRaise(lambda: list(streaming_linear_regression_gram_schmidt(X.T, y)),
+                             RuntimeError)
+            for i, bk in enumerate(streaming_linear_regression_gram_schmidt(X, y)):
+                algo2.append(bk.copy())
+                self.assertNotEmpty(bk)
+                self.assertEqualArray(algo1[i], algo2[i])
+            self.assertEqual(len(algo1), len(algo2))
+
+    def test_profile(self):
+        N = 1000
+        X = rnd.randn(N, 10)
+        eps = rnd.randn(N, 1) / 3
+        y = X.sum(axis=1).reshape((X.shape[0], 1)) + eps
+        y = y.ravel()
+        res = self.profile(lambda: list(
+            streaming_linear_regression_gram_schmidt(X, y)))
+        if __name__ == "__main__":
+            print(res[1])
+        self.assertIn("streaming", res[1])
+        res = self.profile(lambda: list(streaming_linear_regression(X, y)))
+        if __name__ == "__main__":
+            print(res[1])
+        self.assertIn("streaming", res[1])
 
 
 if __name__ == "__main__":

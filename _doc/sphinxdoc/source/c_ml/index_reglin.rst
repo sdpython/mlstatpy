@@ -44,6 +44,7 @@ ni de valeurs propres.
     :maxdepth: 1
 
     ../notebooks/regression_lineaire
-    ../notebooks/quantile_regression
     regression_quantile
+    ../notebooks/quantile_regression
     piecewise
+    ../notebooks/regression_no_inversion
