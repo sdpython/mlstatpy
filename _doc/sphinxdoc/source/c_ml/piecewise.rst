@@ -616,7 +616,7 @@ des lignes :math:`X_1, ..., X_k` et le vecteur colonne
 :math:`y_{1..k}=(y_1, ..., y_k)`.
 L'apprentissage de l'arbre de décision
 faut calculer des régressions pour les problèmes
-:math:`(X_{1..i}, y_{1..i}), (X_{1..i+1}, y_{1..i+1})...`.
+:math:`(X_{1..k}, y_{1..k}), (X_{1..k+1}, y_{1..k+1})...`.
 L'idée que je propose n'est pas parfaite mais elle fonctionne
 pour l'idée de l'algorithme avec :ref:`Gram-Schmidt
 <algo_decision_tree_mselin>`.

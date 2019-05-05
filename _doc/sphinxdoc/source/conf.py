@@ -140,3 +140,7 @@ epkg_dictionary.update({
     'Visualize a scikit-learn pipeline': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/visualize_pipeline.html',
     "X-tree": "https://en.wikipedia.org/wiki/X-tree",
 })
+
+nblinks = {
+    'l-reglin-piecewise-streaming': 'http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/c_ml/piecewise.html#streaming-linear-regression',
+}
