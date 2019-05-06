@@ -36,7 +36,7 @@ Avant de démontrer la propriété, voyons ce qu'il
 se passe entre deux réels. La médiane de :math:`\acc{A,B}`
 peut être n'importe où sur le segment.
 
-.. image:: images/mediane1.png
+.. image:: qureg/mediane1.png
     :height: 100
 
 De manière évidente, les distances
@@ -45,7 +45,7 @@ des deux côtés du point *M* sont égales :
 on voit de manière évidente que la somme
 des distances sera plus grande.
 
-.. image:: images/mediane2.png
+.. image:: qureg/mediane2.png
     :height: 100
 
 N'importe quel point sur le segment *M* minimise
@@ -187,7 +187,7 @@ la médiane avec :math:`p=\frac{1}{2}`. Il faut démontrer
 que la solution de ce programme d'optimisation
 atterrit dans l'intervalle souhaité.
 
-.. images:: images/q02.png
+.. images:: qureg/q02.png
     :height: 80
 
 On choisit un réel *P* à l'intérieur d'un intervale et on calcule :
