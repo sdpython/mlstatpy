@@ -232,7 +232,7 @@ def streaming_gram_schmidt(mat, start=None):
 
 def streaming_linear_regression_update(Xk, yk, XkXk, bk):
     """
-    Updates coefficients :math:`\beta_k` to produce :math:`\beta_{k+1}`
+    Updates coefficients :math:`\\beta_k` to produce :math:`\\beta_{k+1}`
     in :ref:`l-piecewise-linear-regression`.
     The function modifies the matrix *Pk*
     given as an input.
@@ -298,7 +298,7 @@ def streaming_linear_regression(mat, y, start=None):
 
 def streaming_linear_regression_gram_schmidt_update(Xk, yk, Xkyk, Pk, bk):
     """
-    Updates coefficients :math:`\beta_k` to produce :math:`\beta_{k+1}`
+    Updates coefficients :math:`\\beta_k` to produce :math:`\\beta_{k+1}`
     in :ref:`Streaming Linear Regression
     <l-piecewise-linear-regression-gram_schmidt>`.
     The function modifies the matrix *Pk*
