@@ -824,7 +824,9 @@ d'inversion de matrices.
 Notebooks
 =========
 
-Voir :ref:`regressionnoinversionrst`.
+.. toctree::
+
+    ../notebooks/regression_no_inversion
 
 Bilbiographie
 =============

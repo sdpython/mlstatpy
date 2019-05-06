@@ -137,6 +137,7 @@ epkg_dictionary.update({
     "R* tree": "https://en.wikipedia.org/wiki/R*_tree",
     'Regression with confidence interval': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/regression_confidence_interval.html',
     'ROC': 'https://fr.wikipedia.org/wiki/Courbe_ROC',
+    'statsmodels': 'http://www.statsmodels.org/stable/index.html',
     'Visualize a scikit-learn pipeline': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/visualize_pipeline.html',
     "X-tree": "https://en.wikipedia.org/wiki/X-tree",
 })

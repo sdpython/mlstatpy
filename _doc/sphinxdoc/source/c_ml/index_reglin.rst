@@ -45,6 +45,4 @@ ni de valeurs propres.
 
     ../notebooks/regression_lineaire
     regression_quantile
-    ../notebooks/quantile_regression
     piecewise
-    ../notebooks/regression_no_inversion

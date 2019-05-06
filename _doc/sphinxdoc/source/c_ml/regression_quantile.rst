@@ -90,6 +90,7 @@ utiliser l'algorithme
 `Iteratively reweighted least squares <https://en.wikipedia.org/wiki/Iteratively_reweighted_least_squares>`_.
 L'implémentation est faite par la classe
 `QuantileLinearRegression <http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/quantile_regression.html#mlinsights.mlmodel.quantile_regression.QuantileLinearRegression>`_.
+L'algorithme est tiré de [Chen2014]_.
 
 .. mathdef::
     :title: Iteratively reweighted least squares
@@ -240,7 +241,9 @@ de descente de gradient puisque la fonction
 partout dérivable. On peut aussi
 adapter l'algorithme :ref:`Iteratively reweighted least squares <iteratiive-least-square>`.
 L'implémentation est faite par la classe
-`QuantileLinearRegression <http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/quantile_regression.html#mlinsights.mlmodel.quantile_regression.QuantileLinearRegression>`_.
+`QuantileLinearRegression
+<http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/quantile_regression.html#mlinsights.mlmodel.quantile_regression.QuantileLinearRegression>`_
+(voir [Koenker2017]_).
 
 .. mathdef::
     :title: Iteratively reweighted least squares
@@ -292,11 +295,11 @@ Bilbiographie
 =============
 
 Des références sont disponibles sur la page de :epkg:`statsmodels` :
-`statsmodels <http://www.statsmodels.org/stable/generated/statsmodels.regression.quantile_regression.QuantReg.html>`_ ou
+`QuantReg <http://www.statsmodels.org/stable/generated/statsmodels.regression.quantile_regression.QuantReg.html>`_ ou
 là : `Régression quantile <https://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/ml2a/td2a_mlplus_regression_quantile.html>`_.
 
 .. [Koenker2017] `Quantile Regression, 40 years on <http://www.econ.uiuc.edu/~roger/courses/NIPE/handouts/QR40.pdf>`_,
-    Roger Koenker
+    Roger Koenker (2017)
 
 .. [Chen2014] `Fast Iteratively Reweighted Least Squares Algorithms for Analysis-Based Sparsity Reconstruction <https://arxiv.org/abs/1411.5057>`_
     Chen Chen, Junzhou Huang, Lei He, Hongsheng Li
