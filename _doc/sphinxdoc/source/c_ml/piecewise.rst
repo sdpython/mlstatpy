@@ -34,7 +34,7 @@ et originellement implémentée dans
 `Building Model Trees <https://github.com/ankonzoid/LearningX/tree/master/advanced_ML/model_tree>`_.
 Cette dernière implémentation réestime les modèles comme l'implémentation
 décrite au paragraphe :ref:`l-decisiontree-reglin-piecewise-naive`
-qui extension à tout type de modèle.
+mais étendue à tout type de modèle.
 
 Exploration
 ===========
@@ -59,7 +59,7 @@ Cette régression par morceaux est obtenue grâce à un arbre
 de décision. Celui-ci trie le nuage de points :math:`(X_i, Y_i)`
 par ordre croissant selon les *X*, soit :math:`X_i \leqslant X_{i+1}`.
 L'arbre coupe en deux lorsque la différence des erreurs quadratiques est
-maximale, erreur quadratiques obtenus en approximation *Y* par sa moyenne
+maximale, erreur quadratique obtenue en approximant *Y* par sa moyenne
 sur l'intervalle considéré. On note l'erreur quadratique :
 
 .. math::
@@ -74,7 +74,7 @@ sur l'intervalle considéré. On note l'erreur quadratique :
 La dernière ligne applique la formule :math:`\var{X} = \esp{X^2} - \esp{X}^2`
 qui est facile à redémontrer.
 L'algorithme de l'arbre de décision coupe un intervalle en
-deux en détermine l'indice *k* qui minimise la différence :
+deux et détermine l'indice *k* qui minimise la différence :
 
 .. math::
 
@@ -83,7 +83,7 @@ deux en détermine l'indice *k* qui minimise la différence :
 L'arbre de décision optimise la construction d'une fonction
 en escalier qui représente au mieux le nuage de points,
 les traits verts sur le graphe suivant, alors qu'il faudrait
-choisit une erreur quadratique qui correspondent aux traits
+choisir une erreur quadratique qui corresponde aux traits
 oranges.
 
 .. image:: piecewise/piecenaive2.png
@@ -220,7 +220,7 @@ linéaire comme étant la matrice :math:`A = (X'X)^{-1} X' Y`
 et on adapte l'implémentation de :epkg:`scikit-learn` pour
 optimiser l'erreur quadratique obtenue. Ce n'est pas simple mais
 pas impossible. Il faut entrer dans du code :epkg:`cython` et, pour
-éviter de réécrire une fonction qui multiplie et inverse uen matrice,
+éviter de réécrire une fonction qui multiplie et inverse une matrice,
 on peut utiliser la librairie :epkg:`LAPACK`. Je ne vais pas plus loin
 ici car cela serait un peu hors sujet mais ce n'était pas une partie
 de plaisir. Cela donne :
