@@ -17,7 +17,6 @@ numpy>=1.16.0
 pandas>=0.20.0
 pillow
 scipy
-scikit-learn>=0.21
 seaborn
 setuptools
 Sphinx
