@@ -11,7 +11,8 @@ mutagen
 git+https://github.com/sdpython/nbconvert.git@fixes
 pyensae>=1.2.788
 pyinstrument
-pyquickhelper>=1.8.2814
+pyquickhelper>=1.9
+scikit-learn>=0.21
 snakeviz
 sphinx-bootstrap-theme
 vprof
