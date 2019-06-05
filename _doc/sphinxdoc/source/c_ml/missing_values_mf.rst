@@ -266,7 +266,7 @@ Prédiction
 Prédire revient à supposer que la matrice :math:`M` est composée de vecteurs
 colonnes :math:`X_1, ..., X_q`. La matrice :math:`W` reste inchangée et la prédiction
 revient à déterminer les coordonnées de la projection d'un nouveau point :math:`X_{q+1}`
-dans le plan définit par :math:`W`.
+dans le plan défini par :math:`W`.
 
 Factorisation non-négative
 ++++++++++++++++++++++++++
@@ -279,7 +279,8 @@ tous être positifs ou nuls. Il n'est bien sûr plus équivalent
 équivalent à celui résolu par la
 `Décomposition en Valeur Singulière (SVD) <https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res>`_
 qui cherche à décomposer une matrice :math:`M=U\Sigma V^*`. La matrice :math:`\Sigma`
-est une matrice diagonale.
+est une matrice diagonale et la matrice initiale *M*
+n'est pas nécessairement carrée contrairement au cas d'une ACP.
 
 Norme
 +++++
