@@ -40,7 +40,7 @@ Dans ce cas, on cherchera les matrices qui minimise :
 
     .. math::
 
-        \min_{W,h}\acc{\norme{M-WH}^2} = \min_{W,H} \sum_{ij} (m_{ij} - \sum_k w_{ik} h_{kj})^2
+        \min_{W,H}\acc{\norme{M-WH}^2} = \min_{W,H} \sum_{ij} (m_{ij} - \sum_k w_{ik} h_{kj})^2
 
 Quelques cas simples
 ====================
@@ -260,14 +260,6 @@ trouver le minimum diffèrent et sont plus ou moins appropriés dans
 certaines configurations.
 Lire [Gilles2014]_.
 
-Prédiction
-++++++++++
-
-Prédire revient à supposer que la matrice :math:`M` est composée de vecteurs
-colonnes :math:`X_1, ..., X_q`. La matrice :math:`W` reste inchangée et la prédiction
-revient à déterminer les coordonnées de la projection d'un nouveau point :math:`X_{q+1}`
-dans le plan défini par :math:`W`.
-
 Factorisation non-négative
 ++++++++++++++++++++++++++
 
@@ -280,7 +272,43 @@ tous être positifs ou nuls. Il n'est bien sûr plus équivalent
 `Décomposition en Valeur Singulière (SVD) <https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res>`_
 qui cherche à décomposer une matrice :math:`M=U\Sigma V^*`. La matrice :math:`\Sigma`
 est une matrice diagonale et la matrice initiale *M*
-n'est pas nécessairement carrée contrairement au cas d'une ACP.
+n'est pas nécessairement carrée contrairement au cas d'une ACP
+mais SVD et ACP sont très similaires.
+
+Prédiction
+++++++++++
+
+Prédire revient à supposer que la matrice :math:`M` est composée de vecteurs
+lignes :math:`X_1, ..., X_q`. La matrice :math:`H` reste inchangée et la prédiction
+revient à déterminer les coordonnées de la projection d'un nouveau point :math:`X_{q+1}`
+dans le plan défini par les vecteurs de la matrice :math:`H`.
+Pour de nouvelles observations :math:`M_2=X_{q+1}`,
+la fonction `transform
+<https://scikit-learn.org/stable/modules/generated/sklearn.decomposition
+.NMF.html#sklearn.decomposition.NMF.transform>`_
+de la classe :epkg:`sklearn:decomposition:NMF` réestime une matrice
+:math:`W_2` qui projette les vecteurs lignes de :math:`M_2` sur
+les vecteurs de *H* en conservant des coefficients de projection positifs.
+
+.. mathdef::
+    :title: Prédiction
+    :tag: Problème
+
+    Soit :math:`M \in \mathcal{M}_{pq}` et :math:`H \in \mathcal{M}_{kq}`,
+    on cherche les matrices à coefficients positifs
+    :math:`W \in \mathcal{M}_{pk}` qui sont solution
+    du problème d'optimisation :
+
+    .. math::
+
+        \min_{W}\acc{\norme{M-WH}^2} = \min_{W,H} \sum_{ij} (m_{ij} - \sum_k w_{ik} h_{kj})^2
+
+Les recommandations s'obtiennent en multipliant :math:`W_2` par :math:`X_{q+1}`.
+Ce produit peut être approchée en relâchant la contrainte des poids
+positifs pour la matrice *W*. C'est la piste proposée par le
+modèle :epkg:`ApproximateNMFPredictor` qui utilise une transformation
+*SVD* pour projeter sur l'espace vectoriel formé par les vecteurs
+de *H*.
 
 Norme
 +++++

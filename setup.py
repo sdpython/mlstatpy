@@ -158,5 +158,6 @@ if not r:
         package_dir=package_dir,
         package_data=package_data,
         setup_requires=["pyquickhelper"],
-        install_requires=['numpy>=1.16', 'mlinsights>=0.2', 'cpyquickhelper>=0.2'],
+        install_requires=['numpy>=1.16',
+                          'mlinsights>=0.2', 'cpyquickhelper>=0.2'],
     )

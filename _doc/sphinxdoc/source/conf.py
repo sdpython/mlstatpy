@@ -124,6 +124,7 @@ mathdef_link_only = True
 
 epkg_dictionary.update({
     "AESA": "https://tavianator.com/aesa/",
+    'ApproximateNMFPredictor': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/nmf_predictor.html',
     'cython': 'https://cython.org/',
     "B+ tree": "https://en.wikipedia.org/wiki/B%2B_tree",
     "Branch and Bound": "https://en.wikipedia.org/wiki/Branch_and_bound",
