@@ -21,7 +21,7 @@ class TestVoronoi(ExtTestCase):
         from mlstatpy.ml import voronoi_estimation_from_lr
         data = load_iris()
         X, y = data.data[:, :2], data.target
-        clr = LogisticRegression()
+        clr = LogisticRegression(solver="liblinear")
         clr.fit(X, y)
         C = [1., 0.]
         D = 3.
@@ -52,7 +52,7 @@ class TestVoronoi(ExtTestCase):
         from mlstatpy.ml.voronoi import voronoi_estimation_from_lr
         data = load_iris()
         X, y = data.data[:, :4], data.target
-        clr = LogisticRegression()
+        clr = LogisticRegression(solver="liblinear")
         clr.fit(X, y)
         C = [1., 0.]
         D = 3.
@@ -85,7 +85,7 @@ class TestVoronoi(ExtTestCase):
         X = numpy.vstack(Xs)
         Y = numpy.array(Ys)
 
-        clr = LogisticRegression()
+        clr = LogisticRegression(solver="liblinear")
         clr.fit(X, Y)
 
         points = voronoi_estimation_from_lr(clr.coef_, clr.intercept_, qr=True,
@@ -121,7 +121,7 @@ class TestVoronoi(ExtTestCase):
         X = numpy.array(points)
         Y = numpy.array(Ys)
 
-        clr = LogisticRegression()
+        clr = LogisticRegression(solver="liblinear")
         clr.fit(X, Y)
 
         std = StringIO()
