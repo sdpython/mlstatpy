@@ -6,7 +6,7 @@ jyquickhelper
 mako
 memory_profiler
 minepy
-mlinsights>=0.2
+mlinsights>=0.2.312
 mutagen
 git+https://github.com/sdpython/nbconvert.git@fixes
 pyensae>=1.2.788
