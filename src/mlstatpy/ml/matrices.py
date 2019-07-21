@@ -6,6 +6,7 @@
 import warnings
 import numpy
 import numpy.linalg
+from scipy.linalg.lapack import dtrtri  # pylint: disable=E0611
 
 
 def gram_schmidt(mat, change=False):
@@ -86,8 +87,7 @@ def linear_regression(X, y, algo=None):
     """
     Solves the linear regression problem,
     find :math:`\\beta` which minimizes
-    :math:`\\norme{y - X\\beta}`, based on
-    the algorithm
+    :math:`\\norme{y - X\\beta}`, based on the algorithm
     :ref:`Arbre de décision optimisé pour les régressions linéaires
     <algo_decision_tree_mselin>`.
 
@@ -95,7 +95,7 @@ def linear_regression(X, y, algo=None):
     @param      y       targets
     @param      algo    None to use the standard algorithm
                         :math:`\\beta = (X'X)^{-1} X'y`,
-                        `'gram'`, `'gramT'`, `'qr'`, `'qr2'`
+                        `'gram'`, `'qr'`
     @return             beta
 
     .. runpython::
@@ -108,8 +108,18 @@ def linear_regression(X, y, algo=None):
                          [5., 6., 6., 6.],
                          [5., 6., 7., 8.]]).T
         y = numpy.array([0.1, 0.2, 0.19, 0.29])
-        beta = linear_regression(X, y)
+        beta = linear_regression(X, y, algo="gram")
         print(beta)
+
+    ``algo=None`` computes :math:`\\beta = (X'X)^{-1} X'y`.
+    ``algo='qr'`` uses a `QR <https://docs.scipy.org/doc/numpy/reference
+    /generated/numpy.linalg.qr.html>`_ decomposition and calls function
+    `dtrtri <https://docs.scipy.org/doc/scipy/reference/generated/scipy.
+    linalg.lapack.dtrtri.html>`_ to invert an upper triangular matrix.
+    ``algo='gram'`` uses :func:`gram_schmidt
+    <mlstatpy.ml.matrices.gram_schmidt>` and then computes
+    the solution of the linear regression (see above for a link
+    to the algorithm).
     """
     if len(y.shape) != 1:
         warnings.warn(
@@ -123,7 +133,7 @@ def linear_regression(X, y, algo=None):
         return (y.T @ T.T @ P).ravel()
     elif algo == "qr":
         Q, R = numpy.linalg.qr(X, "full")
-        Ri = numpy.linalg.inv(R)
+        Ri = dtrtri(R)[0]
         gamma = (y.T @ Q).ravel()
         return (gamma @ Ri.T).ravel()
     else:
