@@ -821,6 +821,18 @@ et :func:`streaming_linear_regression_gram_schmidt
 Le coût de l'algorithme est en :math:`O(d^3)` mais n'inclut pas
 d'inversion de matrices.
 
+Digressions
+===========
+
+L'article `An Efficient Two Step Algorithm for High DimensionalChange Point Regression Models Without Grid Search
+<http://jmlr.org/papers/volume20/18-460/18-460.pdf>`_ propose un cadre
+théorique pour déterminer une frontière dans un nuage de données
+qui délimite un changement de modèle linéaire.
+Le suivant étudie des changements de paramètres
+`Change Surfaces for Expressive MultidimensionalChangepoints and Counterfactual Prediction
+<http://jmlr.org/papers/volume20/17-352/17-352.pdf>`_ d'une façon
+plus générique.
+
 Notebooks
 =========
 
