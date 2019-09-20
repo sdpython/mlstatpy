@@ -39,7 +39,7 @@ html_logo = "project_ico_small.png"
 
 if choice == "bootstrap":
     html_theme_options = {
-        'navbar_title': ".",
+        'navbar_title': "BASE",
         'navbar_site_name': "Site",
         'navbar_links': [
             ("XD", "http://www.xavierdupre.fr", True),
