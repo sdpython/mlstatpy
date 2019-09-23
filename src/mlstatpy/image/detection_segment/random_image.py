@@ -5,6 +5,7 @@
 """
 import math
 import numpy
+import numpy.random as nprnd  # pylint: disable=E1101
 
 
 def random_noise_image(size, ratio=0.1):
@@ -19,8 +20,8 @@ def random_noise_image(size, ratio=0.1):
     """
     img = numpy.zeros((size[1], size[0]), dtype=numpy.float32)
     nb = int(ratio * size[0] * size[1])
-    xr = numpy.random.randint(0, size[0] - 1, nb)
-    yr = numpy.random.randint(0, size[1] - 1, nb)
+    xr = nprnd.randint(0, size[0] - 1, nb)
+    yr = nprnd.randint(0, size[1] - 1, nb)
     img[yr, xr] = 1
     return img
 
@@ -51,19 +52,19 @@ def random_segment_image(image, lmin=0.1, lmax=1., noise=0.01, density=1.):
     mind = min(image.shape)
     lmin = int(mind * lmin)
     lmax = int(mind * lmax)
-    size = numpy.random.randint(lmin, lmax)
-    angle = numpy.random.random() * math.pi
-    x1 = numpy.random.randint(
+    size = nprnd.randint(lmin, lmax)
+    angle = nprnd.random() * math.pi
+    x1 = nprnd.randint(
         image.shape[1] - int(size * abs(math.cos(angle)) - 1))
-    y1 = numpy.random.randint(image.shape[0] - int(size * math.sin(angle) - 1))
+    y1 = nprnd.randint(image.shape[0] - int(size * math.sin(angle) - 1))
     x2 = x1 + size * math.cos(angle)
     y2 = y1 + size * math.sin(angle)
     x1, y1, x2, y2, size = move_coordinate(
         x1, y1, x2, y2, image.shape[1], image.shape[0])
-    t = numpy.random.randint(0, size, int(size * density))
+    t = nprnd.randint(0, size, int(size * density))
     xs = t * math.cos(angle) + x1
     ys = t * math.sin(angle) + x2
-    noise = numpy.random.randn(  # pylint: disable=E1101
+    noise = nprnd.randn(  # pylint: disable=E1101
         xs.shape[0] * 2).reshape(xs.shape[0], 2) * noise * mind
     xs += noise[:, 0]
     ys += noise[:, 1]
