@@ -70,12 +70,14 @@ def random_segment_image(image, lmin=0.1, lmax=1., noise=0.01, density=1.):
     ys += noise[:, 1]
     xs = numpy.maximum(xs, numpy.zeros(xs.shape[0]))  # pylint: disable=E1111
     ys = numpy.maximum(ys, numpy.zeros(
-        xs.shape[0]))  # pylint: disable=E1111,E1101
-    xs = numpy.minimum(xs, numpy.zeros(  # pylint: disable=E1101
-        xs.shape[0]) + image.shape[1] - 1)  # pylint: disable=E1111,E1101
-    ys = numpy.minimum(ys, numpy.zeros(  # pylint: disable=E1101
-        xs.shape[0]) + image.shape[0] - 1)  # pylint: disable=E1111,E1101
+        xs.shape[0]))  # pylint: disable=E1111,E1101,E1136
+    xs = numpy.minimum(xs, numpy.zeros(  # pylint: disable=E1101,E1136
+        xs.shape[0]) + image.shape[1] - 1)  # pylint: disable=E1111,E1101,E1136
+    ys = numpy.minimum(ys, numpy.zeros(  # pylint: disable=E1101,E1136
+        xs.shape[0]) + image.shape[0] - 1)  # pylint: disable=E1111,E1101,E1136
     xs = xs.astype(numpy.int32)  # pylint: disable=E1101
     ys = ys.astype(numpy.int32)  # pylint: disable=E1101
     image[ys, xs] = 1
-    return dict(size=size, angle=angle, x1=x1, y1=y1, x2=x2, y2=y2, nbpoints=xs.shape[0])
+    res = dict(size=size, angle=angle, x1=x1, y1=y1, x2=x2, y2=y2,
+               nbpoints=xs.shape[0])  # pylint: disable=E1136
+    return res
