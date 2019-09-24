@@ -20,8 +20,8 @@ class TestMlGridBenchMark(unittest.TestCase):
             OutputPrint=__name__ == "__main__")
 
         fix_tkinter_issues_virtualenv(fLOG=fLOG)
-        import matplotlib.pyplot as plt
-        import dill
+        import matplotlib.pyplot as plt  # pylint: disable=C0415
+        import dill  # pylint: disable=C0415
         self.assertTrue(plt is not None)
         temp = get_temp_folder(__file__, "temp_ml_grid_benchmark")
 

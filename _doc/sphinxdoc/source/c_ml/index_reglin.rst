@@ -46,3 +46,4 @@ ni de valeurs propres.
     ../notebooks/regression_lineaire
     regression_quantile
     piecewise
+    l1l2

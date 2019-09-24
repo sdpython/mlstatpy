@@ -189,8 +189,8 @@ class MlGridBenchMark(GridBenchMark):
         @param      path_to_images  where to store images
         @return     list of tuple (image_name, function to create the graph)
         """
-        import matplotlib.pyplot as plt
-        import matplotlib.cm as mcm
+        import matplotlib.pyplot as plt  # pylint: disable=C0415
+        import matplotlib.cm as mcm  # pylint: disable=C0415
         df = self.to_df()
 
         def local_graph(vx, vy, ax=None, text=True, figsize=(5, 5)):
@@ -263,7 +263,7 @@ class MlGridBenchMark(GridBenchMark):
             size = nb // 2 + 1, 2
 
         if grid is None:
-            import matplotlib.pyplot as plt
+            import matplotlib.pyplot as plt  # pylint: disable=C0415
             fg = kwargs.get('figsize', (5 * size[0], 10))
             _, grid = plt.subplots(size[0], size[1], figsize=fg)
             if 'figsize' in kwargs:

@@ -553,15 +553,14 @@ class GraphDistance:
                 if e.to == e.from_:
                     # cycle
                     continue
+                path.append(e)
+                if edges_and_vertices:
+                    path.append(v)
+                if v.label == self.labelEnd:
+                    yield path
                 else:
-                    path.append(e)
-                    if edges_and_vertices:
-                        path.append(v)
-                    if v.label == self.labelEnd:
-                        yield path
-                    else:
-                        for p in self.enumerate_all_paths(edges_and_vertices, path):
-                            yield p
+                    for p in self.enumerate_all_paths(edges_and_vertices, path):
+                        yield p
 
     def edit_distance_path(self, p1, p2, g1, g2,
                            function_mach_vertices=None,

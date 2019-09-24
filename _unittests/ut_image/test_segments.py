@@ -50,7 +50,7 @@ class TestSegments(ExtTestCase):
                             reste = False
                             break
 
-            import pygame
+            import pygame  # pylint: disable=C0415
             pygame.init()
             screen = pygame.display.set_mode((xx * 4, yy * 4))
             screen.fill((255, 255, 255))

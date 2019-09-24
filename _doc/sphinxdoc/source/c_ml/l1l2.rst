@@ -1,0 +1,105 @@
+
+##############################
+Normalisation des coefficients
+##############################
+
+La régression linéaire est le modèle le plus simple pour
+construire une fonction de prédiction lorsque la variable
+à prédire est continue.
+
+.. math::
+
+    f(X) = \sum_{k=1}^d a_k x_k
+
+Les coefficients s'obtiennent en minimisant l'erreur
+:math:`E(X,a_1,...,a_d)=\sum_i (\sum_{k=1}^d a_k x_{ik} - y_i)^2=\norme{XA-y}^2`.
+La solution est explicite : :math:`(a_1,...,a_d) = (X'X)^{-1}X'y`.
+Lorsque le nombre de dimensions augmentent et dépasse le nombre d'observations,
+il existe plus d'une solution et la matrice :math:`(X'X)` n'est plus =
+inversible. Une des astuces consiste à réduire le nombre de dimension
+avant avec une :epkg:`ACP` ou une :epkg:`SVD` (Singular Value Decomposition)
+qui reviennent à trouver un espace de projection de dimension moindre
+et sans perte d'information. La régression est effectuée dans cet espace puis
+transposée dans l'espace initial.
+Une autre astuce consiste à imposer une contrainte supplémentaire sur
+le poids des coefficients de la régression, le plus souvent en les pénalisant.
+
+.. contents::
+    :local:
+
+Réduction de dimension
+======================
+
+L'idée est abordée dans le paragraphe :ref:`l-reglin-acp-svd`.
+Une fois le problème transporté dans une base de variables indépendantes,
+chaque dimension peut être traitée séparément. La régression est restreinte
+aux vecteurs propres associés à une valeur propre non nulle. On en déduit
+ensuite les coefficients dans la base initiale.
+
+Pénalisation L1 et L2
+=====================
+
+La pénalisation revient à minimiser une erreur de la forme.
+
+.. math::
+
+    E(X,a_1,...,a_d)=\sum_i (\sum_{k=1}^d a_k x_{ik} - y_i)^2 + \lambda \sum_{k=1}^d |a_k|^p
+    = \norme{XA-y}^2 + \lambda \sum_{k=1}^d |a_k|^p
+
+Le paramètre *p* permet d'ajuster le poids donné aux petits coefficients
+et celui donnée aux grands. Lorsque *p=2*, c'est une pénalisation **L2**,
+lorsque *p=1*, c'est une pénalisation **L1**. Ces deux ont une incidence
+différente sur la nullité des coefficients. La pénalisation *L1* a tendance
+à annuler les coefficients, la pénalisation **L2** préfère des petits coefficients
+sur toutes les dimensions. Le notebook
+` <>`_
+illustre ce fait sur
+un jeu de données artificiel et montre que le nombre de
+coefficients non nuls reste plus ou moins constant malgré un nombre
+de variables *d* en hausse. Pour s'en convaincre, imaginons un problème
+à *d* variables pour lequel on connaît la solution :math:`(a_1^*, ..., a_d^*)`
+qui minimise le problème.
+
+.. math::
+
+    E(X,a^*_1,...,a^*_d)=\min \sum_i (\sum_{k=1}^d a^*_k x_{ik} - y_i)^2 + \lambda \sum_{k=1}^d |a^*_k|^p
+
+Lorsqu'on ajoute une variable, cette erreur devient :
+
+.. math::
+
+    E(X,a^*_1,...,a^*_d, a_{d+1})=\sum_i (\sum_{k=1}^d a_k x_{ik} + a_{d+1}x_{i,d+1} - y_i)^2 +
+    \lambda \sum_{k=1}^d |a_k|^p + \lambda |a_{d+1}|^p
+
+Et sa dérivée :
+
+.. math::
+
+    \frac{dE(X,a^*_1,...,a^*_d, a_{d+1})}{da_{d+1}}= 2 \sum_i x_{i,d+1} (\sum_{k=1}^d a^*_k x_{ik} + a_{d+1}x_{i,d+1} - y_i) +
+    \lambda p |a_{d+1}|^{p-1} sign(a_{d+1})
+
+On s'intéresse au cas particulier où les variables ne sont pas corrélées et centrées.
+Cela implique que :math:`\sum_i x_{i,d+1} x_{i,k} = 0` si :math:`k \neq d+1`.
+Et lorsque *p>1*, le gradient est nul si on peut résoudre l'équation :
+
+.. math::
+
+    \frac{dE(X,a^*_1,...,a^*_d, a_{d+1})}{da_{d+1}}= 2 \sum_i   a_{d+1}x_{i,d+1}^2 - y_i x_{i,d+1} +
+    \lambda sign(a_{d+1}) = 0
+
+La solution est simple :
+
+.. math::
+
+    a_{d+1}^* = \frac{\sum_i  y_i x_{i,d+1} - \lambda sign(a_{d+1})}{2 \sum_i x_{i,d+1}^2}
+
+Et en fait, pour un :math:`\lambda` assez grand,
+on peut facilement montrer que la solution est impossible puisqu'elle
+implique que le coefficient :math:`a_{d+1}^*` soit même signe opposé
+à :math:`\lambda sign(a_{d+1})`. Cela signifie que n'importe quelle valeur
+pour :math:`a_{d+1}` augmente l'erreur. Sa valeur est donc nulle.
+Ceci n'est pas une démonstration mais donne une intuition de pourquoi
+une pénalisation L1 annule la plupart des coefficients et est utilisée
+comme moyen de sélectionner les variables.
+La pénalisation L2 ne mène pas à une équation impossible.
+Plus on ajoute de variables, plus l'erreur diminue.

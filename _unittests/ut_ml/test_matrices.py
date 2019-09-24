@@ -82,7 +82,8 @@ class TestMatrices(ExtTestCase):
     def test_dim_lin_reg(self):
         X = rnd.randn(100, 7)
         eps = rnd.randn(100, 1) / 3
-        y = X.sum(axis=1).reshape((X.shape[0], 1)) + eps
+        y = X.sum(axis=1).reshape(  # pylint: disable=E1101
+            (X.shape[0], 1)) + eps  # pylint: disable=E1101
         y = y.ravel()
         b1 = linear_regression(X, y)
         b3 = linear_regression(X, y, algo="gram")
@@ -201,7 +202,8 @@ class TestMatrices(ExtTestCase):
         N = 1000
         X = rnd.randn(N, 10)
         eps = rnd.randn(N, 1) / 3
-        y = X.sum(axis=1).reshape((X.shape[0], 1)) + eps
+        y = X.sum(axis=1).reshape(  # pylint: disable=E1101
+            (X.shape[0], 1)) + eps  # pylint: disable=E1101
         y = y.ravel()
         res = self.profile(lambda: list(
             streaming_linear_regression_gram_schmidt(X, y)))

@@ -476,6 +476,8 @@ L'avantage est que cette formulation s'exprime
 uniquement à partir de produits scalaires.
 Voir le notebook :ref:`regressionnoinversionrst`.
 
+.. _l-reglin-acp-svd:
+
 Synthèse mathématique
 =====================
 

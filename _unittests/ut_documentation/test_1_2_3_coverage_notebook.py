@@ -23,9 +23,9 @@ class TestNotebook123Coverage(unittest.TestCase):
         keepnote = [os.path.join(doc, _) for _ in os.listdir(doc) if name in _]
         self.assertTrue(len(keepnote) > 0)
 
-        import pyquickhelper
-        import jyquickhelper
-        import pyensae
+        import pyquickhelper  # pylint: disable=C0415
+        import jyquickhelper  # pylint: disable=C0415
+        import pyensae  # pylint: disable=C0415
         add_path = get_additional_paths(
             [jyquickhelper, pyquickhelper, pyensae, thismodule])
         res = execute_notebook_list(

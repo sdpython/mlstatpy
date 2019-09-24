@@ -19,7 +19,7 @@ class TestROC(ExtTestCase):
             OutputPrint=__name__ == "__main__")
 
         fix_tkinter_issues_virtualenv(fLOG=fLOG)
-        import matplotlib.pyplot as plt
+        import matplotlib.pyplot as plt  # pylint: disable=C0415
 
         temp = get_temp_folder(__file__, "temp_roc")
 

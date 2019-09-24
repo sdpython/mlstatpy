@@ -113,10 +113,9 @@ class TestDocPage(ExtTestCase):
             if 'WARNING' in line:
                 if "contains reference to nonexisting document" in lines[i + 1]:
                     continue
-                else:
-                    mes = 'WARNING issue\n  File "{0}", line {1}'.format(
-                        rst, i + 1)
-                    raise Exception(mes)
+                mes = 'WARNING issue\n  File "{0}", line {1}'.format(
+                    rst, i + 1)
+                raise Exception(mes)
 
 
 if __name__ == "__main__":

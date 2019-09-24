@@ -182,7 +182,7 @@ def streaming_gram_schmidt_update(Xk, Pk):
             Pk[i, :] -= numpy.multiply(Pk[:i, :], dv).sum(axis=0)
             idi[i, :] -= numpy.multiply(idi[:i, :], dv).sum(axis=0)
 
-        d = numpy.square(idi[i, :]).sum()
+        d = numpy.square(idi[i, :]).sum()  # pylint: disable=E1101
         d = tki[i] ** 2 + d
         if d > 0:
             d **= 0.5

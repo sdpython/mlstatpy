@@ -53,7 +53,7 @@ def random_segment_image(image, lmin=0.1, lmax=1., noise=0.01, density=1.):
     lmin = int(mind * lmin)
     lmax = int(mind * lmax)
     size = nprnd.randint(lmin, lmax)
-    angle = nprnd.random() * math.pi
+    angle = nprnd.random() * math.pi  # pylint: disable=E1101
     x1 = nprnd.randint(
         image.shape[1] - int(size * abs(math.cos(angle)) - 1))
     y1 = nprnd.randint(image.shape[0] - int(size * math.sin(angle) - 1))
