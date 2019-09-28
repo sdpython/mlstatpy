@@ -106,3 +106,13 @@ la régression peuvent être calculés séparément dans ce cas
 (voir :ref:`l-reglin-nocoreel-solution`).
 La pénalisation L2 ne mène pas à une équation impossible.
 Plus on ajoute de variables, plus l'erreur diminue.
+Pour aller plus loin, voir [Char]_ et voir
+son application à la séelection d'arbres dans une forêt aléatoire
+`Réduction d’une forêt aléatoire
+<http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/td2a_tree_selection_correction.html>`_.
+
+Bibliographie
+=============
+
+.. [Char] `Regularization and Penalized Regression <https://freakonometrics.hypotheses.org/58240>`_
+    Arthur Charpentier
