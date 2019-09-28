@@ -43,7 +43,7 @@ La pénalisation revient à minimiser une erreur de la forme.
 
 .. math::
 
-    E(X,a_1,...,a_d)=\sum_i (\sum_{k=1}^d a_k x_{ik} - y_i)^2 + \lambda \sum_{k=1}^d |a_k|^p
+    E(X,a_1,...,a_d)=\sum_i \left(\sum_{k=1}^d a_k x_{ik} - y_i\right)^2 + \lambda \sum_{k=1}^d |a_k|^p
     = \norme{XA-y}^2 + \lambda \sum_{k=1}^d |a_k|^p
 
 Le paramètre *p* permet d'ajuster le poids donné aux petits coefficients
@@ -62,13 +62,13 @@ qui minimise le problème.
 
 .. math::
 
-    E(X,a^*_1,...,a^*_d)=\min \sum_i (\sum_{k=1}^d a^*_k x_{ik} - y_i)^2 + \lambda \sum_{k=1}^d |a^*_k|^p
+    E(X,a^*_1,...,a^*_d)=\min \sum_i \left(\sum_{k=1}^d a^*_k x_{ik} - y_i\right)^2 + \lambda \sum_{k=1}^d |a^*_k|^p
 
 Lorsqu'on ajoute une variable, cette erreur devient :
 
 .. math::
 
-    E(X,a^*_1,...,a^*_d, a_{d+1})=\sum_i (\sum_{k=1}^d a_k x_{ik} + a_{d+1}x_{i,d+1} - y_i)^2 +
+    E(X,a^*_1,...,a^*_d, a_{d+1})=\sum_i \left(\sum_{k=1}^d a_k x_{ik} + a_{d+1}x_{i,d+1} - y_i\right)^2 +
     \lambda \sum_{k=1}^d |a_k|^p + \lambda |a_{d+1}|^p
 
 Et sa dérivée :
@@ -95,11 +95,14 @@ La solution est simple :
 
 Et en fait, pour un :math:`\lambda` assez grand,
 on peut facilement montrer que la solution est impossible puisqu'elle
-implique que le coefficient :math:`a_{d+1}^*` soit même signe opposé
+implique que le coefficient :math:`a_{d+1}^*` soit de signe opposé
 à :math:`\lambda sign(a_{d+1})`. Cela signifie que n'importe quelle valeur
 pour :math:`a_{d+1}` augmente l'erreur. Sa valeur est donc nulle.
 Ceci n'est pas une démonstration mais donne une intuition de pourquoi
 une pénalisation L1 annule la plupart des coefficients et est utilisée
-comme moyen de sélectionner les variables.
+comme moyen de sélectionner les variables. C'est une démonstration dans le cas
+où les variables sont indépendantes puisque les coefficients de 
+la régression peuvent être calculés séparément dans ce cas
+(voir :ref:`l-reglin-nocoreel-solution`).
 La pénalisation L2 ne mène pas à une équation impossible.
 Plus on ajoute de variables, plus l'erreur diminue.

@@ -123,6 +123,7 @@ latex_elements['preamble'] = preamble + custom_preamble
 mathdef_link_only = True
 
 epkg_dictionary.update({
+    'ACP': 'https://fr.wikipedia.org/wiki/Analyse_en_composantes_principales',
     "AESA": "https://tavianator.com/aesa/",
     'ApproximateNMFPredictor': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/anmf_predictor.html',
     'cython': 'https://cython.org/',
@@ -139,6 +140,7 @@ epkg_dictionary.update({
     'Regression with confidence interval': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/regression_confidence_interval.html',
     'ROC': 'https://fr.wikipedia.org/wiki/Courbe_ROC',
     'statsmodels': 'http://www.statsmodels.org/stable/index.html',
+    'SVD': 'https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res',
     'Visualize a scikit-learn pipeline': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/visualize_pipeline.html',
     "X-tree": "https://en.wikipedia.org/wiki/X-tree",
 })

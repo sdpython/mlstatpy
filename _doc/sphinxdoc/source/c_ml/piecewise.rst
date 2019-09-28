@@ -269,6 +269,8 @@ mais pour écrire la contrainte lorsque les zones sont construites
 quelles sont les feuilles voisines.
 Et ça c'est un problème intéressant !
 
+.. _l-reglin-nocoreel-solution:
+
 Régression linéaire et corrélation
 ++++++++++++++++++++++++++++++++++
 
