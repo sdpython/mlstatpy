@@ -15,5 +15,6 @@ pyquickhelper>=1.9.3240
 scikit-learn>=0.21
 snakeviz
 sphinx-bootstrap-theme
+tqdm
 vprof
 wheel
