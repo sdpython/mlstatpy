@@ -27,7 +27,6 @@ install:
   - pip install scikit-learn>=0.21
   - pip install -r requirements.txt
   - pip install -U git+https://github.com/quantopian/qgrid --no-deps
-  - pip install -U git+https://github.com/sdpython/nbconvert.git@fixes
   # - pip install hg+http://bitbucket.org/pygame/pygame
   - export PYTHONPATH=src
 script:
