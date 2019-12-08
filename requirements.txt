@@ -1,7 +1,6 @@
 blockdiag
 coverage
 cpyquickhelper>=0.2
-gprof2dot
 jyquickhelper
 mako
 memory_profiler
