@@ -101,7 +101,7 @@ pour :math:`a_{d+1}` augmente l'erreur. Sa valeur est donc nulle.
 Ceci n'est pas une démonstration mais donne une intuition de pourquoi
 une pénalisation L1 annule la plupart des coefficients et est utilisée
 comme moyen de sélectionner les variables. C'est une démonstration dans le cas
-où les variables sont indépendantes puisque les coefficients de 
+où les variables sont indépendantes puisque les coefficients de
 la régression peuvent être calculés séparément dans ce cas
 (voir :ref:`l-reglin-nocoreel-solution`).
 La pénalisation L2 ne mène pas à une équation impossible.
