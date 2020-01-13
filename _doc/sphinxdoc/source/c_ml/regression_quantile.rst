@@ -1,4 +1,6 @@
 
+.. _l-reg-quantile:
+
 ===================
 Régression quantile
 ===================
@@ -9,6 +11,8 @@ Elle peut être définie comme une régression avec une norme
 
 .. contents::
     :local:
+
+.. _l-reg-quantile-demo:
 
 Médiane et valeur absolue
 =========================
@@ -28,6 +32,7 @@ est alors le nombre au milieu :math:`X_{\cro{\frac{n}{2}}}`.
 .. mathdef::
     :title: Médiane et valeur absolue
     :tag: propriété
+    :lid: l-th-med-abs
 
     La médiane *M* de l'ensemble :math:`\acc{X_1,...,X_n}`
     minimise la quantité :math:`E = \sum_i \abs{X_i - M}`.

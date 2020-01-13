@@ -23,7 +23,7 @@ critère appelé *inertie* ou variance *intra-classe*.
 .. mathdef::
     :title: centre mobile, k-means
     :tag: Algorithme
-    :lid: hmm_classification_obs_un
+    :lid: kmeans_def_algo
 
     On considère un ensemble de points :
 
@@ -76,7 +76,7 @@ critère appelé *inertie* ou variance *intra-classe*.
     :lid: theoreme_inertie_1
 
     Quelque soit l'initialisation choisie, la suite :math:`\pa{I_t}_{t\supegal 0}`
-    construite par l'algorithme des :ref:`k-means <hmm_classification_obs_un>`
+    construite par l'algorithme des :ref:`k-means <kmeans_def_algo>`
     converge.
 
 La démonstration du théorème nécessite le lemme suivant.
@@ -220,7 +220,7 @@ par la suivante :
 
     Cette étape d'initialisation viendra remplacer celle
     définie dans l'algorithme
-    :ref:`k-means <hmm_classification_obs_un>`.
+    :ref:`k-means <kmeans_def_algo>`.
     On considère un ensemble de points :
 
     .. math::
@@ -245,7 +245,7 @@ par la suivante :
     :math:`D_k(x) = \min_{1 \infegal l \infegal k} d(x - G_l)`.
 
     La suite de l'algorithme *k-means++* reprend les mêmes étapes que
-    :ref:`k-means <hmm_classification_obs_un>`.
+    :ref:`k-means <kmeans_def_algo>`.
 
 Cette initilisation éloigne le prochain centre le plus possibles des
 centres déjà choisis. L'article montre que :
@@ -274,7 +274,7 @@ que :ref:`l-kmeanspp` mais plus rapide et parallélisable.
 
     Cette étape d'initialisation viendra remplacer celle
     définie dans l'algorithme
-    :ref:`k-means <hmm_classification_obs_un>`.
+    :ref:`k-means <kmeans_def_algo>`.
     On considère un ensemble de points :
 
     .. math::
@@ -667,7 +667,7 @@ L'algorithme qui suit a pour objectif de minimiser la quantité pour un échanti
 
     :math:`t \longleftarrow 0`.
     Les paramètres :math:`\acc{p_i^0, \mu_i^0, \Sigma_i^0 \sac 1 \infegal i \infegal N}` sont initialisés
-    grâce à un algorithme des :ref:`k-means <hmm_classification_obs_un>` ou :ref:`FSCL <label_kmeans_fscl>`.
+    grâce à un algorithme des :ref:`k-means <kmeans_def_algo>` ou :ref:`FSCL <label_kmeans_fscl>`.
     :math:`\forall i, \; p_i^0 = \frac{1}{N}` et :math:`\beta_i^0 = 0`.
 
     *récurrence*
@@ -919,6 +919,38 @@ les neurones ne sont pas repoussés s'ils ne sont pas choisis mais la fonction
 croissante :math:`F\pa{u,t}` par rapport à :math:`u` assure que plus un neurone
 est sélectionné, moins il a de chance de l'être,
 bien que cet avantage disparaisse au fur et à mesure des itérations.
+
+k-means norme L1
+================
+
+L'algorithme dans sa version la plus courante optimise l'inertie définie
+par :math:`\sum_{i=1}^P \; d^2\left(X_i, G_{c_i^t}^t\right)`, qui est
+en quelque sorte une inertie *L2*. Que devriendrait l'algorithme
+si la norme choisie était une norme *L1*, il faudrait alors choisir
+à chaque itération *t* des *points* qui minimise la quantité :
+:math:`\sum_{i=1}^P \; d_1\left(X_i, G_{c_i^t}^t\right)` où
+:math:`d_1` est la norme *L1* entre deux points *X,Y* :
+:math:`d_1(X, Y) = \sum_i |X_i - Y_i|`. Avant de continuer,
+on rappelle un théorème :
+
+.. mathdef::
+    :title: Médiane et valeur absolue
+    :tag: propriété
+    :lid: mediane_L1
+
+    Soit :math:`A=(x_1, ..., x_n)` un ensembl de *n* réels quelconque.
+    On note :math:`m=\med(x_1, ..., x_n)` la médiane
+    de l'ensemble de points *A*. Alors la médiane *m*
+    minimise la quantité :math:`\sum_{i=1}^n |m-x_i|`.
+
+C'est cette propriété qui est utilisée pour définir ce qu'est
+la :ref:`régression quantile <l-reg-quantile>` et sa démonstration
+est présentée à la page :ref:`l-reg-quantile-demo`. On en déduit
+que le barycentre de norme L1 d'un ensemble de points dans un
+espace vectoriel de dimension *d* a pour coordonnées les *d*
+médianes extraites sur chacune des dimensions. Il ne reste
+plus q'à se servir de ce résultat pour mettre à jour l'algorithme
+:ref:`centre mobile, k-means <kmeans_def_algo>`.
 
 Bibliographie
 =============
