@@ -939,7 +939,7 @@ on rappelle un théorème :
     :lid: mediane_L1
 
     Soit :math:`A=(x_1, ..., x_n)` un ensembl de *n* réels quelconque.
-    On note :math:`m=\med(x_1, ..., x_n)` la médiane
+    On note :math:`m=med(x_1, ..., x_n)` la médiane
     de l'ensemble de points *A*. Alors la médiane *m*
     minimise la quantité :math:`\sum_{i=1}^n |m-x_i|`.
 
