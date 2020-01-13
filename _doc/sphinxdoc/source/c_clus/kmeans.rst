@@ -945,12 +945,30 @@ on rappelle un théorème :
 
 C'est cette propriété qui est utilisée pour définir ce qu'est
 la :ref:`régression quantile <l-reg-quantile>` et sa démonstration
-est présentée à la page :ref:`l-reg-quantile-demo`. On en déduit
+est présentée à la page :ref:`l-reg-quantile-demo`. Il ne reste
+plus qu'à se servir de ce résultat pour mettre à jour l'algorithme
+:ref:`centre mobile, k-means <kmeans_def_algo>`. L'étape qui
+consiste à affecter un point à un cluster représenté par un point
+ne pose pas de problème si on utilise cette nouvelle norme. Il ne reste
+plus qu'à déterminer le point qui représente un cluster sachant
+les points qui le constituent. Autrement dit, il faut déterminer
+le point qui minimiser la pseudo-inertie définie comme suit
+pour un ensemble de points :math:`(X_1, ..., X_n)` appartenant à un
+espace vectoriel de dimension *k*.
+
+.. math::
+
+    I(G,X_1,...,X_n) = \norm{G - X_i}_1 = \sum_{i=1}^n \sum_{k=1}^d \abs{G_k - X_{ik}}
+
+On cherche le point *G* qui minimise la quantité :math:`I(G,X_1,...,X_n)`.
+Comme :math:`\sum_{i=1}^n \sum_{k=1}^d \abs{G_k - X_{ik}} = \sum_{k=1}^d \sum_{i=1}^n  \abs{G_k - X_{ik}}`,
+on en déduit qu'on peut chercher la coordonnée :math:`G_k` indépendemment
+les unes des autres. On en déduit
 que le barycentre de norme L1 d'un ensemble de points dans un
 espace vectoriel de dimension *d* a pour coordonnées les *d*
-médianes extraites sur chacune des dimensions. Il ne reste
-plus q'à se servir de ce résultat pour mettre à jour l'algorithme
-:ref:`centre mobile, k-means <kmeans_def_algo>`.
+médianes extraites sur chacune des dimensions.
+L'algorithme est implémenté dans le module :epkg:`mlinsights`
+en s'inspirant du code :epkg:`KMeans`.
 
 Bibliographie
 =============
