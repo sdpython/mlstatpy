@@ -9,4 +9,3 @@ Bases de Machine Learning
     rn/rn
     kppv
     missing_values_mf
-    lr_voronoi
