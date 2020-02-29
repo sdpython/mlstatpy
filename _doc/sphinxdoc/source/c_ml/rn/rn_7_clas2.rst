@@ -1,5 +1,5 @@
 
-.. classification:
+.. _rn-classification:
 
 Classification
 ==============

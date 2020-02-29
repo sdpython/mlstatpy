@@ -10,6 +10,8 @@ Aucun autre type de réseau de neurones ne sera étudié et par la suite,
 tout réseau de neurones sera considéré comme multi-couches
 (donc pas les `réseau de Kohonen <https://fr.wikipedia.org/wiki/Carte_auto_adaptative>`_).
 
+.. _l-rn-neurone:
+
 Un neurone
 ++++++++++
 

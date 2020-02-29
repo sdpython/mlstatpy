@@ -1,7 +1,12 @@
 
-#########################
-Bases de Machine Learning
-#########################
+.. _l-model-ml:
+
+###########################
+Modèles de Machine Learning
+###########################
+
+Les paragraphes suivant abordent de façon plutôt théorique
+des modèles de machine learning.
 
 .. toctree::
     :maxdepth: 1
