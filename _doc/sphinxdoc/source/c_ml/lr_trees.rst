@@ -32,7 +32,7 @@ Dans le cas de la régression logistique, la fonction *f* est définie comme sui
 
 .. math::
 
-    f(\Theta, X_i) = \frac{1}{1 + e^{-\sum{k=1}^d \theta_k x_{ik}}}
+    f(\Theta, X_i) = \frac{1}{1 + e^{-\sum_{k=1}^d \theta_k x_{ik}}}
 
 Cela ressemble beaucoup à la définition d'un :ref:`neurone <l-rn-neurone>`
 où la fonction d'activation :math:`f(x) = \frac{1}{1 + e^{-x}}` est une
@@ -97,6 +97,7 @@ On apprend un arbre de décision qu'on exporte au format :epkg:`dot`.
 
 .. runpython::
     :showcode:
+    :warningout: RuntimeWarning
 
     from sklearn.datasets import load_iris
     from sklearn.tree import DecisionTreeClassifier, export_graphviz
