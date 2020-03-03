@@ -38,6 +38,8 @@ Cela ressemble beaucoup à la définition d'un :ref:`neurone <l-rn-neurone>`
 où la fonction d'activation :math:`f(x) = \frac{1}{1 + e^{-x}}` est une
 fonction sigmoïde.
 
+.. _l-lr-log-likelihood:
+
 Principe d'un arbre de décision
 ===============================
 
@@ -143,6 +145,71 @@ appris sur les exemples passant par ce noeud... Plutôt que de prendre
 une décision basée sur une variable donnée et de retourner une probabilité
 constante, on estime une régression logistique et on retourne
 la probabilité retournée par la régression.
+
+S'il n'y a théoriquement aucun obstacle, en pratique, certains cas
+posent quelques problèmes comme le montre l'exemple
+:ref:`l-example-logistic-decision` et repris ci-dessous.
+
+.. plot::
+
+    import matplotlib.pyplot as plt
+    from mlstatpy.ml.logreg import criteria, random_set_1d, plot_ds
+
+    X1, y1 = random_set_1d(1000, False)
+    X2, y2 = random_set_1d(1000, True)
+    df1 = criteria(X1, y1)
+    df2 = criteria(X2, y2)
+
+    fig, ax = plt.subplots(1, 2, figsize=(12, 6), sharey=True)
+    plot_ds(X1, y1, ax=ax[0], title="easy")
+    plot_ds(X2, y2, ax=ax[1], title="difficult")
+    df1.plot(x='X', y=['Gini', 'Gain', 'LL-10', 'p1', 'p2'], ax=ax[0], lw=5.)
+    df2.plot(x='X', y=['Gini', 'Gain', 'LL-10', 'p1', 'p2'], ax=ax[1], lw=5.)
+    plt.show()
+
+Le seuil de coupure est évident dans le premier cas et
+quasiment impossible à trouver de façon numérique dans le second
+avec les algorithmes tels qu'ils sont implémentés.
+Les arbres de décision contournent
+ce problème en imposant que le seuil de coupure laisse au moins
+quelques exemples de chaque côté ce que la régression logistique
+ne fait pas.
+
+Aparté mathématique
++++++++++++++++++++
+
+La log-vraisemblance d'une régression logistique pour
+un jeu de données :math:`(X_i, y_i)` s'exprime comme
+suit pour une régression logistique de paramètre
+:math:`\beta`.
+
+.. math::
+
+    \begin{array}{rcl}
+    L(\beta, X, y) &=& \sum_{i=1}^n y_i \ln f(\beta, X_i) + (1-y_i) \ln (1-f(\beta, X_i)) \\
+    \text{avec } f(\beta, X_i) &=& \frac{1}{1 + \exp(- (\beta_0 + \sum_{k=1}^d x_{ik} \beta_k))}
+    \end{array}
+
+On remarque que :
+
+.. math::
+
+    \begin{array}{rcl}
+    f(x) &=& \frac{1}{1 + e^{-x}} \\
+    \Rightarrow f(-x) &=& \frac{1}{1 + e^{x}} = \frac{e^{-x}}{1 + e^{-x}} \\
+    \Rightarrow f(x) + f(-x) &=& \frac{1}{1 + e^{-x}} + \frac{e^{-x}}{1 + e^{-x}} = 1
+    \end{array}
+
+Cela explique pour on utilise souvent cette fonction pour transformer
+une distance en probabilité pour un classifieur binaire.
+L'apprentissage d'un arbre de décision
+:epkg:`sklearn:tree:DecisionTreeClassifier` propose le
+paramètre ``min_samples_leaf``. On se propose dans le cadre
+de la régression logistique de chercher le paramètre
+:math:`\beta_0` qui permet de vérifier la contrainte
+fixée par ``min_samples_leaf``. Cela revient à trounver
+un classifieur linéaire parallèle au premier qui vérifie
+les contraintes.
 
 Lien vers les réseaux de neurones
 =================================
