@@ -2,7 +2,6 @@
 @brief      test log(time=2s)
 @author     Xavier Dupre
 """
-import os
 import unittest
 from pyquickhelper.pycode import ExtTestCase
 from mlstatpy.ml.logreg import criteria, random_set_1d, plot_ds
@@ -25,7 +24,7 @@ class TestLogReg(ExtTestCase):
         df2 = criteria(X2, y2)
 
         import matplotlib.pyplot as plt
-        fig, ax = plt.subplots(1, 2, figsize=(12, 6), sharey=True)
+        _, ax = plt.subplots(1, 2, figsize=(12, 6), sharey=True)
         plot_ds(X1, y1, ax=ax[0], title="easy")
         plot_ds(X2, y2, ax=ax[1], title="difficult")
         df1.plot(x='X', y=['Gini', 'Gain', 'LL-10',
