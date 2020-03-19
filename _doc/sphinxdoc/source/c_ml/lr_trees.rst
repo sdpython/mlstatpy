@@ -211,8 +211,24 @@ fixée par ``min_samples_leaf``. Cela revient à trounver
 un classifieur linéaire parallèle au premier qui vérifie
 les contraintes.
 
+Approche EM et régression logistique
+====================================
+
+L'article [Scott2013]_ explicite un algorithme d'apprentissage EM
+pour une régression logistique.
+
+.. image:: lrtreesimg/bayes.png
+
+
 Lien vers les réseaux de neurones
 =================================
 
 Interprétabilité
 ================
+
+
+Bibliographie
+=============
+
+[Scott2013] `Expectation-maximization for logistic regression
+    <https://arxiv.org/pdf/1306.0040.pdf>`_, James G. Scott, Liang Sun
