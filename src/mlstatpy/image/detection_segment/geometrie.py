@@ -28,7 +28,7 @@ class Point:
 
     def __repr__(self):
         """usuel"""
-        return Point(self.x, self.y)
+        return 'Point({0}, {1})'.format(self.x, self.y)
 
     def normalise(self):
         """normalise le vecteur, sa norme devient 1"""

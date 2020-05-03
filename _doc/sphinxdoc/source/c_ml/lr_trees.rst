@@ -219,13 +219,11 @@ pour une régression logistique.
 
 .. image:: lrtreesimg/bayes.png
 
-
 Lien vers les réseaux de neurones
 =================================
 
 Interprétabilité
 ================
-
 
 Bibliographie
 =============
