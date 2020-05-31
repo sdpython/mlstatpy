@@ -34,16 +34,16 @@ def profit(N, X, p, q, s):
         return X * (s - p) + N * (q - s)
 
 
-def proba_poisson(l, i):
+def proba_poisson(lx, i):
     """
     Calcule la probabilité :math:`\\pr{X=i}``
     lorsque :math:`X` suit une loi de Poisson de paramètre
     :math:`\\lambda`.
     """
-    return math.exp(-l) * (l ** i) / factorielle(i)
+    return math.exp(-lx) * (lx ** i) / factorielle(i)
 
 
-def esperance(X, p, q, s, l):
+def esperance(X, p, q, s, lx):
     """
     Espérance du profit en faisant varier
     le nombre de poulet vendus.
@@ -52,16 +52,16 @@ def esperance(X, p, q, s, l):
     @param      p       prix d'achat
     @param      q       prix de vente
     @param      s       prix soldé
-    @param      l       paramètre :math:`\\lambda`
+    @param      lx      paramètre :math:`\\lambda`
     @return             espérance du profit
     """
     res = 0.0
-    for i in range(0, l * 2):
-        res += profit(float(i), X, p, q, s) * proba_poisson(l, i)
+    for i in range(0, lx * 2):
+        res += profit(float(i), X, p, q, s) * proba_poisson(lx, i)
     return res
 
 
-def maximum(p, q, s, l):
+def maximum(p, q, s, lx):
     """
     Calcule les espérances de profit pour différents nombres
     de poulets achetés.
@@ -69,12 +69,12 @@ def maximum(p, q, s, l):
     @param      p       prix d'achat
     @param      q       prix de vente
     @param      s       prix soldé
-    @param      l       paramètre :math:`\\lambda`
+    @param      lx      paramètre :math:`\\lambda`
     @return             liste ``(X, profit)``
     """
     res = []
-    for X in range(0, 2 * l):
-        r = esperance(X, p, q, s, l)
+    for X in range(0, 2 * lx):
+        r = esperance(X, p, q, s, lx)
         res.append((X, r))
     return res
 
@@ -94,22 +94,22 @@ def find_maximum(res):
     return m
 
 
-def exponentielle(l):
+def exponentielle(lx):
     """
     Simule une loi exponentielle de paramètre :math:`\\lambda`.
     """
     u = random.random()
-    return - 1.0 / l * math.log(1.0 - u)
+    return - 1.0 / lx * math.log(1.0 - u)
 
 
-def poisson(l):
+def poisson(lx):
     """
     Simule une loi de Poisson de paramètre :math:`\\lambda`.
     """
     s = 0
     i = 0
     while s <= 1:
-        s += exponentielle(l)
+        s += exponentielle(lx)
         i += 1
     return i - 1
 
