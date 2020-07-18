@@ -252,8 +252,8 @@ def detect_segments(image, proba_bin=1.0 / 16,
     seg = SegmentBord(Point(xx, yy))
 
     # initialisation avant de parcourir l'image
-    segment = []        # resultat, ensemble des segments significatifs
-    ti = time.clock()  # memorise l'heure de depart
+    segment = []  # resultat, ensemble des segments significatifs
+    ti = time.perf_counter()  # memorise l'heure de depart
     # pour savoir combien de segments on a deja visite (seg)
     n = 0
     cont = True         # condition d'arret de la boucle
@@ -297,6 +297,7 @@ def detect_segments(image, proba_bin=1.0 / 16,
         # pour verifier que cela avance
         if verbose and n % 1000 == 0:
             print("n = ", n, " ... ", len(segment), " temps ",
-                  "%2.2f" % (time.clock() - ti), " sec", "nalign", not_aligned)
+                  "%2.2f" % (time.perf_counter() - ti), " sec",
+                  "nalign", not_aligned)
 
     return segment

@@ -428,7 +428,7 @@ class CompletionSystem:
             store_completions = {'': []}
 
         improved = {}
-        to = time.clock()
+        to = time.perf_counter()
         fLOG("init_metrics:", len(self))
         for i, el in enumerate(self._elements):
             if details:
@@ -438,7 +438,7 @@ class CompletionSystem:
                 r = el.init_metrics(i)
             if r and el.value not in improved:
                 improved[el.value] = el
-        t = time.clock()
+        t = time.perf_counter()
         fLOG(
             "interation 0: #={0} dt={1} - log details={2}".format(len(self), t - to, details))
 
@@ -466,7 +466,7 @@ class CompletionSystem:
                         if el.value not in improved:
                             improved[el.value] = el
                         updates += 1
-            t = time.clock()
+            t = time.perf_counter()
             fLOG("interation {0}: updates={1} dt={2}".format(
                 it, updates, t - to))
             it += 1
