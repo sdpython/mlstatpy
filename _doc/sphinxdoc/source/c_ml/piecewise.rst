@@ -43,8 +43,8 @@ Problème et regréssion linéaire dans un espace à une dimension
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Tout d'abord, une petite
-illustration du problème avec la classe
-`PiecewiseRegression <http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression.html>`_
+illustration du problème avec la classe `PiecewiseRegression
+<http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression.html>`_
 implémentée selon l'API de :epkg:`scikit-learn`.
 
 .. toctree::
@@ -106,7 +106,12 @@ linéaire parce qu'il est difficile de simplifier la différence :
     &=&  E(1, k-1) - E(1, k) + E(k, n) - E(k+1, n)
     \end{array}
 
-On s'intéresse au terme :math:`E(1, k-1) - E(1, k)` :
+**Arbre de régression constante**
+
+On s'intéresse au terme :math:`E(1, k-1) - E(1, k)` dans le cas
+le nuage de points est représenté par une constante sur chaque segment.
+C'est l'hypothèse faite par l'algorithme classique de construction
+d'un arbre de régression (segments verts sur le premier dessin) :
 
 .. math::
 
@@ -151,6 +156,8 @@ Le résultat est sans équivoque. La version rapide n'implémente pas
 et dans l'autre. En gros,
 le code stocke les séries des numérateurs et des dénominateurs
 pour les diviser au dernier moment.
+
+**Arbre de régression linéaire**
 
 Le cas d'une régression est plus complexe. Prenons d'abord le cas
 où il n'y a qu'un seule dimension,
@@ -843,6 +850,11 @@ Notebooks
 .. toctree::
 
     ../notebooks/regression_no_inversion
+
+Implémentations
+===============
+
+* :epkg:`PiecewiseTreeRegressor`
 
 Bilbiographie
 =============

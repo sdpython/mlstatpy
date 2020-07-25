@@ -125,26 +125,34 @@ mathdef_link_only = True
 epkg_dictionary.update({
     'ACP': 'https://fr.wikipedia.org/wiki/Analyse_en_composantes_principales',
     "AESA": "https://tavianator.com/aesa/",
-    'ApproximateNMFPredictor': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/anmf_predictor.html',
+    'ApproximateNMFPredictor':
+        'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/anmf_predictor.html',
     "B+ tree": "https://en.wikipedia.org/wiki/B%2B_tree",
     "Branch and Bound": "https://en.wikipedia.org/wiki/Branch_and_bound",
-    "Custom Criterion for DecisionTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
+    "Custom Criterion for DecisionTreeRegressor":
+        "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
     'cython': 'https://cython.org/',
-    'DecisionTreeRegressor optimized for Linear Regression': "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
+    'DecisionTreeRegressor optimized for Linear Regression':
+        "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
     'dot': 'https://fr.wikipedia.org/wiki/DOT_(langage)',
     'ICML 2016': 'https://icml.cc/2016/index.html',
     'KMeans': 'https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html',
     "LAESA": "https://tavianator.com/aesa/",
     'LAPACK': 'http://www.netlib.org/lapack/',
     'mlinsights': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/index.html',
+    'PiecewiseTreeRegressor':
+        'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/'
+        'piecewise_tree_regression.html#mlinsights.mlmodel.piecewise_tree_regression.PiecewiseTreeRegressor',
     'Predictable t-SNE': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/predictable_tsne.html',
     "R-tree": "https://en.wikipedia.org/wiki/R-tree",
     "R* tree": "https://en.wikipedia.org/wiki/R*_tree",
-    'Regression with confidence interval': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/regression_confidence_interval.html',
+    'Regression with confidence interval':
+        'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/regression_confidence_interval.html',
     'ROC': 'https://fr.wikipedia.org/wiki/Courbe_ROC',
     'statsmodels': 'http://www.statsmodels.org/stable/index.html',
     'SVD': 'https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res',
-    'Visualize a scikit-learn pipeline': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/visualize_pipeline.html',
+    'Visualize a scikit-learn pipeline':
+        'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/visualize_pipeline.html',
     "X-tree": "https://en.wikipedia.org/wiki/X-tree",
 })
 

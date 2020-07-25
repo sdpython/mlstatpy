@@ -1,9 +1,9 @@
 
 .. _l-lr-trees-nn:
 
-===========================================
-Régression logistique et arbres de décision
-===========================================
+======================================================
+Régression logistique par morceaux, arbres de décision
+======================================================
 
 .. index:: régression logistique, arbre de décision, réseaux de neurones
 
@@ -149,22 +149,28 @@ la probabilité retournée par la régression.
 S'il n'y a théoriquement aucun obstacle, en pratique, certains cas
 posent quelques problèmes comme le montre l'exemple
 :ref:`l-example-logistic-decision` et repris ci-dessous.
+La fonction :func:`criteria <mlstatpy.ml.logreg.criteria>`
+calcule les différents gains selon les points de coupure.
 
 .. plot::
 
     import matplotlib.pyplot as plt
     from mlstatpy.ml.logreg import criteria, random_set_1d, plot_ds
 
-    X1, y1 = random_set_1d(1000, False)
-    X2, y2 = random_set_1d(1000, True)
+    X1, y1 = random_set_1d(1000, 2)
+    X2, y2 = random_set_1d(1000, 3)
+    X3, y3 = random_set_1d(1000, 4)
     df1 = criteria(X1, y1)
     df2 = criteria(X2, y2)
+    df3 = criteria(X3, y3)
 
-    fig, ax = plt.subplots(1, 2, figsize=(12, 6), sharey=True)
+    fig, ax = plt.subplots(1, 3, figsize=(14, 5), sharey=True)
     plot_ds(X1, y1, ax=ax[0], title="easy")
     plot_ds(X2, y2, ax=ax[1], title="difficult")
-    df1.plot(x='X', y=['Gini', 'Gain', 'LL-10', 'p1', 'p2'], ax=ax[0], lw=5.)
-    df2.plot(x='X', y=['Gini', 'Gain', 'LL-10', 'p1', 'p2'], ax=ax[1], lw=5.)
+    plot_ds(X3, y3, ax=ax[2], title="more difficult")
+    df1.plot(x='X', y=['Gini', 'Gain', 'p1', 'p2'], ax=ax[0], lw=5.)
+    df2.plot(x='X', y=['Gini', 'Gain', 'p1', 'p2'], ax=ax[1], lw=5.)
+    df3.plot(x='X', y=['Gini', 'Gain', 'p1', 'p2'], ax=ax[2], lw=5.)
     plt.show()
 
 Le seuil de coupure est évident dans le premier cas et
@@ -173,7 +179,44 @@ avec les algorithmes tels qu'ils sont implémentés.
 Les arbres de décision contournent
 ce problème en imposant que le seuil de coupure laisse au moins
 quelques exemples de chaque côté ce que la régression logistique
-ne fait pas.
+ne fait pas. On peut réflechir à d'autres critères.
+Le suivant explore la log-vraisemblance.
+
+.. plot::
+
+    import matplotlib.pyplot as plt
+    from mlstatpy.ml.logreg import criteria2, random_set_1d, plot_ds
+
+    X1, y1 = random_set_1d(1000, 2)
+    X2, y2 = random_set_1d(1000, 3)
+    X3, y3 = random_set_1d(1000, 4)
+    df1 = criteria2(X1, y1)
+    df2 = criteria2(X2, y2)
+    df3 = criteria2(X3, y3)
+    print(df3)
+
+    fig, ax = plt.subplots(1, 3, figsize=(14, 5), sharey=True)
+    plot_ds(X1, y1, ax=ax[0], title="easy")
+    plot_ds(X2, y2, ax=ax[1], title="difficult")
+    plot_ds(X3, y3, ax=ax[2], title="more difficult")
+    df1.plot(x='X', y=['LL', 'LL-10', 'LL-100'], ax=ax[0], lw=5.)
+    df2.plot(x='X', y=['LL', 'LL-10', 'LL-100'], ax=ax[1], lw=5.)
+    df3.plot(x='X', y=['LL', 'LL-10', 'LL-100'], ax=ax[2], lw=5.)
+    plt.show()
+
+La log-vraisemblance dans ce problème à une dimension
+est assez simple à écrire. Pour avoir une expression qui
+ne change pas en invertissant les classes, on considère
+le maxiimum des vraisemblance en considérant deux classifieurs
+opposés. Le graphe précédent fait varier :math:`x_0` avec
+différents :math:`\theta`.
+
+.. math::
+
+    LL(x_0, \theta) = \max \left\{ \begin{array}{ll}
+    \frac{1}{1 + \exp((x-x_0) / \theta) \\
+    \frac{1}{1 + \exp(- (x-x_0) / \theta)
+    \end{array}\right.
 
 Aparté mathématique
 +++++++++++++++++++
@@ -219,6 +262,12 @@ pour une régression logistique.
 
 .. image:: lrtreesimg/bayes.png
 
+Il faudrait adapter cet agorithme pour apprendre deux régressions
+logistiques dont la combinaison sur deux parties disjointes
+serait meilleure qu'une seule régression logistique sur
+la réunion des deux parties. Cet algorithme devrait trouver à
+la fois les modèles et la séparation entre les deux parties.
+
 Lien vers les réseaux de neurones
 =================================
 
@@ -228,5 +277,5 @@ Interprétabilité
 Bibliographie
 =============
 
-[Scott2013] `Expectation-maximization for logistic regression
-    <https://arxiv.org/pdf/1306.0040.pdf>`_, James G. Scott, Liang Sun
+[Scott2013] `Expectation-maximization for logistic regression <https://arxiv.org/pdf/1306.0040.pdf>`_,
+    James G. Scott, Liang Sun

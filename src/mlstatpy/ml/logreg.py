@@ -12,19 +12,27 @@ def random_set_1d(n, kind):
     :ref:`l-example-logistic-decision`.
 
     @param      n       number of observations
-    @param      kind    True or False (see example)
+    @param      kind    2, 3, 4 (see example)
     @return             array 2D
     """
     x = numpy.random.rand(n) * 3 - 1
-    if kind:
+    if kind == 3:
         y = numpy.empty(x.shape, dtype=numpy.int32)
         y[x < 0] = 0
         y[(x >= 0) & (x <= 1)] = 1
         y[x > 1] = 0
-    else:
+    elif kind == 2:
         y = numpy.empty(x.shape, dtype=numpy.int32)
         y[x < 0] = 0
         y[x >= 0] = 1
+    elif kind == 4:
+        y = numpy.empty(x.shape, dtype=numpy.int32)
+        y[x < 0] = 0
+        y[(x >= 0) & (x <= 0.8)] = 1
+        y[(x >= 0.8) & (x <= 1.5)] = 0
+        y[x > 1.5] = 1
+    else:
+        raise ValueError('kind must be in (2, 3, 4).')
     x2 = numpy.random.rand(n)
     return numpy.vstack([x, x2]).T, y
 
@@ -37,7 +45,9 @@ def plot_ds(X, y, ax=None, title=None):
     if ax is None:
         import matplotlib.pyplot as plt
         ax = plt.gca()
-    ax.scatter(X[:, 0], X[:, 1], c=y, s=20, edgecolor='k', lw=0.5)
+    colors = {0: '#88CCCC', 1: '#CCCC88'}
+    c = [colors[_] for _ in y]
+    ax.scatter(X[:, 0], X[:, 1], c=c, s=20, edgecolor='k', lw=0.1)
     if title is not None:
         ax.set_title(title)
     return ax
@@ -94,6 +104,37 @@ def criteria(X, y):
         res[i, 4] = 1 - p1**2 - (1 - p1)**2 + 1 - p2**2 - (1 - p2)**2
         res[i, 5] = - plog2(p1) - plog2(1 - p1) - plog2(p2) - plog2(1 - p2)
         th = x[i]
-        res[i, 6] = logistic(th * 10.)
-        res[i, 7] = numpy.sum(likelihood(x, y, 10., th)) / res.shape[0]
-    return DataFrame(res[1:-1], columns=['X', 'y', 'p1', 'p2', 'Gini', 'Gain', 'lr', 'LL-10'])
+        res[i, 6] = logistic(th)
+        res[i, 7] = numpy.sum(likelihood(x, y, 1., th)) / res.shape[0]
+    columns = ['X', 'y', 'p1', 'p2', 'Gini', 'Gain', 'lr', 'LL']
+    return DataFrame(res[1:-1], columns=columns)
+
+
+def criteria2(X, y):
+    """
+    Computes Gini, information gain, likelihood on a dataset
+    with two features assuming the first coordinates is used to classify.
+
+    @param      X       2D matrix
+    @param      y       binary labels
+    @return             dataframe
+    """
+    res = numpy.empty((X.shape[0], 5))
+    res[:, 0] = X[:, 0]
+    res[:, 1] = y
+    order = numpy.argsort(res[:, 0])
+    res = res[order, :].copy()
+    x = res[:, 0].copy()
+    y = res[:, 1].copy()
+
+    for i in range(1, res.shape[0] - 1):
+        # gini
+        th = x[i]
+        res[i, 2] = max(numpy.sum(likelihood(x, y, 1., th)),
+                        numpy.sum(likelihood(x, y, -1., th))) / res.shape[0]
+        res[i, 3] = max(numpy.sum(likelihood(x, y, 10., th)),
+                        numpy.sum(likelihood(x, y, -10., th))) / res.shape[0]
+        res[i, 4] = max(numpy.sum(likelihood(x, y, 100., th)),
+                        numpy.sum(likelihood(x, y, -100., th))) / res.shape[0]
+    columns = ['X', 'y', 'LL', 'LL-10', 'LL-100']
+    return DataFrame(res[1:-1], columns=columns)
