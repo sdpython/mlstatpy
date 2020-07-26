@@ -219,7 +219,7 @@ différents :math:`\theta`.
     \end{array}\right.
 
 Aparté mathématique
-+++++++++++++++++++
+===================
 
 La log-vraisemblance d'une régression logistique pour
 un jeu de données :math:`(X_i, y_i)` s'exprime comme
@@ -268,8 +268,34 @@ serait meilleure qu'une seule régression logistique sur
 la réunion des deux parties. Cet algorithme devrait trouver à
 la fois les modèles et la séparation entre les deux parties.
 
+.. todoext::
+    :title: Arbre de régressions logistiques et EM
+    :tag: idée
+    :issue: 28
+
+    Chaque noeud du graphe serait modélisé comme étant la réunion
+    de trois régressions logistiques, une pour diviser
+    l'espace en deux, deux autres apprenant à classifier sur chacune
+    des parties.
+
 Lien vers les réseaux de neurones
 =================================
+
+En remplçant chaque noeud par une régression logistique,
+l'arbre de décision deviendrait un réseau de neurones,
+avec une structure particulière certes mais un réseau de
+neurones tout de mêmes.
+
+.. todoext::
+    :title: Réseau de neurones construit à partir d'un arbre de décision
+    :tag: idée
+    :issue: 27
+
+    Chaque noeud du graphe serait transformé en un neurone
+    avec une régression logistique impliquant toutes les variables.
+    Il ne resterait plus qu'à continuer l'apprentissage avec des
+    algorithmes à base de gradient stochastique. Cela reviendrait
+    à changer l'initialisation du réseau de neurones.
 
 Interprétabilité
 ================

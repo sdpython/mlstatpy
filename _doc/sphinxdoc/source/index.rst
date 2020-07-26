@@ -28,6 +28,7 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
     c_algo/index
     c_garden/index
     api/index
+    i_idee
     end_index
 
 Exemples
