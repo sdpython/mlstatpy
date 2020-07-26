@@ -137,6 +137,8 @@ Ce qui donne :
         6 -> 8 ;
     }
 
+.. _l-criteria-reg-log:
+
 Construction d'un pseudo arbre
 ==============================
 
@@ -281,7 +283,7 @@ la fois les modèles et la séparation entre les deux parties.
 Lien vers les réseaux de neurones
 =================================
 
-En remplçant chaque noeud par une régression logistique,
+En remplaçant chaque noeud par une régression logistique,
 l'arbre de décision deviendrait un réseau de neurones,
 avec une structure particulière certes mais un réseau de
 neurones tout de mêmes.
@@ -296,6 +298,52 @@ neurones tout de mêmes.
     Il ne resterait plus qu'à continuer l'apprentissage avec des
     algorithmes à base de gradient stochastique. Cela reviendrait
     à changer l'initialisation du réseau de neurones.
+
+Plan orthogonal
+===============
+
+Dans un espace à plusieurs dimensions, la régression logistique
+divise l'espace à l'aide d'un hyperplan. La fonction de décision
+reste similaire puisque la probabilité de classification dépend de la
+distance à cet hyperplan. On suppose qu'il existe une
+régression logistique binaire apprise sur un nuage de points 
+:math:`(X_i, y_i)`. La probabilité de bonne classification est
+définie par :
+
+.. math::
+
+    f(\Theta, X_i) = \frac{1}{1 + e^{-\theta_0 + \sum_{k=1}^d \theta_k x_{ik}}}
+
+Le vecteur :math:`\Theta` définit un hyperplan. On choisit un vecteur
+:math:`\Theta'` de telle sorte que :math:`<\Theta,\Theta'> = 0`. Les deux
+vecteurs sont orthogonaux. On définit maintenant deux
+autres vecteurs :math:`\Theta_1, \Theta_2` pour deux autres régressions
+logistiques. Pour classer un point :math:`X`, on procède comme suit :
+
+* si :math:`<\Theta',X> < 0`, on classe le point en appliquant
+  la régression logistique définie par :math:`Theta_1`,
+* si :math:`<\Theta',X> \leqslant 0`, on classe le point en appliquant
+  la régression logistique définie par :math:`Theta_2`.
+  
+De manière évidente, les performances en classification sont les mêmes
+que la première régression logistique. On peut ensuite réestimer les
+vecteurs :math:`\Theta_1, \Theta_2` pour maximiser la vraisemblance
+sur chacune des parties. Il ne reste plus qu'à montrer que la vraisemblance
+globale sera supérieur à celle obtenue par la première régression logistique.
+
+.. todoext::
+    :title: Arbre de régressions logistiques en cascade orthogonale
+    :tag: idée
+    :issue: 29
+
+    Implémenter la l'algorithme suivant :
+
+    * Apprendre une régression logistique
+    * Choisir un hyperplan perpendiculaire en optimisation
+      un critère :ref:`l-criteria-reg-log`
+    * Apprendre une régression logistique sur chacune des parties.
+    * Continuer jusqu'à ce l'amélioration soit négligeable
+
 
 Interprétabilité
 ================
