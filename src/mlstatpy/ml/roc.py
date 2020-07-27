@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 @file
-@brief About ROC
+@brief About :epkg:`ROC`.
 """
 import math
 import itertools

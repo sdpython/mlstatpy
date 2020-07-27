@@ -157,5 +157,6 @@ epkg_dictionary.update({
 })
 
 nblinks = {
-    'l-reglin-piecewise-streaming': 'http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/c_ml/piecewise.html#streaming-linear-regression',
+    'l-reglin-piecewise-streaming':
+        'http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/c_ml/piecewise.html#streaming-linear-regression',
 }

@@ -286,7 +286,7 @@ Lien vers les réseaux de neurones
 En remplaçant chaque noeud par une régression logistique,
 l'arbre de décision deviendrait un réseau de neurones,
 avec une structure particulière certes mais un réseau de
-neurones tout de mêmes.
+neurones tout de même.
 
 .. todoext::
     :title: Réseau de neurones construit à partir d'un arbre de décision
@@ -299,6 +299,70 @@ neurones tout de mêmes.
     algorithmes à base de gradient stochastique. Cela reviendrait
     à changer l'initialisation du réseau de neurones.
 
+On considère le petit arbre décision suivant,
+trois features, trois noeuds, deux classes.
+
+.. gdot::
+
+    digraph tree {
+        A [label="X1 < 5",shape=record];
+        B [label="X2 < 3",shape=record];
+        C [label="X3 < 2",shape=record];
+        A -> B;
+        A -> C;
+        D [label="<c0> 0|<c1> 1",shape=record];
+        E [label="<c0> 0|<c1> 1",shape=record];
+        B -> D:c0;
+        B -> D:c1;
+        C -> E:c0;
+        C -> E:c1;
+    }
+
+On souhaite le transformer en réseau de neurones avec une
+structure qui serait celle qui suit. On note tout d'abord
+la fonction sigmoïde :math:`f(x, s, h)=\frac{1}{1 + e^{-h(x - s)}`.
+Elle vaut *1/2* lorsque *x* vaut *s*, vaut 1 lorsque *x*
+est très grand, et 0 lorsque *x* est très petit.
+C'est équivalent à la fonction
+:math:`f(x, s, h)=g(X, S, v_0, h)\frac{1}{1 + e^{h(<X,V> + v_0)}`
+où :math:`X=(x_1, x_2, x_3)`, :math:`V=(-1, 0, 0)` et :math:`v_0=s`.
+
+.. gdot::
+
+    digraph tree {
+        A [label="y1=g(X, (-1, 0, 0), 5, h)",shape=record];
+        B [label="y2=g(X, (0, -1, 0), 3, h)",shape=record];
+        C [label="y3=g(X, (0, 0, -1), 2, h)",shape=record];
+        D [label="y4=g((y1, y2), (-1, -1), 1, h)",shape=record];
+        E [label="y5=g((y1, y3), (-1, -1), 1, h)",shape=record];
+        A -> D;
+        A -> E;
+        B -> D;
+        C -> E;
+
+        F [label="y6=g((y4, y5), (-1, -1), 1, h)",shape=record];
+        CL3 [label="<c0> 0|<c1> 1"];
+        D -> F;
+        E -> F;
+        F -> CL3:c0;
+        F -> CL3:c1;
+    }
+
+Le problème avec la structure proposée est que chaque noeud
+final retourne toujours une classe alors que dans un arbre de
+décision, seule une feuille répond. Un noeud final fait la somme
+de toutes les feuilles, deux dans cet exemple. L'implémentation
+de :epkg:`scikit-learn` n'est pas la plus facile à manipuler
+dans le sens où chaque couche ne peut prendre comme entrée
+que les sorties de la précédente et la fonction d'activation
+est la même pour tous les neurones. On ne peut pas non plus
+geler certains coefficients lors de l'apprentissage.
+C'est à ce moment-là qu'on se demande si ça vaut le coup
+de se lancer dans une implémentation à la riguer jolie mais
+sans doute pas porteuse d'une innovation majeure. Et ce n'est
+pas la première fois que quelqu'un se lance dans la conversion
+d'un arbre en réseaux de neurones.
+
 Plan orthogonal
 ===============
 
@@ -306,7 +370,7 @@ Dans un espace à plusieurs dimensions, la régression logistique
 divise l'espace à l'aide d'un hyperplan. La fonction de décision
 reste similaire puisque la probabilité de classification dépend de la
 distance à cet hyperplan. On suppose qu'il existe une
-régression logistique binaire apprise sur un nuage de points 
+régression logistique binaire apprise sur un nuage de points
 :math:`(X_i, y_i)`. La probabilité de bonne classification est
 définie par :
 
@@ -324,7 +388,7 @@ logistiques. Pour classer un point :math:`X`, on procède comme suit :
   la régression logistique définie par :math:`Theta_1`,
 * si :math:`<\Theta',X> \leqslant 0`, on classe le point en appliquant
   la régression logistique définie par :math:`Theta_2`.
-  
+
 De manière évidente, les performances en classification sont les mêmes
 que la première régression logistique. On peut ensuite réestimer les
 vecteurs :math:`\Theta_1, \Theta_2` pour maximiser la vraisemblance
@@ -343,7 +407,6 @@ globale sera supérieur à celle obtenue par la première régression logistique
       un critère :ref:`l-criteria-reg-log`
     * Apprendre une régression logistique sur chacune des parties.
     * Continuer jusqu'à ce l'amélioration soit négligeable
-
 
 Interprétabilité
 ================
