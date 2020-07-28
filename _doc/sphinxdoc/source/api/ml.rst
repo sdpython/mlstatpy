@@ -14,3 +14,8 @@ Métriques
 .. autosignature:: mlstatpy.ml.roc.ROC
 
 .. autosignature:: mlstatpy.ml.voronoi.voronoi_estimation_from_lr
+
+Tree and neural networks
+++++++++++++++++++++++++
+
+.. autosignature:: mlstatpy.ml.neural_tree.NeuralTreeNode
