@@ -7,7 +7,7 @@ import unittest
 import pickle
 import numpy
 from pyquickhelper.pycode import ExtTestCase
-from mlstatpy.ml.neural_tree import NeuralTreeNode
+from mlstatpy.ml.neural_tree import NeuralTreeNode, NeuralTreeNet
 
 
 class TestNeuralTree(ExtTestCase):
@@ -25,6 +25,15 @@ class TestNeuralTree(ExtTestCase):
         st = io.BytesIO(st.getvalue())
         neu2 = pickle.load(st)
         self.assertTrue(neu == neu2)
+
+    def test_neural_tree_network(self):
+        net = NeuralTreeNet(3)
+        X = numpy.random.randn(2, 3)
+        got = net.predict(X)
+        exp = X.sum(axis=1)
+        self.assertEqual(exp.reshape((-1, 1)), got[:, -1:])
+        rep = repr(net)
+        self.assertEqual(rep, 'NeuralTreeNet(3)')
 
 
 if __name__ == "__main__":
