@@ -11,4 +11,5 @@ pillow
 scipy
 seaborn
 setuptools
+statsmodels
 Sphinx
