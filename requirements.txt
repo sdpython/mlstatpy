@@ -6,9 +6,7 @@ jupyter_sphinx
 jyquickhelper
 mako
 memory_profiler
-minepy
-mlinsights>=0.2.312
-mutagen
+mlinsights>=0.2.491
 pycodestyle
 pyensae>=1.2.788
 pyinstrument
