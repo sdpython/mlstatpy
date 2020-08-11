@@ -4,6 +4,7 @@
 @brief Conversion from tree to neural network.
 """
 import numpy
+import numpy.random as rnd
 from scipy.special import expit  # pylint: disable=E0611
 
 
@@ -30,19 +31,33 @@ class NeuralTreeNode:
         raise ValueError(
             "Unknown activation function '{}'.".format(activation))
 
-    def __init__(self, weights, bias, activation='sigmoid', nodeid=-1):
+    def __init__(self, weights, bias=None, activation='sigmoid', nodeid=-1):
         """
         @param      weights     weights
-        @param      bias        bias
+        @param      bias        bias, if None, draws a random number
         @param      activation  activation function
         @param      nodeid      node id
         """
+        if bias is None:
+            bias = rnd.randn()
+        if isinstance(weights, int):
+            weights = rnd.randn(weights)
         self.coef = numpy.empty(len(weights) + 1)
         self.coef[1:] = weights
         self.coef[0] = bias
         self.activation = activation
         self.activation_ = NeuralTreeNode.get_activation_function(activation)
         self.nodeid = nodeid
+
+    @property
+    def weights(self):
+        "Returns the weights."
+        return self.coef[1:]
+
+    @property
+    def bias(self):
+        "Returns the weights."
+        return self.coef[0]
 
     def __getstate__(self):
         "usual"
@@ -78,9 +93,9 @@ class NeuralTreeNode:
         return self.activation_(X @ self.coef[1:] + self.coef[0])
 
     @property
-    def nbin(self):
+    def ndim(self):
         "Returns the input dimension."
-        return self.coef.shape[0]
+        return self.coef.shape[0] - 1
 
 
 class NeuralTreeNet:
@@ -98,8 +113,7 @@ class NeuralTreeNet:
                 numpy.ones((dim,), dtype=numpy.float64),
                 bias=numpy.float64(0.),
                 activation='identity', nodeid=0)]
-        self.nodes_attr = [
-            dict(left=None, right=[], input=0, output=dim + 1, dim=dim)]
+        self.nodes_attr = [dict(inputs=numpy.arange(0, dim), output=dim)]
         self._update_members()
 
     def _update_members(self):
@@ -109,14 +123,26 @@ class NeuralTreeNet:
         "usual"
         return "%s(%d)" % (self.__class__.__name__, self.dim)
 
+    def append(self, node, inputs):
+        """
+        Appends a node into the graph.
+
+        @param      node        node to add
+        @param      inputs      index of input nodes
+        """
+        if len(inputs) != node.ndim:
+            raise ValueError('Node and inputs must have the same dimension.')
+        node.nodeid = len(self.nodes)
+        self.nodes.append(node)
+        attr = dict(inputs=numpy.array(inputs), output=self.size_)
+        self.nodes_attr.append(attr)
+        self.size_ += 1
+
     def _predict_one(self, X):
         res = numpy.zeros((self.size_,), dtype=numpy.float64)
         res[:self.dim] = X
         for node, attr in zip(self.nodes, self.nodes_attr):
-            a = attr['input']
-            b = a + attr['dim']
-            c = attr['output']
-            res[c: c + 1] = node.predict(res[a:b])
+            res[attr['output']] = node.predict(res[attr['inputs']])
         return res
 
     def predict(self, X):

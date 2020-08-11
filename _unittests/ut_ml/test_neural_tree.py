@@ -35,6 +35,23 @@ class TestNeuralTree(ExtTestCase):
         rep = repr(net)
         self.assertEqual(rep, 'NeuralTreeNet(3)')
 
+    def test_neural_tree_network_append(self):
+        net = NeuralTreeNet(3)
+        self.assertRaise(
+            lambda: net.append(NeuralTreeNode(2, activation='identity'),
+                               inputs=[3]),
+            ValueError)
+        net.append(NeuralTreeNode(1, activation='identity'),
+                   inputs=[3])
+        self.assertEqual(net.size_, 5)
+        last_node = net.nodes[-1]
+        X = numpy.random.randn(2, 3)
+        got = net.predict(X)
+        exp = X.sum(axis=1) * last_node.weights[0] + last_node.bias
+        self.assertEqual(exp.reshape((-1, 1)), got[:, -1:])
+        rep = repr(net)
+        self.assertEqual(rep, 'NeuralTreeNet(3)')
+
 
 if __name__ == "__main__":
     unittest.main()

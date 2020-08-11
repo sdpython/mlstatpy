@@ -19,3 +19,5 @@ Tree and neural networks
 ++++++++++++++++++++++++
 
 .. autosignature:: mlstatpy.ml.neural_tree.NeuralTreeNode
+
+.. autosignature:: mlstatpy.ml.neural_tree.NeuralTreeNet

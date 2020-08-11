@@ -71,7 +71,8 @@ class MlGridBenchMark(GridBenchMark):
             spl = ["X", "Y", "weight", "group"]
             names = [_ for _ in spl if _ in ds]
             if len(names) == 0:
-                raise Exception("No dataframe or matrix was found.")
+                raise ValueError(  # pragma: no cover
+                    "No dataframe or matrix was found.")
             mats = [ds[_] for _ in names]
 
             pars = {"train_size", "test_size"}
@@ -97,10 +98,11 @@ class MlGridBenchMark(GridBenchMark):
         Calls meth *fit*.
         """
         if not isinstance(ds, tuple) and len(ds) != 2:
-            raise TypeError(
+            raise TypeError(  # pragma: no cover
                 "ds must a tuple with two dictionaries train, test")
         if "model" not in params:
-            raise KeyError("params must contains key 'model'")
+            raise KeyError(  # pragma: no cover
+                "params must contains key 'model'")
         model = params["model"]
         # we assume model is a function which creates a model
         model = model()
@@ -112,10 +114,11 @@ class MlGridBenchMark(GridBenchMark):
         Calls method *score*.
         """
         if not isinstance(ds, tuple) and len(ds) != 2:
-            raise TypeError(
+            raise TypeError(  # pragma: no cover
                 "ds must a tuple with two dictionaries train, test")
         if "model" in params:
-            raise KeyError("params must not contains key 'model'")
+            raise KeyError(  # pragma: no cover
+                "params must not contains key 'model'")
         return self.score(ds[1], model, **params)
 
     def fit(self, ds, model, **params):
@@ -126,9 +129,10 @@ class MlGridBenchMark(GridBenchMark):
         @param      model       model to train
         """
         if "X" not in ds:
-            raise KeyError("ds must contain key 'X'")
+            raise KeyError(  # pragma: no cover
+                "ds must contain key 'X'")
         if "model" in params:
-            raise KeyError(
+            raise KeyError(  # pragma: no cover
                 "params must not contain key 'model', this is the model to train")
         X = ds["X"]
         Y = ds.get("Y", None)
@@ -200,7 +204,7 @@ class MlGridBenchMark(GridBenchMark):
             decy = (ymax - ymin) / 50
             colors = mcm.rainbow(numpy.linspace(0, 1, len(btrys)))
             if len(btrys) == 0:
-                raise ValueError("The benchmark is empty.")
+                raise ValueError("The benchmark is empty.")  # pragma: no cover
             if ax is None:
                 _, ax = plt.subplots(1, 1, figsize=figsize)
                 ax.grid(True)
@@ -254,7 +258,7 @@ class MlGridBenchMark(GridBenchMark):
         """
         nb = len(self.Graphs)
         if nb == 0:
-            raise ValueError("No graph to plot.")
+            raise ValueError("No graph to plot.")  # pragma: no cover
 
         nb = len(self.Graphs)
         if nb % 2 == 0:
@@ -271,7 +275,7 @@ class MlGridBenchMark(GridBenchMark):
         else:
             shape = grid.shape
             if shape[0] * shape[1] < nb:
-                raise ValueError(
+                raise ValueError(  # pragma: no cover
                     "The graph is not big enough {0} < {1}".format(shape, nb))
 
         x = 0
