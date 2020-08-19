@@ -6,6 +6,7 @@ import io
 import unittest
 import pickle
 import numpy
+from sklearn.tree import DecisionTreeClassifier
 from pyquickhelper.pycode import ExtTestCase
 from mlstatpy.ml.neural_tree import NeuralTreeNode, NeuralTreeNet
 
@@ -38,9 +39,8 @@ class TestNeuralTree(ExtTestCase):
     def test_neural_tree_network_append(self):
         net = NeuralTreeNet(3)
         self.assertRaise(
-            lambda: net.append(NeuralTreeNode(2, activation='identity'),
-                               inputs=[3]),
-            ValueError)
+            lambda: net.append(
+                NeuralTreeNode(2, activation='identity'), inputs=[3]))
         net.append(NeuralTreeNode(1, activation='identity'),
                    inputs=[3])
         self.assertEqual(net.size_, 5)
@@ -51,6 +51,25 @@ class TestNeuralTree(ExtTestCase):
         self.assertEqual(exp.reshape((-1, 1)), got[:, -1:])
         rep = repr(net)
         self.assertEqual(rep, 'NeuralTreeNet(3)')
+
+    def test_convert(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        y2 = y.copy()
+        y2[0] = 2
+
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y2)
+        self.assertRaise(
+            lambda: NeuralTreeNet.create_from_tree(tree), RuntimeError)
+
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree)
+        self.assertNotEmpty(root)
+        exp = tree.predict(X)
+        got = root.predict(X)
+        self.assertEqual(exp.shape[0], got.shape[0])
 
 
 if __name__ == "__main__":

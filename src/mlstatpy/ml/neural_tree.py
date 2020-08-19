@@ -22,7 +22,7 @@ class NeuralTreeNode:
         """
         Returns the activation function.
         """
-        if activation in {'logistic', 'expit'}:
+        if activation in {'logistic', 'expit', 'sigmoid'}:
             return expit
         if activation == 'relu':
             return NeuralTreeNode._relu
@@ -130,13 +130,19 @@ class NeuralTreeNet:
         @param      node        node to add
         @param      inputs      index of input nodes
         """
-        if len(inputs) != node.ndim:
-            raise ValueError('Node and inputs must have the same dimension.')
+        if node.weights.shape[0] != len(inputs):
+            raise RuntimeError(
+                "Dimension mismatch between weights [{}] and inputs [{}].".format(
+                    node.weights.shape[0], len(inputs)))
         node.nodeid = len(self.nodes)
         self.nodes.append(node)
         attr = dict(inputs=numpy.array(inputs), output=self.size_)
         self.nodes_attr.append(attr)
         self.size_ += 1
+
+    def __getitem__(self, i):
+        "Retrieves node and attributes for node i."
+        return self.nodes[i], self.nodes_attr[i]
 
     def _predict_one(self, X):
         res = numpy.zeros((self.size_,), dtype=numpy.float64)
@@ -152,3 +158,72 @@ class NeuralTreeNet:
                 res[i, :] = self._predict_one(x)
             return res
         return self._predict_one(X)
+
+    @staticmethod
+    def create_from_tree(tree, k=1.):
+        """
+        Creates a @see cl NeuralTreeNet instance from a
+        :epkg:`DecisionTreeClassifier`
+
+        @param  tree    :epkg:`DecisionTreeClassifier`
+        @param  k       slant of the sigmoïd
+        @return         @see cl NeuralTreeNet
+
+        The function only works for binary problems.
+        """
+        if tree.n_classes_ > 2:
+            raise RuntimeError(
+                "The function only support binary classification problem.")
+        root = NeuralTreeNet(tree.max_features_)
+        index = {}
+
+        n_nodes = tree.tree_.node_count
+        children_left = tree.tree_.children_left
+        children_right = tree.tree_.children_right
+        feature = tree.tree_.feature
+        threshold = tree.tree_.threshold
+        max_features_ = tree.max_features_
+
+        feat_index = numpy.arange(0, max_features_)
+        predecessor = {}
+        output = []
+        for i in range(n_nodes):
+            # right side
+            coef = numpy.zeros((max_features_,), dtype=numpy.float64)
+            coef[feature[i]] = k
+            node = NeuralTreeNode(coef, bias=-k * threshold[i])
+            root.append(node, feat_index)
+            predecessor[children_left[i]] = (i, 0)
+            predecessor[children_right[i]] = (i, 1)
+            index[i] = node
+
+            if i in predecessor:
+                pred, side = predecessor[i]
+                if pred not in index:
+                    raise RuntimeError("Unxpected predecessor %r." % pred)
+
+                node1 = index[pred]
+                node2 = node
+                attr1 = root[node1.nodeid][1]
+                attr2 = root[node2.nodeid][1]
+
+                if side == 1:
+                    coef = numpy.ones((2,), dtype=numpy.float64) * k
+                    node = NeuralTreeNode(coef, bias=-k / 2)
+                else:
+                    coef = numpy.zeros((2,), dtype=numpy.float64)
+                    coef[0] = k
+                    coef[1] = -k
+                    node = NeuralTreeNode(coef, bias=k / 2)
+                root.append(node, [attr1['output'], attr2['output']])
+            elif children_left[i] != children_right[i]:
+                output.append(node)
+
+        # final node
+        coef = numpy.ones(
+            (len(output), ), dtype=numpy.float64) / len(output) * k
+        feat = [root[n.nodeid][1]['output'] for n in output]
+        root.append(NeuralTreeNode(coef, bias=-k * threshold[i]), feat)
+
+        # final
+        return root

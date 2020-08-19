@@ -132,6 +132,8 @@ epkg_dictionary.update({
     "Custom Criterion for DecisionTreeRegressor":
         "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
     'cython': 'https://cython.org/',
+    'DecisionTreeClassifier':
+        'https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html',
     'DecisionTreeRegressor optimized for Linear Regression':
         "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
     'dot': 'https://fr.wikipedia.org/wiki/DOT_(langage)',
