@@ -149,6 +149,33 @@ class TestNeuralTree(ExtTestCase):
         v2 = root.predict(X[:1])
         self.assertNotEqualArray(v1, v2)
 
+    def test_gradients(self):
+        X = numpy.array([0.1, 0.2, -0.3])
+        w = numpy.array([10, 20, 3])
+        g = numpy.array([-0.7], dtype=numpy.float64)
+        for act in ['sigmoid', 'sigmoid4', 'expit', 'identity', 'relu']:
+            neu = NeuralTreeNode(w, bias=-4, activation=act)
+            pred = neu.predict(X)
+            self.assertEqual(pred.shape, tuple())
+            grad = neu.gradients(g, X)
+            self.assertEqual(grad.shape, (4, ))
+            grad = neu.gradients(g, X, inputs=True)
+            self.assertEqual(grad.shape, (3, ))
+
+        X = numpy.array([0.1, 0.2, -0.3])
+        w = numpy.array([[10, 20, 3], [-10, -20, 3]])
+        b = numpy.array([-3, 4], dtype=numpy.float64)
+        g = numpy.array([-0.7, 0.2], dtype=numpy.float64)
+        for act in ['softmax', 'softmax4']:
+            neu = NeuralTreeNode(w, bias=b, activation=act)
+            pred = neu.predict(X)
+            self.assertAlmostEqual(numpy.sum(pred), 1.)
+            self.assertEqual(pred.shape, (2,))
+            grad = neu.gradients(g, X)
+            self.assertEqual(grad.shape, (2, 4))
+            grad = neu.gradients(g, X, inputs=True)
+            self.assertEqual(grad.shape, (3, ))
+
 
 if __name__ == "__main__":
     unittest.main()

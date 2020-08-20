@@ -18,32 +18,84 @@ class NeuralTreeNode:
         return x if x > 0 else 0
 
     @staticmethod
+    def _drelu(x):
+        return 1 if x > 0 else 0
+
+    @staticmethod
+    def _dsigmoid(x):
+        y = expit(x)
+        return y * (1 - y)
+
+    @staticmethod
+    def _dsoftmax(x):
+        soft = softmax(x)
+        ex = numpy.exp(x)
+        exs = numpy.sum(ex)
+        iexs = 1 / exs
+        dinv = - soft * iexs
+        niexs = numpy.full(ex.shape, iexs)
+        diag = numpy.diag(niexs)
+        return diag + dinv
+
+    @staticmethod
     def get_activation_function(activation):
         """
         Returns the activation function.
         """
-        if activation == 'sigmoid4':
-            return lambda x: expit(x * 4)
         if activation == 'softmax':
             return softmax
         if activation == 'softmax4':
             return lambda x: softmax(x * 4)
         if activation in {'logistic', 'expit', 'sigmoid'}:
             return expit
+        if activation == 'sigmoid4':
+            return lambda x: expit(x * 4)
         if activation == 'relu':
-            return NeuralTreeNode._relu
+            return numpy.vectorize(NeuralTreeNode._relu)
         if activation == 'identity':
             return lambda x: x
         raise ValueError(
             "Unknown activation function '{}'.".format(activation))
 
-    def __init__(self, weights, bias=None, activation='sigmoid', nodeid=-1):
+    @staticmethod
+    def get_activation_gradient_function(activation):
+        """
+        Returns the activation function.
+        About the sigmoid:
+
+        .. math::
+
+            \\begin{array}{l}
+            f(x) &=& \frac{1}{1 + e^{-x}} \\\\
+            f'(x) &=& \frac{e^{-x}}{(1 + e^{-x})^2} = f(x)(1-f(x))
+            \\end{array}}
+        """
+        if activation == 'softmax':
+            return NeuralTreeNode._dsoftmax
+        if activation == 'softmax4':
+            return lambda x: NeuralTreeNode._dsoftmax(x) * 4
+        if activation in {'logistic', 'expit', 'sigmoid'}:
+            return NeuralTreeNode._dsigmoid
+        if activation == 'sigmoid4':
+            return lambda x: NeuralTreeNode._dsigmoid(x) * 4
+        if activation == 'relu':
+            return numpy.vectorize(NeuralTreeNode._drelu)
+        if activation == 'identity':
+            return numpy.vectorize(lambda x: 1)
+        raise ValueError(
+            "Unknown activation gradient function '{}'.".format(activation))
+
+    def __init__(self, weights, bias=None, activation='sigmoid', nodeid=-1,
+                 tag=None):
         """
         @param      weights     weights
         @param      bias        bias, if None, draws a random number
         @param      activation  activation function
         @param      nodeid      node id
+        @param      tag         unused but to add information
+                                on how this node was created
         """
+        self.tag = tag
         if isinstance(weights, int):
             weights = rnd.randn(weights)
         if isinstance(weights, list):
@@ -72,8 +124,10 @@ class NeuralTreeNode:
                 "Unexpected weights shape: {}".format(weights.shape))
 
         self.activation = activation
-        self.activation_ = NeuralTreeNode.get_activation_function(activation)
         self.nodeid = nodeid
+        self.activation_ = NeuralTreeNode.get_activation_function(activation)
+        self.gradient_ = NeuralTreeNode.get_activation_gradient_function(
+            activation)
 
     @property
     def weights(self):
@@ -93,7 +147,8 @@ class NeuralTreeNode:
         "usual"
         return {
             'coef': self.coef, 'activation': self.activation,
-            'nodeid': self.nodeid, 'n_outputs': self.n_outputs}
+            'nodeid': self.nodeid, 'n_outputs': self.n_outputs,
+            'tag': self.tag}
 
     def __setstate__(self, state):
         "usual"
@@ -101,7 +156,10 @@ class NeuralTreeNode:
         self.activation = state['activation']
         self.nodeid = state['nodeid']
         self.n_outputs = state['n_outputs']
+        self.tag = state['tag']
         self.activation_ = NeuralTreeNode.get_activation_function(
+            self.activation)
+        self.gradient_ = NeuralTreeNode.get_activation_gradient_function(
             self.activation)
 
     def __eq__(self, obj):
@@ -131,6 +189,42 @@ class NeuralTreeNode:
         "Returns the input dimension."
         return self.coef.shape[0] - 1
 
+    def gradients(self, grad, X, inputs=False):
+        """
+        Computes the gradients at point *X*.
+
+        :param grad: existing gradient
+        :param X: computes the gradient in X
+        :param inputs: if False, derivative against the coefficients,
+            otherwise against the inputs.
+        :return: gradient
+        """
+        pred = self.predict(X)
+        ga = self.gradient_(pred)
+        if len(ga.shape) == 2:
+            f = grad @ ga
+        else:
+            f = grad * ga
+        if inputs:
+            if len(self.coef.shape) == 1:
+                rgrad = numpy.empty(X.shape)
+                rgrad[:] = self.coef[1:]
+                rgrad *= f
+            else:
+                rgrad = numpy.sum(
+                    self.coef[:, 1:] * f.reshape((-1, 1)), axis=0)
+            return rgrad
+        rgrad = numpy.empty(self.coef.shape)
+        if len(self.coef.shape) == 1:
+            rgrad[0] = 1
+            rgrad[1:] = X
+            rgrad *= f
+        else:
+            rgrad[:, 0] = 1
+            rgrad[:, 1:] = X
+            rgrad *= f.reshape((-1, 1))
+        return rgrad
+
 
 class TrainingAPI:
     """
@@ -152,11 +246,14 @@ class TrainingAPI:
         raise NotImplementedError(  # pragma: no cover
             "This should be overwritten.")
 
-    def gradient(self, X):
+    def gradient(self, grad, X, inputs=False):
         """
         Computes the gradient in X.
 
+        :param grad: existing gradient
         :param X: computes the gradient in X
+        :param inputs: if False, derivative against the coefficients,
+            otherwise against the inputs.
         :return: gradient
         """
         raise NotImplementedError(  # pragma: no cover
@@ -294,7 +391,7 @@ class NeuralTreeNet(TrainingAPI):
                 coef = numpy.zeros((max_features_,), dtype=numpy.float64)
                 coef[feature[i]] = -k
                 node_th = NeuralTreeNode(coef, bias=k * threshold[i],
-                                         activation='sigmoid4')
+                                         activation='sigmoid4', tag="N%d-th" % i)
                 root.append(node_th, feat_index)
 
                 if i in predecessor:
@@ -306,14 +403,16 @@ class NeuralTreeNet(TrainingAPI):
 
                     coef = numpy.ones((2,), dtype=numpy.float64) * k
                     node_true = NeuralTreeNode(coef, bias=-k * 1.5,
-                                               activation='sigmoid4')
+                                               activation='sigmoid4',
+                                               tag="N%d-T" % i)
                     root.append(node_true, [attr1['output'], attr2['output']])
 
                     coef = numpy.zeros((2,), dtype=numpy.float64)
                     coef[0] = k
                     coef[1] = -k
                     node_false = NeuralTreeNode(coef, bias=-k * 0.25,
-                                                activation='sigmoid4')
+                                                activation='sigmoid4',
+                                                tag="N%d-F" % i)
                     root.append(node_false, [attr1['output'], attr2['output']])
 
                     predecessor[children_left[i]] = node_true
@@ -321,7 +420,7 @@ class NeuralTreeNet(TrainingAPI):
                 else:
                     coef = numpy.ones((1,), dtype=numpy.float64) * -1
                     node_false = NeuralTreeNode(
-                        coef, bias=1, activation='identity')
+                        coef, bias=1, activation='identity', tag="N%d-F" % i)
                     attr = root[node_th.nodeid][1]
                     root.append(node_false, [attr['output']])
 
@@ -345,7 +444,8 @@ class NeuralTreeNet(TrainingAPI):
             coef[i, index[i]:index[i + 1]] = k
         feat = [root[n.nodeid][1]['output'] for n in output]
         root.append(
-            NeuralTreeNode(coef, bias=-k / 2, activation='softmax4'),
+            NeuralTreeNode(coef, bias=-k / 2,
+                           activation='softmax4', tag="Nfinal"),
             feat)
 
         # final
@@ -386,14 +486,15 @@ class NeuralTreeNet(TrainingAPI):
                 lof = "%s&#92;n" + los
 
             a = "a={}\n".format(self[i][0].activation)
+            stag = "" if self[i][0].tag is None else (self[i][0].tag + "\\n")
             bias = str(numpy.array(self[i][0].bias)).replace(" ", "&#92; ")
             if y is None:
-                lab = lof % '{}id={} b={} s={}'.format(
-                    a, i, bias, self[i][0].n_outputs)
+                lab = lof % '{}{}id={} b={} s={}'.format(
+                    stag, a, i, bias, self[i][0].n_outputs)
             else:
                 yo = numpy.array(y[o])
-                lab = lof % '{}id={} b={} s={}\ny={}'.format(
-                    a, i, bias, self[i][0].n_outputs, yo)
+                lab = lof % '{}{}id={} b={} s={}\ny={}'.format(
+                    stag, a, i, bias, self[i][0].n_outputs, yo)
             rows.append('{} [label="{}"];'.format(
                 lo, lab.replace("\n", "&#92;n")))
             for ii, inp in enumerate(self[i][1]['inputs']):
@@ -460,5 +561,3 @@ class NeuralTreeNet(TrainingAPI):
         :param X: computes the gradient in X
         :return: gradient
         """
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
