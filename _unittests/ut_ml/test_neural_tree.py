@@ -119,6 +119,36 @@ class TestNeuralTree(ExtTestCase):
         c = numpy.corrcoef(mat.T)
         self.assertGreater(c[0, 1], 0.5)
 
+    def test_neural_tree_network_weights(self):
+        net = NeuralTreeNet(3, empty=False)
+        net.append(NeuralTreeNode(1, activation='identity'),
+                   inputs=[3])
+        w = net.weights
+        self.assertEqual(w.shape, (6, ))
+        self.assertEqual(w[0], 0)
+        self.assertEqualArray(w[1:4], [1, 1, 1])
+        delta = numpy.arange(6) - 0.5
+        net.update_weights(delta)
+        w2 = net.weights
+        self.assertEqualArray(w2, w + delta)
+
+    def test_convert_weights(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        y2 = y.copy()
+        y2[0] = 2
+
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10)
+        v1 = root.predict(X[:1])
+        w = root.weights
+        self.assertEqual(w.shape, (11, ))
+        delta = numpy.arange(11) + 0.5
+        root.update_weights(delta)
+        v2 = root.predict(X[:1])
+        self.assertNotEqualArray(v1, v2)
+
 
 if __name__ == "__main__":
     unittest.main()

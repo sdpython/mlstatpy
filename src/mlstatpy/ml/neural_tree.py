@@ -132,7 +132,38 @@ class NeuralTreeNode:
         return self.coef.shape[0] - 1
 
 
-class NeuralTreeNet:
+class TrainingAPI:
+    """
+    Declaration of function needed to train a model.
+    """
+
+    @property
+    def weights(self):
+        "Returns the weights."
+        raise NotImplementedError(  # pragma: no cover
+            "This should be overwritten.")
+
+    def update_weights(self, grad):
+        """
+        Updates weights.
+
+        :param grad: vector to add to the weights such as gradient
+        """
+        raise NotImplementedError(  # pragma: no cover
+            "This should be overwritten.")
+
+    def gradient(self, X):
+        """
+        Computes the gradient in X.
+
+        :param X: computes the gradient in X
+        :return: gradient
+        """
+        raise NotImplementedError(  # pragma: no cover
+            "This should be overwritten.")
+
+
+class NeuralTreeNet(TrainingAPI):
     """
     Node ensemble.
     """
@@ -391,3 +422,43 @@ class NeuralTreeNet:
 
         rows.append('}')
         return '\n'.join(rows)
+
+    @property
+    def shape(self):
+        "Returns the shape of the coefficients."
+        return (sum(n.coef.size for n in self.nodes), )
+
+    @property
+    def weights(self):
+        "Returns the weights."
+        sh = self.shape
+        res = numpy.empty(sh[0], dtype=numpy.float64)
+        pos = 0
+        for n in self.nodes:
+            s = n.coef.size
+            res[pos: pos +
+                s] = n.coef if len(n.coef.shape) == 1 else n.coef.ravel()
+            pos += s
+        return res
+
+    def update_weights(self, X):
+        """
+        Updates weights.
+
+        :param grad: vector to add to the weights such as gradient
+        """
+        pos = 0
+        for n in self.nodes:
+            s = n.coef.size
+            n.coef += X[pos: pos + s].reshape(n.coef.shape)
+            pos += s
+
+    def gradient(self, X):
+        """
+        Computes the gradient in X.
+
+        :param X: computes the gradient in X
+        :return: gradient
+        """
+        raise NotImplementedError(  # pragma: no cover
+            "This should be overwritten.")
