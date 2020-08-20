@@ -5,7 +5,7 @@
 """
 import numpy
 import numpy.random as rnd
-from scipy.special import expit  # pylint: disable=E0611
+from scipy.special import expit, softmax  # pylint: disable=E0611
 
 
 class NeuralTreeNode:
@@ -22,8 +22,12 @@ class NeuralTreeNode:
         """
         Returns the activation function.
         """
-        if activation in {'sigmoid4'}:
+        if activation == 'sigmoid4':
             return lambda x: expit(x * 4)
+        if activation == 'softmax':
+            return softmax
+        if activation == 'softmax4':
+            return lambda x: softmax(x * 4)
         if activation in {'logistic', 'expit', 'sigmoid'}:
             return expit
         if activation == 'relu':
@@ -40,13 +44,33 @@ class NeuralTreeNode:
         @param      activation  activation function
         @param      nodeid      node id
         """
-        if bias is None:
-            bias = rnd.randn()
         if isinstance(weights, int):
             weights = rnd.randn(weights)
-        self.coef = numpy.empty(len(weights) + 1)
-        self.coef[1:] = weights
-        self.coef[0] = bias
+        if isinstance(weights, list):
+            weights = numpy.array(weights)
+        if len(weights.shape) == 1:
+            self.n_outputs = 1
+            if bias is None:
+                bias = rnd.randn()
+            self.coef = numpy.empty(len(weights) + 1)
+            self.coef[1:] = weights
+            self.coef[0] = bias
+        elif len(weights.shape) == 2:
+            self.n_outputs = weights.shape[0]
+            if self.n_outputs == 1:
+                raise RuntimeError(  # pragma: no cover
+                    "Unexpected unsqueezed weights shape: {}".format(weights.shape))
+            if bias is None:
+                bias = rnd.randn(self.n_outputs)
+            shape = list(weights.shape)
+            shape[1] += 1
+            self.coef = numpy.empty(shape)
+            self.coef[:, 1:] = weights
+            self.coef[:, 0] = bias
+        else:
+            raise RuntimeError(  # pragma: no cover
+                "Unexpected weights shape: {}".format(weights.shape))
+
         self.activation = activation
         self.activation_ = NeuralTreeNode.get_activation_function(activation)
         self.nodeid = nodeid
@@ -54,24 +78,29 @@ class NeuralTreeNode:
     @property
     def weights(self):
         "Returns the weights."
-        return self.coef[1:]
+        if self.n_outputs == 1:
+            return self.coef[1:]
+        return self.coef[:, 1:]
 
     @property
     def bias(self):
         "Returns the weights."
-        return self.coef[0]
+        if self.n_outputs == 1:
+            return self.coef[0]
+        return self.coef[:, 0]
 
     def __getstate__(self):
         "usual"
         return {
             'coef': self.coef, 'activation': self.activation,
-            'nodeid': self.nodeid}
+            'nodeid': self.nodeid, 'n_outputs': self.n_outputs}
 
     def __setstate__(self, state):
         "usual"
         self.coef = state['coef']
         self.activation = state['activation']
         self.nodeid = state['nodeid']
+        self.n_outputs = state['n_outputs']
         self.activation_ = NeuralTreeNode.get_activation_function(
             self.activation)
 
@@ -92,7 +121,10 @@ class NeuralTreeNode:
 
     def predict(self, X):
         "Computes neuron outputs."
-        return self.activation_(X @ self.coef[1:] + self.coef[0])
+        if self.n_outputs == 1:
+            return self.activation_(X @ self.coef[1:] + self.coef[0])
+        return self.activation_(
+            (X.reshape((1, -1)) @ self.coef[:, 1:].T + self.coef[:, 0]).ravel())
 
     @property
     def ndim(self):
@@ -146,15 +178,30 @@ class NeuralTreeNet:
         @param      node        node to add
         @param      inputs      index of input nodes
         """
-        if node.weights.shape[0] != len(inputs):
+        if len(node.weights.shape) == 1:
+            if node.weights.shape[0] != len(inputs):
+                raise RuntimeError(
+                    "Dimension mismatch between weights [{}] and inputs [{}].".format(
+                        node.weights.shape[0], len(inputs)))
+            node.nodeid = len(self.nodes)
+            self.nodes.append(node)
+            attr = dict(inputs=numpy.array(inputs), output=self.size_)
+            self.nodes_attr.append(attr)
+            self.size_ += 1
+        elif len(node.weights.shape) == 2:
+            if node.weights.shape[1] != len(inputs):
+                raise RuntimeError(
+                    "Dimension mismatch between weights [{}] and inputs [{}].".format(
+                        node.weights.shape[1], len(inputs)))
+            node.nodeid = len(self.nodes)
+            self.nodes.append(node)
+            attr = dict(inputs=numpy.array(inputs),
+                        output=list(range(self.size_, self.size_ + node.weights.shape[0])))
+            self.nodes_attr.append(attr)
+            self.size_ += node.weights.shape[0]
+        else:
             raise RuntimeError(
-                "Dimension mismatch between weights [{}] and inputs [{}].".format(
-                    node.weights.shape[0], len(inputs)))
-        node.nodeid = len(self.nodes)
-        self.nodes.append(node)
-        attr = dict(inputs=numpy.array(inputs), output=self.size_)
-        self.nodes_attr.append(attr)
-        self.size_ += 1
+                "Coefficients should have 1 or 2 dimension not {}.".format(node.weights.shape))
 
     def __getitem__(self, i):
         "Retrieves node and attributes for node i."
@@ -194,79 +241,86 @@ class NeuralTreeNet:
         if tree.n_classes_ > 2:
             raise RuntimeError(
                 "The function only support binary classification problem.")
-        root = NeuralTreeNet(tree.max_features_, empty=True)
-        index = {}
 
         n_nodes = tree.tree_.node_count
         children_left = tree.tree_.children_left
         children_right = tree.tree_.children_right
         feature = tree.tree_.feature
         threshold = tree.tree_.threshold
+        value = tree.tree_.value.reshape((-1, 2))
+        output_class = (value[:, 1] > value[:, 0]).astype(numpy.int64)
         max_features_ = tree.max_features_
 
+        root = NeuralTreeNet(tree.max_features_, empty=True)
         feat_index = numpy.arange(0, max_features_)
         predecessor = {}
-        output = []
+        outputs = {i: [] for i in range(0, tree.n_classes_)}
         for i in range(n_nodes):
 
             if children_left[i] != children_right[i]:
                 # node with a threshold
                 # right side
                 coef = numpy.zeros((max_features_,), dtype=numpy.float64)
-                coef[feature[i]] = k
-                node = NeuralTreeNode(coef, bias=-k * threshold[i],
-                                      activation='sigmoid4')
-                root.append(node, feat_index)
-                predecessor[children_left[i]] = (i, 0)
-                predecessor[children_right[i]] = (i, 1)
-                index[i] = node
+                coef[feature[i]] = -k
+                node_th = NeuralTreeNode(coef, bias=k * threshold[i],
+                                         activation='sigmoid4')
+                root.append(node_th, feat_index)
 
                 if i in predecessor:
-                    pred, side = predecessor[i]
-                    if pred not in index:
-                        raise RuntimeError("Unxpected predecessor %r." % pred)
-
-                    node1 = index[pred]
-                    node2 = node
+                    pred = predecessor[i]
+                    node1 = pred
+                    node2 = node_th
                     attr1 = root[node1.nodeid][1]
                     attr2 = root[node2.nodeid][1]
 
-                    if side == 1:
-                        coef = numpy.ones((2,), dtype=numpy.float64) * k / 2
-                        node = NeuralTreeNode(coef, bias=-k * 0.75,
-                                              activation='sigmoid4')
-                    else:
-                        coef = numpy.zeros((2,), dtype=numpy.float64)
-                        coef[0] = -k / 2
-                        coef[1] = k / 2
-                        node = NeuralTreeNode(coef, bias=k * 0.75,
-                                              activation='sigmoid4')
-                    root.append(node, [attr1['output'], attr2['output']])
+                    coef = numpy.ones((2,), dtype=numpy.float64) * k
+                    node_true = NeuralTreeNode(coef, bias=-k * 1.5,
+                                               activation='sigmoid4')
+                    root.append(node_true, [attr1['output'], attr2['output']])
+
+                    coef = numpy.zeros((2,), dtype=numpy.float64)
+                    coef[0] = k
+                    coef[1] = -k
+                    node_false = NeuralTreeNode(coef, bias=-k * 0.25,
+                                                activation='sigmoid4')
+                    root.append(node_false, [attr1['output'], attr2['output']])
+
+                    predecessor[children_left[i]] = node_true
+                    predecessor[children_right[i]] = node_false
+                else:
+                    coef = numpy.ones((1,), dtype=numpy.float64) * -1
+                    node_false = NeuralTreeNode(
+                        coef, bias=1, activation='identity')
+                    attr = root[node_th.nodeid][1]
+                    root.append(node_false, [attr['output']])
+
+                    predecessor[children_left[i]] = node_th
+                    predecessor[children_right[i]] = node_false
+
             elif i in predecessor:
                 # leave
-                pred, side = predecessor[i]
-                node = index[pred]
-                attr = root[node.nodeid][1]
-                if threshold[i] == 0:
-                    coef = numpy.ones((1,), dtype=numpy.float64) * (-k)
-                else:
-                    coef = numpy.ones((1,), dtype=numpy.float64) * k
-                node = NeuralTreeNode(coef, bias=-k / 2, activation='sigmoid4')
-                root.append(node, [attr['output']])
-                output.append(node)
+                outputs[output_class[i]].append(predecessor[i])
 
         # final node
-        coef = numpy.ones(
-            (len(output), ), dtype=numpy.float64) / len(output) * k
+        output = []
+        index = [0]
+        nb = []
+        for i in range(0, tree.n_classes_):
+            output.extend(outputs[i])
+            nb.append(len(outputs[i]))
+            index.append(len(outputs[i]) + index[-1])
+        coef = numpy.zeros((len(nb), len(output)), dtype=numpy.float64)
+        for i in range(0, tree.n_classes_):
+            coef[i, index[i]:index[i + 1]] = k
         feat = [root[n.nodeid][1]['output'] for n in output]
         root.append(
-            NeuralTreeNode(coef, bias=-k / 2, activation='sigmoid4'),
+            NeuralTreeNode(coef, bias=-k / 2, activation='softmax4'),
             feat)
 
         # final
         return root
 
-    def export_graphviz(self, X=None):
+    def to_dot(self, X=None):
         """
         Exports the neural network into :epkg:`dot`.
 
@@ -275,21 +329,65 @@ class NeuralTreeNet:
         y = None
         if X is not None:
             y = self.predict(X)
-        rows = ['digraph Tree {', "node [shape=box];"]
+        rows = ['digraph Tree {',
+                "node [shape=box, fontsize=10];",
+                "edge [fontsize=8];"]
         for i in range(self.dim):
             if y is None:
                 rows.append('{0} [label="X[{0}]"];'.format(i))
             else:
-                rows.append('{0} [label="X[{0}]=\\n{1}"];'.format(i, X[i]))
+                rows.append(
+                    '{0} [label="X[{0}]=\\n{1:1.2f}"];'.format(i, X[i]))
+
+        labels = {}
+
         for i in range(0, len(self)):  # pylint: disable=C0200
             o = self[i][1]['output']
-            if y is None:
-                rows.append('{} [label="id={} b={}"];'.format(
-                    o, i, self[i][0].bias))
+            if isinstance(o, int):
+                lo = str(o)
+                labels[o] = lo
+                lof = "%s"
             else:
-                rows.append('{} [label="id={} b={}\\ny={}"];'.format(
-                    o, i, self[i][0].bias, y[o]))
-            for inp, w in zip(self[i][1]['inputs'], self[i][0].weights):
-                rows.append('{} -> {} [label="{}"];'.format(inp, o, w))
+                lo = "s" + 'a'.join(map(str, o))
+                for oo in o:
+                    labels[oo] = '{}:f{}'.format(lo, oo)
+                los = "|".join("<f{0}> {0}".format(oo) for oo in o)
+                lof = "%s&#92;n" + los
+
+            a = "a={}\n".format(self[i][0].activation)
+            bias = str(numpy.array(self[i][0].bias)).replace(" ", "&#92; ")
+            if y is None:
+                lab = lof % '{}id={} b={} s={}'.format(
+                    a, i, bias, self[i][0].n_outputs)
+            else:
+                yo = numpy.array(y[o])
+                lab = lof % '{}id={} b={} s={}\ny={}'.format(
+                    a, i, bias, self[i][0].n_outputs, yo)
+            rows.append('{} [label="{}"];'.format(
+                lo, lab.replace("\n", "&#92;n")))
+            for ii, inp in enumerate(self[i][1]['inputs']):
+                if isinstance(o, int):
+                    w = self[i][0].weights[ii]
+                    if w == 0:
+                        c = ', color=grey, fontcolor=grey'
+                    elif w < 0:
+                        c = ', color=red, fontcolor=red'
+                    else:
+                        c = ', color=blue, fontcolor=blue'
+                    rows.append(
+                        '{} -> {} [label="{}"{}];'.format(inp, o, w, c))
+                    continue
+
+                w = self[i][0].weights[:, ii]
+                for oi, oo in enumerate(o):
+                    if w[oi] == 0:
+                        c = ', color=grey, fontcolor=grey'
+                    elif w[oi] < 0:
+                        c = ', color=red, fontcolor=red'
+                    else:
+                        c = ', color=blue, fontcolor=blue'
+                    rows.append('{} -> {} [label="{}|{}"{}];'.format(
+                        inp, labels[oo], oi, w[oi], c))
+
         rows.append('}')
         return '\n'.join(rows)

@@ -55,6 +55,25 @@ class TestNeuralTree(ExtTestCase):
         rep = repr(net)
         self.assertEqual(rep, 'NeuralTreeNet(3)')
 
+    def test_neural_tree_network_append_dim2(self):
+        net = NeuralTreeNet(3, empty=False)
+        self.assertRaise(
+            lambda: net.append(
+                NeuralTreeNode(2, activation='identity'), inputs=[3]))
+        net.append(NeuralTreeNode(numpy.ones((2, 1), dtype=numpy.float64),
+                                  activation='identity'),
+                   inputs=[3])
+        self.assertEqual(net.size_, 6)
+        last_node = net.nodes[-1]
+        X = numpy.random.randn(2, 3)
+        got = net.predict(X)
+        exp = X.sum(axis=1) * last_node.weights[1, :] + last_node.bias[0]
+        self.assertEqual(exp.reshape((-1, )), got[:, -2: -1].reshape((-1, )))
+        exp = X.sum(axis=1) * last_node.weights[1, :] + last_node.bias[1]
+        self.assertEqual(exp.reshape((-1, )), got[:, -1:].reshape((-1, )))
+        rep = repr(net)
+        self.assertEqual(rep, 'NeuralTreeNet(3)')
+
     def test_convert(self):
         X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
         y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
@@ -70,27 +89,27 @@ class TestNeuralTree(ExtTestCase):
         tree.fit(X, y)
         root = NeuralTreeNet.create_from_tree(tree, 10)
         self.assertNotEmpty(root)
-        exp = tree.predict(X)
+        exp = tree.predict_proba(X)
         got = root.predict(X)
         self.assertEqual(exp.shape[0], got.shape[0])
-        self.assertEqualArray(exp, got[:, -1])
+        self.assertEqualArray(exp, got[:, -2:])
 
     def test_dot(self):
         data = load_iris()
         X, y = data.data, data.target
         y = y % 2
 
-        tree = DecisionTreeClassifier(max_depth=3)
+        tree = DecisionTreeClassifier(max_depth=3, random_state=11)
         tree.fit(X, y)
         root = NeuralTreeNet.create_from_tree(tree)
         dot = export_graphviz(tree)
         self.assertIn("digraph", dot)
 
-        dot2 = root.export_graphviz()
+        dot2 = root.to_dot()
         self.assertIn("digraph", dot2)
         x = X[:1].copy()
         x[0, 3] = 1.
-        dot2 = root.export_graphviz(X=x.ravel())
+        dot2 = root.to_dot(X=x.ravel())
         self.assertIn("digraph", dot2)
         exp = tree.predict_proba(X)[:, -1]
         got = root.predict(X)[:, -1]

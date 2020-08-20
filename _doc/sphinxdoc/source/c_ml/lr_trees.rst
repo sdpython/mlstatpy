@@ -216,9 +216,9 @@ différents :math:`\theta`.
 .. math::
 
     LL(x_0, \theta) = \max \left\{ \begin{array}{ll}
-    \frac{1}{1 + \exp((x-x_0) / \theta) \\
-    \frac{1}{1 + \exp(- (x-x_0) / \theta)
-    \end{array}\right.
+    \frac{1}{1 + \exp((x-x_0) / \theta)} \\
+    \frac{1}{1+\exp(- (x-x_0) / \theta)}
+    \end{array}\right
 
 Aparté mathématique
 ===================
@@ -305,9 +305,9 @@ trois features, trois noeuds, deux classes.
 .. gdot::
 
     digraph tree {
-        A [label="X1 < 5",shape=record];
-        B [label="X2 < 3",shape=record];
-        C [label="X3 < 2",shape=record];
+        A [label="X1 &lt; 5",shape=record];
+        B [label="X2 &lt; 3",shape=record];
+        C [label="X3 &lt; 2",shape=record];
         A -> B;
         A -> C;
         D [label="<c0> 0|<c1> 1",shape=record];
@@ -320,11 +320,11 @@ trois features, trois noeuds, deux classes.
 
 On souhaite le transformer en réseau de neurones avec une
 structure qui serait celle qui suit. On note tout d'abord
-la fonction sigmoïde :math:`f(x, s, h)=\frac{1}{1 + e^{-h(x - s)}`.
+la fonction sigmoïde :math:`f(x, s, h)=\frac{1}{1 + e^{-h(x - s)}}`.
 Elle vaut *1/2* lorsque *x* vaut *s*, vaut 1 lorsque *x*
 est très grand, et 0 lorsque *x* est très petit.
 C'est équivalent à la fonction
-:math:`f(x, s, h)=g(X, S, v_0, h)\frac{1}{1 + e^{h(<X,V> + v_0)}`
+:math:`f(x, s, h)=g(X, S, v_0, h)\frac{1}{1 + e^{h(<X,V> + v_0)}}`
 où :math:`X=(x_1, x_2, x_3)`, :math:`V=(-1, 0, 0)` et :math:`v_0=s`.
 
 .. gdot::
@@ -358,10 +358,14 @@ que les sorties de la précédente et la fonction d'activation
 est la même pour tous les neurones. On ne peut pas non plus
 geler certains coefficients lors de l'apprentissage.
 C'est à ce moment-là qu'on se demande si ça vaut le coup
-de se lancer dans une implémentation à la riguer jolie mais
+de se lancer dans une implémentation à la rigueur jolie mais
 sans doute pas porteuse d'une innovation majeure. Et ce n'est
 pas la première fois que quelqu'un se lance dans la conversion
 d'un arbre en réseaux de neurones.
+
+J'ai quand même essayé avec le notebook :ref:`neuraltreerst`
+et les classes :class:`NeuralTreeNode <mlstatpy.ml.neural_tree.NeuralTreeNode>`,
+:class:`NeuralTreeNet <mlstatpy.ml.neural_tree.NeuralTreeNet>`.
 
 Plan orthogonal
 ===============
