@@ -31,13 +31,13 @@ def run_graphviz(filename, image, engine="dot"):
     out, err = run_cmd(cmd, wait=True)
     if len(err) > 0:
         raise Exception(
-            "unable to run Graphviz\nCMD:\n{0}\nOUT:\n{1}\nERR:\n{2}".format(cmd, out, err))
+            "Unable to run Graphviz\nCMD:\n{0}\nOUT:\n{1}\nERR:\n{2}".format(cmd, out, err))
     return out
 
 
 def edges2gv(vertices, edges):
     """
-    Converts a graph into a graphviz file format.
+    Converts a graph into a :epkg:`GraphViz` file format.
 
     @param      edges           see below
     @param      vertices        see below
@@ -101,7 +101,7 @@ def edges2gv(vertices, edges):
 
 def draw_graph_graphviz(vertices, edges, image, engine="dot"):
     """
-    Draw a graph using :epkg:`Graphviz`.
+    Draws a graph using :epkg:`Graphviz`.
 
     @param      edges           see below
     @param      vertices        see below

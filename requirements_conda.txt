@@ -8,7 +8,7 @@ notebook
 numpy>=1.19.0
 pandas>=1.0
 pillow
-scipy
+scipy>=1.15
 seaborn
 setuptools
 statsmodels

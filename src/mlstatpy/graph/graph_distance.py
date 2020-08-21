@@ -11,7 +11,7 @@ import re
 
 class Vertex:
     """
-    defines a vertex of a graph
+    Defines a vertex of a graph.
     """
 
     def __init__(self, nb, label, weight):
@@ -63,7 +63,7 @@ class Vertex:
 
 class Edge:
     """
-    defines an edge
+    Defines an edge of a graph.
     """
 
     def __init__(self, from_, to, label, weight):
@@ -120,7 +120,7 @@ class Edge:
 
 class GraphDistance:
     """
-    Defines a graph to compute a distance a distance between two graphs.
+    Defines a graph to compute a distance between two graphs.
 
     .. exref::
         :title: Compute a distance between two graphs.

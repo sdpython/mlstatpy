@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@brief      test log(time=6s)
+@brief      test log(time=2s)
 """
 import io
 import unittest
@@ -50,7 +50,7 @@ class TestNeuralTree(ExtTestCase):
         last_node = net.nodes[-1]
         X = numpy.random.randn(2, 3)
         got = net.predict(X)
-        exp = X.sum(axis=1) * last_node.weights[0] + last_node.bias
+        exp = X.sum(axis=1) * last_node.input_weights[0] + last_node.bias
         self.assertEqual(exp.reshape((-1, 1)), got[:, -1:])
         rep = repr(net)
         self.assertEqual(rep, 'NeuralTreeNet(3)')
@@ -67,9 +67,9 @@ class TestNeuralTree(ExtTestCase):
         last_node = net.nodes[-1]
         X = numpy.random.randn(2, 3)
         got = net.predict(X)
-        exp = X.sum(axis=1) * last_node.weights[1, :] + last_node.bias[0]
+        exp = X.sum(axis=1) * last_node.input_weights[1, :] + last_node.bias[0]
         self.assertEqual(exp.reshape((-1, )), got[:, -2: -1].reshape((-1, )))
-        exp = X.sum(axis=1) * last_node.weights[1, :] + last_node.bias[1]
+        exp = X.sum(axis=1) * last_node.input_weights[1, :] + last_node.bias[1]
         self.assertEqual(exp.reshape((-1, )), got[:, -1:].reshape((-1, )))
         rep = repr(net)
         self.assertEqual(rep, 'NeuralTreeNet(3)')
@@ -119,20 +119,20 @@ class TestNeuralTree(ExtTestCase):
         c = numpy.corrcoef(mat.T)
         self.assertGreater(c[0, 1], 0.5)
 
-    def test_neural_tree_network_weights(self):
+    def test_neural_tree_network_training_weights(self):
         net = NeuralTreeNet(3, empty=False)
         net.append(NeuralTreeNode(1, activation='identity'),
                    inputs=[3])
-        w = net.weights
+        w = net.training_weights
         self.assertEqual(w.shape, (6, ))
         self.assertEqual(w[0], 0)
         self.assertEqualArray(w[1:4], [1, 1, 1])
         delta = numpy.arange(6) - 0.5
-        net.update_weights(delta)
-        w2 = net.weights
+        net.update_training_weights(delta)
+        w2 = net.training_weights
         self.assertEqualArray(w2, w + delta)
 
-    def test_convert_weights(self):
+    def test_training_weights(self):
         X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
         y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
         y2 = y.copy()
@@ -142,10 +142,10 @@ class TestNeuralTree(ExtTestCase):
         tree.fit(X, y)
         root = NeuralTreeNet.create_from_tree(tree, 10)
         v1 = root.predict(X[:1])
-        w = root.weights
+        w = root.training_weights
         self.assertEqual(w.shape, (11, ))
         delta = numpy.arange(11) + 0.5
-        root.update_weights(delta)
+        root.update_training_weights(delta)
         v2 = root.predict(X[:1])
         self.assertNotEqualArray(v1, v2)
 
@@ -153,29 +153,54 @@ class TestNeuralTree(ExtTestCase):
         X = numpy.array([0.1, 0.2, -0.3])
         w = numpy.array([10, 20, 3])
         g = numpy.array([-0.7], dtype=numpy.float64)
+        z = numpy.zeros((4, ), dtype=w.dtype)
         for act in ['sigmoid', 'sigmoid4', 'expit', 'identity', 'relu']:
             neu = NeuralTreeNode(w, bias=-4, activation=act)
             pred = neu.predict(X)
             self.assertEqual(pred.shape, tuple())
-            grad = neu.gradients(g, X)
+            grad = neu.gradient_backward(g, z, X)
             self.assertEqual(grad.shape, (4, ))
-            grad = neu.gradients(g, X, inputs=True)
+            grad = neu.gradient_backward(g, z, X, inputs=True)
             self.assertEqual(grad.shape, (3, ))
+            ww = neu.training_weights
+            neu.update_training_weights(-ww)
+            w0 = neu.training_weights
+            self.assertEqualArray(w0, numpy.zeros(w0.shape))
 
         X = numpy.array([0.1, 0.2, -0.3])
         w = numpy.array([[10, 20, 3], [-10, -20, 3]])
         b = numpy.array([-3, 4], dtype=numpy.float64)
         g = numpy.array([-0.7, 0.2], dtype=numpy.float64)
+        z = numpy.zeros((2, 4), dtype=w.dtype)
         for act in ['softmax', 'softmax4']:
             neu = NeuralTreeNode(w, bias=b, activation=act)
             pred = neu.predict(X)
             self.assertAlmostEqual(numpy.sum(pred), 1.)
             self.assertEqual(pred.shape, (2,))
-            grad = neu.gradients(g, X)
+            grad = neu.gradient_backward(g, z, X)
             self.assertEqual(grad.shape, (2, 4))
-            grad = neu.gradients(g, X, inputs=True)
+            grad = neu.gradient_backward(g, z, X, inputs=True)
             self.assertEqual(grad.shape, (3, ))
+            ww = neu.training_weights
+            neu.update_training_weights(-ww)
+            w0 = neu.training_weights
+            self.assertEqualArray(w0, numpy.zeros(w0.shape))
+
+    def test_optim_regression(self):
+        X = numpy.random.randn(10, 2)
+        y = numpy.sum(X, axis=1) + numpy.random.randn(X.shape[0]) / 10
+        w0 = numpy.random.randn(3)
+        for act in ['sigmoid', 'sigmoid4', 'expit', 'identity', 'relu']:
+            neu = NeuralTreeNode(w0[1:], bias=w0[0], activation=act)
+
+            xt, yt = X[0], y[0]
+            try:
+                grad = neu.gradient(xt, yt)
+            except ValueError as e:
+                raise ValueError("Issue with act='{}'.".format(act)) from e
+            self.assertEqual(grad.shape, w0.shape)
 
 
 if __name__ == "__main__":
+    TestNeuralTree().test_optim_regression()
     unittest.main()
