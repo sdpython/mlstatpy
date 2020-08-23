@@ -36,20 +36,24 @@ class TestOptim(ExtTestCase):
         no = numpy.linalg.norm(gr)
         self.assertGreater(no, 0.001)
 
-        sgd = SGDOptimizer(numpy.array([0., 0., 0.]))
+        sgd = SGDOptimizer(numpy.array([0., 0., 0.]),
+                           lr_schedule='constant')
 
         buf = io.StringIO()
         with redirect_stdout(buf):
-            ls = sgd.train(X, y, fct_loss, fct_grad, max_iter=15, verbose=True)
+            ls = sgd.train(X, y, fct_loss, fct_grad, max_iter=15,
+                           verbose=True)
         out = buf.getvalue()
         self.assertIn("15/15: loss", out)
         self.assertLess(ls, 0.1)
         self.assertEqual(sgd.learning_rate, 0.1)
 
-        sgd = SGDOptimizer(numpy.array([0., 0., 0.]), lr_schedule='invscaling')
+        sgd = SGDOptimizer(numpy.array([0., 0., 0.]),
+                           lr_schedule='invscaling')
         buf = io.StringIO()
         with redirect_stdout(buf):
-            ls = sgd.train(X, y, fct_loss, fct_grad, max_iter=15, verbose=True)
+            ls = sgd.train(X, y, fct_loss, fct_grad, max_iter=15,
+                           verbose=True)
         out = buf.getvalue()
         self.assertIn("15/15: loss", out)
         self.assertLess(ls, 1)

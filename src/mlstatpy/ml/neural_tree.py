@@ -5,7 +5,8 @@
 """
 import numpy
 import numpy.random as rnd
-from scipy.special import expit, softmax, rel_entr  # pylint: disable=E0611
+from scipy.special import expit, softmax, rel_entr as kl_fct  # pylint: disable=E0611
+from ..optim import SGDOptimizer
 
 
 class _TrainingAPI:
@@ -19,11 +20,12 @@ class _TrainingAPI:
         raise NotImplementedError(  # pragma: no cover
             "This should be overwritten.")
 
-    def update_training_weights(self, grad):
+    def update_training_weights(self, grad, add=True):
         """
         Updates weights.
 
         :param grad: vector to add to the weights such as gradient
+        :param add: addition or replace
         """
         raise NotImplementedError(  # pragma: no cover
             "This should be overwritten.")
@@ -41,7 +43,7 @@ class _TrainingAPI:
         raise NotImplementedError(  # pragma: no cover
             "This should be overwritten.")
 
-    def dlossdx(self, X, y, cache=None):
+    def dlossds(self, X, y, cache=None):
         """
         Computes the loss derivative against the inputs.
         """
@@ -80,10 +82,54 @@ class _TrainingAPI:
             otherwise against the inputs.
         :return: gradient
         """
+        if len(X.shape) != 1:
+            raise ValueError(  # pragma: no cover
+                "X must a vector of one dimension but has shape {}.".format(X.shape))
         cache = self.fill_cache(X)  # pylint: disable=E1128
-        dlossdx = self.dlossdx(X, y, cache=cache)
+        dlossds = self.dlossds(X, y, cache=cache)
         dlossdw = self.dlossdw(X, y, cache=cache)
-        return self.gradient_backward(dlossdx, dlossdw, X, inputs=inputs, cache=cache)
+        return self.gradient_backward(dlossds, dlossdw, X, inputs=inputs, cache=cache)
+
+    def fit(self, X, y, optimizer=None, max_iter=100, early_th=None, verbose=False,
+            lr=None, lr_schedule=None):
+        """
+        Fits a neuron.
+
+        :param X: training set
+        :param y: training labels
+        :param optimizer: optimizer, by default, it is
+            :class:`SGDOptimizer <mlstatpy.optim.sgd.SGDOptimizer>`.
+        :param max_iter: number maximum of iterations
+        :param early_th: early stopping threshold
+        :param verbose: more verbose
+        :param lr: to overwrite *learning_rate_init* if
+            *optimizer* is None (unused otherwise)
+        :param lr_schedule: to overwrite *lr_schedule* if
+            *optimizer* is None (unused otherwise)
+        :return: self
+        """
+        if optimizer is None:
+            optimizer = SGDOptimizer(
+                self.training_weights, learning_rate_init=lr or 0.002,
+                lr_schedule=lr_schedule or 'invscaling')
+
+        def fct_loss(coef, lx, ly, neuron=self):
+            neuron.update_training_weights(coef, False)
+            loss = neuron.loss(lx, ly)
+            if loss.shape[0] > 1:
+                return numpy.sum(loss)
+            return loss
+
+        def fct_grad(coef, lx, ly, i, neuron=self):
+            neuron.update_training_weights(coef, False)
+            return neuron.gradient(lx, ly).ravel()
+
+        optimizer.train(
+            X, y, fct_loss, fct_grad, max_iter=max_iter,
+            early_th=early_th, verbose=verbose)
+
+        self.update_training_weights(optimizer.coef, False)
+        return self
 
 
 class NeuralTreeNode(_TrainingAPI):
@@ -97,9 +143,19 @@ class NeuralTreeNode(_TrainingAPI):
         return x if x > 0 else 0
 
     @staticmethod
+    def _leakyrelu(x):
+        "Leaky Relu function."
+        return x if x > 0 else x * 0.01
+
+    @staticmethod
     def _drelu(x):
-        "Derivative of the relu function."
+        "Derivative of the Relu function."
         return 1 if x > 0 else 0
+
+    @staticmethod
+    def _dleakyrelu(x):
+        "Derivative of the Leaky Relu function."
+        return 1 if x > 0 else 0.01
 
     @staticmethod
     def _dsigmoid(x):
@@ -108,16 +164,19 @@ class NeuralTreeNode(_TrainingAPI):
         return y * (1 - y)
 
     @staticmethod
+    def _softmax(x):
+        "Derivative of the softmax function."
+        if len(x.shape) == 2:
+            return softmax(x, axis=1)
+        return softmax(x)
+
+    @staticmethod
     def _dsoftmax(x):
         "Derivative of the softmax function."
         soft = softmax(x)
-        ex = numpy.exp(x)
-        exs = numpy.sum(ex)
-        iexs = 1 / exs
-        dinv = - soft * iexs
-        niexs = numpy.full(ex.shape, iexs)
-        diag = numpy.diag(niexs)
-        return diag + dinv
+        grad = - soft @ soft.T
+        diag = numpy.diag(soft)
+        return diag + grad
 
     @staticmethod
     def get_activation_function(activation):
@@ -126,15 +185,17 @@ class NeuralTreeNode(_TrainingAPI):
         It returns a function *y=f(x)*.
         """
         if activation == 'softmax':
-            return softmax
+            return NeuralTreeNode._softmax
         if activation == 'softmax4':
-            return lambda x: softmax(x * 4)
+            return lambda x: NeuralTreeNode._softmax(x * 4)
         if activation in {'logistic', 'expit', 'sigmoid'}:
             return expit
         if activation == 'sigmoid4':
             return lambda x: expit(x * 4)
         if activation == 'relu':
             return numpy.vectorize(NeuralTreeNode._relu)
+        if activation == 'leakyrelu':
+            return numpy.vectorize(NeuralTreeNode._leakyrelu)
         if activation == 'identity':
             return lambda x: x
         raise ValueError(
@@ -164,6 +225,8 @@ class NeuralTreeNode(_TrainingAPI):
             return lambda x: NeuralTreeNode._dsigmoid(x) * 4
         if activation == 'relu':
             return numpy.vectorize(NeuralTreeNode._drelu)
+        if activation == 'leakyrelu':
+            return numpy.vectorize(NeuralTreeNode._dleakyrelu)
         if activation == 'identity':
             return numpy.vectorize(lambda x: 1)
         raise ValueError(
@@ -178,11 +241,15 @@ class NeuralTreeNode(_TrainingAPI):
         """
         if activation in {'logistic', 'expit', 'sigmoid', 'sigmoid4'}:
             # regression + regularization
-            return lambda w, x, y: (x - y) ** 2 + w @ w.T * 0.1
+            return lambda w, x, y: (x - y) ** 2 + w @ w.T * 0.01
         if activation in {'softmax', 'softmax4'}:
+            cst = numpy.finfo(numpy.float32).eps
+
             # classification
-            return lambda w, x, y: rel_entr(x, y)
-        if activation in {'identity', 'relu'}:
+            def kl_fct2(w, x, y):
+                return kl_fct(x + cst, y + cst)
+            return kl_fct2
+        if activation in {'identity', 'relu', 'leakyrelu'}:
             # regression
             return lambda w, x, y: (x - y) ** 2
         raise ValueError(
@@ -198,10 +265,10 @@ class NeuralTreeNode(_TrainingAPI):
         if activation in {'logistic', 'expit', 'sigmoid', 'sigmoid4'}:
             # regression + regularization
             def dregrdx(w, x, y):
-                return x * (x - y) * 2
+                return (x - y) * 2
 
             def dregrdw(w, x, y):
-                return w * 2
+                return w * 0.02
             return dregrdx, dregrdw
 
         if activation in {'softmax', 'softmax4'}:
@@ -215,10 +282,10 @@ class NeuralTreeNode(_TrainingAPI):
                 return numpy.zeros(w.shape, dtype=w.dtype)
             return dclsdx, dclsdw
 
-        if activation in {'identity', 'relu'}:
+        if activation in {'identity', 'relu', 'leakyrelu'}:
             # regression
             def dregdx(w, x, y):
-                return x * (x - y) * 2
+                return (x - y) * 2
 
             def dregdw(w, x, y):
                 return numpy.zeros(w.shape, dtype=w.dtype)
@@ -238,7 +305,10 @@ class NeuralTreeNode(_TrainingAPI):
         """
         self.tag = tag
         if isinstance(weights, int):
-            weights = rnd.randn(weights)
+            if activation.startswith('softmax'):
+                weights = rnd.randn(2, weights)
+            else:
+                weights = rnd.randn(weights)
         if isinstance(weights, list):
             weights = numpy.array(weights)
         if len(weights.shape) == 1:
@@ -275,7 +345,7 @@ class NeuralTreeNode(_TrainingAPI):
             self.activation)
         self.loss_ = NeuralTreeNode.get_activation_loss_function(
             self.activation)
-        self.dlossdx_, self.dlossdw_ = NeuralTreeNode.get_activation_dloss_function(
+        self.dlossds_, self.dlossdw_ = NeuralTreeNode.get_activation_dloss_function(
             self.activation)
 
     @property
@@ -319,9 +389,13 @@ class NeuralTreeNode(_TrainingAPI):
 
     def __repr__(self):
         "usual"
+        if len(self.coef.shape) == 1:
+            return "%s(weights=%r, bias=%r, activation=%r)" % (
+                self.__class__.__name__, self.coef[1:],
+                self.coef[0], self.activation)
         return "%s(weights=%r, bias=%r, activation=%r)" % (
-            self.__class__.__name__, self.coef[1:],
-            self.coef[0], self.activation)
+            self.__class__.__name__, self.coef[:, 1:],
+            self.coef[:, 0], self.activation)
 
     def _predict(self, X):
         "Computes inputs of the activation function."
@@ -333,6 +407,9 @@ class NeuralTreeNode(_TrainingAPI):
         "Computes neuron outputs."
         if self.n_outputs == 1:
             return self.activation_(X @ self.coef[1:] + self.coef[0])
+        if len(X.shape) == 2:
+            return self.activation_(
+                (X @ self.coef[:, 1:].T + self.coef[:, 0]))
         return self.activation_(
             (X.reshape((1, -1)) @ self.coef[:, 1:].T + self.coef[:, 0]).ravel())
 
@@ -346,43 +423,51 @@ class NeuralTreeNode(_TrainingAPI):
         "Returns the weights stored in the neuron."
         return self.coef.ravel()
 
-    def update_training_weights(self, X):
+    def update_training_weights(self, X, add=True):
         """
         Updates weights.
 
         :param grad: vector to add to the weights such as gradient
+        :param add: addition or replace
         """
-        self.coef += X.reshape(self.coef.shape)
+        if add:
+            self.coef += X.reshape(self.coef.shape)
+        else:
+            numpy.copyto(self.coef, X.reshape(self.coef.shape))
 
     def fill_cache(self, X):
         """
         Creates a cache with intermediate results.
+        ``lX`` is the results before the activation function,
+        ``aX`` is the results after the activation function, the prediction.
         """
-        return dict(sX=self._predict(X))
+        cache = dict(lX=self._predict(X))
+        cache['aX'] = self.activation_(cache['lX'])
+        return cache
 
     def loss(self, X, y, cache=None):
         """
         Computes a loss. Returns a float.
         """
-        if cache is not None and 'sX' in cache:
-            self.loss_(cache['sX'], y)  # pylint: disable=E1120
-        return self.loss_(self.predict(X), y)  # pylint: disable=E1120
+        if cache is not None and 'aX' in cache:
+            self.loss_(cache['aX'], y)  # pylint: disable=E1120
+        return self.loss_(self.coef, self.predict(X), y)  # pylint: disable=E1120
 
-    def dlossdx(self, X, y, cache=None):
+    def dlossds(self, X, y, cache=None):
         """
         Computes the loss derivative against the inputs.
         """
-        if cache is not None and 'sX' in cache:
-            self.dlossdx_(self.training_weights, cache['sX'], y)
-        return self.dlossdx_(self.training_weights, self.predict(X), y)
+        if cache is not None and 'aX' in cache:
+            self.dlossds_(self.training_weights, cache['aX'], y)
+        return self.dlossds_(self.coef, self.predict(X), y)
 
     def dlossdw(self, X, y, cache=None):
         """
         Computes the loss derivative against the weights.
         """
-        if cache is not None and 'sX' in cache:
-            self.dlossdw_(self.training_weights, cache['sX'], y)
-        return self.dlossdw_(self.training_weights, self.predict(X), y)
+        if cache is not None and 'aX' in cache:
+            self.dlossdw_(self.training_weights, cache['aX'], y)
+        return self.dlossdw_(self.coef, self.predict(X), y)
 
     def gradient_backward(self, graddx, graddw, X, inputs=False, cache=None):
         """
@@ -393,11 +478,12 @@ class NeuralTreeNode(_TrainingAPI):
         :param X: computes the gradient in X
         :param inputs: if False, derivative against the coefficients,
             otherwise against the inputs.
+        :param cache: cache intermediate results
         :return: gradient
         """
         if cache is None:
             cache = self.fill_cache(X)
-        pred = cache['sX']
+        pred = cache['aX']
         ga = self.gradient_(pred)
         if len(ga.shape) == 2:
             f = graddx @ ga
@@ -706,17 +792,24 @@ class NeuralTreeNet(_TrainingAPI):
             pos += s
         return res
 
-    def update_training_weights(self, X):
+    def update_training_weights(self, X, add=True):
         """
         Updates weights.
 
         :param grad: vector to add to the weights such as gradient
+        :param add: addition or replace
         """
         pos = 0
-        for n in self.nodes:
-            s = n.coef.size
-            n.coef += X[pos: pos + s].reshape(n.coef.shape)
-            pos += s
+        if add:
+            for n in self.nodes:
+                s = n.coef.size
+                n.coef += X[pos: pos + s].reshape(n.coef.shape)
+                pos += s
+        else:
+            for n in self.nodes:
+                s = n.coef.size
+                numpy.copyto(n.coef, X[pos: pos + s].reshape(n.coef.shape))
+                pos += s
 
     def fill_cache(self, X):
         """
@@ -732,7 +825,7 @@ class NeuralTreeNet(_TrainingAPI):
         raise NotImplementedError(  # pragma: no cover
             "This should be overwritten.")
 
-    def dlossdx(self, X, y, cache=None):
+    def dlossds(self, X, y, cache=None):
         """
         Computes the loss derivative against the inputs.
         """

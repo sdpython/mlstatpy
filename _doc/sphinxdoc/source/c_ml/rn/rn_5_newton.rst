@@ -294,7 +294,11 @@ Cet algorithme se déduit des équations :eq:`algo_retro_1`, :eq:`algo_retro_3`,
     |           :math:`w'_{c,i,j} \longleftarrow z_{c-1,j} \; y'_{c,i}`
     |           :math:`b'_{c,i,j} \longleftarrow y'_{c,i}`
 
-		
-		
-		
-		
+Ces formules sont assez indigestes pour comprendre comment
+la rétropropagation fonctionne. La figure suivante illustre
+comme le gradient se propage d'un neurone au précédente de façon
+récursive. Je la trouve plus simple à exploiter lorsqu'on dévie
+du perceptron classique pour faire des choses hors des clous.
+Je la laisse comme ça sans trop d'explications.
+
+.. image:: rnimg/neurone2.jpg

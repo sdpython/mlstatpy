@@ -23,6 +23,8 @@ class BaseOptimizer:
     The class holds the following attributes:
 
     * *learning_rate*: float, the current learning rate
+    * *coef*: optimized coefficients
+    * *min_threshold*, *max_threshold*: coefficients thresholds
     """
 
     def __init__(self, coef, learning_rate_init=0.1,
@@ -51,7 +53,9 @@ class BaseOptimizer:
         :param grad: array, gradient
         """
         if self.coef.shape != grad.shape:
-            raise ValueError("coef and grad must have the same shape.")
+            raise ValueError(
+                "coef and grad must have the same shape coef {} != gradient {}."
+                "".format(self.coef.shape, grad.shape))
         update = self._get_updates(grad)
         self.coef += update
         if self.min_threshold is not None:
@@ -161,11 +165,13 @@ class BaseOptimizer:
 
     def _display_progress(self, it, max_iter, loss, losses=None, msg=None):
         'Displays training progress.'
+        mxc = numpy.abs(self.coef.ravel()).max()
         if losses is None:
-            print('{}/{}: loss: {:1.4g}'.format(it, max_iter, loss))
+            print('{}/{}: loss: {:1.4g} max(coef): {:1.4g}'.format(
+                it, max_iter, loss, mxc))
         else:
-            print('{}/{}: loss: {:1.4g} losses: {}'.format(
-                it, max_iter, loss, losses))
+            print('{}/{}: loss: {:1.4g} losses: {} max(coef): {:1.4g}'.format(
+                it, max_iter, loss, losses, mxc))
 
 
 class SGDOptimizer(BaseOptimizer):
@@ -230,7 +236,7 @@ class SGDOptimizer(BaseOptimizer):
             print('optimized coefficients:', sgd.coef)
     """
 
-    def __init__(self, coef, learning_rate_init=0.1, lr_schedule='constant',
+    def __init__(self, coef, learning_rate_init=0.1, lr_schedule='invscaling',
                  momentum=0.9, power_t=0.5, early_th=None,
                  min_threshold=None, max_threshold=None):
         super().__init__(coef, learning_rate_init,
@@ -254,6 +260,11 @@ class SGDOptimizer(BaseOptimizer):
         if self.lr_schedule == 'invscaling':
             self.learning_rate = (float(self.learning_rate_init) /
                                   (time_step + 1) ** self.power_t)
+        elif self.lr_schedule == 'constant':
+            pass
+        else:
+            raise ValueError(  # pragma: no cover
+                "Unexpected value: lr_schedule='{}'.".format(self.lr_schedule))
 
     def _get_updates(self, grad):
         """
@@ -268,9 +279,11 @@ class SGDOptimizer(BaseOptimizer):
 
     def _display_progress(self, it, max_iter, loss, losses=None, msg='loss'):
         'Displays training progress.'
+        mxc = numpy.abs(self.coef.ravel()).max()
         if losses is None:
-            print('{}/{}: {}: {:1.4g} lr={:1.3g}'.format(
-                it, max_iter, msg, loss, self.learning_rate))
+            print('{}/{}: {}: {:1.4g} lr={:1.3g} max(coef): {:1.4g}'.format(
+                it, max_iter, msg, loss, self.learning_rate, mxc))
         else:
-            print('{}/{}: {}: {:1.4g} lr={:1.3g} {}es: {}'.format(  # pylint: disable=W1308
-                it, max_iter, msg, loss, self.learning_rate, msg, losses))
+            print('{}/{}: {}: {:1.4g} lr={:1.3g} {}es: {} '  # pylint: disable=W1308
+                  'max(coef): {:1.4g}'.format(  # pylint: disable=W1308
+                      it, max_iter, msg, loss, self.learning_rate, msg, losses, mxc))

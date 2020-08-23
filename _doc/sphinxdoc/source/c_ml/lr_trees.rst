@@ -280,6 +280,8 @@ la fois les modèles et la séparation entre les deux parties.
     l'espace en deux, deux autres apprenant à classifier sur chacune
     des parties.
 
+.. _l-decnntrees:
+
 Lien vers les réseaux de neurones
 =================================
 
