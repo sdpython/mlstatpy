@@ -18,7 +18,8 @@ class MlGridBenchMark(GridBenchMark):
     """
 
     def __init__(self, name, datasets, clog=None, fLOG=noLOG, path_to_images=".",
-                 cache_file=None, progressbar=None, graphx=None, graphy=None, **params):
+                 cache_file=None, progressbar=None, graphx=None, graphy=None,
+                 **params):
         """
         @param      name            name of the test
         @param      datasets        list of dictionary of dataframes
@@ -58,40 +59,37 @@ class MlGridBenchMark(GridBenchMark):
         ds, appe, params = GridBenchMark.preprocess_dataset(
             self, dsi, **params)
 
-        if "no_split" in ds:
-            no_split = ds["no_split"]
-        else:
-            no_split = False
+        no_split = ds["no_split"] if "no_split" in ds else False
 
         if no_split:
             self.fLOG("[MlGridBenchMark.preprocess_dataset] no split")
             return (ds, ds), appe, params
-        else:
-            self.fLOG("[MlGridBenchMark.preprocess_dataset] split train test")
-            spl = ["X", "Y", "weight", "group"]
-            names = [_ for _ in spl if _ in ds]
-            if len(names) == 0:
-                raise ValueError(  # pragma: no cover
-                    "No dataframe or matrix was found.")
-            mats = [ds[_] for _ in names]
 
-            pars = {"train_size", "test_size"}
-            options = {k: v for k, v in params.items() if k in pars}
-            for k in pars:
-                if k in params:
-                    del params[k]
+        self.fLOG("[MlGridBenchMark.preprocess_dataset] split train test")
+        spl = ["X", "Y", "weight", "group"]
+        names = [_ for _ in spl if _ in ds]
+        if len(names) == 0:
+            raise ValueError(  # pragma: no cover
+                "No dataframe or matrix was found.")
+        mats = [ds[_] for _ in names]
 
-            res = train_test_split(*mats, **options)
+        pars = {"train_size", "test_size"}
+        options = {k: v for k, v in params.items() if k in pars}
+        for k in pars:
+            if k in params:
+                del params[k]
 
-            train = {}
-            for i, n in enumerate(names):
-                train[n] = res[i * 2]
-            test = {}
-            for i, n in enumerate(names):
-                test[n] = res[i * 2 + 1]
+        res = train_test_split(*mats, **options)
 
-            self.fLOG("[MlGridBenchMark.preprocess_dataset] done")
-            return (train, test), appe, params
+        train = {}
+        for i, n in enumerate(names):
+            train[n] = res[i * 2]
+        test = {}
+        for i, n in enumerate(names):
+            test[n] = res[i * 2 + 1]
+
+        self.fLOG("[MlGridBenchMark.preprocess_dataset] done")
+        return (train, test), appe, params
 
     def bench_experiment(self, ds, **params):
         """

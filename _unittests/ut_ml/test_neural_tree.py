@@ -261,7 +261,18 @@ class TestNeuralTree(ExtTestCase):
             c2 = neu.training_weights
             self.assertEqual(c1.shape, c2.shape)
 
+    def test_neural_net_gradient(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        y2 = y.copy()
+        y2[0] = 2
+
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10)
+        root.fit(X, y)
+
 
 if __name__ == "__main__":
-    TestNeuralTree().test_optim_clas()
+    # TestNeuralTree().test_neural_net_gradient()
     unittest.main()

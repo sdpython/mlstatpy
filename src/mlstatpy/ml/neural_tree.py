@@ -445,29 +445,37 @@ class NeuralTreeNode(_TrainingAPI):
         cache['aX'] = self.activation_(cache['lX'])
         return cache
 
+    def _common_loss_dloss(self, X, y, cache=None):
+        """
+        Common beginning to methods *loss*, *dlossds*,
+        *dlossdw*.
+        """
+        if cache is not None and 'aX' in cache:
+            act = cache['aX']
+        else:
+            act = self.predict(X)
+        return act
+
     def loss(self, X, y, cache=None):
         """
         Computes a loss. Returns a float.
         """
-        if cache is not None and 'aX' in cache:
-            self.loss_(cache['aX'], y)  # pylint: disable=E1120
-        return self.loss_(self.coef, self.predict(X), y)  # pylint: disable=E1120
+        act = self._common_loss_dloss(X, y, cache=cache)
+        return self.loss_(self.coef, act, y)  # pylint: disable=E1120
 
     def dlossds(self, X, y, cache=None):
         """
         Computes the loss derivative against the inputs.
         """
-        if cache is not None and 'aX' in cache:
-            self.dlossds_(self.training_weights, cache['aX'], y)
-        return self.dlossds_(self.coef, self.predict(X), y)
+        act = self._common_loss_dloss(X, y, cache=cache)
+        return self.dlossds_(self.coef, act, y)
 
     def dlossdw(self, X, y, cache=None):
         """
         Computes the loss derivative against the weights.
         """
-        if cache is not None and 'aX' in cache:
-            self.dlossdw_(self.training_weights, cache['aX'], y)
-        return self.dlossdw_(self.coef, self.predict(X), y)
+        act = self._common_loss_dloss(X, y, cache=cache)
+        return self.dlossdw_(self.coef, act, y)
 
     def gradient_backward(self, graddx, graddw, X, inputs=False, cache=None):
         """
@@ -483,12 +491,14 @@ class NeuralTreeNode(_TrainingAPI):
         """
         if cache is None:
             cache = self.fill_cache(X)
+
         pred = cache['aX']
         ga = self.gradient_(pred)
         if len(ga.shape) == 2:
             f = graddx @ ga
         else:
             f = graddx * ga
+
         if inputs:
             if len(self.coef.shape) == 1:
                 rgrad = numpy.empty(X.shape)
@@ -498,6 +508,7 @@ class NeuralTreeNode(_TrainingAPI):
                 rgrad = numpy.sum(
                     self.coef[:, 1:] * f.reshape((-1, 1)), axis=0)
             return rgrad
+
         rgrad = numpy.empty(self.coef.shape)
         if len(self.coef.shape) == 1:
             rgrad[0] = 1
@@ -530,14 +541,40 @@ class NeuralTreeNet(_TrainingAPI):
                     numpy.ones((dim,), dtype=numpy.float64),
                     bias=numpy.float64(0.),
                     activation='identity', nodeid=0)]
-            self.nodes_attr = [dict(inputs=numpy.arange(0, dim), output=dim)]
+            self.nodes_attr = [dict(inputs=numpy.arange(0, dim), output=dim,
+                                    coef_size=self.nodes[0].coef.size,
+                                    first_coef=0)]
         self._update_members()
 
-    def _update_members(self):
-        if len(self.nodes_attr) == 0:
-            self.size_ = self.dim
+    def _update_members(self, node=None, attr=None):
+        "Updates internal members."
+        if node is None or attr is None:
+            if len(self.nodes_attr) == 0:
+                self.size_ = self.dim
+            else:
+                self.size_ = max(d['output'] for d in self.nodes_attr) + 1
+            self.output_to_node_ = {}
+            self.input_to_node_ = {}
+            for node2, attr2 in zip(self.nodes, self.nodes_attr):
+                if isinstance(attr2['output'], list):
+                    for o in attr2['output']:
+                        self.output_to_node_[o] = node2, attr2
+                else:
+                    self.output_to_node_[attr2['output']] = node2, attr2
+                for i in attr2['inputs']:
+                    self.input_to_node_[i] = node2, attr2
         else:
-            self.size_ = max(d['output'] for d in self.nodes_attr) + 1
+            if len(node.input_weights.shape) == 1:
+                self.size_ += 1
+            else:
+                self.size_ += node.input_weights.shape[0]
+            if isinstance(attr['output'], list):
+                for o in attr['output']:
+                    self.output_to_node_[o] = node, attr
+            else:
+                self.output_to_node_[attr['output']] = node, attr
+            for i in attr['inputs']:
+                self.input_to_node_[i] = node, attr
 
     def __repr__(self):
         "usual"
@@ -563,9 +600,12 @@ class NeuralTreeNet(_TrainingAPI):
                         node.input_weights.shape[0], len(inputs)))
             node.nodeid = len(self.nodes)
             self.nodes.append(node)
-            attr = dict(inputs=numpy.array(inputs), output=self.size_)
+            first_coef = (
+                0 if len(self.nodes_attr) == 0 else
+                self.nodes_attr[-1]['first_coef'] + self.nodes_attr[-1]['coef_size'])
+            attr = dict(inputs=numpy.array(inputs), output=self.size_,
+                        coef_size=node.coef.size, first_coef=first_coef)
             self.nodes_attr.append(attr)
-            self.size_ += 1
         elif len(node.input_weights.shape) == 2:
             if node.input_weights.shape[1] != len(inputs):
                 raise RuntimeError(
@@ -573,13 +613,18 @@ class NeuralTreeNet(_TrainingAPI):
                         node.input_weights.shape[1], len(inputs)))
             node.nodeid = len(self.nodes)
             self.nodes.append(node)
+            first_coef = (
+                0 if len(self.nodes_attr) == 0 else
+                self.nodes_attr[-1]['first_coef'] + self.nodes_attr[-1]['coef_size'])
             attr = dict(inputs=numpy.array(inputs),
-                        output=list(range(self.size_, self.size_ + node.input_weights.shape[0])))
+                        output=list(range(self.size_, self.size_ +
+                                          node.input_weights.shape[0])),
+                        coef_size=node.coef.size, first_coef=first_coef)
             self.nodes_attr.append(attr)
-            self.size_ += node.input_weights.shape[0]
         else:
             raise RuntimeError(
                 "Coefficients should have 1 or 2 dimension not {}.".format(node.input_weights.shape))
+        self._update_members(node, attr)
 
     def __getitem__(self, i):
         "Retrieves node and attributes for node i."
@@ -787,8 +832,8 @@ class NeuralTreeNet(_TrainingAPI):
         pos = 0
         for n in self.nodes:
             s = n.coef.size
-            res[pos: pos +
-                s] = n.coef if len(n.coef.shape) == 1 else n.coef.ravel()
+            res[pos: pos + s] = (
+                n.coef if len(n.coef.shape) == 1 else n.coef.ravel())
             pos += s
         return res
 
@@ -815,29 +860,84 @@ class NeuralTreeNet(_TrainingAPI):
         """
         Creates a cache with intermediate results.
         """
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
+        big_cache = {}
+        res = numpy.zeros((self.size_,), dtype=numpy.float64)
+        res[:self.dim] = X
+        for node, attr in zip(self.nodes, self.nodes_attr):
+            cache = node.fill_cache(res[attr['inputs']])
+            big_cache[node.nodeid] = cache
+            res[attr['output']] = cache['aX']
+        big_cache[-1] = res
+        return big_cache
+
+    def _get_output_node_attr(self, nb_last):
+        """
+        Retrieves the output nodes.
+        *nb_last* is the number of expected outputs.
+        """
+        neurones = set(self.output_to_node_[self.nodes[i].nodeid][0].nodeid
+                       for i in range(len(self.nodes) - nb_last,
+                                      len(self.nodes)))
+        if len(neurones) != 1:
+            raise RuntimeError(  # pragma: no cover
+                "Only one output node is implemented not {}".format(
+                    len(neurones)))
+        return self.output_to_node_[len(self.nodes) - 1]
+
+    def _common_loss_dloss(self, X, y, cache=None):
+        """
+        Common beginning to methods *loss*, *dlossds*,
+        *dlossdw*.
+        """
+        last = 1 if len(y.shape) <= 1 else y.shape[1]
+        if cache is not None and -1 in cache:
+            res = cache[-1]
+        else:
+            res = self.predict(X)
+        if len(res.shape) == 2:
+            pred = res[:, -last:]
+        else:
+            pred = res[-last:]
+        last_node, last_attr = self._get_output_node_attr(last)
+        return res, pred, last_node, last_attr
 
     def loss(self, X, y, cache=None):
         """
         Computes a loss. Returns a float.
         """
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
+        res, _, last_node, last_attr = self._common_loss_dloss(
+            X, y, cache=cache)
+        if len(res.shape) <= 1:
+            return last_node.loss(res[last_attr['inputs']], y)  # pylint: disable=E1120
+        return last_node.loss(res[:, last_attr['inputs']], y)  # pylint: disable=E1120
 
     def dlossds(self, X, y, cache=None):
         """
         Computes the loss derivative against the inputs.
         """
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
+        res, _, last_node, last_attr = self._common_loss_dloss(
+            X, y, cache=cache)
+        if len(res.shape) <= 1:
+            return last_node.dlossds(res[last_attr['inputs']], y)  # pylint: disable=E1120
+        return last_node.dlossds(res[:, last_attr['inputs']], y)  # pylint: disable=E1120
 
     def dlossdw(self, X, y, cache=None):
         """
         Computes the loss derivative against the weights.
         """
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
+        res = self._common_loss_dloss(X, y, cache=cache)[0]
+        if len(res.shape) <= 1:
+            dw = numpy.empty(self.training_weights.size)
+            for node, attr in zip(self.nodes, self.nodes_attr):
+                d = node.dlossdw(res[attr['inputs']],
+                                 y)  # pylint: disable=E1120
+                dw[attr['first_coef']: attr['first_coef'] +
+                    attr['coef_size']] = d.ravel()
+        else:
+            raise NotImplementedError()
+
+        # results
+        return dw
 
     def gradient_backward(self, graddx, graddw, X, inputs=False, cache=None):
         """

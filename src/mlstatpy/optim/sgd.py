@@ -62,14 +62,14 @@ class BaseOptimizer:
             try:
                 self.coef = numpy.maximum(self.coef, self.min_threshold)
             except UFuncTypeError:  # pragma: no cover
-                raise RuntimeError(
+                raise RuntimeError(  # pylint: disable=W0707
                     "Unable to compute an upper bound with coef={} "
                     "max_threshold={}".format(self.coef, self.min_threshold))
         if self.max_threshold is not None:
             try:
                 self.coef = numpy.minimum(self.coef, self.max_threshold)
             except UFuncTypeError:  # pragma: no cover
-                raise RuntimeError(
+                raise RuntimeError(  # pylint: disable=W0707
                     "Unable to compute a lower bound with coef={} "
                     "max_threshold={}".format(self.coef, self.max_threshold))
 

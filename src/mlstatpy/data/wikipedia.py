@@ -8,7 +8,8 @@ from pyquickhelper.filehelper import get_url_content_timeout, ungzip_files
 from .data_exceptions import DataException
 
 
-def download_pageviews(dt, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG):
+def download_pageviews(dt, folder=".", unzip=True, timeout=-1,
+                       overwrite=False, fLOG=noLOG):
     """
     Downloads wikipedia pagacount for a precise date (up to the hours),
     the url follows the pattern::
@@ -23,7 +24,8 @@ def download_pageviews(dt, folder=".", unzip=True, timeout=-1, overwrite=False, 
     @param      fLOG        logging function
     @return                 filename
 
-    More information on page `pageviews <https://dumps.wikimedia.org/other/pageviews/>`_.
+    More information on page
+    `pageviews <https://dumps.wikimedia.org/other/pageviews/>`_.
     """
     url = "https://dumps.wikimedia.org/other/pageviews/%Y/%Y-%m/pageviews-%Y%m%d-%H0000.gz"
     url = dt.strftime(url)
@@ -38,18 +40,19 @@ def download_pageviews(dt, folder=".", unzip=True, timeout=-1, overwrite=False, 
         os.remove(name)
         if isinstance(names, list):
             if len(names) != 1:
-                raise DataException(
+                raise DataException(  # pragma: no cover
                     "Expecting only one file, not '{0}'".format(names))
             return names[0]
-        else:
-            return names
-    else:
-        return name
+        return names
+    return name
 
 
-def download_dump(country, name, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG):
+def download_dump(country, name, folder=".", unzip=True, timeout=-1,
+                  overwrite=False, fLOG=noLOG):
     """
-    Downloads *wikipedia dumps* from ``https://dumps.wikimedia.org/frwiki/latest/``.
+    Downloads *wikipedia dumps* from
+    `dumps.wikimedia.org/frwiki/latest/
+    <https://dumps.wikimedia.org/frwiki/latest/>`_.
 
     @param      country     country
     @param      name        name of the stream to download
@@ -72,18 +75,19 @@ def download_dump(country, name, folder=".", unzip=True, timeout=-1, overwrite=F
         os.remove(name)
         if isinstance(names, list):
             if len(names) != 1:
-                raise DataException(
+                raise DataException(  # pragma: no cover
                     "Expecting only one file, not '{0}'".format(names))
             return names[0]
-        else:
-            return names
-    else:
-        return name[:-3] if name.endswith('.gz') else name
+        return names
+    return name[:-3] if name.endswith('.gz') else name
 
 
-def download_titles(country, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG):
+def download_titles(country, folder=".", unzip=True, timeout=-1,
+                    overwrite=False, fLOG=noLOG):
     """
-    Downloads wikipedia titles from ``https://dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz``.
+    Downloads wikipedia titles from
+    `dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz
+    <https://dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz>`_.
 
     @param      country     country
     @param      folder      where to download
@@ -92,7 +96,8 @@ def download_titles(country, folder=".", unzip=True, timeout=-1, overwrite=False
     @param      overwrite   overwrite
     @param      fLOG        logging function
     """
-    return download_dump(country, "latest-all-titles-in-ns0.gz", folder, unzip=unzip, timeout=timeout,
+    return download_dump(country, "latest-all-titles-in-ns0.gz",
+                         folder, unzip=unzip, timeout=timeout,
                          overwrite=overwrite, fLOG=fLOG)
 
 
