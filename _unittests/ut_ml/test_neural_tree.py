@@ -9,7 +9,8 @@ import numpy
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn.datasets import load_iris
 from pyquickhelper.pycode import ExtTestCase
-from mlstatpy.ml.neural_tree import NeuralTreeNode, NeuralTreeNet
+from mlstatpy.ml.neural_tree import (
+    NeuralTreeNode, NeuralTreeNet, label_class_to_softmax_output)
 
 
 class TestNeuralTree(ExtTestCase):
@@ -223,7 +224,7 @@ class TestNeuralTree(ExtTestCase):
             c2 = neu.training_weights
             diff = numpy.abs(c2 - c1)
             if act == 'identity':
-                self.assertLess(diff.max(), 0.15)
+                self.assertLess(diff.max(), 0.16)
 
     def test_optim_clas(self):
         X = numpy.abs(numpy.random.randn(10, 2))
@@ -261,18 +262,50 @@ class TestNeuralTree(ExtTestCase):
             c2 = neu.training_weights
             self.assertEqual(c1.shape, c2.shape)
 
+    def test_label_class_to_softmax_output(self):
+        y_label = numpy.array([0, 1, 0, 0])
+        self.assertRaise(lambda: label_class_to_softmax_output(y_label.reshape((-1, 1))),
+                         ValueError)
+        soft_y = label_class_to_softmax_output(y_label)
+        self.assertEqual(soft_y.shape, (4, 2))
+        self.assertEqual(soft_y[:, 1], y_label)
+        self.assertEqual(soft_y[:, 0], 1 - y_label)
+
     def test_neural_net_gradient(self):
         X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
         y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
-        y2 = y.copy()
-        y2[0] = 2
+        ny = label_class_to_softmax_output(y)
 
         tree = DecisionTreeClassifier(max_depth=2)
         tree.fit(X, y)
         root = NeuralTreeNet.create_from_tree(tree, 10)
-        root.fit(X, y)
+        _, out, err = self.capture(lambda: root.fit(X, ny, verbose=True))
+        self.assertIn("loss:", out)
+        self.assertEmpty(err)
+
+    def test_neural_net_gradient_regression(self):
+        X = numpy.abs(numpy.random.randn(10, 2))
+        w1 = numpy.array([-0.5, 0.8, -0.6])
+        noise = numpy.random.randn(X.shape[0]) / 10
+        noise[0] = 0
+        noise[1] = 0.07
+        X[1, 0] = 0.7
+        X[1, 1] = -0.5
+        y = w1[0] + X[:, 0] * w1[1] + X[:, 1] * w1[2] + noise
+
+        for act in ['identity', 'relu', 'leakyrelu',
+                    'sigmoid', 'sigmoid4', 'expit']:
+            neu = NeuralTreeNode(w1[1:], bias=w1[0], activation=act)
+            loss1 = neu.loss(X, y)
+            grad1 = neu.gradient(X[0], y[0])
+
+            net = NeuralTreeNet(X.shape[1], empty=True)
+            net.append(neu, numpy.arange(0, 2))
+            loss2 = net.loss(X, y)
+            grad2 = net.gradient(X[0], y[0])
+            self.assertEqualArray(loss1, loss2)
+            self.assertEqualArray(grad1, grad2)
 
 
 if __name__ == "__main__":
-    # TestNeuralTree().test_neural_net_gradient()
     unittest.main()
