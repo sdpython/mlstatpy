@@ -216,7 +216,7 @@ class SGDOptimizer(BaseOptimizer):
             :showcode:
 
             import numpy
-            from aftercovid.optim import SGDOptimizer
+            from mlstatpy.ml.optim import SGDOptimizer
 
 
             def fct_loss(c, X, y):
