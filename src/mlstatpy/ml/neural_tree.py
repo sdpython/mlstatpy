@@ -35,6 +35,28 @@ def label_class_to_softmax_output(y_label):
 class NeuralTreeNet(_TrainingAPI):
     """
     Node ensemble.
+
+    .. runpython::
+        :showcode:
+
+        import numpy
+        from mlstatpy.ml.neural_tree import NeuralTreeNode, NeuralTreeNet
+
+        w1 = numpy.array([-0.5, 0.8, -0.6])
+
+        neu = NeuralTreeNode(w1[1:], bias=w1[0], activation='sigmoid')
+        net = NeuralTreeNet(2, empty=True)
+        net.append(neu, numpy.arange(2))
+
+        ide = NeuralTreeNode(numpy.array([1.]),
+                             bias=numpy.array([0.]),
+                             activation='identity')
+
+        net.append(ide, numpy.arange(2, 3))
+
+        X = numpy.abs(numpy.random.randn(10, 2))
+        pred = net.predict(X)
+        print(pred)
     """
 
     def __init__(self, dim, empty=True):
@@ -413,13 +435,27 @@ class NeuralTreeNet(_TrainingAPI):
 
     def loss(self, X, y, cache=None):
         """
-        Computes a loss. Returns a float.
+        Computes the loss. Returns a float.
+        """
+        loss = self.losss(X, y, cache=cache)
+        lossw = self.lossw()
+        return loss + lossw
+
+    def losss(self, X, y, cache=None):
+        """
+        Computes the loss due to prediction error. Returns a float.
         """
         res, _, last_node, last_attr = self._common_loss_dloss(
             X, y, cache=cache)
         if len(res.shape) <= 1:
-            return last_node.loss(res[last_attr['inputs']], y)  # pylint: disable=E1120
-        return last_node.loss(res[:, last_attr['inputs']], y)  # pylint: disable=E1120
+            return last_node.losss(res[last_attr['inputs']], y)  # pylint: disable=E1120
+        return last_node.losss(res[:, last_attr['inputs']], y)  # pylint: disable=E1120
+
+    def lossw(self):
+        """
+        Computes the loss due to regularization. Returns a float.
+        """
+        return sum(node.lossw() for node in self.nodes)
 
     def dlossds(self, X, y, cache=None):
         """
@@ -431,23 +467,17 @@ class NeuralTreeNet(_TrainingAPI):
             return last_node.dlossds(res[last_attr['inputs']], y)  # pylint: disable=E1120
         return last_node.dlossds(res[:, last_attr['inputs']], y)  # pylint: disable=E1120
 
-    def dlossdw(self, X, y, cache=None):
+    def dlossdw(self):
         """
-        Computes the loss derivative against the weights.
+        Computes the loss derivative due to regularization.
         """
-        res = self._common_loss_dloss(X, y, cache=cache)[0]
-        if len(res.shape) <= 1:
-            dw = numpy.empty(self.training_weights.size)
-            for node, attr in zip(self.nodes, self.nodes_attr):
-                d = node.dlossdw(res[attr['inputs']],
-                                 y)  # pylint: disable=E1120
-                dw[attr['first_coef']: attr['first_coef'] +
-                    attr['coef_size']] = d.ravel()
-        else:
-            raise NotImplementedError()
-
-        # results
-        return dw
+        res = numpy.zeros((self.shape[0],), dtype=numpy.float64)
+        for node, atts in zip(self.nodes, self.nodes_attr):
+            dw = node.dlossdw()
+            a = atts['first_coef']
+            b = a + atts['coef_size']
+            res[a: b] = dw.ravel()
+        return res
 
     def gradient_backward(self, graddx, graddw, X, inputs=False, cache=None):
         """

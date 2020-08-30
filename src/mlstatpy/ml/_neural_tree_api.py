@@ -36,21 +36,35 @@ class _TrainingAPI:
 
     def loss(self, X, y, cache=None):
         """
-        Computes a loss. Returns a float.
+        Computes the loss. Returns a float.
+        """
+        raise NotImplementedError(  # pragma: no cover
+            "This should be overwritten.")
+
+    def losss(self, X, y, cache=None):
+        """
+        Computes the loss due to prediction error. Returns a float.
+        """
+        raise NotImplementedError(  # pragma: no cover
+            "This should be overwritten.")
+
+    def lossw(self, X, y, cache=None):
+        """
+        Computes the loss due to regularization. Returns a float.
         """
         raise NotImplementedError(  # pragma: no cover
             "This should be overwritten.")
 
     def dlossds(self, X, y, cache=None):
         """
-        Computes the loss derivative against the inputs.
+        Computes the loss derivative due to prediction error.
         """
         raise NotImplementedError(  # pragma: no cover
             "This should be overwritten.")
 
-    def dlossdw(self, X, y, cache=None):
+    def dlossdw(self):
         """
-        Computes the loss derivative against the weights.
+        Computes the loss derivative due to regularization.
         """
         raise NotImplementedError(  # pragma: no cover
             "This should be overwritten.")
@@ -85,7 +99,7 @@ class _TrainingAPI:
                 "X must a vector of one dimension but has shape {}.".format(X.shape))
         cache = self.fill_cache(X)  # pylint: disable=E1128
         dlossds = self.dlossds(X, y, cache=cache)
-        dlossdw = self.dlossdw(X, y, cache=cache)
+        dlossdw = self.dlossdw()
         return self.gradient_backward(dlossds, dlossdw, X, inputs=inputs, cache=cache)
 
     def fit(self, X, y, optimizer=None, max_iter=100, early_th=None, verbose=False,

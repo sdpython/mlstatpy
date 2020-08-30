@@ -157,17 +157,18 @@ class TestNeuralTree(ExtTestCase):
         z = numpy.zeros((4, ), dtype=w.dtype)
         for act in ['sigmoid', 'sigmoid4', 'expit', 'identity',
                     'relu', 'leakyrelu']:
-            neu = NeuralTreeNode(w, bias=-4, activation=act)
-            pred = neu.predict(X)
-            self.assertEqual(pred.shape, tuple())
-            grad = neu.gradient_backward(g, z, X)
-            self.assertEqual(grad.shape, (4, ))
-            grad = neu.gradient_backward(g, z, X, inputs=True)
-            self.assertEqual(grad.shape, (3, ))
-            ww = neu.training_weights
-            neu.update_training_weights(-ww)
-            w0 = neu.training_weights
-            self.assertEqualArray(w0, numpy.zeros(w0.shape))
+            with self.subTest(act=act):
+                neu = NeuralTreeNode(w, bias=-4, activation=act)
+                pred = neu.predict(X)
+                self.assertEqual(pred.shape, tuple())
+                grad = neu.gradient_backward(g, z, X)
+                self.assertEqual(grad.shape, (4, ))
+                grad = neu.gradient_backward(g, z, X, inputs=True)
+                self.assertEqual(grad.shape, (3, ))
+                ww = neu.training_weights
+                neu.update_training_weights(-ww)
+                w0 = neu.training_weights
+                self.assertEqualArray(w0, numpy.zeros(w0.shape))
 
         X = numpy.array([0.1, 0.2, -0.3])
         w = numpy.array([[10, 20, 3], [-10, -20, 3]])
@@ -175,18 +176,19 @@ class TestNeuralTree(ExtTestCase):
         g = numpy.array([-0.7, 0.2], dtype=numpy.float64)
         z = numpy.zeros((2, 4), dtype=w.dtype)
         for act in ['softmax', 'softmax4']:
-            neu = NeuralTreeNode(w, bias=b, activation=act)
-            pred = neu.predict(X)
-            self.assertAlmostEqual(numpy.sum(pred), 1.)
-            self.assertEqual(pred.shape, (2,))
-            grad = neu.gradient_backward(g, z, X)
-            self.assertEqual(grad.shape, (2, 4))
-            grad = neu.gradient_backward(g, z, X, inputs=True)
-            self.assertEqual(grad.shape, (3, ))
-            ww = neu.training_weights
-            neu.update_training_weights(-ww)
-            w0 = neu.training_weights
-            self.assertEqualArray(w0, numpy.zeros(w0.shape))
+            with self.subTest(act=act):
+                neu = NeuralTreeNode(w, bias=b, activation=act)
+                pred = neu.predict(X)
+                self.assertAlmostEqual(numpy.sum(pred), 1.)
+                self.assertEqual(pred.shape, (2,))
+                grad = neu.gradient_backward(g, z, X)
+                self.assertEqual(grad.shape, (2, 4))
+                grad = neu.gradient_backward(g, z, X, inputs=True)
+                self.assertEqual(grad.shape, (3, ))
+                ww = neu.training_weights
+                neu.update_training_weights(-ww)
+                w0 = neu.training_weights
+                self.assertEqualArray(w0, numpy.zeros(w0.shape))
 
     def test_optim_regression(self):
         X = numpy.abs(numpy.random.randn(10, 2))
@@ -201,30 +203,31 @@ class TestNeuralTree(ExtTestCase):
 
         for act in ['identity', 'relu', 'leakyrelu',
                     'sigmoid', 'sigmoid4', 'expit']:
-            neu = NeuralTreeNode(w1[1:], bias=w1[0], activation=act)
-            loss = neu.loss(X, y).sum() / X.shape[0]
-            if act == 'identity':
-                self.assertGreater(loss, 0)
-                self.assertLess(loss, 0.1)
-            grad = neu.gradient(X[0], y[0])
-            if act == 'identity':
-                self.assertEqualArray(grad, numpy.zeros(grad.shape))
-            grad = neu.gradient(X[1], y[1])
-            ming, maxg = grad[:2].min(), grad[:2].max()
-            if ming == maxg:
-                raise AssertionError(
-                    "Gradient is wrong\nloss={}\ngrad={}".format(
-                        loss, grad))
-            self.assertEqual(grad.shape, w0.shape)
+            with self.subTest(act=act):
+                neu = NeuralTreeNode(w1[1:], bias=w1[0], activation=act)
+                loss = neu.loss(X, y).sum() / X.shape[0]
+                if act == 'identity':
+                    self.assertGreater(loss, 0)
+                    self.assertLess(loss, 0.1)
+                grad = neu.gradient(X[0], y[0])
+                if act == 'identity':
+                    self.assertEqualArray(grad, numpy.zeros(grad.shape))
+                grad = neu.gradient(X[1], y[1])
+                ming, maxg = grad[:2].min(), grad[:2].max()
+                if ming == maxg:
+                    raise AssertionError(
+                        "Gradient is wrong\nloss={}\ngrad={}".format(
+                            loss, grad))
+                self.assertEqual(grad.shape, w0.shape)
 
-            neu.fit(X, y, verbose=False)
-            c1 = neu.training_weights
-            neu = NeuralTreeNode(w0[1:], bias=w0[0], activation=act)
-            neu.fit(X, y, verbose=False, lr_schedule='constant')
-            c2 = neu.training_weights
-            diff = numpy.abs(c2 - c1)
-            if act == 'identity':
-                self.assertLess(diff.max(), 0.16)
+                neu.fit(X, y, verbose=False)
+                c1 = neu.training_weights
+                neu = NeuralTreeNode(w0[1:], bias=w0[0], activation=act)
+                neu.fit(X, y, verbose=False, lr_schedule='constant')
+                c2 = neu.training_weights
+                diff = numpy.abs(c2 - c1)
+                if act == 'identity':
+                    self.assertLess(diff.max(), 0.16)
 
     def test_optim_clas(self):
         X = numpy.abs(numpy.random.randn(10, 2))
@@ -242,25 +245,26 @@ class TestNeuralTree(ExtTestCase):
         y /= numpy.sum(y, axis=1, keepdims=1)
 
         for act in ['softmax', 'softmax4']:
-            neu2 = NeuralTreeNode(2, activation=act)
-            neu = NeuralTreeNode(w1[:, 1:], bias=w1[:, 0], activation=act)
-            self.assertEqual(neu2.training_weights.shape,
-                             neu.training_weights.shape)
-            self.assertEqual(neu2.input_weights.shape,
-                             neu.input_weights.shape)
-            loss = neu.loss(X, y).sum() / X.shape[0]
-            self.assertNotEmpty(loss)
-            self.assertFalse(numpy.isinf(loss))
-            self.assertFalse(numpy.isnan(loss))
-            grad = neu.gradient(X[0], y[0])
-            self.assertEqual(grad.ravel().shape, w1.ravel().shape)
+            with self.subTest(act=act):
+                neu2 = NeuralTreeNode(2, activation=act)
+                neu = NeuralTreeNode(w1[:, 1:], bias=w1[:, 0], activation=act)
+                self.assertEqual(neu2.training_weights.shape,
+                                 neu.training_weights.shape)
+                self.assertEqual(neu2.input_weights.shape,
+                                 neu.input_weights.shape)
+                loss = neu.loss(X, y).sum() / X.shape[0]
+                self.assertNotEmpty(loss)
+                self.assertFalse(numpy.isinf(loss))
+                self.assertFalse(numpy.isnan(loss))
+                grad = neu.gradient(X[0], y[0])
+                self.assertEqual(grad.ravel().shape, w1.ravel().shape)
 
-            neu.fit(X, y, verbose=False)
-            c1 = neu.training_weights
-            neu = NeuralTreeNode(w0[:, 1:], bias=w0[:, 0], activation=act)
-            neu.fit(X, y, verbose=False, lr_schedule='constant')
-            c2 = neu.training_weights
-            self.assertEqual(c1.shape, c2.shape)
+                neu.fit(X, y, verbose=False)
+                c1 = neu.training_weights
+                neu = NeuralTreeNode(w0[:, 1:], bias=w0[:, 0], activation=act)
+                neu.fit(X, y, verbose=False, lr_schedule='constant')
+                c2 = neu.training_weights
+                self.assertEqual(c1.shape, c2.shape)
 
     def test_label_class_to_softmax_output(self):
         y_label = numpy.array([0, 1, 0, 0])
@@ -295,17 +299,64 @@ class TestNeuralTree(ExtTestCase):
 
         for act in ['identity', 'relu', 'leakyrelu',
                     'sigmoid', 'sigmoid4', 'expit']:
-            neu = NeuralTreeNode(w1[1:], bias=w1[0], activation=act)
-            loss1 = neu.loss(X, y)
-            grad1 = neu.gradient(X[0], y[0])
+            with self.subTest(act=act):
+                neu = NeuralTreeNode(w1[1:], bias=w1[0], activation=act)
+                loss1 = neu.loss(X, y)
+                grad1 = neu.gradient(X[0], y[0])
 
-            net = NeuralTreeNet(X.shape[1], empty=True)
-            net.append(neu, numpy.arange(0, 2))
-            loss2 = net.loss(X, y)
-            grad2 = net.gradient(X[0], y[0])
-            self.assertEqualArray(loss1, loss2)
-            self.assertEqualArray(grad1, grad2)
+                net = NeuralTreeNet(X.shape[1], empty=True)
+                net.append(neu, numpy.arange(0, 2))
+                loss2 = net.loss(X, y)
+                grad2 = net.gradient(X[0], y[0])
+                self.assertEqualArray(loss1, loss2)
+                self.assertEqualArray(grad1, grad2)
+
+    def test_neural_net_gradient_regression_2(self):
+        X = numpy.abs(numpy.random.randn(10, 2))
+        w1 = numpy.array([-0.5, 0.8, -0.6])
+        noise = numpy.random.randn(X.shape[0]) / 10
+        noise[0] = 0
+        noise[1] = 0.07
+        X[1, 0] = 0.7
+        X[1, 1] = -0.5
+        y = w1[0] + X[:, 0] * w1[1] + X[:, 1] * w1[2] + noise
+
+        for act in ['relu', 'sigmoid', 'identity', 'leakyrelu',
+                    'sigmoid4', 'expit']:
+
+            with self.subTest(act=act):
+                neu = NeuralTreeNode(w1[1:], bias=w1[0], activation=act)
+                loss1 = neu.loss(X, y)
+                pred1 = neu.predict(X)
+                if act == 'relu':
+                    self.assertEqualArray(pred1[1:2], numpy.array([0.36]))
+                    pred11 = neu.predict(X)
+                    self.assertEqualArray(pred11[1:2], numpy.array([0.36]))
+
+                net = NeuralTreeNet(X.shape[1], empty=True)
+                net.append(neu, numpy.arange(0, 2))
+                ide = NeuralTreeNode(numpy.array([1], dtype=X.dtype),
+                                     bias=numpy.array([0], dtype=X.dtype),
+                                     activation='identity')
+                net.append(ide, numpy.arange(2, 3))
+                pred2 = net.predict(X)
+                loss2 = net.loss(X, y)
+
+                self.assertEqualArray(pred1, pred2[:, -1])
+                self.assertEqualArray(pred2[:, -2], pred2[:, -1])
+                self.assertEqualArray(pred2[:, 2], pred2[:, 3])
+                self.assertEqualArray(neu.lossw(), net.lossw())
+                self.assertEqualArray(loss1, loss2)
+
+                for p in range(0, 5):
+                    dw1 = neu.dlossdw()
+                    dw2 = net.dlossdw()
+                    self.assertEqualArray(dw1, dw2[:dw1.shape[0]])
+                    grad1 = neu.gradient(X[p], y[p])
+                    grad2 = net.gradient(X[p], y[p])
+                    self.assertEqualArray(grad1, grad2[:3])
 
 
 if __name__ == "__main__":
+    TestNeuralTree().test_neural_net_gradient_regression_2()
     unittest.main()
