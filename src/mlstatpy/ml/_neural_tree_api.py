@@ -41,20 +41,6 @@ class _TrainingAPI:
         raise NotImplementedError(  # pragma: no cover
             "This should be overwritten.")
 
-    def losss(self, X, y, cache=None):
-        """
-        Computes the loss due to prediction error. Returns a float.
-        """
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
-
-    def lossw(self, X, y, cache=None):
-        """
-        Computes the loss due to regularization. Returns a float.
-        """
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
-
     def dlossds(self, X, y, cache=None):
         """
         Computes the loss derivative due to prediction error.
@@ -62,19 +48,11 @@ class _TrainingAPI:
         raise NotImplementedError(  # pragma: no cover
             "This should be overwritten.")
 
-    def dlossdw(self):
-        """
-        Computes the loss derivative due to regularization.
-        """
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
-
-    def gradient_backward(self, graddx, graddw, X, inputs=False, cache=None):
+    def gradient_backward(self, graddx, X, inputs=False, cache=None):
         """
         Computes the gradient in X.
 
-        :param graddx: existing gradient against the inputs
-        :param graddw: existing gradient against the weights
+        :param graddx: existing gradient against the outputs
         :param X: computes the gradient in X
         :param inputs: if False, derivative against the coefficients,
             otherwise against the inputs.
@@ -99,8 +77,7 @@ class _TrainingAPI:
                 "X must a vector of one dimension but has shape {}.".format(X.shape))
         cache = self.fill_cache(X)  # pylint: disable=E1128
         dlossds = self.dlossds(X, y, cache=cache)
-        dlossdw = self.dlossdw()
-        return self.gradient_backward(dlossds, dlossdw, X, inputs=inputs, cache=cache)
+        return self.gradient_backward(dlossds, X, inputs=inputs, cache=cache)
 
     def fit(self, X, y, optimizer=None, max_iter=100, early_th=None, verbose=False,
             lr=None, lr_schedule=None):

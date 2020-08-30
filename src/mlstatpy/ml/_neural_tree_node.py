@@ -5,7 +5,7 @@
 """
 import numpy
 import numpy.random as rnd
-from scipy.special import expit, softmax, rel_entr as kl_fct  # pylint: disable=E0611
+from scipy.special import expit, softmax, kl_div as kl_fct  # pylint: disable=E0611
 from ._neural_tree_api import _TrainingAPI
 
 
@@ -117,25 +117,21 @@ class NeuralTreeNode(_TrainingAPI):
     def get_activation_loss_function(activation):
         """
         Returns a default loss function based on the activation
-        function. It returns two functions *g=loss(x,y)*
-        and *h=loss(w)* (regularization) where *w* are the weights.
+        function. It returns two functions *g=loss(x,y)*.
         """
-        def zerof(w):
-            return 0.
-
         if activation in {'logistic', 'expit', 'sigmoid', 'sigmoid4'}:
             # regression + regularization
-            return lambda x, y: (x - y) ** 2, lambda w: w @ w.T * 0.01
+            return lambda x, y: (x - y) ** 2
         if activation in {'softmax', 'softmax4'}:
             cst = numpy.finfo(numpy.float32).eps
 
             # classification
             def kl_fct2(x, y):
                 return kl_fct(x + cst, y + cst)
-            return kl_fct2, zerof
+            return kl_fct2
         if activation in {'identity', 'relu', 'leakyrelu'}:
             # regression
-            return lambda x, y: (x - y) ** 2, zerof
+            return lambda x, y: (x - y) ** 2
         raise ValueError(
             "Unknown activation function '{}'.".format(activation))
 
@@ -151,29 +147,23 @@ class NeuralTreeNode(_TrainingAPI):
             def dregrdx(x, y):
                 return (x - y) * 2
 
-            def dregrdw(w):
-                return w * 0.02
-            return dregrdx, dregrdw
+            return dregrdx
 
         if activation in {'softmax', 'softmax4'}:
             # classification
             cst = numpy.finfo(numpy.float32).eps
 
             def dclsdx(x, y):
-                return numpy.log(x + cst) - numpy.log(y + cst) + 1
+                return numpy.log(x + cst) - numpy.log(y + cst)
 
-            def dclsdw(w):
-                return numpy.zeros(w.shape, dtype=w.dtype)
-            return dclsdx, dclsdw
+            return dclsdx
 
         if activation in {'identity', 'relu', 'leakyrelu'}:
             # regression
             def dregdx(x, y):
                 return (x - y) * 2
 
-            def dregdw(w):
-                return numpy.zeros(w.shape, dtype=w.dtype)
-            return dregdx, dregdw
+            return dregdx
         raise ValueError(
             "Unknown activation function '{}'.".format(activation))
 
@@ -229,9 +219,9 @@ class NeuralTreeNode(_TrainingAPI):
             self.activation)
         self.gradient_ = NeuralTreeNode.get_activation_gradient_function(
             self.activation)
-        self.losss_, self.lossw_ = NeuralTreeNode.get_activation_loss_function(
+        self.losss_ = NeuralTreeNode.get_activation_loss_function(
             self.activation)
-        self.dlossds_, self.dlossdw_ = NeuralTreeNode.get_activation_dloss_function(
+        self.dlossds_ = NeuralTreeNode.get_activation_dloss_function(
             self.activation)
 
     @property
@@ -347,20 +337,9 @@ class NeuralTreeNode(_TrainingAPI):
         Computes the loss. Returns a float.
         """
         act = self._common_loss_dloss(X, y, cache=cache)
-        return self.losss_(act, y) + self.lossw_(self.coef)  # pylint: disable=E1120
-
-    def losss(self, X, y, cache=None):
-        """
-        Computes the loss due to prediction error. Returns a float.
-        """
-        act = self._common_loss_dloss(X, y, cache=cache)
+        if len(X.shape) == 1:
+            return self.losss_(act, y)  # pylint: disable=E1120
         return self.losss_(act, y)  # pylint: disable=E1120
-
-    def lossw(self):
-        """
-        Computes the loss due to regularization. Returns a float.
-        """
-        return self.lossw_(self.coef)  # pylint: disable=E1120
 
     def dlossds(self, X, y, cache=None):
         """
@@ -369,18 +348,11 @@ class NeuralTreeNode(_TrainingAPI):
         act = self._common_loss_dloss(X, y, cache=cache)
         return self.dlossds_(act, y)
 
-    def dlossdw(self):
-        """
-        Computes the loss derivative due to regularization.
-        """
-        return self.dlossdw_(self.coef)
-
-    def gradient_backward(self, graddx, graddw, X, inputs=False, cache=None):
+    def gradient_backward(self, graddx, X, inputs=False, cache=None):
         """
         Computes the gradients at point *X*.
 
         :param graddx: existing gradient against the inputs
-        :param graddw: existing gradient against the weights
         :param X: computes the gradient in X
         :param inputs: if False, derivative against the coefficients,
             otherwise against the inputs.
@@ -416,4 +388,4 @@ class NeuralTreeNode(_TrainingAPI):
             rgrad[:, 0] = 1
             rgrad[:, 1:] = X
             rgrad *= f.reshape((-1, 1))
-        return rgrad + graddw.reshape(rgrad.shape)
+        return rgrad

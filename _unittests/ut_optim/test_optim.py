@@ -59,6 +59,37 @@ class TestOptim(ExtTestCase):
         self.assertLess(ls, 1)
         self.assertLess(sgd.learning_rate, 0.1)
 
+    def test_sgd_optimizer_l1l2(self):
+        coef = numpy.array([0.5, 0.6, 0.7])
+
+        X = numpy.random.randn(10, 3)
+        y = X @ coef
+
+        sgd = SGDOptimizer(numpy.array([0., 0., 0.]),
+                           lr_schedule='constant',
+                           l1=1., l2=1.)
+
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            ls = sgd.train(X, y, fct_loss, fct_grad, max_iter=15,
+                           verbose=True)
+        out = buf.getvalue()
+        self.assertIn("15/15: loss", out)
+        self.assertLess(ls, 0.1)
+        self.assertEqual(sgd.learning_rate, 0.1)
+
+        sgd = SGDOptimizer(numpy.array([0., 0., 0.]),
+                           lr_schedule='invscaling',
+                           l1=1., l2=1.)
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            ls = sgd.train(X, y, fct_loss, fct_grad, max_iter=15,
+                           verbose=True)
+        out = buf.getvalue()
+        self.assertIn("15/15: loss", out)
+        self.assertLess(ls, 1)
+        self.assertLess(sgd.learning_rate, 0.1)
+
     def test_sgd_optimizer_raise(self):
         coef = numpy.array([0.5, 0.6, 0.7])
 

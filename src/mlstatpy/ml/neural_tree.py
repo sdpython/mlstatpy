@@ -3,6 +3,8 @@
 @file
 @brief Conversion from tree to neural network.
 """
+from io import BytesIO
+import pickle
 import numpy
 from ._neural_tree_api import _TrainingAPI
 from ._neural_tree_node import NeuralTreeNode
@@ -78,6 +80,12 @@ class NeuralTreeNet(_TrainingAPI):
                                     coef_size=self.nodes[0].coef.size,
                                     first_coef=0)]
         self._update_members()
+
+    def copy(self):
+        st = BytesIO()
+        pickle.dump(self, st)
+        cop = BytesIO(st.getvalue())
+        return pickle.load(cop)
 
     def _update_members(self, node=None, attr=None):
         "Updates internal members."
@@ -435,27 +443,13 @@ class NeuralTreeNet(_TrainingAPI):
 
     def loss(self, X, y, cache=None):
         """
-        Computes the loss. Returns a float.
-        """
-        loss = self.losss(X, y, cache=cache)
-        lossw = self.lossw()
-        return loss + lossw
-
-    def losss(self, X, y, cache=None):
-        """
         Computes the loss due to prediction error. Returns a float.
         """
         res, _, last_node, last_attr = self._common_loss_dloss(
             X, y, cache=cache)
         if len(res.shape) <= 1:
-            return last_node.losss(res[last_attr['inputs']], y)  # pylint: disable=E1120
-        return last_node.losss(res[:, last_attr['inputs']], y)  # pylint: disable=E1120
-
-    def lossw(self):
-        """
-        Computes the loss due to regularization. Returns a float.
-        """
-        return sum(node.lossw() for node in self.nodes)
+            return last_node.loss(res[last_attr['inputs']], y)  # pylint: disable=E1120
+        return last_node.loss(res[:, last_attr['inputs']], y)  # pylint: disable=E1120
 
     def dlossds(self, X, y, cache=None):
         """
@@ -467,24 +461,11 @@ class NeuralTreeNet(_TrainingAPI):
             return last_node.dlossds(res[last_attr['inputs']], y)  # pylint: disable=E1120
         return last_node.dlossds(res[:, last_attr['inputs']], y)  # pylint: disable=E1120
 
-    def dlossdw(self):
-        """
-        Computes the loss derivative due to regularization.
-        """
-        res = numpy.zeros((self.shape[0],), dtype=numpy.float64)
-        for node, atts in zip(self.nodes, self.nodes_attr):
-            dw = node.dlossdw()
-            a = atts['first_coef']
-            b = a + atts['coef_size']
-            res[a: b] = dw.ravel()
-        return res
-
-    def gradient_backward(self, graddx, graddw, X, inputs=False, cache=None):
+    def gradient_backward(self, graddx, X, inputs=False, cache=None):
         """
         Computes the gradient in X.
 
         :param graddx: existing gradient against the inputs
-        :param graddw: existing gradient against the weights
         :param X: computes the gradient in X
         :param inputs: if False, derivative against the coefficients,
             otherwise against the inputs.
@@ -502,20 +483,17 @@ class NeuralTreeNet(_TrainingAPI):
             whole_gradx[-1] = graddx
         else:
             whole_gradx[-graddx.shape[0]:] = graddx
-        whole_gradw += graddw
 
         for node, attr in zip(self.nodes[::-1], self.nodes_attr[::-1]):
             ch = cache[node.nodeid]
 
             node_graddx = whole_gradx[attr['output']]
-            node_graddw = numpy.zeros(
-                (attr['coef_size'],), dtype=whole_gradw.dtype)
             xi = pred[attr['inputs']]
 
             temp_gradw = node.gradient_backward(
-                node_graddx, node_graddw, xi, inputs=False, cache=ch)
+                node_graddx, xi, inputs=False, cache=ch)
             temp_gradx = node.gradient_backward(
-                node_graddx, node_graddw, xi, inputs=True, cache=ch)
+                node_graddx, xi, inputs=True, cache=ch)
 
             whole_gradw[attr['first_coef']:attr['first_coef'] +
                         attr['coef_size']] += temp_gradw.reshape((attr['coef_size'],))

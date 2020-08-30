@@ -25,10 +25,13 @@ class BaseOptimizer:
     * *learning_rate*: float, the current learning rate
     * *coef*: optimized coefficients
     * *min_threshold*, *max_threshold*: coefficients thresholds
+    * *l2*: L2 regularization
+    * *l1*: L1 regularization
     """
 
     def __init__(self, coef, learning_rate_init=0.1,
-                 min_threshold=None, max_threshold=None):
+                 min_threshold=None, max_threshold=None,
+                 l1=0., l2=0.):
         if not isinstance(coef, numpy.ndarray):
             raise TypeError("coef must be an array.")
         self.coef = coef
@@ -42,6 +45,8 @@ class BaseOptimizer:
             raise TypeError("min_threshold must be a float")
         self.min_threshold = min_threshold
         self.max_threshold = max_threshold
+        self.l1 = l1
+        self.l2 = l2
 
     def _get_updates(self, grad):
         raise NotImplementedError("Must be overwritten.")  # pragma no cover
@@ -116,6 +121,7 @@ class BaseOptimizer:
             irows = numpy.random.choice(X.shape[0], X.shape[0])
             for irow in irows:
                 grad = fct_grad(self.coef, X[irow, :], y[irow], irow)
+                self._regularize_gradient(grad)
                 if isinstance(verbose, int) and verbose >= 10:
                     self._display_progress(0, max_iter, loss, grad, 'grad')
                 if numpy.isnan(grad).sum() > 0:
@@ -134,6 +140,15 @@ class BaseOptimizer:
                     it, max_iter, losses, early_th, verbose=verbose):
                 break
         return loss
+
+    def _regularize_gradient(self, grad):
+        """
+        Applies regularization.
+        """
+        if self.l2 > 0:
+            grad += self.coef * self.l2
+        if self.l1 > 0:
+            grad += numpy.sign(self.coef) * self.l1
 
     def _evaluate_early_stopping(
             self,
@@ -201,6 +216,8 @@ class SGDOptimizer(BaseOptimizer):
     :param early_th: stops if the error goes below that threshold
     :param min_threshold: lower bound for parameters (can be None)
     :param max_threshold: upper bound for parameters (can be None)
+    :param l1: L1 regularization
+    :param l2: L2 regularization
 
     The class holds the following attributes:
 
@@ -238,10 +255,12 @@ class SGDOptimizer(BaseOptimizer):
 
     def __init__(self, coef, learning_rate_init=0.1, lr_schedule='invscaling',
                  momentum=0.9, power_t=0.5, early_th=None,
-                 min_threshold=None, max_threshold=None):
+                 min_threshold=None, max_threshold=None,
+                 l1=0., l2=0.):
         super().__init__(coef, learning_rate_init,
                          min_threshold=min_threshold,
-                         max_threshold=max_threshold)
+                         max_threshold=max_threshold,
+                         l1=l1, l2=l2)
         self.lr_schedule = lr_schedule
         self.momentum = momentum
         self.power_t = power_t
