@@ -37,7 +37,7 @@ class TestOptim(ExtTestCase):
         self.assertGreater(no, 0.001)
 
         sgd = SGDOptimizer(numpy.array([0., 0., 0.]),
-                           lr_schedule='constant')
+                           lr_schedule='constant', momentum=0.9)
 
         buf = io.StringIO()
         with redirect_stdout(buf):
@@ -49,7 +49,8 @@ class TestOptim(ExtTestCase):
         self.assertEqual(sgd.learning_rate, 0.1)
 
         sgd = SGDOptimizer(numpy.array([0., 0., 0.]),
-                           lr_schedule='invscaling')
+                           lr_schedule='invscaling',
+                           momentum=0.9)
         buf = io.StringIO()
         with redirect_stdout(buf):
             ls = sgd.train(X, y, fct_loss, fct_grad, max_iter=15,
@@ -67,7 +68,7 @@ class TestOptim(ExtTestCase):
 
         sgd = SGDOptimizer(numpy.array([0., 0., 0.]),
                            lr_schedule='constant',
-                           l1=1., l2=1.)
+                           l1=0.01, l2=0.01, momentum=0.9)
 
         buf = io.StringIO()
         with redirect_stdout(buf):
@@ -75,12 +76,12 @@ class TestOptim(ExtTestCase):
                            verbose=True)
         out = buf.getvalue()
         self.assertIn("15/15: loss", out)
-        self.assertLess(ls, 0.1)
+        self.assertLess(ls, 1)
         self.assertEqual(sgd.learning_rate, 0.1)
 
         sgd = SGDOptimizer(numpy.array([0., 0., 0.]),
                            lr_schedule='invscaling',
-                           l1=1., l2=1.)
+                           l1=0.001, l2=0.001, momentum=0.9)
         buf = io.StringIO()
         with redirect_stdout(buf):
             ls = sgd.train(X, y, fct_loss, fct_grad, max_iter=15,

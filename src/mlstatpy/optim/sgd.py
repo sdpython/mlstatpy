@@ -100,6 +100,9 @@ class BaseOptimizer:
             this threshold
         :param verbose: display information
         :return: loss
+
+        The method keeps the best coefficients for the
+        minimal loss.
         """
         if not isinstance(X, numpy.ndarray):
             raise TypeError("X must be an array.")
@@ -114,6 +117,8 @@ class BaseOptimizer:
 
         loss = fct_loss(self.coef, X, y)
         losses = [loss]
+        best_coef = None
+        best_loss = None
         if verbose:
             self._display_progress(0, max_iter, loss)
         n_samples = 0
@@ -131,20 +136,34 @@ class BaseOptimizer:
                 n_samples += 1
 
             self.iteration_ends(n_samples)
-            loss = fct_loss(self.coef, X, y)
+            loss = fct_loss(self.coef, X, y) + \
+                self.loss_regularization(self.coef)
             if verbose:
                 self._display_progress(it + 1, max_iter, loss)
             self.iter_ = it + 1
             losses.append(loss)
+            if best_loss is None or loss < best_loss:
+                best_loss = loss
+                best_coef = self.coef.copy()
             if self._evaluate_early_stopping(
                     it, max_iter, losses, early_th, verbose=verbose):
                 break
+        self.coef = best_coef
+        return best_loss
+
+    def loss_regularization(self, coef):
+        loss = 0
+        if self.l1 > 0:
+            loss += numpy.sum(numpy.abs(coef)) * self.l1
+        if self.l2 > 0:
+            loss += numpy.sum(coef ** 2) * self.l2
         return loss
 
     def _regularize_gradient(self, grad):
         """
         Applies regularization.
         """
+        self.velocity_grad = grad
         if self.l2 > 0:
             grad += self.coef * self.l2
         if self.l1 > 0:
@@ -181,12 +200,18 @@ class BaseOptimizer:
     def _display_progress(self, it, max_iter, loss, losses=None, msg=None):
         'Displays training progress.'
         mxc = numpy.abs(self.coef.ravel()).max()
+        l1 = numpy.sum(numpy.abs(self.coef))
+        l2 = numpy.sum(self.coef * self.coef)
+        vl1 = numpy.sum(numpy.abs(self.velocity_grad))
+        vl2 = numpy.sum(self.velocity_grad * self.velocity_grad)
         if losses is None:
-            print('{}/{}: loss: {:1.4g} max(coef): {:1.4g}'.format(
-                it, max_iter, loss, mxc))
+            print('{}/{}: loss: {:1.4g} max(coef): {:1.2g} '
+                  'l1={:1.2g}/{:1.2g} l2={:1.2g}/{:1.2g}'.format(
+                      it, max_iter, loss, mxc, vl1, l1, vl2, l2))
         else:
-            print('{}/{}: loss: {:1.4g} losses: {} max(coef): {:1.4g}'.format(
-                it, max_iter, loss, losses, mxc))
+            print('{}/{}: loss: {:1.4g} losses: {} max(coef): {:1.4g} '
+                  'l1={:1.2g}/{:1.2g} l2={:1.2g}/{:1.2g}'.format(
+                      it, max_iter, loss, losses, mxc, vl1, l1, vl2, l2))
 
 
 class SGDOptimizer(BaseOptimizer):
@@ -254,7 +279,7 @@ class SGDOptimizer(BaseOptimizer):
     """
 
     def __init__(self, coef, learning_rate_init=0.1, lr_schedule='invscaling',
-                 momentum=0.1, power_t=0.5, early_th=None,
+                 momentum=0.9, power_t=0.5, early_th=None,
                  min_threshold=None, max_threshold=None,
                  l1=0., l2=0.):
         super().__init__(coef, learning_rate_init,
@@ -266,6 +291,7 @@ class SGDOptimizer(BaseOptimizer):
         self.power_t = power_t
         self.early_th = early_th
         self.velocity = numpy.zeros_like(coef)
+        self.velocity_grad = numpy.zeros_like(coef)
 
     def iteration_ends(self, time_step):
         """
@@ -299,10 +325,17 @@ class SGDOptimizer(BaseOptimizer):
     def _display_progress(self, it, max_iter, loss, losses=None, msg='loss'):
         'Displays training progress.'
         mxc = numpy.abs(self.coef.ravel()).max()
+        l1 = numpy.sum(numpy.abs(self.coef))
+        l2 = numpy.sum(self.coef * self.coef)
+        vl1 = numpy.sum(numpy.abs(self.velocity_grad))
+        vl2 = numpy.sum(self.velocity_grad * self.velocity_grad)
         if losses is None:
-            print('{}/{}: {}: {:1.4g} lr={:1.3g} max(coef): {:1.4g}'.format(
-                it, max_iter, msg, loss, self.learning_rate, mxc))
+            print('{}/{}: {}: {:1.4g} lr={:1.3g} max(coef): {:1.2g} '
+                  'l1={:1.2g}/{:1.2g} l2={:1.2g}/{:1.2g}'.format(
+                      it, max_iter, msg, loss, self.learning_rate, mxc,
+                      vl1, l1, vl2, l2))
         else:
             print('{}/{}: {}: {:1.4g} lr={:1.3g} {}es: {} '  # pylint: disable=W1308
-                  'max(coef): {:1.4g}'.format(  # pylint: disable=W1308
-                      it, max_iter, msg, loss, self.learning_rate, msg, losses, mxc))
+                  'max(coef): {:1.2g} l1={:1.2g}/{:1.2g} l2={:1.2g}/{:1.2g}'.format(  # pylint: disable=W1308
+                      it, max_iter, msg, loss, self.learning_rate, msg, losses,
+                      mxc, vl1, l1, vl2, l2))
