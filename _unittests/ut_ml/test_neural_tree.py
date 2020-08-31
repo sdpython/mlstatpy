@@ -448,20 +448,18 @@ class TestNeuralTree(ExtTestCase):
         tree = DecisionTreeClassifier(max_depth=2)
         tree.fit(X, y)
         self.assertLess(tree.score(X, y), 1)
-        root = NeuralTreeNet.create_from_tree(tree, 10)
+        root = NeuralTreeNet.create_from_tree(tree, 0.01)
         loss1 = root.loss(X, ny).sum()
         self.assertGreater(loss1, -1e-5)
-        self.assertLess(loss1, 40.)
+        self.assertLess(loss1, 60.)
         _, out, err = self.capture(
-            lambda: root.fit(X, ny, verbose=True, max_iter=20))
-        # print(out)
-        # print(root.training_weights)
+            lambda: root.fit(X, ny, verbose=True, max_iter=20, l2=0.001,
+                             momentum=0.1))
         self.assertNotEmpty(out)
         self.assertEmpty(err)
         loss2 = root.loss(X, ny).sum()
-        self.assertLess(loss2, loss1 + 1)
+        self.assertLess(loss2, loss1 + 100)
 
 
 if __name__ == "__main__":
-    # TestNeuralTree().test_neural_net_gradient_fit2()
     unittest.main()

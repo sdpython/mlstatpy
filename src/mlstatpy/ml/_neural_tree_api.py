@@ -80,7 +80,7 @@ class _TrainingAPI:
         return self.gradient_backward(dlossds, X, inputs=inputs, cache=cache)
 
     def fit(self, X, y, optimizer=None, max_iter=100, early_th=None, verbose=False,
-            lr=None, lr_schedule=None):
+            lr=None, lr_schedule=None, l1=0., l2=0., momentum=0.9):
         """
         Fits a neuron.
 
@@ -95,12 +95,18 @@ class _TrainingAPI:
             *optimizer* is None (unused otherwise)
         :param lr_schedule: to overwrite *lr_schedule* if
             *optimizer* is None (unused otherwise)
+        :param l1: L1 regularization if *optimizer* is None
+            (unused otherwise)
+        :param l2: L2 regularization if *optimizer* is None
+            (unused otherwise)
+        :param momentum: used if *optimizer* is None
         :return: self
         """
         if optimizer is None:
             optimizer = SGDOptimizer(
                 self.training_weights, learning_rate_init=lr or 0.002,
-                lr_schedule=lr_schedule or 'invscaling')
+                lr_schedule=lr_schedule or 'invscaling',
+                l1=l1, l2=l2, momentum=momentum)
 
         def fct_loss(coef, lx, ly, neuron=self):
             neuron.update_training_weights(coef, False)

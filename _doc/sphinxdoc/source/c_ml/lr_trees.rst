@@ -289,18 +289,11 @@ En remplaçant chaque noeud par une régression logistique,
 l'arbre de décision deviendrait un réseau de neurones,
 avec une structure particulière certes mais un réseau de
 neurones tout de même.
-
-.. todoext::
-    :title: Réseau de neurones construit à partir d'un arbre de décision
-    :tag: idée
-    :issue: 27
-
-    Chaque noeud du graphe serait transformé en un neurone
-    avec une régression logistique impliquant toutes les variables.
-    Il ne resterait plus qu'à continuer l'apprentissage avec des
-    algorithmes à base de gradient stochastique. Cela reviendrait
-    à changer l'initialisation du réseau de neurones.
-
+Chaque noeud du graphe serait transformé en un neurone
+avec une régression logistique impliquant toutes les variables.
+Il ne resterait plus qu'à continuer l'apprentissage avec des
+algorithmes à base de gradient stochastique. Cela reviendrait
+à changer l'initialisation du réseau de neurones.
 On considère le petit arbre décision suivant,
 trois features, trois noeuds, deux classes.
 
@@ -368,6 +361,14 @@ d'un arbre en réseaux de neurones.
 J'ai quand même essayé avec le notebook :ref:`neuraltreerst`
 et les classes :class:`NeuralTreeNode <mlstatpy.ml.neural_tree.NeuralTreeNode>`,
 :class:`NeuralTreeNet <mlstatpy.ml.neural_tree.NeuralTreeNet>`.
+Si l'idée de départ est séduisante, elle requiert une contrainte
+supplémentaire qui est de créer un réseau de neurones qui ne soit
+pas un minimum local de la fonction d'erreur auquel cas
+un apprentissage avec un algorithme à base de gradient ne pourra
+pas améliorer les performances du réseau de neurones.
+
+.. image:: lrtreesimg/mloc.png
+    :width: 200
 
 Plan orthogonal
 ===============

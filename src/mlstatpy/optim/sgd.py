@@ -254,7 +254,7 @@ class SGDOptimizer(BaseOptimizer):
     """
 
     def __init__(self, coef, learning_rate_init=0.1, lr_schedule='invscaling',
-                 momentum=0.9, power_t=0.5, early_th=None,
+                 momentum=0.1, power_t=0.5, early_th=None,
                  min_threshold=None, max_threshold=None,
                  l1=0., l2=0.):
         super().__init__(coef, learning_rate_init,
