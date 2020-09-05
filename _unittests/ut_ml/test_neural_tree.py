@@ -460,6 +460,16 @@ class TestNeuralTree(ExtTestCase):
         loss2 = root.loss(X, ny).sum()
         self.assertLess(loss2, loss1 + 100)
 
+    def test_shape_dim2(self):
+        X = numpy.random.randn(10, 3)
+        w = numpy.array([[10, 20, 3], [-10, -20, 0.5]])
+        for act in ['sigmoid', 'sigmoid4', 'expit', 'identity',
+                    'relu', 'leakyrelu']:
+            with self.subTest(act=act):
+                neu = NeuralTreeNode(w, bias=[-4, 0.5], activation=act)
+                pred = neu.predict(X)
+                self.assertEqual(pred.shape, (X.shape[0], 2))
+
 
 if __name__ == "__main__":
     unittest.main()
