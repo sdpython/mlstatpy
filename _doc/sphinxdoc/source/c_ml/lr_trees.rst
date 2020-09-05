@@ -370,6 +370,20 @@ pas améliorer les performances du réseau de neurones.
 .. image:: lrtreesimg/mloc.png
     :width: 200
 
+La structure proposée n'est cependant pas la meilleure et elle
+pourrait être simplifiée. D'autres projets s'appuie des librairies
+existantes :
+
+* `Soft-Decision-Tree <https://github.com/kimhc6028/soft-decision-tree>`_
+* `Neural-Decision-Forests <https://github.com/jingxil/Neural-Decision-Forests>`_
+* `hummingbird <https://github.com/microsoft/hummingbird>`_
+
+Ce dernier package convertit un réseau de neurones en autant de couches
+que la profondeur de l'arbre. L'image qui suit est tiré de l'article
+[Nakandalam2020]_ et qui résume leur idée.
+
+.. image:: lrtreesimg/hb.png
+
 Plan orthogonal
 ===============
 
@@ -423,3 +437,8 @@ Bibliographie
 
 [Scott2013] `Expectation-maximization for logistic regression <https://arxiv.org/pdf/1306.0040.pdf>`_,
     James G. Scott, Liang Sun
+    
+[Nakandalam2020] A Tensor-based Approach for One-size-fits-all ML Prediction Serving.
+    Supun Nakandalam, Karla Saur, Gyeong-In Yu, Konstantinos Karanasos, Carlo Curino,
+    Markus Weimer, Matteo Interlandi. To appear at `OSDI 2020
+    <https://www.usenix.org/conference/osdi20>`_.
