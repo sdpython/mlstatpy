@@ -197,10 +197,11 @@ class TestNeuralTree(ExtTestCase):
                 self.assertEqualArray(w0, numpy.zeros(w0.shape))
 
     def test_optim_regression(self):
-        X = numpy.abs(numpy.random.randn(10, 2))
-        w0 = numpy.random.randn(3)
+        state = numpy.random.RandomState(seed=0)  # pylint: disable=E1101
+        X = numpy.abs(state.randn(10, 2))
+        w0 = state.randn(3)
         w1 = numpy.array([-0.5, 0.8, -0.6])
-        noise = numpy.random.randn(X.shape[0]) / 10
+        noise = state.randn(X.shape[0]) / 10
         noise[0] = 0
         noise[1] = 0.07
         X[1, 0] = 0.7
@@ -479,7 +480,8 @@ class TestNeuralTree(ExtTestCase):
                 self.assertEqual(neu.ndim, 3)
                 loss = neu.loss(X[0], 0.)
                 self.assertEqual(loss.shape, (2,))
-                loss = neu.loss(X, numpy.zeros((X.shape[0], 1), dtype=numpy.float64))
+                loss = neu.loss(X, numpy.zeros(
+                    (X.shape[0], 1), dtype=numpy.float64))
                 self.assertEqual(loss.shape, (10, 2))
 
     def test_convert_compact(self):
@@ -504,7 +506,7 @@ class TestNeuralTree(ExtTestCase):
         exp = tree.predict_proba(X)
         got = root.predict(X)
         self.assertEqual(exp.shape[0], got.shape[0])
-        self.assertEqualArray(exp, got[:, -2:])
+        self.assertEqualArray(exp + 1e-8, got[:, -2:] + 1e-8)
 
 
 if __name__ == "__main__":

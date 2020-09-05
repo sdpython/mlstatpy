@@ -447,7 +447,8 @@ class ROC:
         @return                     dictionary of values
         """
         if bootstrap <= 1:
-            raise ValueError("Use auc instead, bootstrap < 2")  # pragma: no cover
+            raise ValueError(
+                "Use auc instead, bootstrap < 2")  # pragma: no cover
         rate = []
         for _ in range(0, bootstrap):
             cloud = self.random_cloud()

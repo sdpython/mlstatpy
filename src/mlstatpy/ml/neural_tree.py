@@ -299,7 +299,7 @@ class NeuralTreeNet(_TrainingAPI):
             coef[i, index[i]:index[i + 1]] = k
         feat = [root[n.nodeid][1]['output'] for n in output]
         root.append(
-            NeuralTreeNode(coef, bias=-k / 2,
+            NeuralTreeNode(coef, bias=(-k / 2) * len(feat),
                            activation='softmax4', tag="Nfinal"),
             feat)
 
@@ -313,6 +313,119 @@ class NeuralTreeNet(_TrainingAPI):
         if tree.n_classes_ > 2:
             raise RuntimeError(
                 "The function only support binary classification problem.")
+
+        n_nodes = tree.tree_.node_count
+        children_left = tree.tree_.children_left
+        children_right = tree.tree_.children_right
+        feature = tree.tree_.feature
+        threshold = tree.tree_.threshold
+        value = tree.tree_.value.reshape((-1, 2))
+        output_class = (value[:, 1] > value[:, 0]).astype(numpy.int64)
+        max_features_ = tree.max_features_
+        feat_index = numpy.arange(0, max_features_)
+
+        root = NeuralTreeNet(tree.max_features_, empty=True)
+        coef1 = []
+        bias1 = []
+        parents = {}
+        rows = {}
+
+        # first pass: threshold
+
+        for i in range(n_nodes):
+            if children_left[i] == children_right[i]:
+                # leaves
+                continue
+            rows[i] = len(coef1)
+            parents[children_left[i]] = i
+            parents[children_right[i]] = i
+            coef = numpy.zeros((max_features_,), dtype=numpy.float64)
+            coef[feature[i]] = -k
+            coef1.append(coef)
+            bias1.append(k * threshold[i])
+
+        coef1 = numpy.vstack(coef1)
+        if len(bias1) == 1:
+            bias1 = bias1[0]
+        node1 = NeuralTreeNode(
+            coef1 if coef1.shape[0] > 1 else coef1[0], bias=bias1,
+            activation='sigmoid4', tag="threshold")
+        root.append(node1, feat_index)
+        th_index = numpy.arange(max_features_, max_features_ + coef1.shape[0])
+
+        # second pass: decision path
+        coef2 = []
+        bias2 = []
+        output = []
+
+        for i in range(n_nodes):
+            if children_left[i] != children_right[i]:
+                # not a leave
+                continue
+
+            path = []
+            last = i
+            lr = "class", output_class[i]
+            output.append(output_class[i])
+            while last is not None:
+                path.append((last, lr))
+                if last not in parents:
+                    break
+                par = parents[last]
+                if children_right[par] == last:
+                    lr = 'right'
+                elif children_left[par] == last:
+                    lr = 'left'
+                else:
+                    raise RuntimeError(  # pragma: no cover
+                        "Inconsistent tree structure.")
+                last = par
+
+            coef = numpy.zeros((coef1.shape[0], ), dtype=numpy.float64)
+            bias = 0.
+            for ip, lr in path:
+                if isinstance(lr, tuple):
+                    lr, value = lr
+                    if lr != 'class':
+                        raise RuntimeError(
+                            "algorithm issue")  # pragma: no cover
+                else:
+                    r = rows[ip]
+                    if lr == 'right':
+                        coef[r] = k
+                        bias -= k / 2
+                    else:
+                        coef[r] = -k
+                        bias += k / 2
+            coef2.append(coef)
+            bias2.append(bias)
+
+        coef2 = numpy.vstack(coef2)
+        if len(bias2) == 1:
+            bias2 = bias2[0]
+        node2 = NeuralTreeNode(
+            coef2 if coef2.shape[0] > 1 else coef2[0], bias=bias2,
+            activation='sigmoid4', tag="pathes")
+        root.append(node2, th_index)
+
+        # final node
+        coef = numpy.zeros(
+            (tree.n_classes_, coef2.shape[0]), dtype=numpy.float64)
+        bias = [0. for i in range(tree.n_classes_)]
+        for i, cls in enumerate(output):
+            coef[cls, i] = -k
+            coef[1 - cls, i] = k
+            bias[cls] += k / 2
+            bias[1 - cls] += -k / 2
+        findex = numpy.arange(max_features_ + coef1.shape[0],
+                              max_features_ + coef1.shape[0] + coef2.shape[0])
+        root.append(
+            NeuralTreeNode(coef, bias=bias,
+                           activation='softmax4', tag="final"),
+            findex)
+
+        # end
+        return root
 
     def to_dot(self, X=None):
         """
