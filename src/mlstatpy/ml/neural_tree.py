@@ -191,17 +191,36 @@ class NeuralTreeNet(_TrainingAPI):
         return self._predict_one(X)
 
     @staticmethod
-    def create_from_tree(tree, k=1.):
+    def create_from_tree(tree, k=1., arch='one'):
         """
         Creates a @see cl NeuralTreeNet instance from a
         :epkg:`DecisionTreeClassifier`
 
         @param  tree    :epkg:`DecisionTreeClassifier`
         @param  k       slant of the sigmoïd
+        @param  arch    architecture, see below
         @return         @see cl NeuralTreeNet
 
         The function only works for binary problems.
+        Available architecture:
+        * `'one'`: the method adds nodes with one output, there
+          is no soecific definition of layers,
+        * `'compact'`: the adds two nodes, the first computes
+          the threshold, the second one computes the leaves
+          output, a final node merges all outputs into one
+
+        See notebook :ref:`neuraltreerst` for examples.
         """
+        if arch == 'one':
+            return NeuralTreeNet._create_from_tree_one(tree, k)
+        if arch == 'compact':
+            return NeuralTreeNet._create_from_tree_compact(tree, k)
+        raise ValueError("Unknown arch value '{}'.".format(arch))
+
+    @staticmethod
+    def _create_from_tree_one(tree, k=1.):
+        "Implements strategy one. See @see meth create_from_tree."
+
         if tree.n_classes_ > 2:
             raise RuntimeError(
                 "The function only support binary classification problem.")
@@ -286,6 +305,14 @@ class NeuralTreeNet(_TrainingAPI):
 
         # final
         return root
+
+    @staticmethod
+    def _create_from_tree_compact(tree, k=1.):
+        "Implements strategy one. See @see meth create_from_tree."
+
+        if tree.n_classes_ > 2:
+            raise RuntimeError(
+                "The function only support binary classification problem.")
 
     def to_dot(self, X=None):
         """

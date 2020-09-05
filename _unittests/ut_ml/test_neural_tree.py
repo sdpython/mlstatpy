@@ -470,6 +470,30 @@ class TestNeuralTree(ExtTestCase):
                 pred = neu.predict(X)
                 self.assertEqual(pred.shape, (X.shape[0], 2))
 
+    def test_convert_compact(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        y2 = y.copy()
+        y2[0] = 2
+
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y2)
+        self.assertRaise(
+            lambda: NeuralTreeNet.create_from_tree(tree, arch="k"),
+            ValueError)
+        self.assertRaise(
+            lambda: NeuralTreeNet.create_from_tree(tree, arch="compact"),
+            RuntimeError)
+
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+        self.assertNotEmpty(root)
+        exp = tree.predict_proba(X)
+        got = root.predict(X)
+        self.assertEqual(exp.shape[0], got.shape[0])
+        self.assertEqualArray(exp, got[:, -2:])
+
 
 if __name__ == "__main__":
     unittest.main()
