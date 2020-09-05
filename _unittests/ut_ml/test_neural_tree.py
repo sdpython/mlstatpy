@@ -463,12 +463,24 @@ class TestNeuralTree(ExtTestCase):
     def test_shape_dim2(self):
         X = numpy.random.randn(10, 3)
         w = numpy.array([[10, 20, 3], [-10, -20, 0.5]])
+        first = None
         for act in ['sigmoid', 'sigmoid4', 'expit', 'identity',
                     'relu', 'leakyrelu']:
             with self.subTest(act=act):
                 neu = NeuralTreeNode(w, bias=[-4, 0.5], activation=act)
                 pred = neu.predict(X)
                 self.assertEqual(pred.shape, (X.shape[0], 2))
+                text = str(neu)
+                self.assertIn('NeuralTreeNode(', text)
+                if first is None:
+                    first = neu
+                else:
+                    self.assertFalse(neu == first)
+                self.assertEqual(neu.ndim, 3)
+                loss = neu.loss(X[0], 0.)
+                self.assertEqual(loss.shape, (2,))
+                loss = neu.loss(X, numpy.zeros((X.shape[0], 1), dtype=numpy.float64))
+                self.assertEqual(loss.shape, (10, 2))
 
     def test_convert_compact(self):
         X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))

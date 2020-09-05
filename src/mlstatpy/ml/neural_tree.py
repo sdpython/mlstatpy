@@ -149,7 +149,7 @@ class NeuralTreeNet(_TrainingAPI):
             self.nodes_attr.append(attr)
         elif len(node.input_weights.shape) == 2:
             if node.input_weights.shape[1] != len(inputs):
-                raise RuntimeError(
+                raise RuntimeError(  # pragma: no cover
                     "Dimension mismatch between weights [{}] and inputs [{}].".format(
                         node.input_weights.shape[1], len(inputs)))
             node.nodeid = len(self.nodes)
@@ -163,7 +163,7 @@ class NeuralTreeNet(_TrainingAPI):
                         coef_size=node.coef.size, first_coef=first_coef)
             self.nodes_attr.append(attr)
         else:
-            raise RuntimeError(
+            raise RuntimeError(  # pragma: no cover
                 "Coefficients should have 1 or 2 dimension not {}.".format(node.input_weights.shape))
         self._update_members(node, attr)
 

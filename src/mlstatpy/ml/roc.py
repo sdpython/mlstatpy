@@ -183,14 +183,14 @@ class ROC:
                 roc.iloc[pos_roc:, 4] = min(cloud.iloc[:, 0])
                 return roc
             else:
-                raise NotImplementedError(
+                raise NotImplementedError(  # pragma: no cover
                     "Unexpected type '{0}', only ROC is allowed.".format(curve))
         else:
             roc = self.confusion(nb=len(self), curve=curve,
                                  bootstrap=False, score=None)
             roc = roc[roc["threshold"] <= score]
             if len(roc) == 0:
-                raise ValueError(
+                raise ValueError(  # pragma: no cover
                     "The requested confusion is empty for score={0}.".format(score))
             return roc[:1]
 
@@ -235,7 +235,8 @@ class ROC:
 
         if curve is ROC.CurveType.SKROC:
             if nb > 0:
-                raise NotImplementedError("nb must be <= 0 si curve is SKROC")
+                raise NotImplementedError(  # pragma: no cover
+                    "nb must be <= 0 si curve is SKROC")
             from sklearn.metrics import roc_curve
             fpr, tpr, thresholds = roc_curve(y_true=cloud[cloud.columns[1]],
                                              y_score=cloud[cloud.columns[0]],
@@ -305,7 +306,8 @@ class ROC:
             roc.iloc[pos_roc:, 2] = cloud.iloc[-1, 0]
 
         else:
-            raise NotImplementedError("Unknown curve type '{}'.".format(curve))
+            raise NotImplementedError(  # pragma: no cover
+                "Unknown curve type '{}'.".format(curve))
 
         return roc
 
@@ -370,7 +372,7 @@ class ROC:
             final = 0
             if thresholds:
                 if 'label' in kwargs and len(cols) != len(kwargs['label']):
-                    raise ValueError(
+                    raise ValueError(  # pragma: no cover
                         'label must have {0} values'.format(len(cols)))
                 roc = roc.sort_values("threshold").reset_index(drop=True)
                 ax = roc.plot(x="threshold", y=cols, ax=ax, **kwargs)
@@ -428,8 +430,9 @@ class ROC:
             elif a[0] >= b[0]:
                 auc += a[2] * b[2] / 2
         if auc == 0 and good.shape[0] + wrong.shape[0] < self.data.shape[0]:
-            raise ValueError("Label are not right, expect 0 and 1 not {0}".format(
-                set(cloud[cloud.columns[1]])))
+            raise ValueError(  # pragma: no cover
+                "Label are not right, expect 0 and 1 not {0}".format(
+                    set(cloud[cloud.columns[1]])))
         n = len(wrong) * len(good)
         if n > 0:
             auc /= float(n)
@@ -444,7 +447,7 @@ class ROC:
         @return                     dictionary of values
         """
         if bootstrap <= 1:
-            raise ValueError("Use auc instead, bootstrap < 2")
+            raise ValueError("Use auc instead, bootstrap < 2")  # pragma: no cover
         rate = []
         for _ in range(0, bootstrap):
             cloud = self.random_cloud()
@@ -490,8 +493,7 @@ class ROC:
 
         if p1[0] == p2[0]:
             return (p1[1] + p2[0]) / 2
-        else:
-            return (x - p1[0]) / (p2[0] - p1[0]) * (p2[1] - p1[1]) + p1[1]
+        return (x - p1[0]) / (p2[0] - p1[0]) * (p2[1] - p1[1]) + p1[1]
 
     def roc_intersect_interval(self, x, nb, curve=CurveType.ROC, bootstrap=10, alpha=0.05):
         """

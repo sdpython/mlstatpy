@@ -102,8 +102,9 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
                     continue
                 found = True
             if not found:
-                raise ValueError(
-                    "Matrix L has two similar rows {0} and {1}. Problem cannot be solved.".format(i, j))
+                raise ValueError(  # pragma: no cover
+                    "Matrix L has two similar rows {0} and {1}. "
+                    "Problem cannot be solved.".format(i, j))
 
             c /= nc
             c2 = c * c[coor]
@@ -128,7 +129,7 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
 
     if nbeq * 2 <= L.shape[0] * L.shape[1]:
         if C is None and D is None:
-            warnings.warn(
+            warnings.warn(  # pragma: no cover
                 "[voronoi_estimation_from_lr] Additional condition are required.")
         if C is not None and D is not None:
             matL = numpy.vstack([matL, numpy.zeros((1, matL.shape[1]))])
@@ -139,7 +140,7 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
                 raise TypeError("D must be a float not {0}".format(type(D)))
             matB = numpy.hstack([matB, [D]])
         elif C is None and D is None:
-            pass
+            pass  # pragma: no cover
         else:
             raise ValueError(
                 "C and D must be None together or not None together.")
@@ -202,9 +203,10 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
                             break
                     pos -= 1
                 if pos < 0:
-                    forma = 'Two classes have been merged in a single Voronoi point (dist={0} < {1}). max_iter should be lower than {2}'
-                    raise VoronoiEstimationError(
-                        forma.format(dist[-1][0], tol, it))
+                    raise VoronoiEstimationError(  # pragma: no cover
+                        'Two classes have been merged in a single Voronoi point '
+                        '(dist={0} < {1}). max_iter should be lower than '
+                        '{2}'.format(dist[-1][0], tol, it))
 
         dmax, i, j = dist[0]
         pos = 0
