@@ -21,3 +21,4 @@ sphinxcontrib.imagesvg
 tqdm
 vprof
 wheel
+xgboost
