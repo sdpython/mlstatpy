@@ -3,6 +3,7 @@ cytoolz
 ipython
 jupyter
 matplotlib
+nbconvert>=6.0.2
 nbformat
 notebook
 numpy>=1.19.0
