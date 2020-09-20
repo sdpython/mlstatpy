@@ -9,6 +9,7 @@ mako
 memory_profiler
 minepy
 mlinsights>=0.2.491
+nbconvert>=6.0.2
 pycodestyle
 pyensae>=1.2.788
 pyinstrument
