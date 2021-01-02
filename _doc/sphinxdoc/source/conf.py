@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.split(__file__)[0])))
 local_template = os.path.join(os.path.abspath(
     os.path.dirname(__file__)), "phdoc_templates")
 
-set_sphinx_variables(__file__, "mlstatpy", "Xavier Dupré", 2019,
+set_sphinx_variables(__file__, "mlstatpy", "Xavier Dupré", 2021,
                      html_theme, html_theme_path, locals(),
                      extlinks=dict(
                          issue=('https://github.com/sdpython/mlstatpy/issues/%s', 'issue')),
