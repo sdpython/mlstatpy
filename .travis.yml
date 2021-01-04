@@ -8,19 +8,20 @@ matrix:
     name: "Python39"
 
 before_install:
-    - sudo apt-get install libgeos-dev libproj-dev proj-data graphviz libblas-dev liblapack-dev
-    - wget https://apt.llvm.org/llvm.sh
-    - chmod +x llvm.sh
-    - sudo ./llvm.sh 10
-    - ls /usr/bin/llvm*
-    - export LLVM_CONFIG=/usr/bin/llvm-config
-    # - sudo ln -s /usr/bin/llvm-config-10 /usr/bin/llvm-config
-    - sudo apt-get -y install graphviz
-    - pip uninstall -y shapely
-    - pip install --no-binary shapely shapely
+  - sudo apt-get install libgeos-dev libproj-dev proj-data graphviz libblas-dev liblapack-dev
+  - wget https://apt.llvm.org/llvm.sh
+  - chmod +x llvm.sh
+  - sudo ./llvm.sh 10
+  - ls /usr/bin/llvm*
+  - export LLVM_CONFIG=/usr/bin/llvm-config
+  # - sudo ln -s /usr/bin/llvm-config-10 /usr/bin/llvm-config
+  - sudo apt-get -y install graphviz
+  - pip uninstall -y shapely
+  - pip install --no-binary shapely shapely
 
 install:
   - pip install -r requirements.txt
+  - export PYTHONPATH=src
 
 script:
   - python setup.py unittests
