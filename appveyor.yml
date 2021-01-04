@@ -10,8 +10,13 @@ init:
 
 install:
   - "%PYTHON%\\python -m pip install --upgrade pip"
-  - "%PYTHON%\\Scripts\\pip install -r requirements_conda.txt"
-  - "%PYTHON%\\Scripts\\pip install -r requirements.txt"
+  - pip install wheel
+  # for many packages
+  - "%PYTHON%\\Scripts\\pip install -r requirements-win.txt"
+  # install precompiled versions not available on pypi
+  - "%PYTHON%\\Scripts\\pymy_install3 llvmlite numba"
+  # other dependencies
+  - "%PYTHON%\\Scripts\\pip install -r requirements.txt --no-deps"
   - set PYTHONPATH=src
 build: off
 
