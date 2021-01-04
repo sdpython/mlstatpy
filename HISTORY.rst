@@ -5,10 +5,10 @@
 History
 =======
 
-current - 2021-01-02 - 0.00Mb
+current - 2021-01-04 - 0.00Mb
 =============================
 
-0.0.0 - 2021-01-02 - 0.00Mb
+0.0.0 - 2021-01-04 - 0.00Mb
 ===========================
 
 * `27`: Convertir un arbre de décision en réseaux de neurones et apprendre (2020-08-31)
