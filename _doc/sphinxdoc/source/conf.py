@@ -3,7 +3,7 @@ import sys
 import os
 from pyquickhelper.helpgen.default_conf import set_sphinx_variables, get_default_stylesheet
 
-choice = "bootstrap"
+choice = "pydata_sphinx_theme"
 
 if choice == "sphtheme":
     import sphinx_theme_pd as sphtheme
@@ -13,6 +13,10 @@ elif choice == "bootstrap":
     import sphinx_bootstrap_theme
     html_theme = 'bootstrap'
     html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+elif choice == 'pydata_sphinx_theme':
+    import pydata_sphinx_theme
+    html_theme = 'pydata_sphinx_theme'
+    html_theme_path = pydata_sphinx_theme.get_html_theme_path()
 else:
     raise NotImplementedError()
 
