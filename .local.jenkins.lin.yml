@@ -19,7 +19,7 @@ install:
 
 script:
   - { CMD: "$PYINT -u setup.py unittests", NAME: "UT" }
-  - { CMD: "$PYINT -u setup.py unittests_LONG", NAME: "UT_LONG", TIMEOUT: 7200 }
+  - { CMD: "$PYINT -u setup.py unittests_LONG", NAME: "UT_LONG", TIMEOUT: 7200, SCHEDULER: "H H(1-2) 11 * *" }
 
 after_script:
   - $PYINT -u setup.py bdist_wheel
