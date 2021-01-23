@@ -216,9 +216,9 @@ différents :math:`\theta`.
 .. math::
 
     LL(x_0, \theta) = \max \left\{ \begin{array}{ll}
-    \frac{1}{1 + \exp((x-x_0) / \theta)} \\
-    \frac{1}{1+\exp(- (x-x_0) / \theta)}
-    \end{array}\right
+    \frac{1}{1 + \exp{\left(\frac{x-x_0}{\theta}\right)}} \\
+    \frac{1}{1 + \exp{\left(-\frac{x-x_0}{\theta}\right)}}
+    \end{array}\right.
 
 Aparté mathématique
 ===================
@@ -437,7 +437,7 @@ Bibliographie
 
 [Scott2013] `Expectation-maximization for logistic regression <https://arxiv.org/pdf/1306.0040.pdf>`_,
     James G. Scott, Liang Sun
-    
+
 [Nakandalam2020] A Tensor-based Approach for One-size-fits-all ML Prediction Serving.
     Supun Nakandalam, Karla Saur, Gyeong-In Yu, Konstantinos Karanasos, Carlo Curino,
     Markus Weimer, Matteo Interlandi. To appear at `OSDI 2020

@@ -79,7 +79,7 @@ class NeuralTreeNode(_TrainingAPI):
             return NeuralTreeNode._leakyrelu
         if activation == 'identity':
             return lambda x: x
-        raise ValueError(
+        raise ValueError(  # pragma: no cover
             "Unknown activation function '{}'.".format(activation))
 
     @staticmethod
@@ -257,7 +257,8 @@ class NeuralTreeNode(_TrainingAPI):
     def __eq__(self, obj):
         if self.coef.shape != obj.coef.shape:
             return False
-        if any(map(lambda xy: xy[0] != xy[1], zip(self.coef, obj.coef))):
+        if any(map(lambda xy: xy[0] != xy[1],
+                   zip(self.coef.ravel(), obj.coef.ravel()))):
             return False
         if self.activation != obj.activation:
             return False
@@ -292,7 +293,9 @@ class NeuralTreeNode(_TrainingAPI):
     @property
     def ndim(self):
         "Returns the input dimension."
-        return self.coef.shape[0] - 1
+        if len(self.coef.shape) == 1:
+            return self.coef.shape[0] - 1
+        return self.coef.shape[1] - 1
 
     @property
     def training_weights(self):

@@ -41,9 +41,10 @@ class NuagePoints:
         @return                         array (dist), array (indices)
         """
         if n_neighbors != 1:
-            raise NotImplementedError("Not implemented when n_neighbors != 1.")
+            raise NotImplementedError(  # pragma: no cover
+                "Not implemented when n_neighbors != 1.")
         if not return_distance:
-            raise NotImplementedError(
+            raise NotImplementedError(  # pragma: no cover
                 "Not implemented when return_distance is False.")
 
         dist = numpy.zeros(X.shape[0])

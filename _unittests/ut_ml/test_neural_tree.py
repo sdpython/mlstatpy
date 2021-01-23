@@ -197,10 +197,11 @@ class TestNeuralTree(ExtTestCase):
                 self.assertEqualArray(w0, numpy.zeros(w0.shape))
 
     def test_optim_regression(self):
-        X = numpy.abs(numpy.random.randn(10, 2))
-        w0 = numpy.random.randn(3)
+        state = numpy.random.RandomState(seed=0)  # pylint: disable=E1101
+        X = numpy.abs(state.randn(10, 2))
+        w0 = state.randn(3)
         w1 = numpy.array([-0.5, 0.8, -0.6])
-        noise = numpy.random.randn(X.shape[0]) / 10
+        noise = state.randn(X.shape[0]) / 10
         noise[0] = 0
         noise[1] = 0.07
         X[1, 0] = 0.7
@@ -463,12 +464,74 @@ class TestNeuralTree(ExtTestCase):
     def test_shape_dim2(self):
         X = numpy.random.randn(10, 3)
         w = numpy.array([[10, 20, 3], [-10, -20, 0.5]])
+        first = None
         for act in ['sigmoid', 'sigmoid4', 'expit', 'identity',
                     'relu', 'leakyrelu']:
             with self.subTest(act=act):
                 neu = NeuralTreeNode(w, bias=[-4, 0.5], activation=act)
                 pred = neu.predict(X)
                 self.assertEqual(pred.shape, (X.shape[0], 2))
+                text = str(neu)
+                self.assertIn('NeuralTreeNode(', text)
+                if first is None:
+                    first = neu
+                else:
+                    self.assertFalse(neu == first)
+                self.assertEqual(neu.ndim, 3)
+                loss = neu.loss(X[0], 0.)
+                self.assertEqual(loss.shape, (2,))
+                loss = neu.loss(X, numpy.zeros(
+                    (X.shape[0], 1), dtype=numpy.float64))
+                self.assertEqual(loss.shape, (10, 2))
+
+    def test_convert_compact(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        y2 = y.copy()
+        y2[0] = 2
+
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y2)
+        self.assertRaise(
+            lambda: NeuralTreeNet.create_from_tree(tree, arch="k"),
+            ValueError)
+        self.assertRaise(
+            lambda: NeuralTreeNet.create_from_tree(tree, arch="compact"),
+            RuntimeError)
+
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+        self.assertNotEmpty(root)
+        exp = tree.predict_proba(X)
+        got = root.predict(X)
+        self.assertEqual(exp.shape[0], got.shape[0])
+        self.assertEqualArray(exp + 1e-8, got[:, -2:] + 1e-8)
+        dot = root.to_dot()
+        self.assertIn("s3a4:f4 -> s5a6:f6", dot)
+
+    def test_convert_compact_fit(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        y2 = y.copy()
+        y2[0] = 2
+
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+        self.assertNotEmpty(root)
+        exp = tree.predict_proba(X)
+        got = root.predict(X)
+        self.assertEqual(exp.shape[0], got.shape[0])
+        self.assertEqualArray(exp + 1e-8, got[:, -2:] + 1e-8)
+        ny = label_class_to_softmax_output(y)
+        loss1 = root.loss(X, ny).sum()
+        _, out, err = self.capture(
+            lambda: root.fit(X, ny, verbose=True, max_iter=20))
+        self.assertEmpty(err)
+        self.assertNotEmpty(out)
+        loss2 = root.loss(X, ny).sum()
+        self.assertLess(loss2, loss1 + 1)
 
 
 if __name__ == "__main__":

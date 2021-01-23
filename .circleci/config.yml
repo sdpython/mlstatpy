@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.8.5
+      - image: circleci/python:3.9.1
     
     working_directory: ~/repo
     
@@ -18,19 +18,11 @@ jobs:
           name: Install pandoc
           command: |
                     sudo apt-get update 
-                    wget https://github.com/jgm/pandoc/releases/download/2.2.1/pandoc-2.2.1-1-amd64.deb
-                    sudo dpkg -i pandoc-2.2.1-1-amd64.deb
+                    wget https://github.com/jgm/pandoc/releases/download/2.11.3.2/pandoc-2.11.3.2-1-amd64.deb
+                    sudo dpkg -i pandoc-2.11.3.2-1-amd64.deb
           
       - run:
-          name: Install tex
-          command: |
-                    sudo apt-get install -y texlive
-                    sudo apt-get install -y texlive-latex-extra
-                    sudo apt-get install -y texlive-lang-french
-                    sudo apt-get install -y dvipng
-          
-      - run:
-          name: Install 7z
+          name: Install 7z, unrar
           command: |
                     sudo apt-get install -y p7zip-full
           
@@ -44,27 +36,52 @@ jobs:
           command: |
                     sudo apt-get install -y graphviz
           
-      # statsmodels setup.py requires it
       - run:
-          name: install numpy
+          name: Install libproj
           command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install numpy
+            sudo apt-get install -y libgeos-dev libproj-dev proj-data graphviz
 
       - run:
-          name: install dependencies 1
+          name: Install llvmlite
           command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            conda install -c conda-forge xgboost
-            pip install -r requirements_conda.txt
-            
+            sudo apt-get install lsb-release wget software-properties-common
+            wget https://apt.llvm.org/llvm.sh
+            chmod +x llvm.sh
+            sudo ./llvm.sh 10
+            ls /usr/bin/llvm*
+
       - run:
-          name: install dependencies 2
+          name: Install standard libraries
           command: |
-            python3 -m venv venv
+            python -m venv venv
             . venv/bin/activate
+            pip install scipy matplotlib numpy cython pandas
+
+      - run:
+          name: Install pyproj, shapely, cartopy
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install pyproj
+            pip uninstall -y shapely
+            pip install --no-binary shapely shapely
+            pip install cartopy
+
+      - run:
+          name: Install numba, llvmlite
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            # export LLVM_CONFIG=/usr/local/opt/llvm/bin/llvm-config
+            sudo ln -s /usr/bin/llvm-config-10 /usr/bin/llvm-config
+            pip install llvmlite numba
+
+      - run:
+          name: install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install wheel
             pip install -r requirements.txt
 
       - save_cache:
@@ -73,36 +90,41 @@ jobs:
           key: v2-dependencies-{{ checksum "requirements.txt" }}
         
       - run:
+          name: check list of dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip freeze
+            apt list --installed
+        
+      - run:
           name: run tests
           command: |
             . venv/bin/activate
             export PYTHONPATH=src
-            python setup.py unittests
+            python setup.py unittests -d 20
 
       - run:
           name: wheel
           command: |
             . venv/bin/activate
             export PYTHONPATH=src
-            python setup.py bdist_wheel
+            python ./setup.py bdist_wheel
             mkdir -p test-reports/dist
             cp dist/*.whl test-reports/dist
 
-      - run:
-          name: documentation
-          command: |
-            . venv/bin/activate
-            export PYTHONPATH=src
-            python setup.py build_sphinx
-            
-      - run:
-          name: copy documentation
-          command: |
-            mkdir -p test-reports/doc
-            zip -r -9  test-reports/doc/documentation_html.zip _doc/sphinxdoc/build/html
-            mkdir -p test-reports/pdf
-            cp _doc/sphinxdoc/build/elatex/*.pdf test-reports/pdf
-            cp _doc/sphinxdoc/build/elatex/ml*.tex* test-reports/pdf
+#      - run:
+#          name: documentation
+#          command: |
+#            . venv/bin/activate
+#            python ./setup.py build_sphinx
+#            
+#      - run:
+#          name: copy documentation
+#          command: |
+#            mkdir -p test-reports/doc
+#            mkdir -p test-reports/pdf
+#            zip -r -9  test-reports/doc/documentation_html.zip _doc/sphinxdoc/build/html
             
       - store_artifacts:
           path: test-reports

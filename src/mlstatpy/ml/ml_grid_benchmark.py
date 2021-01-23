@@ -154,7 +154,8 @@ class MlGridBenchMark(GridBenchMark):
         Y = ds.get("Y", None)
 
         if "weight" in ds:
-            raise NotImplementedError("weight are not used yet")
+            raise NotImplementedError(  # pragma: no cover
+                "weight are not used yet")
 
         metrics = {}
         appe = {}
@@ -204,8 +205,8 @@ class MlGridBenchMark(GridBenchMark):
             if len(btrys) == 0:
                 raise ValueError("The benchmark is empty.")  # pragma: no cover
             if ax is None:
-                _, ax = plt.subplots(1, 1, figsize=figsize)
-                ax.grid(True)
+                _, ax = plt.subplots(1, 1, figsize=figsize)  # pragma: no cover
+                ax.grid(True)  # pragma: no cover
             for i, btry in enumerate(sorted(btrys)):
                 subset = df[df["_btry"] == btry]
                 if subset.shape[0] > 0:
@@ -269,7 +270,7 @@ class MlGridBenchMark(GridBenchMark):
             fg = kwargs.get('figsize', (5 * size[0], 10))
             _, grid = plt.subplots(size[0], size[1], figsize=fg)
             if 'figsize' in kwargs:
-                del kwargs['figsize']
+                del kwargs['figsize']  # pragma: no cover
         else:
             shape = grid.shape
             if shape[0] * shape[1] < nb:

@@ -107,7 +107,8 @@ def criteria(X, y):
         th = x[i]
         res[i, 6] = logistic(th * 10.)
         res[i, 7] = numpy.sum(likelihood(x, y, 10., th)) / res.shape[0]
-    return DataFrame(res[1:-1], columns=['X', 'y', 'p1', 'p2', 'Gini', 'Gain', 'lr', 'LL-10'])
+    return DataFrame(res[1:-1], columns=[
+        'X', 'y', 'p1', 'p2', 'Gini', 'Gain', 'lr', 'LL-10'])
 
 
 X1, y1 = random_set_1d(1000, False)
