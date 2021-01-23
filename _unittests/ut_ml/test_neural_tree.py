@@ -507,6 +507,31 @@ class TestNeuralTree(ExtTestCase):
         got = root.predict(X)
         self.assertEqual(exp.shape[0], got.shape[0])
         self.assertEqualArray(exp + 1e-8, got[:, -2:] + 1e-8)
+        dot = root.to_dot()
+        self.assertIn("s3a4:f4 -> s5a6:f6", dot)
+
+    def test_convert_compact_fit(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        y2 = y.copy()
+        y2[0] = 2
+
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+        self.assertNotEmpty(root)
+        exp = tree.predict_proba(X)
+        got = root.predict(X)
+        self.assertEqual(exp.shape[0], got.shape[0])
+        self.assertEqualArray(exp + 1e-8, got[:, -2:] + 1e-8)
+        ny = label_class_to_softmax_output(y)
+        loss1 = root.loss(X, ny).sum()
+        _, out, err = self.capture(
+            lambda: root.fit(X, ny, verbose=True, max_iter=20))
+        self.assertEmpty(err)
+        self.assertNotEmpty(out)
+        loss2 = root.loss(X, ny).sum()
+        self.assertLess(loss2, loss1 + 1)
 
 
 if __name__ == "__main__":

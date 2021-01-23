@@ -495,7 +495,7 @@ class NeuralTreeNet(_TrainingAPI):
                     else:
                         c = ', color=blue, fontcolor=blue'
                     rows.append('{} -> {} [label="{}|{}"{}];'.format(
-                        inp, labels[oo], oi, w[oi], c))
+                        labels.get(inp, inp), labels[oo], oi, w[oi], c))
 
         rows.append('}')
         return '\n'.join(rows)
