@@ -1,9 +1,9 @@
 
 .. _l-model-ml:
 
-###########################
-Modèles de Machine Learning
-###########################
+############
+Non linéaire
+############
 
 Les paragraphes suivant abordent de façon plutôt théorique
 des modèles de machine learning.

@@ -34,33 +34,7 @@ set_sphinx_variables(__file__, "mlstatpy", "Xavier Dupré", 2021,
 # next
 
 blog_root = "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/"
-
-html_context = {
-    'css_files': get_default_stylesheet() + ['_static/my-styles.css'],
-}
-
 html_logo = "phdoc_static/project_ico_small.png"
-
-if choice == "bootstrap":
-    html_theme_options = {
-        'navbar_title': "BASE",
-        'navbar_site_name': "Site",
-        'navbar_links': [
-            ("XD", "http://www.xavierdupre.fr", True),
-            ("blog", "blog/main_0000.html", True),
-            ("index", "genindex"),
-        ],
-        'navbar_sidebarrel': True,
-        'navbar_pagenav': True,
-        'navbar_pagenav_name': "Page",
-        'bootswatch_theme': "readable",
-        # united = weird colors, sandstone=green, simplex=red, paper=trop bleu
-        # lumen: OK
-        # to try, yeti, flatly, paper
-        'bootstrap_version': "3",
-        'source_link_position': "footer",
-    }
-
 language = "fr"
 
 preamble = '''

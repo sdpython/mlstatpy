@@ -19,8 +19,7 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
     introduction
     c_clus/index
     c_ml/index
-    c_ml/index_reglin
-    c_ml/index_reglog
+    c_ml/index_lin
     c_nlp/index
     c_metric/index
     c_dist/index
@@ -31,15 +30,6 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
     i_idee
     end_index
 
-Exemples
-========
-
-.. toctree::
-    :maxdepth: 1
-
-    gyexamples/index
-    all_notebooks
-    blog/blogindex
 
 On fait beaucoup de choses avec l'informatique mais en pratique
 on doit maintenir, on doit réécrire sans cesse.

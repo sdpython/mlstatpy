@@ -1,7 +1,7 @@
 
-##################################
-Pérégrinations d'un data scientist
-##################################
+##############
+Pérégrinations
+##############
 
 Ce sont quelques notebooks sur des points particuliers
 qui surgissent au quotidien quand on traite des données.
