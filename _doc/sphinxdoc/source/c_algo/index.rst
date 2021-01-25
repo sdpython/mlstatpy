@@ -13,4 +13,6 @@ c'est-à-dire la grande majorité des cas.
 .. toctree::
     :maxdepth: 1
 
+    edit_distance
+    graph_distance
     gest
