@@ -28,7 +28,6 @@ Le site est aussi disponible en `PDF <http://www.xavierdupre.fr/app/mlstatpy/hel
     i_idee
     end_index
 
-
 On fait beaucoup de choses avec l'informatique mais en pratique
 on doit maintenir, on doit réécrire sans cesse.
 Faire un peu de théorie ça repose.

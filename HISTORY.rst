@@ -5,12 +5,14 @@
 History
 =======
 
-current - 2021-01-04 - 0.00Mb
+current - 2021-01-27 - 0.00Mb
 =============================
 
-0.0.0 - 2021-01-04 - 0.00Mb
+0.0.0 - 2021-01-27 - 0.00Mb
 ===========================
 
+* `26`: Aborder les régressions logistiques sous forme d'arbres (2021-01-23)
+* `30`: Fixes #26, implements a compact architecture (2021-01-23)
 * `27`: Convertir un arbre de décision en réseaux de neurones et apprendre (2020-08-31)
 * `25`: k-means norme L1 (2020-01-13)
 * `23`: uses function dtrtri to invert an upper triangular matrix in function linear_regression (2019-07-21)
