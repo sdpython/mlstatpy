@@ -46,12 +46,15 @@ autour du machine learning. Parmi les choses intéressantes,
 une courbe *ROC* avec intervalle de confiance, détection
 automatique de segment dans une image, un algorithme
 d'autocomplétion, une distance d'édition entre graphes,
-des petites choses pour les données de Wikipedia.
+des petites choses pour les données de Wikipedia,
+un algorithme de conversion d'un arbre de décision en
+réseaux de neurones.
 
 The package mostly contains documentation. It also implements
 some code rarely needed such as ROC curve with bandwidth,
 automated segment detection in a image, some simple autocomplete
-algorithm, a graph edit distance, some helpers on Wikipedia data.
+algorithm, a graph edit distance, some helpers on Wikipedia data,
+an algorithm to convert decision trees into neural network.
 
 * `GitHub/mlstatpy <https://github.com/sdpython/mlstatpy/>`_
 * `documentation <http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html>`_
