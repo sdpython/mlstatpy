@@ -120,6 +120,20 @@ classe prédite est égale à la classe attendue, il est négatif dans le
 cas contraire. La courbe peut être adaptée pour d'autres problèmes
 tels que le ranking (voir [Agarwal2005]_).
 
+Une autre façon de l'exprimer car je ne retiens jamais la définition
+des FP, TP, FN, TN... Pour quelqu'un qui doit réfléchir trois secondes
+à chaque fois qu'on me demande où est la gauche, ce n'est jamais 
+évident.
+
+.. math::
+
+    \begin{array}{rcl}FPR(s) &=& \sum_{i=1}^n \mathbb{1}_{score(X_i)
+    \geqslant s}\mathbb{1}_{y_i == 1}\\ TPR(s) &=& \sum_{i=1}^n 
+    \mathbb{1}_{score(X_i) \geqslant s}\mathbb{1}_{y_i \neq 1}
+    \end{array}
+
+*X = FPR, y = TPR*.
+
 .. index:: AUC
 
 Aire sous la courbe
