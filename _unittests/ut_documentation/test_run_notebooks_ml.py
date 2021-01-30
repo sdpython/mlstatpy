@@ -38,7 +38,7 @@ class TestRunNotebooksML(unittest.TestCase):
         res = execute_notebook_list(
             temp, keepnote, additional_path=add_path, valid=valid)
         execute_notebook_list_finalize_ut(res, fLOG=fLOG, dump=thismodule)
-    
+
     def test_notebook_benchmark(self):
         self.a_test_notebook_runner("benchmark", "ml")
 
