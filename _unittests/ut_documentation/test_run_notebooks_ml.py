@@ -1,59 +1,67 @@
 # -*- coding: utf-8 -*-
 """
-@brief      test log(time=33s)
+@brief      test log(time=215s)
 """
 import os
 import unittest
 from pyquickhelper.loghelper import fLOG
-from pyquickhelper.pycode import get_temp_folder
-from pyquickhelper.ipythonhelper import execute_notebook_list, execute_notebook_list_finalize_ut
-import mlstatpy
+from pyquickhelper.pycode import get_temp_folder, add_missing_development_version
+from pyquickhelper.ipythonhelper import (
+    execute_notebook_list, execute_notebook_list_finalize_ut, get_additional_paths)
+import mlstatpy as thismodule
 
 
 class TestRunNotebooksML(unittest.TestCase):
 
-    def test_run_notebook_ml(self):
+    def setUp(self):
         fLOG(
             __file__,
             self._testMethodName,
             OutputPrint=__name__ == "__main__")
 
-        temp = get_temp_folder(__file__, "temp_run_notebooks_ml")
+        add_missing_development_version(["pyensae", "jyquickhelper"],
+                                        __file__, hide=True)
 
-        try:
-            from mlinsights.mlmodel import PiecewiseRegressor  # pylint: disable=W0611
-            piecewise = True
-        except ImportError:
-            piecewise = False
+    def a_test_notebook_runner(self, name, folder, valid=None):
+        fLOG("notebook %r in %r" % (name, folder))
+        temp = get_temp_folder(__file__, "temp_notebook_ml_{0}".format(name))
+        doc = os.path.join(temp, "..", "..", "..", "_doc", "notebooks", folder)
+        self.assertTrue(os.path.exists(doc))
+        keepnote = [os.path.join(doc, _) for _ in os.listdir(doc) if name in _]
+        self.assertTrue(len(keepnote) > 0)
 
-        # selection of notebooks
-        fnb = os.path.normpath(os.path.join(
-            os.path.abspath(os.path.dirname(__file__)), "..", "..", "_doc", "notebooks", "ml"))
-        keepnote = []
-        for f in os.listdir(fnb):
-            if "piecewise_linear_regression" in f and not piecewise:
-                continue
-            if os.path.splitext(f)[-1] == ".ipynb" and "_long" not in f:
-                keepnote.append(os.path.join(fnb, f))
-
-        # function to tell that a can be run
-        def valid(cell):
-            return True
-
-        # additionnal path to add
-        addpaths = [os.path.normpath(os.path.join(
-            os.path.abspath(os.path.dirname(__file__)), "..", "..", "src")),
-            os.path.normpath(os.path.join(
-                os.path.abspath(os.path.dirname(__file__)), "..", "..", "..", "pyquickhelper", "src")),
-            os.path.normpath(os.path.join(
-                os.path.abspath(os.path.dirname(__file__)), "..", "..", "..", "jyquickhelper", "src"))
-        ]
-
-        # run the notebooks
+        import pyquickhelper  # pylint: disable=C0415
+        import jyquickhelper  # pylint: disable=C0415
+        import pyensae  # pylint: disable=C0415
+        add_path = get_additional_paths(
+            [jyquickhelper, pyquickhelper, pyensae, thismodule])
         res = execute_notebook_list(
-            temp, keepnote, fLOG=fLOG, valid=valid, additional_path=addpaths)
-        execute_notebook_list_finalize_ut(
-            res, fLOG=fLOG, dump=mlstatpy)
+            temp, keepnote, additional_path=add_path, valid=valid)
+        execute_notebook_list_finalize_ut(res, fLOG=fLOG, dump=thismodule)
+    
+    def test_notebook_benchmark(self):
+        self.a_test_notebook_runner("benchmark", "ml")
+
+    def test_notebook_logreg_voronoi(self):
+        self.a_test_notebook_runner("logreg_voronoi", "ml")
+
+    def test_notebook_mf_acp(self):
+        self.a_test_notebook_runner("mf_acp", "ml")
+
+    def test_notebook_neural_tree(self):
+        self.a_test_notebook_runner("neural_tree", "ml")
+
+    def test_notebook_piecewise_linear_regression(self):
+        self.a_test_notebook_runner("piecewise_linear_regression", "ml")
+
+    def test_notebook_regression_no_inversion(self):
+        self.a_test_notebook_runner("regression_no_inversion", "ml")
+
+    def test_notebook_valeurs_manquantes_mf(self):
+        self.a_test_notebook_runner("valeurs_manquantes_mf", "ml")
+
+    def test_notebook_reseau_neurones(self):
+        self.a_test_notebook_runner("reseau_neurones", "ml")
 
 
 if __name__ == "__main__":

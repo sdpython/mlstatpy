@@ -6,7 +6,8 @@ import os
 import unittest
 from pyquickhelper.loghelper import fLOG
 from pyquickhelper.pycode import get_temp_folder, add_missing_development_version
-from pyquickhelper.ipythonhelper import execute_notebook_list, execute_notebook_list_finalize_ut, get_additional_paths
+from pyquickhelper.ipythonhelper import (
+    execute_notebook_list, execute_notebook_list_finalize_ut, get_additional_paths)
 import mlstatpy as thismodule
 
 
