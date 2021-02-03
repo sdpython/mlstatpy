@@ -45,7 +45,7 @@ class TestOptim(ExtTestCase):
                            verbose=True)
         out = buf.getvalue()
         self.assertIn("15/15: loss", out)
-        self.assertLess(ls, 0.1)
+        self.assertLess(ls, 0.11)
         self.assertEqual(sgd.learning_rate, 0.1)
 
         sgd = SGDOptimizer(numpy.array([0., 0., 0.]),
