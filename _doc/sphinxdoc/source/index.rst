@@ -18,14 +18,17 @@ Le site est aussi disponible (format brut de fonderie) sur
     introduction
     c_clus/index
     c_ml/index
-    c_ml/index_lin
+    c_ml/index_reg_lin
+    c_ml/index_reg_log
     c_nlp/index
     c_metric/index
     c_algo/index
     c_garden/index
+    i_examples
     api/index
-    i_idee
     end_index
+
+    gyexamples/index
 
 On fait beaucoup de choses avec l'informatique mais en pratique
 on doit maintenir, on doit réécrire sans cesse.

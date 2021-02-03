@@ -9,6 +9,3 @@ Galleries
 
     gyexamples/index
     all_notebooks
-    gynotebooks/index
-    blog/blogindex
-    i_idee
