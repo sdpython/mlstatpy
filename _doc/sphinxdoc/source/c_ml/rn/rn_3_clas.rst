@@ -14,7 +14,7 @@ suivant une `loi multinomiale <https://fr.wikipedia.org/wiki/Loi_multinomiale>`_
     :lid: probleme_classification
 
     Soit une variable aléatoire :math:`X`
-    et une variable aléatoire discrète :math:`Y`,
+    et une variable aléatoire discrète :math:`Y \in \N`,
     l'objectif est d'approximer la fonction :math:`\esp\pa{Y | X} = f\pa{X}`.
     Les données du problème sont
     un échantillon de points : :math:`\acc { \pa{ X_{i},Y_{i} } | 1 \infegal i \infegal N }`

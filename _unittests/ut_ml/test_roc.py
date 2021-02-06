@@ -28,6 +28,8 @@ class TestROC(ExtTestCase):
 
         test = ROC(y_true=[_[1] for _ in data],
                    y_score=[_[0] for _ in data])
+        self.assertNotEmpty(test.Data)
+        self.assertNotEmpty(repr(test))
         self.assertEqual(len(test), len(data))
         test = ROC(df=data)
         fLOG(test.__str__())

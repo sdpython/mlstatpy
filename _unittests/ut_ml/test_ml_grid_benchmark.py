@@ -1,5 +1,5 @@
 """
-@brief      test log(time=2s)
+@brief      test log(time=20s)
 @author     Xavier Dupre
 """
 import os
@@ -21,7 +21,17 @@ class TestMlGridBenchMark(unittest.TestCase):
 
         fix_tkinter_issues_virtualenv(fLOG=fLOG)
         import matplotlib.pyplot as plt  # pylint: disable=C0415
-        import dill  # pylint: disable=C0415
+        try:
+            import dill  # pylint: disable=C0415
+            pickle_module = dill
+        except ImportError:
+            try:
+                import cloudpickle
+                pickle_module = cloudpickle
+            except ImportError:
+                raise ImportError(  # pylint: disable=W0707
+                    "Unable to import 'dill' or 'cloudpickle'. Cannot pickle a lambda function.")
+
         self.assertTrue(plt is not None)
         temp = get_temp_folder(__file__, "temp_ml_grid_benchmark")
 
@@ -36,15 +46,17 @@ class TestMlGridBenchMark(unittest.TestCase):
                          name="blob-100-5", shortname="b-100-5", no_split=True)]
 
         for no_split in [True, False]:
-            bench = MlGridBenchMark("TestName", datasets, fLOG=fLOG, clog=temp,
-                                    path_to_images=temp,
-                                    cache_file=os.path.join(
-                                        temp, "cache.pickle"),
-                                    pickle_module=dill, repetition=3,
-                                    graphx=["_time", "time_train", "Nclus"],
-                                    graphy=["silhouette", "Nrows"],
-                                    no_split=no_split)
+            bench = MlGridBenchMark(
+                "TestName", datasets, fLOG=fLOG, clog=temp, path_to_images=temp,
+                cache_file=os.path.join(temp, "cache.pickle"),
+                pickle_module=pickle_module, repetition=3,
+                graphx=["_time", "time_train", "Nclus"],
+                graphy=["silhouette", "Nrows"],
+                no_split=no_split)
             bench.run(params)
+            spl = bench.preprocess_dataset(0)
+            self.assertIsInstance(spl, tuple)
+            self.assertEqual(len(spl), 3)
             df = bench.to_df()
             ht = df.to_html(float_format="%1.3f", index=False)
             self.assertTrue(len(df) > 0)

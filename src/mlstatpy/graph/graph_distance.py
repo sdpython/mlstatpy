@@ -82,9 +82,9 @@ class Edge:
         self.pair = (None, None)
         self.weight = weight
         if self.from_ == "00" and self.to == "00":
-            raise AssertionError("should not happen")
+            raise AssertionError("should not happen")  # pragma: no cover
         if self.from_ == "11" and self.to == "11":
-            raise AssertionError("should not happen")
+            raise AssertionError("should not happen")  # pragma: no cover
 
     def __str__(self):
         """
@@ -197,10 +197,10 @@ class GraphDistance:
         """
         if isinstance(index, str):
             return self.vertices[index]
-        elif isinstance(index, tuple):
+        if isinstance(index, tuple):
             return self.edges[index]
-        else:
-            raise KeyError("unable to get element " + str(index))
+        raise KeyError(  # pragma: no cover
+            "unable to get element " + str(index))
 
     @staticmethod
     def load_from_file(filename, add_loop):
@@ -226,7 +226,8 @@ class GraphDistance:
                 g = ve.groups()
                 vertex_label[g[0]] = g[1]
         if len(vertex_label) == 0 or len(edge_list) == 0:
-            raise OSError("unable to parse file " + filename)
+            raise OSError(  # pragma: no cover
+                "Unable to parse file %r." % filename)
         return GraphDistance(edge_list, vertex_label, add_loop)
 
     def _private__init__(self, add_loop, weight_vertex, weight_edge):
@@ -387,15 +388,16 @@ class GraphDistance:
             if function_mach_vertices is None:
                 def tempF1(v1, v2, g1, g2, w1, w2):
                     if v1 is not None and not v1.is_vertex():
-                        raise TypeError("should be a vertex")
+                        raise TypeError(
+                            "should be a vertex")  # pragma: no cover
                     if v2 is not None and not v2.is_vertex():
-                        raise TypeError("should be a vertex")
+                        raise TypeError(
+                            "should be a vertex")  # pragma: no cover
                     if v1 is None and v2 is None:
                         return 0
-                    elif v1 is None or v2 is None:
+                    if v1 is None or v2 is None:
                         return v2.weight * w2 if v1 is None else v1.weight * w1
-                    else:
-                        return 0 if v1.label == v2.label else 0.5 * (v1.weight * w1 + v2.weight * w2)
+                    return 0 if v1.label == v2.label else 0.5 * (v1.weight * w1 + v2.weight * w2)
                 function_mach_vertices = tempF1
 
             if function_match_edges is None:
@@ -815,9 +817,11 @@ class GraphDistance:
             to = list(count_vertex_left[e.to].keys())[0] if e.to in count_vertex_left \
                 else "2a.%s" % e.to
             if from_ not in res_graph.vertices:
-                raise RuntimeError("should not happen " + from_)
+                raise RuntimeError("should not happen " +
+                                   from_)  # pragma: no cover
             if to not in res_graph.vertices:
-                raise RuntimeError("should not happen " + to)
+                raise RuntimeError("should not happen " +
+                                   to)  # pragma: no cover
             newe = Edge(from_, to, e.label, weight_edge)
             res_graph.edges[newe.nb] = newe
             newe.pair = (None, e)
@@ -844,7 +848,7 @@ class GraphDistance:
             elif v.pair[0] is None:
                 vertices.append((k, "+" + v.label, "green"))
             else:
-                raise Exception("?")
+                raise RuntimeError("?")  # pragma: no cover
 
         for k, v in self.edges.items():
             if v.pair == (None, None) or (v.pair[0] is not None and v.pair[1] is not None):
@@ -854,6 +858,6 @@ class GraphDistance:
             elif v.pair[0] is None:
                 edges.append((v.from_, v.to, "+" + v.label, "green"))
             else:
-                raise Exception("?")
+                raise RuntimeError("?")  # pragma: no cover
 
         return vertices, edges

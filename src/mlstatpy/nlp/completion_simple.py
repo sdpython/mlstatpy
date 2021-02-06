@@ -297,10 +297,9 @@ class CompletionSystem:
         def create_element(i, e):
             if isinstance(e, CompletionElement):
                 return e
-            elif isinstance(e, tuple):
+            if isinstance(e, tuple):
                 return CompletionElement(e[1], e[0] if e[0] else i)
-            else:
-                return CompletionElement(e, i)
+            return CompletionElement(e, i)
         self._elements = [create_element(i, e) for i, e in enumerate(elements)]
 
     def __getitem__(self, i):
@@ -319,7 +318,8 @@ class CompletionSystem:
         @return                 element or None
         """
         if is_sorted:
-            raise NotImplementedError()
+            raise NotImplementedError(  # pragma: no cover
+                "No optimisation for the sorted case.")
         for e in self:
             if e.value == value:
                 return e
@@ -380,8 +380,7 @@ class CompletionSystem:
                 el.str_all_completions(), f.str_all_completions())
             if diff:
                 return "-------\n{0}\n-------".format(s)
-            else:
-                return s
+            return s
 
         trie = CompletionTrieNode.build(self.tuples())
         self.compute_metrics(delta=delta, fLOG=fLOG, details=True)
@@ -423,7 +422,8 @@ class CompletionSystem:
         """
         self.sort_weight()
         if ffilter is not None:
-            raise NotImplementedError("ffilter not None is not implemented")
+            raise NotImplementedError(  # pragma: no cover
+                "ffilter not None is not implemented")
         if details:
             store_completions = {'': []}
 

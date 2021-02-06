@@ -98,6 +98,7 @@ sigmoïde entre :math:`\cro{0,1}`              :math:`\dfrac{1}{1+e^{-x}}`
 sigmoïde entre :math:`\cro{-1,1}`             :math:`1-\dfrac{2}{1+e^{x}}`
 normale                                       :math:`e^{-\frac{x^{2}}{2}}`
 exponentielle                                 :math:`e^{x}`
+relu                                          :math:`x \indicatrice{x \supegal 0}`
 ============================================= ======================================
 
 La plupart des fonctions utilisées sont dérivables et cette propriété
@@ -106,6 +107,9 @@ l'algorithme de rétropropagation découvert par
 [Rumelhart1986]_.
 Ce dernier permet le calcul de la dérivée ouvre ainsi les portes
 des méthodes d'optimisation basées sur cette propriété.
+La fonction :epkg:`relu` a progressivement remplacé la fonction *sigmoïde*
+sur les couches cachées car elle est non linéaire et
+beaucoup plus rapide à calculer.
 
 Une couche de neurones
 ++++++++++++++++++++++

@@ -19,7 +19,7 @@ Pour cela, on dispose d'un ensemble de points
 
 Soit :math:`f : \R^M \times \R^p \longrightarrow \R^q` une fonction, on définit
 :math:`\forall i \in \intervalle{1}{N}, \; \widehat{Y_{i}^{W}} = f \pa{W,X_{i}}`.
-:math:`\widehat{Y_{i}^{W}}` est appelée la valeur prédite pour `X_{i}`.
+On appelle aussi :math:`\widehat{Y_{i}^{W}}` la valeur prédite pour :math:`X_{i}`.
 On pose alors
 :math:`\epsilon_{i}^{W} = Y_{i} -  \widehat{Y_{i}^{W}} = Y_{i} - f \pa{W,X_{i}}`.
 

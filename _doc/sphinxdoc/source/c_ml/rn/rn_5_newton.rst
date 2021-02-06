@@ -302,3 +302,10 @@ du perceptron classique pour faire des choses hors des clous.
 Je la laisse comme ça sans trop d'explications.
 
 .. image:: rnimg/neurone2.jpg
+
+L'idée de la rétropropagation : en supposant connu le gradient de l'erreur
+par rapport à la sortie, comment en déduir le gradient par rapport
+aux coefficients du réseau puis comment le propager à chaque entrée
+de sorte qu'il puisse être transmis aux neurones de la couche inférieure.
+
+.. image:: rnimg/backp.png

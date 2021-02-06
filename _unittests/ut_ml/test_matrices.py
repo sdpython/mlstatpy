@@ -6,8 +6,10 @@ import unittest
 import numpy
 import numpy.random as rnd
 from pyquickhelper.pycode import ExtTestCase
-from mlstatpy.ml.matrices import gram_schmidt, linear_regression, streaming_gram_schmidt
-from mlstatpy.ml.matrices import streaming_linear_regression, streaming_linear_regression_gram_schmidt
+from mlstatpy.ml.matrices import (
+    gram_schmidt, linear_regression, streaming_gram_schmidt,
+    streaming_linear_regression, streaming_linear_regression_gram_schmidt,
+    norm2)
 
 
 class TestMatrices(ExtTestCase):
@@ -214,6 +216,11 @@ class TestMatrices(ExtTestCase):
         if __name__ == "__main__":
             print(res[1])
         self.assertIn("streaming", res[1])
+
+    def test_norm2(self):
+        X = numpy.array([[1, 0.5, 0], [0, 0.4, 2]], dtype=float).T
+        n2 = norm2(X)
+        print(n2)
 
 
 if __name__ == "__main__":

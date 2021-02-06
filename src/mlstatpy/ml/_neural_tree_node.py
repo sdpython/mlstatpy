@@ -110,7 +110,7 @@ class NeuralTreeNode(_TrainingAPI):
             return NeuralTreeNode._dleakyrelu
         if activation == 'identity':
             return lambda x: numpy.ones(x.shape, dtype=x.dtype)
-        raise ValueError(
+        raise ValueError(  # pragma: no cover
             "Unknown activation gradient function '{}'.".format(activation))
 
     @staticmethod
@@ -164,7 +164,7 @@ class NeuralTreeNode(_TrainingAPI):
                 return (x - y) * 2
 
             return dregdx
-        raise ValueError(
+        raise ValueError(  # pragma: no cover
             "Unknown activation function '{}'.".format(activation))
 
     def __init__(self, weights, bias=None, activation='sigmoid', nodeid=-1,

@@ -72,7 +72,7 @@ custom_preamble = """\n
 \\newcommand{\\ensemble}[2]{\\acc{#1,\\dots,#2}}
 \\newcommand{\\fleche}[1]{\\overrightarrow{ #1 }}
 \\newcommand{\\intervalle}[2]{\\left\\{#1,\\cdots,#2\\right\\}}
-\\newcommand{\\independant}[0]{\\;\\makebox[3ex]{\\makebox[0ex]{\\rule[-0.2ex]{3ex}{.1ex}}\\!\\!\\!\\!\\makebox[.5ex][l]{\\rule[-.2ex]{.1ex}{2ex}}\\makebox[.5ex][l]{\\rule[-.2ex]{.1ex}{2ex}}} \\,\\,}
+\\newcommand{\\independant}[0]{\\perp \\!\\!\\! \\perp}
 \\newcommand{\\esp}{\\mathbb{E}}
 \\newcommand{\\espf}[2]{\\mathbb{E}_{#1}\\pa{#2}}
 \\newcommand{\\var}{\\mathbb{V}}
@@ -128,6 +128,7 @@ epkg_dictionary.update({
     "R* tree": "https://en.wikipedia.org/wiki/R*_tree",
     'Regression with confidence interval':
         'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/regression_confidence_interval.html',
+    'relu': 'https://en.wikipedia.org/wiki/Rectifier_(neural_networks)',
     'ROC': 'https://fr.wikipedia.org/wiki/Courbe_ROC',
     'statsmodels': 'http://www.statsmodels.org/stable/index.html',
     'SVD': 'https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res',

@@ -53,6 +53,7 @@ class MlGridBenchMark(GridBenchMark):
         """
         Splits the dataset into train and test.
 
+        @param      dsi         dataset index
         @param      params      additional parameters
         @return                 dataset (like info), dictionary for metrics
         """

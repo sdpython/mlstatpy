@@ -169,9 +169,8 @@ def f_proba_poisson_melange():
             proba_poisson_melange_tableau.extend(
                 histogramme_poisson_melange(params, coef))
         if i >= len(proba_poisson_melange_tableau):
-            return 0.0
-        else:
-            return proba_poisson_melange_tableau[i]
+            return 0.0  # pragma: no cover
+        return proba_poisson_melange_tableau[i]
 
     return local_proba_poisson_melange
 

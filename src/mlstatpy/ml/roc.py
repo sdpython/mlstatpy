@@ -69,7 +69,7 @@ class ROC:
                 self.data = pandas.DataFrame(
                     df, columns=["score", "label", "weight"])
         elif not isinstance(df, pandas.DataFrame):
-            raise TypeError(
+            raise TypeError(  # pragma: no cover
                 "df should be a DataFrame, not {0}".format(type(df)))
         else:
             self.data = df.copy()
@@ -146,9 +146,11 @@ class ROC:
             cloud["cw"] = cloud[cloud.columns[2]].cumsum()
             cloud["clw"] = cloud["lw"].cumsum()
             if cloud.columns[4] != "cw":
-                raise ValueError("Column 4 should be 'cw'.")
+                raise ValueError(
+                    "Column 4 should be 'cw'.")  # pragma: no cover
             if cloud.columns[5] != "clw":
-                raise ValueError("Column 5 should be 'clw'.")
+                raise ValueError(
+                    "Column 5 should be 'clw'.")  # pragma: no cover
 
             pos_roc = 0
             pos_seuil = 0
@@ -182,17 +184,17 @@ class ROC:
                 roc.iloc[pos_roc:, 3] = 0
                 roc.iloc[pos_roc:, 4] = min(cloud.iloc[:, 0])
                 return roc
-            else:
-                raise NotImplementedError(  # pragma: no cover
-                    "Unexpected type '{0}', only ROC is allowed.".format(curve))
-        else:
-            roc = self.confusion(nb=len(self), curve=curve,
-                                 bootstrap=False, score=None)
-            roc = roc[roc["threshold"] <= score]
-            if len(roc) == 0:
-                raise ValueError(  # pragma: no cover
-                    "The requested confusion is empty for score={0}.".format(score))
-            return roc[:1]
+            raise NotImplementedError(  # pragma: no cover
+                "Unexpected type '{0}', only ROC is allowed.".format(curve))
+
+        # if score is not None
+        roc = self.confusion(nb=len(self), curve=curve,
+                             bootstrap=False, score=None)
+        roc = roc[roc["threshold"] <= score]
+        if len(roc) == 0:
+            raise ValueError(  # pragma: no cover
+                "The requested confusion is empty for score={0}.".format(score))
+        return roc[:1]
 
     def precision(self):
         """
@@ -221,7 +223,7 @@ class ROC:
                 nb=nb, curve=ROC.CurveType.RECPREC, bootstrap=bootstrap)
             roc["error"] = - roc["precision"] + 1
             return roc[["error", "recall", "threshold"]]
-        elif curve is ROC.CurveType.PROBSCORE:
+        if curve is ROC.CurveType.PROBSCORE:
             roc = self.compute_roc_curve(
                 nb=nb, curve=ROC.CurveType.ROC, bootstrap=bootstrap)
             roc["P(->s)"] = roc["False Positive Rate"]
@@ -262,9 +264,9 @@ class ROC:
         cloud["clw"] = cloud["lw"].cumsum()
         sum_weights_ans = cloud["lw"].sum()
         if cloud.columns[4] != "cw":
-            raise ValueError("Column 4 should be 'cw'.")
+            raise ValueError("Column 4 should be 'cw'.")  # pragma: no cover
         if cloud.columns[5] != "clw":
-            raise ValueError("Column 5 should be 'clw'.")
+            raise ValueError("Column 5 should be 'clw'.")  # pragma: no cover
 
         pos_roc = 0
         pos_seuil = 0

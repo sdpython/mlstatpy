@@ -59,10 +59,10 @@ def _load_image(img, format='PIL', mode=None):
     if isinstance(img, str):
         img = Image.open(img)
         return _load_image(img, format)
-    elif isinstance(img, Image.Image):
+    if isinstance(img, Image.Image):
         if format == 'PIL':
             return img
-        elif format == 'array':
+        if format == 'array':
             d1, d0 = img.size[1], img.size[0]
             img = numpy.array(img.getdata(), dtype=numpy.uint8)
             if len(img.shape) == 1:
@@ -72,25 +72,24 @@ def _load_image(img, format='PIL', mode=None):
             elif(img.shape) == 3:
                 gray = img.shape[0] * img.shape[1] * img.shape[2] - d1 * d0
             else:
-                raise ValueError("Unexpected shape {0}".format(img.shape))
+                raise ValueError(  # pragma: no cover
+                    "Unexpected shape {0}".format(img.shape))
             if gray == 0:
                 img = img.reshape((d1, d0))
             else:
                 img = img.reshape((d1, d0, 3))
             return img
-        else:
-            raise ValueError(
-                "Unexpected value for fomat: '{0}'".format(format))
-    elif isinstance(img, numpy.ndarray):
+        raise ValueError(  # pragma: no cover
+            "Unexpected value for fomat: '{0}'".format(format))
+    if isinstance(img, numpy.ndarray):
         if format == 'array':
             return img
-        elif format == 'PIL':
+        if format == 'PIL':
             return Image.fromarray(img, mode=mode)
-        else:
-            raise ValueError(
-                "Unexpected value for fomat: '{0}'".format(format))
-    else:
-        raise TypeError("numpy array expected not {0}".format(type(img)))
+        raise ValueError(  # pragma: no cover
+            "Unexpected value for fomat: '{0}'".format(format))
+    raise TypeError(  # pragma: no cover
+        "numpy array expected not {0}".format(type(img)))
 
 
 def compute_gradient(img, color=None):
@@ -184,8 +183,8 @@ def plot_gradient(image, gradient, more=None, direction=-1):
                 i, j = max(i, 0), max(j, 0)
                 image.line([(x, y), (x, y)], fill=(0, j, i))
     else:
-        raise ValueError(
-            "unexpected value for direction={0}".format(direction))
+        raise ValueError(  # pragma: no cover
+            "Unexpected value for direction={0}".format(direction))
 
     return image_
 
@@ -208,8 +207,7 @@ def plot_segments(image, segments, outfile=None, color=(255, 0, 0)):
     if outfile is not None:
         image.save(outfile)
         return outfile
-    else:
-        return image
+    return image
 
 
 def detect_segments(image, proba_bin=1.0 / 16,
@@ -296,8 +294,9 @@ def detect_segments(image, proba_bin=1.0 / 16,
 
         # pour verifier que cela avance
         if verbose and n % 1000 == 0:
-            print("n = ", n, " ... ", len(segment), " temps ",
-                  "%2.2f" % (time.perf_counter() - ti), " sec",
-                  "nalign", not_aligned)
+            print(  # pragma: no cover
+                "n = ", n, " ... ", len(segment), " temps ",
+                "%2.2f" % (time.perf_counter() - ti), " sec",
+                "nalign", not_aligned)
 
     return segment
