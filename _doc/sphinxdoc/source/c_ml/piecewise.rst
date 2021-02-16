@@ -867,3 +867,10 @@ Bilbiographie
 
 .. [Nie2016] `Online PCA with Optimal Regret <http://jmlr.org/papers/volume17/15-320/15-320.pdf>`_,
     Jiazhong Nie, Wojciech Kotlowski, Manfred K. Warmuth
+
+.. [Preda2010] `The NIPALS Algorithm for Missing Functional Data <https://hal.archives-ouvertes.fr/hal-01125940/document>`_,
+    Cristian Preda, Gilbert Saporta, Mohamed Hadj Mbarek,
+    Revue roumaine de mathématiques pures et appliquées 2010, 55 (4), pp.315-326.
+
+Voir aussi `The NIPALS algorithm
+<https://cran.r-project.org/web/packages/nipals/vignettes/nipals_algorithm.html>`_.
