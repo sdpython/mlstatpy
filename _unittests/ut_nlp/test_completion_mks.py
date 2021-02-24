@@ -26,12 +26,13 @@ class TestCompletionMks(unittest.TestCase):
             nb = 0
             size = 0
             for n in trie.leaves():
-                if (True and gmksd2 > gmksd) or \
-                        (n.value == "baaaab" and n.stat.mks1 != 4):
+                if ((gmksd2 > gmksd) or
+                        (n.value == "baaaab" and n.stat.mks1 != 4)):
                     info = n.str_all_completions()
                     info2 = n.str_all_completions(use_precompute=True)
-                    raise Exception("issue with query '{0}'\n{1}\n##########\n{2}\n############\n{3}".format(
-                        n.value, n.stat.str_mks(), info, info2))
+                    raise AssertionError(
+                        "issue with query '{0}'\n{1}\n##########\n{2}\n############\n{3}"
+                        "".format(n.value, n.stat.str_mks(), info, info2))
 
                 gmks += len(n.value) - n.stat.mks0
                 gmksd += len(n.value) - n.stat.mks1

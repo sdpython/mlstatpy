@@ -23,7 +23,7 @@ class TestSegments(ExtTestCase):
         res = []
         while n:
             res.append(s.copy())
-            n = s.next()
+            n = s.next()  # pylint: disable=E1102
         self.assertEqual(len(res), 279)
         self.assertEqual(res[-1].a, Point(0, 3))
         self.assertEqual(res[-1].b, Point(7, 2))
@@ -86,7 +86,7 @@ class TestSegments(ExtTestCase):
                 pygame.draw.line(screen, couleur[c % len(couleur)], a, b)
                 pygame.display.flip()
 
-            n = s.next()
+            n = s.next()  # pylint: disable=E1102
             if angle != s.angle:
                 if TestSegments.visual and __name__ == "__main__":
                     print("changement angle = ", angle,
