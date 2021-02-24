@@ -34,7 +34,7 @@ class TestOptim(ExtTestCase):
 
         gr = fct_grad(numpy.array([0., 0., 0.]), X[0, :], y[0], 0)
         no = numpy.linalg.norm(gr)
-        self.assertGreater(no, 0.001)
+        self.assertGreater(no, 0.0001)
 
         sgd = SGDOptimizer(numpy.array([0., 0., 0.]),
                            lr_schedule='constant', momentum=0.9)
