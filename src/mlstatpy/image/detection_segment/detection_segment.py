@@ -289,7 +289,7 @@ def detect_segments(image, proba_bin=1.0 / 16,
             not_aligned += 1
 
         # on passe au segment suivant
-        cont = seg.next()
+        cont = seg.next()  # pylint: disable=E1102
         n += 1
 
         # pour verifier que cela avance
