@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@brief      test log(time=215s)
+@brief      test log(time=312s)
 """
 import os
 import unittest
@@ -62,6 +62,9 @@ class TestRunNotebooksML(unittest.TestCase):
 
     def test_notebook_reseau_neurones(self):
         self.a_test_notebook_runner("reseau_neurones", "ml")
+
+    def test_notebook_survival(self):
+        self.a_test_notebook_runner("survival", "ml")
 
 
 if __name__ == "__main__":
