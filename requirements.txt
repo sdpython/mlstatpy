@@ -24,6 +24,7 @@ cpyquickhelper>=0.3
 dill
 jupyter_sphinx
 jyquickhelper
+lifelines
 mako
 memory_profiler
 minepy

@@ -28,3 +28,4 @@ indique la classe de l'observation :math:`X_i` et la valeur
     lr_voronoi
     lr_trees
     ../notebooks/reseau_neurones
+    survival_analysis
