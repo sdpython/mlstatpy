@@ -141,7 +141,7 @@ On sait que si :math:`g(t) = \log S'(t)` alors
 
 .. math::
 
-    \hat{\lambda_0}(t) = − \frac{d (log(\hat{S}(t)))}{dt}
+    \hat{\lambda_0}(t) = - \frac{d (\log(\hat{S}(t)))}{dt}
 
 Pour la suite, on pose :math:`h(X_i, \beta) = \exp(\beta X_i)`,
 et l'individu meurt au temps :math:`t_i` de l'expérience.
@@ -150,8 +150,8 @@ Une expérience est définie par la liste des couples
 :math:`\beta` qui représentent au mieux les données
 de l'expérience. On définit donc :
 
-* :math:`R_t` : l'ensemble des personnes en vie au temps $t$
-* :math:`D_t` : l'ensemble qui décèdent au $t$
+* :math:`R_t` : l'ensemble des personnes en vie au temps *t*
+* :math:`D_t` : l'ensemble qui décèdent au *t*
 
 Par définition :math:`i \in R_{t_i}` et :math:`i \in D_{t_i}`.
 On calcule le ratio :
@@ -184,7 +184,7 @@ C'est un estimateur de la fonction de survie :
 
 .. math::
 
-    \hat{S}(t) = \exp{ - \hat{B}(t) }
+    \hat{S}(t) = \exp(-\hat{B}(t))
 
 Notebooks
 =========
