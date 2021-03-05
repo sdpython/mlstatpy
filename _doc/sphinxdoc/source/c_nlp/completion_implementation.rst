@@ -19,7 +19,7 @@ Notion de trie
 ++++++++++++++
 
 Une implémentation des tries est décrites dans deux notebooks :
-`Arbre et Trie <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/_gs1a_A_arbre_trie.html>`_.
+`Arbre et Trie <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx/notebooks/_gs1a_A_arbre_trie.html>`_.
 Les résultats de ce chapitre ont été produits avec le module :mod:`completion <mlstatpy.nlp.completion>`
 et le notebook :ref:`completiontrierst`. Le notebook
 :ref:`completionprofilingrst` montre les résultats du profiling.

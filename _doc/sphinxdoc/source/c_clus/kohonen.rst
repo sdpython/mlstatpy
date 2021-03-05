@@ -202,7 +202,7 @@ Autres utilisation des cartes de Kohenen
 On peut les utiliser pour déterminer le plus court
 chemin passant par tous les noeuds d'un graphe,
 c'est à dire appliquer
-`Kohonen au problème du voyageur de commerce <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/specials/tsp_kohonen.html>`_.
+`Kohonen au problème du voyageur de commerce <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx/specials/tsp_kohonen.html>`_.
 
 Bibliographie
 =============

@@ -109,7 +109,7 @@ Plus on ajoute de variables, plus l'erreur diminue.
 Pour aller plus loin, voir [Char]_ et voir
 son application à la séelection d'arbres dans une forêt aléatoire
 `Réduction d’une forêt aléatoire
-<http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx3/notebooks/td2a_tree_selection_correction.html>`_.
+<http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx/notebooks/td2a_tree_selection_correction.html>`_.
 
 Bibliographie
 =============
