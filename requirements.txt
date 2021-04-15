@@ -36,6 +36,7 @@ pyensae>=1.2.788
 pyinstrument
 pylint
 pyquickhelper>=1.10
+pyquicksetup
 snakeviz
 sphinx-bootstrap-theme
 sphinxcontrib.imagesvg
