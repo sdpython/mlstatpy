@@ -209,7 +209,7 @@ class GraphDistance:
         @param      filename        file name
         @param      add_loop         @see me __init__
         """
-        lines = open(filename, "r").readlines()
+        lines = open(filename, "r").readlines()  # pylint: disable=R1732
         regV = re.compile("\\\"?([a-z0-9_]+)\\\"? *[[]label=\\\"(.*)\\\"[]]")
         regE = re.compile("\\\"?([a-z0-9_]+)\\\"? *-> *\\\"?" +
                           "([a-z0-9_]+)\\\"? *[[]label=\\\"(.*)\\\"[]]")

@@ -92,7 +92,7 @@ class MlGridBenchMark(GridBenchMark):
         self.fLOG("[MlGridBenchMark.preprocess_dataset] done")
         return (train, test), appe, params
 
-    def bench_experiment(self, ds, **params):
+    def bench_experiment(self, ds, **params):  # pylint: disable=W0237
         """
         Calls meth *fit*.
         """
@@ -108,7 +108,7 @@ class MlGridBenchMark(GridBenchMark):
         del params["model"]
         return self.fit(ds[0], model, **params)
 
-    def predict_score_experiment(self, ds, model, **params):
+    def predict_score_experiment(self, ds, model, **params):  # pylint: disable=W0237
         """
         Calls method *score*.
         """

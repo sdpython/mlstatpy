@@ -518,7 +518,7 @@ class NeuralTreeNet(_TrainingAPI):
             pos += s
         return res
 
-    def update_training_weights(self, X, add=True):
+    def update_training_weights(self, X, add=True):  # pylint: disable=W0237
         """
         Updates weights.
 

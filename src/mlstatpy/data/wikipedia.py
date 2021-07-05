@@ -64,7 +64,7 @@ def download_dump(country, name, folder=".", unzip=True, timeout=-1,
     """
     url = "https://dumps.wikimedia.org/{0}wiki/latest/{0}wiki-{1}".format(
         country, name)
-    file = url.split("/")[-1]
+    file = url.split("/")[-1]  # pylint: disable=C0207
     name = os.path.join(folder, file)
     unzipname = os.path.splitext(name)[0]
     if overwrite or (not os.path.exists(name) and not os.path.exists(unzipname)):

@@ -54,7 +54,7 @@ class NuagePointsLaesa (NuagePoints):
         # on calcule aussi la distance de chaque éléments au pivots
         self.dist = numpy.zeros((self.nuage.shape[0], len(self.pivots)))
         for i in range(self.nuage.shape[0]):
-            for j in range(len(self.pivots)):
+            for j in range(len(self.pivots)):  # pylint: disable=C0200
                 self.dist[i, j] = self.distance(
                     self.nuage[i, :], self.nuage[self.pivots[j], :])
 

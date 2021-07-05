@@ -302,7 +302,7 @@ class NeuralTreeNode(_TrainingAPI):
         "Returns the weights stored in the neuron."
         return self.coef.ravel()
 
-    def update_training_weights(self, X, add=True):
+    def update_training_weights(self, X, add=True):  # pylint: disable=W0237
         """
         Updates weights.
 
