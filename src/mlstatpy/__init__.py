@@ -6,7 +6,7 @@ Functions and examples associated to the
 content of the :epkg:`mlstatpy`.
 """
 
-__version__ = "0.3.567"
+__version__ = "0.3.593"
 __author__ = "Xavier Dupré"
 __github__ = "https://github.com/sdpython/mlstatpy"
 __url__ = "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html"
