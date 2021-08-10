@@ -99,17 +99,18 @@ def edges2gv(vertices, edges):
     return text
 
 
-def draw_graph_graphviz(vertices, edges, image, engine="dot"):
+def draw_graph_graphviz(vertices, edges, image=None, engine="dot"):
     """
     Draws a graph using :epkg:`Graphviz`.
 
     @param      edges           see below
     @param      vertices        see below
-    @param      image           output image
+    @param      image           output image, None, just returns the output
     @param      engine          *dot* or *neato*
-    @return                     :epkg:`Graphviz`
+    @return                     :epkg:`Graphviz` output or
+                                the dot text if *image* is None
 
-    The function creates a file ``<image>.gv``.
+    The function creates a file ``<image>.gv`` if *image* is not None.
     ::
 
         edges    = [ (1,2, label, color), (3,4), (1,3), ... ]  , liste d'arcs
@@ -118,6 +119,8 @@ def draw_graph_graphviz(vertices, edges, image, engine="dot"):
 
     """
     text = edges2gv(vertices, edges)
+    if image is None:
+        return text
     filename = image + ".gv"
     with open(filename, "w", encoding="utf-8") as f:
         f.write(text)
