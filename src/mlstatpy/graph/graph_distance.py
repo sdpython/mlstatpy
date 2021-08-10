@@ -9,7 +9,17 @@ import copy
 import re
 
 
-class Vertex:
+class _Vertex:
+
+    __slots__ = ('nb', 'label', 'weight')
+
+    def __init__(self, nb, label, weight):
+        self.nb = nb         # kind of id
+        self.label = label      # label
+        self.weight = weight
+
+
+class Vertex(_Vertex):
     """
     Defines a vertex of a graph.
     """
@@ -21,13 +31,11 @@ class Vertex:
         @param      label   (str) label
         @para       weight  (float)
         """
-        self.nb = nb         # kind of id
-        self.label = label      # label
+        _Vertex.__init__(self, nb, label, weight)
         self.pair = (None, None)
         self.edges = {}
         self.predE = {}
         self.succE = {}
-        self.weight = weight
 
     def __str__(self):
         """
@@ -61,14 +69,23 @@ class Vertex:
         return self.label
 
 
-class Edge:
+class _Edge:
+
+    __slots__ = ('from_', 'to', 'label', 'weight', 'nb')
+
+    def __init__(self, from_, to, label, weight):
+        self.from_, self.to = from_, to
+        self.nb = from_, to  # pylint: disable=E1101
+        self.label = label
+
+
+class Edge(_Edge):
     """
     Defines an edge of a graph.
     """
 
     def __init__(self, from_, to, label, weight):
         """
-        constructor
         @param  from_       (int)
         @param  to          (int)
         @param  label       (str)
@@ -76,9 +93,7 @@ class Edge:
 
         ``'00'`` means the beginning of a graph, ``'11'`` the end.
         """
-        self.from_, self.to = from_, to
-        self.nb = from_, to
-        self.label = label
+        _Edge.__init__(self, from_, to, label, weight)
         self.pair = (None, None)
         self.weight = weight
         if self.from_ == "00" and self.to == "00":
@@ -90,13 +105,16 @@ class Edge:
         """
         usual
         """
-        return "{} -> {} [{}]".format(self.nb[0], self.nb[1], self.Label)
+        return "{} -> {} [{}]".format(
+            self.nb[0], self.nb[1], self.Label)  # pylint: disable=E1101
 
     def __repr__(self):
         """
         usual
         """
-        return "Edge({}, {}, {}, {})".format(repr(self.nb[0]), repr(self.nb[1]), repr(self.Label), self.weight)
+        return "Edge({}, {}, {}, {})".format(
+            repr(self.nb[0]), repr(self.nb[1]),  # pylint: disable=E1101
+            repr(self.Label), self.weight)  # pylint: disable=E1101
 
     def is_vertex(self):
         """
@@ -386,22 +404,37 @@ class GraphDistance:
         if cost:
 
             if function_mach_vertices is None:
-                def tempF1(v1, v2, g1, g2, w1, w2):
-                    if v1 is not None and not v1.is_vertex():
-                        raise TypeError(
-                            "should be a vertex")  # pragma: no cover
-                    if v2 is not None and not v2.is_vertex():
-                        raise TypeError(
-                            "should be a vertex")  # pragma: no cover
-                    if v1 is None and v2 is None:
-                        return 0
-                    if v1 is None or v2 is None:
-                        return v2.weight * w2 if v1 is None else v1.weight * w1
-                    return 0 if v1.label == v2.label else 0.5 * (v1.weight * w1 + v2.weight * w2)
-                function_mach_vertices = tempF1
+                def tempF1_vertex(v1, v2, g1, g2, w1, w2):
+                    if v1 is None:
+                        if v2 is None:
+                            return 0.
+                        if not v2.is_vertex():
+                            raise TypeError(  # pragma: no cover
+                                "v2 should be a vertex")
+                        return v2.weight * w2
+                    elif v2 is None:
+                        if not v1.is_vertex():
+                            raise TypeError(  # pragma: no cover
+                                "v1 should be a vertex")
+                        if not v1.is_vertex():
+                            raise TypeError(  # pragma: no cover
+                                "v1 should be a vertex")
+                        return v1.weight * w1
+                    else:
+                        if not v1.is_vertex():
+                            raise TypeError(  # pragma: no cover
+                                "v1 should be a vertex")
+                        if not v2.is_vertex():
+                            raise TypeError(  # pragma: no cover
+                                "v2 should be a vertex")
+                        return (
+                            0 if v1.label == v2.label
+                            else 0.5 * (v1.weight * w1 + v2.weight * w2))
+
+                function_mach_vertices = tempF1_vertex
 
             if function_match_edges is None:
-                def tempF2(e1, e2, g1, g2, w1, w2):
+                def tempF2_edge(e1, e2, g1, g2, w1, w2):
                     if e1 is not None and not e1.is_edge():
                         raise TypeError("should be an edge")
                     if e2 is not None and not e2.is_edge():
@@ -413,16 +446,14 @@ class GraphDistance:
                     elif e1.label != e2.label:
                         return 0.5 * (e1.weight * w1 + e2.weight * w2)
                     else:
-                        lab1 = g1.vertices[
-                            e1.from_].label == g2.vertices[e2.from_].label
-                        lab2 = g1.vertices[
-                            e1.to].label == g2.vertices[e2.to].label
+                        lab1 = g1.vertices[e1.from_].label == g2.vertices[e2.from_].label
+                        lab2 = g1.vertices[e1.to].label == g2.vertices[e2.to].label
                         if lab1 and lab2:
                             return 0
                         else:
                             return e1.weight * w1 + e2.weight * w2
 
-                function_match_edges = tempF2
+                function_match_edges = tempF2_edge
         else:
             if function_mach_vertices is None:
                 function_mach_vertices = \
@@ -568,7 +599,8 @@ class GraphDistance:
                            function_mach_vertices=None,
                            function_match_edges=None,
                            use_min=False,
-                           debug=False):
+                           debug=False,
+                           cache=None):
         """
         Tries to align two paths from two graphs.
 
@@ -589,40 +621,64 @@ class GraphDistance:
                                                     d = d*1.0 / n if n > 0 else 0
 
         @param      debug                   unused
+        @param      cache                   to cache the costs
         @return                             2-uple: distance, aligned path
         """
-        function_mach_vertices, function_match_edges = \
+        def edge_vertex_match(x, y, g1, g2, w1, w2):
+            if x is None:
+                if y is None:
+                    raise RuntimeError(
+                        "Both x and y are None.")
+                return y.weight * w2
+            elif y is None:
+                return x.weight * w1
+            return (x.weight * w1 + y.weight * w2) / 2
+
+        def cache_cost(func, a, b, g1, g2, w1, w2):
+            if cache is None:
+                return func(a, b, g1, g2, w1, w2)
+            key = (id(a), id(b), w1, w2)
+            if key in cache:
+                return cache[key]
+            cost = func(a, b, g1, g2, w1, w2)
+            cache[key] = cost
+            return cost
+
+        function_mach_vertices, function_match_edges = (
             self.get_matching_functions(
-                function_mach_vertices, function_match_edges, True)
+                function_mach_vertices, function_match_edges, True))
         dist = {(-1, -1): (0, None, None)}
 
-        w1 = 1.0 / len(p1) if use_min else 1.
-        w2 = 1.0 / len(p2) if use_min else 1.
+        if use_min:
+            w1 = 1.0 / len(p1)
+            w2 = 1.0 / len(p2)
+        else:
+            w1 = 1.
+            w2 = 1.
 
+        p2l = list(enumerate(p2))
         for i1, eorv1 in enumerate(p1):
-            for i2, eorv2 in enumerate(p2):
+            ed1 = eorv1.is_edge()
+            ve1 = eorv1.is_vertex()
+            for i2, eorv2 in p2l:
                 np = i1, i2
-                posit = [((i1 - 1, i2), (eorv1, None)),
-                         ((i1, i2 - 1), (None, eorv2)),
-                         ((i1 - 1, i2 - 1), (eorv1, eorv2)), ]
+                posit = [((i1 - 1, i2 - 1), (eorv1, eorv2)),
+                         ((i1 - 1, i2), (eorv1, None)),
+                         ((i1, i2 - 1), (None, eorv2))]
 
-                if eorv1.is_edge() and eorv2.is_edge():
+                if ed1 and eorv2.is_edge():
                     func = function_match_edges
-                elif eorv1.is_vertex() and eorv2.is_vertex():
+                elif ve1 and eorv2.is_vertex():
                     func = function_mach_vertices
                 else:
-                    def func(x, y, g1, g2, w1, w2):
-                        return 0.5 * (x.weight * w1 + y.weight * w2) if x is not None and y is not None \
-                            else (x.weight * w1 if y is None else y.weight * w2)
+                    func = edge_vertex_match
 
                 for p, co in posit:
                     if p in dist:
                         c0 = dist[p][0]
-                        c1 = func(co[0], co[1], g1, g2, w1, w2)
+                        c1 = cache_cost(func, co[0], co[1], g1, g2, w1, w2)
                         c = c0 + c1
-                        if np not in dist:
-                            dist[np] = (c, p, co, (c0, c1))
-                        elif c < dist[np][0]:
+                        if np not in dist or c < dist[np][0]:
                             dist[np] = (c, p, co, (c0, c1))
 
         last = dist[len(p1) - 1, len(p2) - 1]
@@ -714,9 +770,9 @@ class GraphDistance:
         See :ref:`l-graph_distance`.
         """
 
-        function_mach_vertices, function_match_edges = \
+        function_mach_vertices, function_match_edges = (
             self.get_matching_functions(
-                function_mach_vertices, function_match_edges, True)
+                function_mach_vertices, function_match_edges, True))
 
         paths1 = list(self.enumerate_all_paths(True))
         paths2 = list(graph2.enumerate_all_paths(True))
@@ -733,11 +789,19 @@ class GraphDistance:
         else:
             loop1 = enumerate(paths1)
         loop2 = list(enumerate(paths2))
+        if verbose > 0 and fLOG is not None:
+            fLOG("[distance_matching_graphs_paths] len(loop1)=%d" % len(
+                list(enumerate(paths1))))
+            fLOG("[distance_matching_graphs_paths] len(loop2)=%d" % len(loop2))
+        cache = {}
         for i1, p1 in loop1:
             for i2, p2 in loop2:
                 matrix_distance[i1, i2] = self.edit_distance_path(
                     p1, p2, self, graph2, function_mach_vertices,
-                    function_match_edges, use_min=use_min)
+                    function_match_edges, use_min=use_min,
+                    cache=cache)
+        if verbose > 0 and fLOG is not None:
+            fLOG("[distance_matching_graphs_paths] len(cache)=%d" % len(cache))
 
         if store is not None:
             store["matrix_distance"] = matrix_distance
@@ -842,11 +906,12 @@ class GraphDistance:
                 raise RuntimeError("should not happen " +
                                    to)  # pragma: no cover
             newe = Edge(from_, to, e.label, weight_edge)
-            res_graph.edges[newe.nb] = newe
+            res_graph.edges[newe.nb] = newe  # pylint: disable=E1101
             newe.pair = (None, e)
 
         if verbose > 0 and fLOG is not None:
-            fLOG("[distance_matching_graphs_paths] compute_predecessor, compute_successor")
+            fLOG(
+                "[distance_matching_graphs_paths] compute_predecessor, compute_successor")
         res_graph.compute_predecessor()
         res_graph.compute_successor()
 
