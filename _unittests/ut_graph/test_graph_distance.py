@@ -84,8 +84,12 @@ class TestGraphDistance(ExtTestCase):
         graph1 = GraphDistance(graph1)
         graph2 = GraphDistance(graph2)
         store = {}
-        distance, graph = graph1.distance_matching_graphs_paths(graph2,
-                                                                use_min=False, store=store)
+        res, out, err = self.capture(
+            lambda: graph1.distance_matching_graphs_paths(
+                graph2, use_min=False, store=store, verbose=True))
+        self.assertIn("[distance_matching_graphs_paths]", out)
+        self.assertIn("#", err)
+        distance, graph = res
         if distance is None:
             raise TypeError("expecting something different from None")
         allPaths = list(graph.enumerate_all_paths(True))

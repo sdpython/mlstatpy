@@ -277,3 +277,4 @@ _doc/notebooks/nlp/output_38_0.jpeg
 _doc/notebooks/nlp/output_41_0.jpeg
 _doc/sphinxdoc/source/c_ml/math/*.png
 _doc/sphinxdoc/source/c_ml/piecewise_.html
+_unittests/ut_graph/test_graph_distance.py.prof

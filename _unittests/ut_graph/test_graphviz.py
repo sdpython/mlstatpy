@@ -12,7 +12,7 @@ class TestGraphviz(unittest.TestCase):
 
     @skipif_appveyor("no graphviz")
     @skipif_travis("no graphviz")
-    def test_make_video(self):
+    def test_draw_graph_graphviz(self):
         temp = get_temp_folder(__file__, "temp_graphviz")
         fout = os.path.join(temp, "image.png")
 
@@ -21,6 +21,12 @@ class TestGraphviz(unittest.TestCase):
 
         self.assertTrue(os.path.exists(fout))
         self.assertTrue(os.path.exists(fout + ".gv"))
+
+    def test_draw_graph_graphviz_no_image(self):
+        res = draw_graph_graphviz([(1, "eee", "red")],
+                                  [(1, 2, "blue"), (3, 4), (1, 3)],
+                                  image=None)
+        self.assertIn('[label="eee"', res)
 
 
 if __name__ == "__main__":
