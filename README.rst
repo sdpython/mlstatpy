@@ -17,10 +17,6 @@
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT
 
-.. image:: https://requires.io/github/sdpython/mlstatpy/requirements.svg?branch=master
-     :target: https://requires.io/github/sdpython/mlstatpy/requirements/?branch=master
-     :alt: Requirements Status
-
 .. image:: https://codecov.io/github/sdpython/mlstatpy/coverage.svg?branch=master
     :target: https://codecov.io/github/sdpython/mlstatpy?branch=master
 
