@@ -115,7 +115,7 @@ class TestSegments(ExtTestCase):
                            "data", "eglise_zoom2.jpg")
         rootrem = os.path.normpath(os.path.abspath(
             os.path.join(os.path.dirname(rootfile), '..')))
-        _, res = self.profile(lambda: _calcule_gradient(
+        _, res = self.profile(lambda: _calcule_gradient(  # pylint: disable=W0632
             img, color=0), rootrem=rootrem)
         short = "\n".join(res.split('\n')[:15])
         self.assertIn("_calcule_gradient", short)
