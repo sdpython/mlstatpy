@@ -144,7 +144,7 @@ class TestSegments(ExtTestCase):
                            "data", "eglise_zoom2.jpg")
         rootrem = os.path.normpath(os.path.abspath(
             os.path.join(os.path.dirname(rootfile), '..')))
-        _, res = self.profile(lambda: detect_segments(
+        _, res = self.profile(lambda: detect_segments(  # pylint: disable=W0632
             img, stop=100), rootrem=rootrem)
         short = "\n".join(res.split('\n')[:25])
         if __name__ == "__main__":
