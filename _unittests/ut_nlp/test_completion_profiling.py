@@ -61,7 +61,7 @@ class TestCompletionProfiling(unittest.TestCase):
             res = s.getvalue().replace(rem, "")
             if show:
                 fLOG(res)
-            with open(os.path.join(temp, "profiling%d.txt" % n), "w") as f:
+            with open(os.path.join(temp, "profiling%d.txt" % n), "w") as f:  # pylint: disable=W1514
                 f.write(res)
         prof(1, show=False)
         prof(2, show=True)
