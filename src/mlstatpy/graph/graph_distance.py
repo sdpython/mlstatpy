@@ -189,7 +189,7 @@ class GraphDistance:
         @param      weight_edge      weight for every edge
         """
         if vertex_label is None:
-            vertex_label = dict()
+            vertex_label = {}
         if isinstance(edge_list, str):
             self.load_from_file(edge_list, add_loop)
         else:
@@ -227,7 +227,7 @@ class GraphDistance:
         @param      filename        file name
         @param      add_loop         @see me __init__
         """
-        lines = open(filename, "r").readlines()  # pylint: disable=R1732
+        lines = open(filename, "r").readlines()  # pylint: disable=R1732,W1514
         regV = re.compile("\\\"?([a-z0-9_]+)\\\"? *[[]label=\\\"(.*)\\\"[]]")
         regE = re.compile("\\\"?([a-z0-9_]+)\\\"? *-> *\\\"?" +
                           "([a-z0-9_]+)\\\"? *[[]label=\\\"(.*)\\\"[]]")
