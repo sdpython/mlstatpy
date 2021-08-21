@@ -278,7 +278,8 @@ class NeuralTreeNode(_TrainingAPI):
         "Computes inputs of the activation function."
         if self.n_outputs == 1:
             return X @ self.coef[1:] + self.coef[0]
-        return (X.reshape((1, -1)) @ self.coef[:, 1:].T + self.coef[:, 0]).ravel()
+        res = X.reshape((1, -1)) @ self.coef[:, 1:].T + self.coef[:, 0]
+        return res.ravel()
 
     def predict(self, X):
         "Computes neuron outputs."

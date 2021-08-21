@@ -34,7 +34,7 @@ pycodestyle
 pydata_sphinx_theme
 pyensae>=1.2.788
 pyinstrument
-pylint
+pylint>=2.10.0
 pyquickhelper>=1.10
 pyquicksetup
 snakeviz
