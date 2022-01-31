@@ -548,7 +548,8 @@ class CompletionSystem:
         """
         res = dict(mks0=0.0, mks1=0.0, mks2=0.0,
                    sum_weights=0.0, sum_wlen=0.0, n=0)
-        hist = {k: {} for k in {"mks0", "mks1", "mks2", "l"}}  # pylint: disable=C0208
+        hist = {k: {}
+                for k in {"mks0", "mks1", "mks2", "l"}}  # pylint: disable=C0208
         wei = {k: {} for k in hist}
         res["hist"] = hist
         res["histnow"] = wei
