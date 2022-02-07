@@ -10,10 +10,12 @@ Courbe ROC
 
 .. index:: ROC
 
-Ce document introduit la `courbe ROC <https://en.wikipedia.org/wiki/Receiver_operating_characteristic>`_
+Ce document introduit la `courbe ROC
+<https://en.wikipedia.org/wiki/Receiver_operating_characteristic>`_
 (Receiving Operator Characteristic) qui est communément utilisée pour mesurer
 la performance d'un classifieur. Il introduit aussi des termes comme précision,
-rappel, `AUC <https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve>`_,
+rappel, `AUC
+<https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve>`_,
 qui sont présents dans la plupart des articles qui traitent de machine learning.
 Le module :mod:`roc <mlstatpy.ml.roc>` implémente les calculs ci-dessous
 qu'on peut tester avec le notebook :ref:`rocexamplerst`.
@@ -63,8 +65,10 @@ réponse attendue    0                   1
 
 A partir de ces définitions, on définit :
 
-* la `précision <https://en.wikipedia.org/wiki/Information_retrieval#Precision>`_ : :math:`\frac{ TP }{ TP + FP }`
-* le `rappel ou recall <https://en.wikipedia.org/wiki/Information_retrieval#Recall>`_ : :math:`\frac{ TP }{ TP + TN }`
+* la `précision <https://en.wikipedia.org/wiki/Information_retrieval#Precision>`_ :
+  :math:`\frac{ TP }{ TP + FP }`
+* le `rappel ou recall <https://en.wikipedia.org/wiki/Information_retrieval#Recall>`_ :
+  :math:`\frac{ TP }{ TP + TN }`
 
 En choisissant un seuil relatif au score de pertinence :math:`x`,
 au-dessus, on valide la réponse du classifieur, en-dessous,
@@ -77,16 +81,18 @@ La courbe ROC s'obtient en faisant varier :math:`s`.
     :lid: def_roc_2
     :tag: Définition
 
-    On suppose que :math:`Y` est la variable aléatoire des scores des expériences qui ont réussi.
+    On suppose que :math:`Y` est la variable aléatoire des scores
+    des expériences qui ont réussi.
     :math:`X` est celle des scores des expériences qui ont échoué.
     On suppose également que tous les scores sont indépendants.
-    On note :math:`F_X` et :math:`F_Y` les fonctions de répartition de ces variables.
+    On note :math:`F_Y` et :math:`F_X` les fonctions de répartition de ces variables.
+    :math:`F_Y(s)=\pr{Y \infegal s}` et :math:`F_X(s)=\pr{X \infegal s}`.
     On définit en fonction d'un seuil :math:`s \in \R` :
 
-    * :math:`R(s) = 1 - F_Y(s)`
-    * :math:`E(s) = 1 - F_X(s)`
+    * :math:`R(s) = 1 - F_Y(s) = \pr{Y > s}`
+    * :math:`E(s) = 1 - F_X(s) = \pr{X > s}`
 
-    La courbe ROC est le graphe :math:`\pa{E(s),R(s)}` lorsque :math:`s` varie dans :math:`\R`.		
+    La courbe ROC est le graphe :math:`\pa{E(s),R(s)}` lorsque :math:`s` varie dans :math:`\R`.
 
 :math:`TP(s)` désigne les true positifs au-dessus du seuil :math:`s`,
 avec les notations *TP*, *FP*, *FN*, *TN*, cela revient à :
@@ -105,7 +111,8 @@ De même pour :math:`FP(s) + FN(s)`.
 .. image:: rocimg/rocwi.png
     :width: 500
 
-On remarque que les fonctions :math:`s \longrightarrow E(s)` et :math:`s \longrightarrow R(s)`
+On remarque que les fonctions :math:`s \longrightarrow E(s)`
+et :math:`s \longrightarrow R(s)`
 sont décroissantes toutes deux. Elles sont donc inversibles.
 Dans le cas où la variable aléatoire :math:`\theta` est indépendante de
 la variable :math:`X`, la courbe ROC est une droite reliant les points
@@ -127,12 +134,15 @@ des FP, TP, FN, TN... Pour quelqu'un qui doit réfléchir trois secondes
 
 .. math::
 
-    \begin{array}{rcl}FPR(s) &=& \sum_{i=1}^n \mathbb{1}_{score(X_i)
-    \geqslant s}\mathbb{1}_{y_i == 1}\\ TPR(s) &=& \sum_{i=1}^n
-    \mathbb{1}_{score(X_i) \geqslant s}\mathbb{1}_{y_i \neq 1}
+    \begin{array}{rcl}
+    N_+ &=& \sum_{i=1}^n \indicatrice{1}_{y_i == 1}\\
+    TPR(s) &=& \frac{1}{N_+}\sum_{i=1}^n \indicatrice{1}_{score(X_i) \geqslant s}\indicatrice{1}_{y_i == 1}\\
+    FPR(s) &=& \frac{1}{1 - N_+}\sum_{i=1}^n \indicatrice{1}_{score(X_i) \geqslant s}\indicatrice{1}_{y_i \neq 1}
     \end{array}
 
-*X = FPR, y = TPR*.
+*x = FPR(s), y = TPR(s)*. (FPR = False Positive Rate, TPR = True Positive Rate)
+
+.. image:: rocimg/rocwi2.png
 
 .. index:: AUC
 
@@ -159,7 +169,8 @@ de fonction de répartition :math:`F`. Si :math:`U = F(X)`, alors :
 
 .. math::
 
-    \pr{ U \infegal t} = \pr{ F(X) \infegal t} = \pr{ X \infegal F^{-1}(t)} = F \pa{ F^{-1}(t) } = t
+    \pr{ U \infegal t} = \pr{ F(X) \infegal t} =
+    \pr{ X \infegal F^{-1}(t)} = F \pa{ F^{-1}(t) } = t
 
 La variable :math:`U` est de loi uniforme sur :math:`\cro{0,1}`.
 De plus, soit :math:`g` une fonction intégrable quelconque, on pose :math:`u = F(x)` et :
@@ -192,8 +203,8 @@ est uniforme et comprise dans :math:`\cro{0,1}`.
 
     \begin{eqnarray*}
     P \pa{Y>X} &=& \int_x f_X(x) dx \int_y  \; f_Y(y) \; \indicatrice{y > x} dy  \\
-                         &=& \int_u du \int_y  \; f_Y(y) \; \indicatrice{y > F_X^{-1}(u)} dy   \\
-                         &=& \int_u du \; \pr{Y > F_X^{-1}(u)} \nonumber
+    &=& \int_u du \int_y  \; f_Y(y) \; \indicatrice{y > F_X^{-1}(u)} dy   \\
+    &=& \int_u du \; \pr{Y > F_X^{-1}(u)} \nonumber
     \end{eqnarray*}
 
 Or si :math:`u = F_X(s) = E(s)`, alors :math:`F_X^{-1}(u) = s`
@@ -208,7 +219,8 @@ et :math:`\pr{Y > F_X^{-1}(u)} = R'(s)`. Par conséquent :
 Cette dernière expression est l'aire recherchée.
 Ce théorème nous permet de définir un estimateur pour l'aire sous
 la courbe ROC à l'aide des `U-statistiques <https://en.wikipedia.org/wiki/U-statistic>`_
-de `Mann-Whitney <https://fr.wikipedia.org/wiki/Test_de_Wilcoxon-Mann-Whitney>`_ (voir [Saporta1990]_).
+de `Mann-Whitney <https://fr.wikipedia.org/wiki/Test_de_Wilcoxon-Mann-Whitney>`_
+(voir [Saporta1990]_).
 
 .. mathdef::
     :tag: Corollaire
@@ -225,7 +237,8 @@ de `Mann-Whitney <https://fr.wikipedia.org/wiki/Test_de_Wilcoxon-Mann-Whitney>`_
     .. math::
         :label: estimateur_roc
 
-        \hat{A} = \frac{1}{nm} \; \sum_{i=1}^{m}\sum_{j=1}^{n} \pa{\indicatrice{ Y_j > X_i} + \frac{1}{2} \indicatrice{ Y_j = X_i}}
+        \hat{A} = \frac{1}{nm} \; \sum_{i=1}^{m}\sum_{j=1}^{n}
+        \pa{\indicatrice{ Y_j > X_i} + \frac{1}{2} \indicatrice{ Y_j = X_i}}
 
 **Démonstration**
 
@@ -234,7 +247,8 @@ La démonstration est évidente :
 .. math::
 
     \esp\pa{\hat{A}} = \frac{1}{nm} \; \sum_{i=1}^{m}\sum_{j=1}^{n}
-                    \pa{\pr{ Y_j > X_i} + \frac{1}{2} \pr{X_i=Y_j}} = \pr{ Y > X} + \frac{1}{2}\pr{ Y = X}
+    \pa{\pr{ Y_j > X_i} + \frac{1}{2} \pr{X_i=Y_j}} =
+    \pr{ Y > X} + \frac{1}{2}\pr{ Y = X}
 
 Dans le cas où :math:`X` ou :math:`Y` sont continues, :math:`\pr{X=Y} = 0`.
 
@@ -256,9 +270,8 @@ une loi normale lorsque :math:`n` et :math:`m` tendent vers l'infini.
     .. math::
 
         \var{\hat{A}} = \frac{ \hat{A} (1-\hat{A})}{nm} \; \cro{
-                                                            1 + (n-1) \frac { P_Y  - \hat{A}^2 } { \hat{A} (1-\hat{A}) } +
-                                                            (m-1) \frac { P_X - \hat{A}^2 } { \hat{A} (1-\hat{A}) }
-                                                        }
+        1 + (n-1) \frac { P_Y  - \hat{A}^2 } { \hat{A} (1-\hat{A}) } +
+        (m-1) \frac { P_X - \hat{A}^2 } { \hat{A} (1-\hat{A}) } }
 
 **Démonstration**
 
@@ -288,9 +301,9 @@ On en déduit que :
 
     \begin{eqnarray*}
     \esp{\hat{A}^2} &=&	\frac{\hat{A}}{nm} + \frac{n-1 }{nm} \; \pr{ \max\acc{X_i,X_k} < Y_j}  + \nonumber \\ &&
-                                        \frac{m-1 }{nm} \;  \pr{ X_i < \min\acc{Y_j,Y_l}} +  \frac{nm-n-m-1 }{n m} \;  \hat{A}^2 \\
+    \frac{m-1 }{nm} \;  \pr{ X_i < \min\acc{Y_j,Y_l}} +  \frac{nm-n-m-1 }{n m} \;  \hat{A}^2 \\
     \var{\hat{A}^2} &=&	\frac{1}{nm} \cro{ \hat{A} + (n-1) P_Y + (m-1) P_X - (n+m+1) \hat{A}^2 } \nonumber \\
-                                &=&	\frac{1}{nm} \cro{ \hat{A} + (n-1) \pa{P_Y - \hat{A}^2}+ (m-1) \pa{P_X - \hat{A}^2} + \hat{A}^2 }
+    &=&	\frac{1}{nm} \cro{ \hat{A} + (n-1) \pa{P_Y - \hat{A}^2}+ (m-1) \pa{P_X - \hat{A}^2} + \hat{A}^2 }
     \end{eqnarray*}
 
 On retrouve l'expression cherchée.		

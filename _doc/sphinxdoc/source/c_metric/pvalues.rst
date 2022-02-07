@@ -31,7 +31,8 @@ Usually, it starts from a set of identically distributed random variables
 the question is :math:`\widehat{\theta}_N` null? In others terms, we
 want to know if the average is significantly different from zero. If
 the random variable :math:`X` follows a random law which has a standard
-deviation, we can use the `central limit theorem <https://en.wikipedia.org/wiki/Central_limit_theorem>`_
+deviation, we can use the `central limit theorem
+<https://en.wikipedia.org/wiki/Central_limit_theorem>`_
 which tells us:
 
 .. math::
@@ -53,7 +54,8 @@ If :math:`Y \sim \loinormale{0}{\sigma}`, then we have
     :nowrap:
 
     \begin{eqnarray*}
-    \widehat{\theta}_N \text{ is not null with 95\% confidence if } \sqrt{N} \frac{|\widehat{\theta}_N|}{\sigma} > 1.96
+    \widehat{\theta}_N \text{ is not null with 95\% confidence if }
+    \sqrt{N} \frac{|\widehat{\theta}_N|}{\sigma} > 1.96
     \end{eqnarray*}
 
 And the confidence intervalle at 95% would be:
@@ -74,10 +76,13 @@ When :math:`\esp{ \widehat{\theta}_N } = \theta_0 \neq 0`, it becomes:
     :nowrap:
 
     \begin{eqnarray*}
-    \sqrt{N} \cro{ \widehat{\theta}_N - \theta_0} \underset{N \rightarrow \infty}{\longrightarrow}   \loinormale{0}{\sigma}
+    \sqrt{N} \cro{ \widehat{\theta}_N - \theta_0}
+    \underset{N \rightarrow \infty}{\longrightarrow}
+    \loinormale{0}{\sigma}
     \end{eqnarray*}
 
-We usually want to check if the mean is equal to a specific value using a statistical test:
+We usually want to check if the mean is equal to a specific value
+using a statistical test:
 
 .. math::
     :nowrap:
@@ -93,7 +98,8 @@ We validate :math:`H0` if:
     :nowrap:
 
     \begin{eqnarray*}
-    \widehat{\theta}_N \in \cro{ \theta_0 - \frac{1.96 \sigma}{\sqrt{N}}, \theta_0 + \frac{1.96 \sigma}{\sqrt{N}}}
+    \widehat{\theta}_N \in \cro{ \theta_0 - \frac{1.96 \sigma}{\sqrt{N}},
+    \theta_0 + \frac{1.96 \sigma}{\sqrt{N}}}
     \end{eqnarray*}
 
 p-value
@@ -123,8 +129,9 @@ We are looking for:
     :label: p_value_expression
 
     \begin{eqnarray*}
-    \alpha &=& 1-\int_{-\beta_N}^{\beta_N} \frac{1}{\sqrt{2\pi}} e^{\frac{-x^2}{2}} dx =
-                                2 \int_{\beta_N}^{\infty} \frac{1}{\sqrt{2\pi}} e^{\frac{-x^2}{2}} dx \\
+    \alpha &=& 1-\int_{-\beta_N}^{\beta_N} \frac{1}{\sqrt{2\pi}}
+    e^{\frac{-x^2}{2}} dx =
+    2 \int_{\beta_N}^{\infty} \frac{1}{\sqrt{2\pi}} e^{\frac{-x^2}{2}} dx \\
     \text{where } \beta_N &=& \sqrt{N} \frac{|\widehat{\theta}_N|}{\sigma}
     \end{eqnarray*}
 
@@ -148,12 +155,13 @@ difference to be null.
     :label: pvalues_exp2
 
     \begin{eqnarray*}
-    \widehat{\eta}_N &=& \frac{1}{N} \sum_{i=1}^{N} X_i - \frac{1}{N} \sum_{i=1}^{N} Y_i
-                                 = \frac{1}{N} \cro{ \sum_{i=1}^{N} X_i -  Y_i }
+    \widehat{\eta}_N &=& \frac{1}{N} \sum_{i=1}^{N} X_i -
+    \frac{1}{N} \sum_{i=1}^{N} Y_i
+    = \frac{1}{N} \cro{ \sum_{i=1}^{N} X_i -  Y_i }
     \end{eqnarray*}
 
-Considering expression :eq:`pvalues_exp2`, we can applying the central limit theorem
-on variable :math:`Z=X-Y`, we get (:math:`\eta_0=0`):
+Considering expression :eq:`pvalues_exp2`, we can applying the central
+limit theorem on variable :math:`Z=X-Y`, we get (:math:`\eta_0=0`):
 
 .. math::
     :nowrap:
@@ -163,16 +171,18 @@ on variable :math:`Z=X-Y`, we get (:math:`\eta_0=0`):
     \loinormale{\eta_0}{\sqrt{ \frac{\var{Z} }{N  } }}
     \end{eqnarray*}
 
-If both samples do not have the same number of observations, this expression becomes:
+If both samples do not have the same number of observations,
+this expression becomes:
 
 .. math::
     :nowrap:
 
     \begin{eqnarray*}
-    \sqrt{N} \widehat{\eta}_N \underset{ \begin{subarray}{c} N_1 \rightarrow \infty \\
-                             N_2 \rightarrow \infty \\
-                             \frac{N_1}{N_2} \rightarrow x \end{subarray}
-     }{\longrightarrow}   \loinormale{\eta_0}{\sqrt{ \frac{\var{X}}{N_1}+\frac{\var{Y}}{N_2} }}
+    \sqrt{N} \widehat{\eta}_N \underset{ \begin{subarray}{c} N_1
+    \rightarrow \infty \\
+    N_2 \rightarrow \infty \\
+    \frac{N_1}{N_2} \rightarrow x \end{subarray}}{\longrightarrow}
+    \loinormale{\eta_0}{\sqrt{ \frac{\var{X}}{N_1}+\frac{\var{Y}}{N_2} }}
     \end{eqnarray*}
 
 .. _l-section_pvalues_table:
