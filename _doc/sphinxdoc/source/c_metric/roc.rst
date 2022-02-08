@@ -135,14 +135,15 @@ des FP, TP, FN, TN... Pour quelqu'un qui doit réfléchir trois secondes
 .. math::
 
     \begin{array}{rcl}
-    N_+ &=& \sum_{i=1}^n \indicatrice{1}_{y_i == 1}\\
-    TPR(s) &=& \frac{1}{N_+}\sum_{i=1}^n \indicatrice{1}_{score(X_i) \geqslant s}\indicatrice{1}_{y_i == 1}\\
-    FPR(s) &=& \frac{1}{1 - N_+}\sum_{i=1}^n \indicatrice{1}_{score(X_i) \geqslant s}\indicatrice{1}_{y_i \neq 1}
+    N_+ &=& \sum_{i=1}^n \indicatrice{y_i == 1}\\
+    TPR(s) &=& \frac{1}{N_+}\sum_{i=1}^n \indicatrice{score(X_i) \geqslant s}\indicatrice{y_i == 1}\\
+    FPR(s) &=& \frac{1}{1 - N_+}\sum_{i=1}^n \indicatrice{score(X_i) \geqslant s}\indicatrice{y_i \neq 1}
     \end{array}
 
 *x = FPR(s), y = TPR(s)*. (FPR = False Positive Rate, TPR = True Positive Rate)
 
 .. image:: rocimg/rocwi2.png
+    :width: 300
 
 .. index:: AUC
 
