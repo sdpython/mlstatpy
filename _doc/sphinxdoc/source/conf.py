@@ -16,7 +16,7 @@ elif choice == "bootstrap":
 elif choice == 'pydata_sphinx_theme':
     import pydata_sphinx_theme
     html_theme = 'pydata_sphinx_theme'
-    html_theme_path = pydata_sphinx_theme.get_html_theme_path()
+    html_theme_path = ['_static']
 else:
     raise NotImplementedError()
 
