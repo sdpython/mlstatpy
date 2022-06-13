@@ -32,7 +32,7 @@ class TestROC(ExtTestCase):
         self.assertNotEmpty(repr(test))
         self.assertEqual(len(test), len(data))
         test = ROC(df=data)
-        fLOG(test.__str__())
+        fLOG(test.__str__())  # pylint: disable=C2801
         roc = test.compute_roc_curve()
         t = test.roc_intersect(roc, 0.2)
         self.assertTrue(1 >= t >= 0)

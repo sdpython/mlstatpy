@@ -712,15 +712,15 @@ class GraphDistance:
         countLeft, countRight = self.private_count_left_right(matrix)
         cleft, cright = len(countLeft), len(countRight)
         matrix.sort(reverse=reverse)
-        count = max(max([sum(_.values()) for _ in countRight.values()]),
-                    max([sum(_.values()) for _ in countLeft.values()]))
+        count = max(max(sum(_.values()) for _ in countRight.values()),
+                    max(sum(_.values()) for _ in countLeft.values()))
         while count > 1:
             k, v = matrix.pop()
             i, j = v
             countRight[i][j] -= 1
             countLeft[j][i] -= 1
-            count = max(max([max(_.values()) for _ in countRight.values()]),
-                        max([max(_.values()) for _ in countLeft.values()]))
+            count = max(max(max(_.values()) for _ in countRight.values()),
+                        max(max(_.values()) for _ in countLeft.values()))
 
         mini = min(cleft, cright)
         if len(matrix) < mini:
@@ -917,7 +917,7 @@ class GraphDistance:
 
         allPaths = list(res_graph.enumerate_all_paths(True))
 
-        temp = [sum([0 if None in _.pair else 1 for _ in p]) * 1.0 / len(p)
+        temp = [sum(0 if None in _.pair else 1 for _ in p) * 1.0 / len(p)
                 for p in allPaths]
         distance = 1.0 - 1.0 * sum(temp) / len(allPaths)
 

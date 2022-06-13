@@ -14,9 +14,9 @@ class TestCodeStyle(ExtTestCase):
         thi = os.path.abspath(os.path.dirname(__file__))
         src_ = os.path.normpath(os.path.join(thi, "..", "..", "src"))
         check_pep8(src_, fLOG=fLOG,
-                   pylint_ignore=('C0103', 'C1801', 'R0201', 'R1705', 'W0108', 'W0613',
+                   pylint_ignore=('C0103', 'C1801', 'R1705', 'W0108', 'W0613',
                                   'C0111', 'W0201', 'W0212', 'E0203', 'W0107', 'C0415',
-                                  'R1730', 'R1731', 'C0209'),
+                                  'R1730', 'R1731', 'C0209', 'C3001'),
                    skip=["Too many nested blocks",
                          "Module 'numpy.random' has no 'RandomState' member",
                          "Value 'sch' is unsubscriptable",
@@ -38,9 +38,9 @@ class TestCodeStyle(ExtTestCase):
         thi = os.path.abspath(os.path.dirname(__file__))
         test = os.path.normpath(os.path.join(thi, "..", ))
         check_pep8(test, fLOG=fLOG, neg_pattern="temp_.*",
-                   pylint_ignore=('C0103', 'C1801', 'R0201', 'R1705', 'W0108', 'W0613',
+                   pylint_ignore=('C0103', 'C1801', 'R1705', 'W0108', 'W0613',
                                   'C0111', 'W0212', 'W0212', 'W0107', 'C0415',
-                                  'R1730', 'R1731', 'C0209'),
+                                  'R1730', 'R1731', 'C0209', 'C3001'),
                    skip=["Module 'pygame' has no 'init' member",
                          "Module 'pygame' has no 'MOUSEBUTTONUP' member",
                          "test_graph_distance.py:122: W0612",
