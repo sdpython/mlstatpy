@@ -309,7 +309,7 @@ class SGDOptimizer(BaseOptimizer):
             pass
         else:
             raise ValueError(  # pragma: no cover
-                "Unexpected value: lr_schedule='{}'.".format(self.lr_schedule))
+                f"Unexpected value: lr_schedule='{self.lr_schedule}'.")
 
     def _get_updates(self, grad):
         """

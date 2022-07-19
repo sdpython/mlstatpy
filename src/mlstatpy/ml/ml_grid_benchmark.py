@@ -227,16 +227,16 @@ class MlGridBenchMark(GridBenchMark):
         if self._xaxis is not None and self._yaxis is not None:
             for vx in self._xaxis:
                 for vy in self._yaxis:
-                    self.fLOG("Plotting {0} x {1}".format(vx, vy))
+                    self.fLOG(f"Plotting {vx} x {vy}")
                     func_graph = lambda ax=None, text=True, vx=vx, vy=vy, **kwargs: \
                         local_graph(vx, vy, ax=ax, text=text, **kwargs)
 
                     if path_to_images is not None:
                         img = os.path.join(
-                            path_to_images, "img-{0}-{1}x{2}.png".format(self.Name, vx, vy))
+                            path_to_images, f"img-{self.Name}-{vx}x{vy}.png")
                         gr = self.LocalGraph(
                             func_graph, img, root=path_to_images)
-                        self.fLOG("Saving '{0}'".format(img))
+                        self.fLOG(f"Saving '{img}'")
                         fig, ax = plt.subplots(1, 1, figsize=(8, 8))
                         gr.plot(ax=ax, text=True)
                         fig.savefig(img)
@@ -276,12 +276,12 @@ class MlGridBenchMark(GridBenchMark):
             shape = grid.shape
             if shape[0] * shape[1] < nb:
                 raise ValueError(  # pragma: no cover
-                    "The graph is not big enough {0} < {1}".format(shape, nb))
+                    f"The graph is not big enough {shape} < {nb}")
 
         x = 0
         y = 0
         for i, gr in enumerate(self.Graphs):
-            self.fLOG("Plot graph {0}/{1}".format(i + 1, nb))
+            self.fLOG(f"Plot graph {i + 1}/{nb}")
             gr.plot(ax=grid[y, x], text=text, **kwargs)
             x += 1
             if x >= grid.shape[1]:

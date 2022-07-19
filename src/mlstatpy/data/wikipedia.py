@@ -41,7 +41,7 @@ def download_pageviews(dt, folder=".", unzip=True, timeout=-1,
         if isinstance(names, list):
             if len(names) != 1:
                 raise DataException(  # pragma: no cover
-                    "Expecting only one file, not '{0}'".format(names))
+                    f"Expecting only one file, not '{names}'")
             return names[0]
         return names
     return name
@@ -76,7 +76,7 @@ def download_dump(country, name, folder=".", unzip=True, timeout=-1,
         if isinstance(names, list):
             if len(names) != 1:
                 raise DataException(  # pragma: no cover
-                    "Expecting only one file, not '{0}'".format(names))
+                    f"Expecting only one file, not '{names}'")
             return names[0]
         return names
     return name[:-3] if name.endswith('.gz') else name

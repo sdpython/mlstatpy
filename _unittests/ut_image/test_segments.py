@@ -75,7 +75,7 @@ class TestSegments(ExtTestCase):
         c = 0
         while n:
             if TestSegments.visual and __name__ == "__main__" and i % 100 == 0:
-                print("i={0} s={1}".format(i, s))
+                print(f"i={i} s={s}")
 
             x = s.bord1
             y = s.calcul_bord2()

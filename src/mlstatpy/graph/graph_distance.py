@@ -41,13 +41,13 @@ class Vertex(_Vertex):
         """
         usual
         """
-        return '{}'.format(self.Label)
+        return f'{self.Label}'
 
     def __repr__(self):
         """
         usual
         """
-        return "Vertex({}, {}, {})".format(repr(self.nb), repr(self.Label), self.weight)
+        return f"Vertex({repr(self.nb)}, {repr(self.Label)}, {self.weight})"
 
     def is_vertex(self):
         """
@@ -105,8 +105,7 @@ class Edge(_Edge):
         """
         usual
         """
-        return "{} -> {} [{}]".format(
-            self.nb[0], self.nb[1], self.Label)  # pylint: disable=E1101
+        return f"{self.nb[0]} -> {self.nb[1]} [{self.Label}]"  # pylint: disable=E1101
 
     def __repr__(self):
         """
@@ -245,7 +244,7 @@ class GraphDistance:
                 vertex_label[g[0]] = g[1]
         if len(vertex_label) == 0 or len(edge_list) == 0:
             raise OSError(  # pragma: no cover
-                "Unable to parse file %r." % filename)
+                f"Unable to parse file {filename!r}.")
         return GraphDistance(edge_list, vertex_label, add_loop)
 
     def _private__init__(self, add_loop, weight_vertex, weight_edge):
@@ -317,9 +316,9 @@ class GraphDistance:
         usual
         """
         edges = ", ".join(repr(v) for _, v in sorted(self.edges.items()))
-        vertices = ", ".join("'{}': {}".format(k, repr(v))
+        vertices = ", ".join(f"'{k}': {repr(v)}"
                              for k, v in sorted(self.vertices.items()))
-        return "GraphDistance(\n    [{0}],\n    {{{1}}})".format(edges, vertices)
+        return f"GraphDistance(\n    [{edges}],\n    {{{vertices}}})"
 
     def compute_predecessor(self):
         """
@@ -476,7 +475,7 @@ class GraphDistance:
             self.get_matching_functions(
                 function_mach_vertices, function_match_edges)
         g = GraphDistance([])
-        vfirst = Vertex(self.labelBegin, "%s-%s" % (self.labelBegin, self.labelBegin),
+        vfirst = Vertex(self.labelBegin, f"{self.labelBegin}-{self.labelBegin}",
                         (self.vertices[self.labelBegin].weight +
                          graph2.vertices[self.labelBegin].weight) / 2)
         g.vertices[self.labelBegin] = vfirst
@@ -500,14 +499,14 @@ class GraphDistance:
                                 tv2 = graph2.vertices[oe2.to]
                                 if function_mach_vertices(tv1, tv2, self, graph2, 1., 1.):
                                     # we have a match
-                                    ii = "%s-%s" % (tv1.nb, tv2.nb)
+                                    ii = f"{tv1.nb}-{tv2.nb}"
                                     if tv1.nb == self.labelEnd and tv2.nb == self.labelEnd:
                                         ii = self.labelEnd
-                                    lab = "%s-%s" % (tv1.label, tv2.label) \
+                                    lab = f"{tv1.label}-{tv2.label}" \
                                         if tv1.label != tv2.label else tv1.label
                                     tv = Vertex(
                                         ii, lab, (tv1.weight + tv2.weight) / 2)
-                                    lab = "%s-%s" % (oe1.label, oe2.label) \
+                                    lab = f"{oe1.label}-{oe2.label}" \
                                         if oe1.label != oe2.label else oe1.label
                                     ne = Edge(v.nb, tv.nb, lab,
                                               (oe1.weight + oe2.weight) / 2)
@@ -736,7 +735,7 @@ class GraphDistance:
                 continue
             su = "-" if u is None else str(u.nb)
             sv = "-" if v is None else str(v.nb)
-            s = "(%s,%s)" % (su, sv)
+            s = f"({su},{sv})"
             temp.append(s)
         return " ".join(temp)
 
@@ -792,7 +791,7 @@ class GraphDistance:
         if verbose > 0 and fLOG is not None:
             fLOG("[distance_matching_graphs_paths] len(loop1)=%d" % len(
                 list(enumerate(paths1))))
-            fLOG("[distance_matching_graphs_paths] len(loop2)=%d" % len(loop2))
+            fLOG(f"[distance_matching_graphs_paths] len(loop2)={len(loop2)}")
         cache = {}
         for i1, p1 in loop1:
             for i2, p2 in loop2:
@@ -801,7 +800,7 @@ class GraphDistance:
                     function_match_edges, use_min=use_min,
                     cache=cache)
         if verbose > 0 and fLOG is not None:
-            fLOG("[distance_matching_graphs_paths] len(cache)=%d" % len(cache))
+            fLOG(f"[distance_matching_graphs_paths] len(cache)={len(cache)}")
 
         if store is not None:
             store["matrix_distance"] = matrix_distance
@@ -870,15 +869,14 @@ class GraphDistance:
                 newv.pair = (v, graph2.vertices[ind])
                 doneVertex[ind] = newv
                 if newv.pair[0].label != newv.pair[1].label:
-                    newv.label = "%s|%s" % (
-                        newv.pair[0].label, newv.pair[1].label)
+                    newv.label = f"{newv.pair[0].label}|{newv.pair[1].label}"
             else:
                 newv.pair = (v, None)
 
         for k, v in graph2.vertices.items():
             if k in doneVertex:
                 continue
-            newv = Vertex("2a.%s" % v.nb, v.label, weight_vertex)
+            newv = Vertex(f"2a.{v.nb}", v.label, weight_vertex)
             res_graph.vertices[newv.nb] = newv
             newv.pair = (None, v)
 
@@ -896,9 +894,9 @@ class GraphDistance:
             if k in done_edge:
                 continue
             from_ = list(count_vertex_left[e.from_].keys())[0] if e.from_ in count_vertex_left \
-                else "2a.%s" % e.from_
+                else f"2a.{e.from_}"
             to = list(count_vertex_left[e.to].keys())[0] if e.to in count_vertex_left \
-                else "2a.%s" % e.to
+                else f"2a.{e.to}"
             if from_ not in res_graph.vertices:
                 raise RuntimeError("should not happen " +
                                    from_)  # pragma: no cover

@@ -138,7 +138,7 @@ def linear_regression(X, y, algo=None):
         gamma = (y.T @ Q).ravel()
         return (gamma @ Ri.T).ravel()
     raise ValueError(  # pragma: no cover
-        "Unknwown algo='{}'.".format(algo))
+        f"Unknwown algo='{algo}'.")
 
 
 def norm2(X):

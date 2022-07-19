@@ -23,8 +23,8 @@ class TestRunNotebooksML(unittest.TestCase):
                                         __file__, hide=True)
 
     def a_test_notebook_runner(self, name, folder, valid=None):
-        fLOG("notebook %r in %r" % (name, folder))
-        temp = get_temp_folder(__file__, "temp_notebook_ml_{0}".format(name))
+        fLOG(f"notebook {name!r} in {folder!r}")
+        temp = get_temp_folder(__file__, f"temp_notebook_ml_{name}")
         doc = os.path.join(temp, "..", "..", "..", "_doc", "notebooks", folder)
         self.assertTrue(os.path.exists(doc))
         keepnote = [os.path.join(doc, _) for _ in os.listdir(doc) if name in _]

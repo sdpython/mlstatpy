@@ -24,11 +24,11 @@ class Point:
 
     def __str__(self):
         """permet d'afficher un point avec l'instruction print"""
-        return '({0},{1})'.format(self.x, self.y)
+        return f'({self.x},{self.y})'
 
     def __repr__(self):
         """usuel"""
-        return 'Point({0}, {1})'.format(self.x, self.y)
+        return f'Point({self.x}, {self.y})'
 
     def normalise(self):
         """normalise le vecteur, sa norme devient 1"""
@@ -119,7 +119,7 @@ class Segment:
 
     def __str__(self) -> str:
         """permet d'afficher le segment avec l'instruction print"""
-        return "[{0},{1}]".format(self.a, self.b)
+        return f"[{self.a},{self.b}]"
 
     def directeur(self) -> Point:
         """retourne le vecteur directeur du segment,

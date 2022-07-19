@@ -70,7 +70,7 @@ class ROC:
                     df, columns=["score", "label", "weight"])
         elif not isinstance(df, pandas.DataFrame):
             raise TypeError(  # pragma: no cover
-                "df should be a DataFrame, not {0}".format(type(df)))
+                f"df should be a DataFrame, not {type(df)}")
         else:
             self.data = df.copy()
         self.data.sort_values(self.data.columns[0], inplace=True)
@@ -102,8 +102,7 @@ class ROC:
         Shows first elements, precision rate.
         """
         rows = []
-        rows.append("Overall precision: %3.2f - AUC=%f" %
-                    (self.precision(), self.auc()))
+        rows.append(f"Overall precision: {self.precision():3.2f} - AUC={self.auc():f}")
         rows.append("--------------")
         rows.append(str(self.data.head(min(5, len(self)))))
         rows.append("--------------")
@@ -185,7 +184,7 @@ class ROC:
                 roc.iloc[pos_roc:, 4] = min(cloud.iloc[:, 0])
                 return roc
             raise NotImplementedError(  # pragma: no cover
-                "Unexpected type '{0}', only ROC is allowed.".format(curve))
+                f"Unexpected type '{curve}', only ROC is allowed.")
 
         # if score is not None
         roc = self.confusion(nb=len(self), curve=curve,
@@ -193,7 +192,7 @@ class ROC:
         roc = roc[roc["threshold"] <= score]
         if len(roc) == 0:
             raise ValueError(  # pragma: no cover
-                "The requested confusion is empty for score={0}.".format(score))
+                f"The requested confusion is empty for score={score}.")
         return roc[:1]
 
     def precision(self):
@@ -309,7 +308,7 @@ class ROC:
 
         else:
             raise NotImplementedError(  # pragma: no cover
-                "Unknown curve type '{}'.".format(curve))
+                f"Unknown curve type '{curve}'.")
 
         return roc
 
@@ -375,7 +374,7 @@ class ROC:
             if thresholds:
                 if 'label' in kwargs and len(cols) != len(kwargs['label']):
                     raise ValueError(  # pragma: no cover
-                        'label must have {0} values'.format(len(cols)))
+                        f'label must have {len(cols)} values')
                 roc = roc.sort_values("threshold").reset_index(drop=True)
                 ax = roc.plot(x="threshold", y=cols, ax=ax, **kwargs)
                 ax.set_ylim([0, 1])
@@ -385,7 +384,7 @@ class ROC:
             else:
                 if 'label' in kwargs and len(cols) - 1 != len(kwargs['label']):
                     raise ValueError(
-                        'label must have {0} values'.format(len(cols) - 1))
+                        f'label must have {len(cols) - 1} values')
                 final += len(cols) - 1
                 roc = roc.sort_values(cols[0]).reset_index(drop=True)
                 ax = roc.plot(x=cols[0], y=cols[1:], ax=ax, **kwargs)

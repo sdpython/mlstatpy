@@ -40,7 +40,7 @@ class CompletionElement:
         """
         if not isinstance(value, str):
             raise TypeError(
-                "value must be str not '{0}' - type={1}".format(value, type(value)))
+                f"value must be str not '{value}' - type={type(value)}")
         self.value = value
         self.weight = weight
         self.disp = disp
@@ -81,7 +81,7 @@ class CompletionElement:
         return a string with metric information
         """
         if hasattr(self, "mks0"):
-            return "MKS={0} *={1}".format(self.mks0, self.mks0_)
+            return f"MKS={self.mks0} *={self.mks0_}"
         else:
             return "-"
 
@@ -108,7 +108,7 @@ class CompletionElement:
         @return                     str
         """
         rows = [
-            "{0} -- {1} -- {2}".format(self.weight, self.value, self.str_mks())]
+            f"{self.weight} -- {self.value} -- {self.str_mks()}"]
         if self._info is not None:
             rows.append("------------------")
             for el in self._info._log_imp:
@@ -116,7 +116,7 @@ class CompletionElement:
             for i in range(len(self.value)):
                 prefix = self.value[:i]
                 rows.append("------------------")
-                rows.append("i={0} - {1}".format(i, prefix))
+                rows.append(f"i={i} - {prefix}")
                 completions = self._info._completions.get(prefix, [])
                 for i2, el in enumerate(completions):
                     ar = "   " if el.value != self.value else "-> "
@@ -142,7 +142,7 @@ class CompletionElement:
 
             class c:
                 def __str__(self):
-                    return "{0}-{1}".format(self._completions, self._log_imp)
+                    return f"{self._completions}-{self._log_imp}"
 
             self._info = c()
             self._info._completions = {}
@@ -176,8 +176,8 @@ class CompletionElement:
             self.mks2_ = 0
             if log_imp:
                 self._info._log_imp.append(
-                    (0, "mks0", position, '', "k={0}".format(0),
-                     "p={0}".format(position), "it={0}".format(0)))
+                    (0, "mks0", position, '', f"k={0}",
+                     f"p={position}", f"it={0}"))
             return True
 
     def update_metrics(self, prefix: str, position: int, improved: dict, delta: float,
@@ -223,8 +223,8 @@ class CompletionElement:
             check = True
             if log_imp:
                 self._info._log_imp.append(
-                    (1, "mks0", mks, prefix, "k={0}".format(k), "p={0}".format(position),
-                     "it={0}".format(iteration), "last={0}".format(self.prefix.value)))
+                    (1, "mks0", mks, prefix, f"k={k}", f"p={position}",
+                     f"it={iteration}", f"last={self.prefix.value}"))
         elif mks == self.mks0 and self.mks0_ < k:
             self.mks0_ = k
         if mks < self.mks1:
@@ -247,8 +247,8 @@ class CompletionElement:
                 check = True
                 if log_imp:
                     self._info._log_imp.append(
-                        (4, "mks1", mks, prefix, "k={0}".format(k), "p={0}".format(position),
-                         "it={0}".format(iteration), "last={0}".format(self.prefix.value)))
+                        (4, "mks1", mks, prefix, f"k={k}", f"p={position}",
+                         f"it={iteration}", f"last={self.prefix.value}"))
             mks = v.mks2 + dd
             if mks < self.mks2:
                 self.mks2 = mks
@@ -256,8 +256,8 @@ class CompletionElement:
                 check = True
                 if log_imp:
                     self._info._log_imp.append(
-                        (5, "mks2", mks, prefix, "k={0}".format(k), "p={0}".format(position),
-                         "it={0}".format(iteration), "last={0}".format(self.prefix.value)))
+                        (5, "mks2", mks, prefix, f"k={k}", f"p={position}",
+                         f"it={iteration}", f"last={self.prefix.value}"))
         if prefix in improved:
             v = improved[prefix]
             self.prefix = v
@@ -268,8 +268,8 @@ class CompletionElement:
                 check = True
                 if log_imp:
                     self._info._log_imp.append(
-                        (2, "mks1", mks, prefix, "k={0}".format(k), "p={0}".format(position),
-                         "it={0}".format(iteration), "last={0}".format(self.prefix.value)))
+                        (2, "mks1", mks, prefix, f"k={k}", f"p={position}",
+                         f"it={iteration}", f"last={self.prefix.value}"))
             mks = v.mks2 + min(len(self.value) - len(prefix), pos + delta)
             if mks < self.mks2:
                 self.mks2 = mks
@@ -277,8 +277,8 @@ class CompletionElement:
                 check = True
                 if log_imp:
                     self._info._log_imp.append(
-                        (3, "mks2", mks, prefix, "k={0}".format(k), "p={0}".format(position),
-                         "it={0}".format(iteration), "last={0}".format(self.prefix.value)))
+                        (3, "mks2", mks, prefix, f"k={k}", f"p={position}",
+                         f"it={iteration}", f"last={self.prefix.value}"))
 
         if log_imp and self.prefix and self.prefix.value != '':
             self._info._log_imp.append(self.prefix)
@@ -379,7 +379,7 @@ class CompletionSystem:
                 el.value, el.str_mks(), f.stat.str_mks(),
                 el.str_all_completions(), f.str_all_completions())
             if diff:
-                return "-------\n{0}\n-------".format(s)
+                return f"-------\n{s}\n-------"
             return s
 
         trie = CompletionTrieNode.build(self.tuples())
@@ -440,7 +440,7 @@ class CompletionSystem:
                 improved[el.value] = el
         t = time.perf_counter()
         fLOG(
-            "interation 0: #={0} dt={1} - log details={2}".format(len(self), t - to, details))
+            f"interation 0: #={len(self)} dt={t - to} - log details={details}")
 
         updates = 1
         it = 1
@@ -467,8 +467,7 @@ class CompletionSystem:
                             improved[el.value] = el
                         updates += 1
             t = time.perf_counter()
-            fLOG("interation {0}: updates={1} dt={2}".format(
-                it, updates, t - to))
+            fLOG(f"interation {it}: updates={updates} dt={t - to}")
             it += 1
 
         self.sort_values()

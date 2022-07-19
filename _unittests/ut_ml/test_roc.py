@@ -146,7 +146,7 @@ class TestROC(ExtTestCase):
         fLOG("computing rate..............................")
         values = test.auc_interval(alpha=0.1, bootstrap=20)
         for k, v in sorted(values.items()):
-            fLOG("{0}={1}".format(k, v))
+            fLOG(f"{k}={v}")
         self.assertEqual(list(sorted(values.keys())), [
                          'auc', 'interval', 'max', 'mean', 'mediane', 'min', 'var'])
         self.assertTrue(values["min"] <= values["auc"] <= values["max"])
@@ -155,7 +155,7 @@ class TestROC(ExtTestCase):
         values = test.roc_intersect_interval(
             0.1, 100, bootstrap=50)
         for k, v in sorted(values.items()):
-            fLOG("{0}={1}".format(k, v))
+            fLOG(f"{k}={v}")
         self.assertEqual(list(sorted(values.keys())), [
                          'interval', 'max', 'mean', 'mediane', 'min', 'var', 'y'])
         self.assertTrue(values["min"] <= values["y"] <= values["max"])

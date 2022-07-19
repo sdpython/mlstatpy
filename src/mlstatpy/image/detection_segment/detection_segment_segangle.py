@@ -48,8 +48,8 @@ class SegmentBord(SegmentBord_Commun):
         s = SegmentBord_Commun.__str__(self)
         s += " -- bord " + str(self.bord1)
         s += " -- fin " + str(self.fin)
-        s += " -- a " + "%3.1f" % (self.angle * 180 / math.pi)
-        s += " -- vec " + "%2.2f,%2.2f" % (self.vecteur.x, self.vecteur.y)
+        s += " -- a " + f"{self.angle * 180 / math.pi:3.1f}"
+        s += " -- vec " + f"{self.vecteur.x:2.2f},{self.vecteur.y:2.2f}"
         return s
 
     def premier(self):

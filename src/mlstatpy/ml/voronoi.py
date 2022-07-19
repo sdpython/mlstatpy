@@ -137,7 +137,7 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
             b = a + L.shape[1]
             matL[-1, a:b] = C
             if not isinstance(D, float):
-                raise TypeError("D must be a float not {0}".format(type(D)))
+                raise TypeError(f"D must be a float not {type(D)}")
             matB = numpy.hstack([matB, [D]])
         elif C is None and D is None:
             pass  # pragma: no cover

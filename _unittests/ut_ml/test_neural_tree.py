@@ -223,8 +223,7 @@ class TestNeuralTree(ExtTestCase):
                 ming, maxg = grad[:2].min(), grad[:2].max()
                 if ming == maxg:
                     raise AssertionError(
-                        "Gradient is wrong\nloss={}\ngrad={}".format(
-                            loss, grad))
+                        f"Gradient is wrong\nloss={loss}\ngrad={grad}")
                 self.assertEqual(grad.shape, w0.shape)
 
                 neu.fit(X, y, verbose=False)

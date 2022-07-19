@@ -80,7 +80,7 @@ class NeuralTreeNode(_TrainingAPI):
         if activation == 'identity':
             return lambda x: x
         raise ValueError(  # pragma: no cover
-            "Unknown activation function '{}'.".format(activation))
+            f"Unknown activation function '{activation}'.")
 
     @staticmethod
     def get_activation_gradient_function(activation):
@@ -111,7 +111,7 @@ class NeuralTreeNode(_TrainingAPI):
         if activation == 'identity':
             return lambda x: numpy.ones(x.shape, dtype=x.dtype)
         raise ValueError(  # pragma: no cover
-            "Unknown activation gradient function '{}'.".format(activation))
+            f"Unknown activation gradient function '{activation}'.")
 
     @staticmethod
     def get_activation_loss_function(activation):
@@ -133,7 +133,7 @@ class NeuralTreeNode(_TrainingAPI):
             # regression
             return lambda x, y: (x - y) ** 2
         raise ValueError(
-            "Unknown activation function '{}'.".format(activation))
+            f"Unknown activation function '{activation}'.")
 
     @staticmethod
     def get_activation_dloss_function(activation):
@@ -165,7 +165,7 @@ class NeuralTreeNode(_TrainingAPI):
 
             return dregdx
         raise ValueError(  # pragma: no cover
-            "Unknown activation function '{}'.".format(activation))
+            f"Unknown activation function '{activation}'.")
 
     def __init__(self, weights, bias=None, activation='sigmoid', nodeid=-1,
                  tag=None):
@@ -198,7 +198,7 @@ class NeuralTreeNode(_TrainingAPI):
             self.n_outputs = weights.shape[0]
             if self.n_outputs == 1:
                 raise RuntimeError(  # pragma: no cover
-                    "Unexpected unsqueezed weights shape: {}".format(weights.shape))
+                    f"Unexpected unsqueezed weights shape: {weights.shape}")
             if bias is None:
                 bias = rnd.randn(self.n_outputs)
             shape = list(weights.shape)
@@ -208,7 +208,7 @@ class NeuralTreeNode(_TrainingAPI):
             self.coef[:, 0] = bias
         else:
             raise RuntimeError(  # pragma: no cover
-                "Unexpected weights shape: {}".format(weights.shape))
+                f"Unexpected weights shape: {weights.shape}")
 
         self.activation = activation
         self.nodeid = nodeid

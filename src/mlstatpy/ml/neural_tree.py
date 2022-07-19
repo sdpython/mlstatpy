@@ -27,7 +27,7 @@ def label_class_to_softmax_output(y_label):
     """
     if len(y_label.shape) != 1:
         raise ValueError(
-            "y_label must be a vector but has shape {}.".format(y_label.shape))
+            f"y_label must be a vector but has shape {y_label.shape}.")
     y = numpy.empty((y_label.shape[0], 2), dtype=numpy.float64)
     y[:, 0] = (y_label < 0.5).astype(numpy.float64)
     y[:, 1] = 1 - y[:, 0]
@@ -164,7 +164,7 @@ class NeuralTreeNet(_TrainingAPI):
             self.nodes_attr.append(attr)
         else:
             raise RuntimeError(  # pragma: no cover
-                "Coefficients should have 1 or 2 dimension not {}.".format(node.input_weights.shape))
+                f"Coefficients should have 1 or 2 dimension not {node.input_weights.shape}.")
         self._update_members(node, attr)
 
     def __getitem__(self, i):
@@ -215,7 +215,7 @@ class NeuralTreeNet(_TrainingAPI):
             return NeuralTreeNet._create_from_tree_one(tree, k)
         if arch == 'compact':
             return NeuralTreeNet._create_from_tree_compact(tree, k)
-        raise ValueError("Unknown arch value '{}'.".format(arch))
+        raise ValueError(f"Unknown arch value '{arch}'.")
 
     @staticmethod
     def _create_from_tree_one(tree, k=1.):
@@ -457,16 +457,15 @@ class NeuralTreeNet(_TrainingAPI):
             else:
                 lo = "s" + 'a'.join(map(str, o))
                 for oo in o:
-                    labels[oo] = '{}:f{}'.format(lo, oo)
+                    labels[oo] = f'{lo}:f{oo}'
                 los = "|".join("<f{0}> {0}".format(oo) for oo in o)
                 lof = "%s&#92;n" + los
 
-            a = "a={}\n".format(self[i][0].activation)
+            a = f"a={self[i][0].activation}\n"
             stag = "" if self[i][0].tag is None else (self[i][0].tag + "\\n")
             bias = str(numpy.array(self[i][0].bias)).replace(" ", "&#92; ")
             if y is None:
-                lab = lof % '{}{}id={} b={} s={}'.format(
-                    stag, a, i, bias, self[i][0].n_outputs)
+                lab = lof % f'{stag}{a}id={i} b={bias} s={self[i][0].n_outputs}'
             else:
                 yo = numpy.array(y[o])
                 lab = lof % '{}{}id={} b={} s={}\ny={}'.format(
@@ -483,7 +482,7 @@ class NeuralTreeNet(_TrainingAPI):
                     else:
                         c = ', color=blue, fontcolor=blue'
                     rows.append(
-                        '{} -> {} [label="{}"{}];'.format(inp, o, w, c))
+                        f'{inp} -> {o} [label="{w}"{c}];')
                     continue
 
                 w = self[i][0].input_weights[:, ii]
@@ -560,8 +559,7 @@ class NeuralTreeNet(_TrainingAPI):
                        for i in range(self.size_ - nb_last, self.size_))
         if len(neurones) != 1:
             raise RuntimeError(  # pragma: no cover
-                "Only one output node is implemented not {}".format(
-                    len(neurones)))
+                f"Only one output node is implemented not {len(neurones)}")
         return self.output_to_node_[self.size_ - 1]
 
     def _common_loss_dloss(self, X, y, cache=None):

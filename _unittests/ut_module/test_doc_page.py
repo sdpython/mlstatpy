@@ -101,7 +101,7 @@ class TestDocPage(ExtTestCase):
         ht = ht.replace('src="_images/', 'src="')
         ht = ht.replace('/scripts\\bokeh', '../bokeh_plot\\bokeh')
         ht = ht.replace('/scripts/bokeh', '../bokeh_plot/bokeh')
-        rst = os.path.join(temp, "out.{0}".format(writer))
+        rst = os.path.join(temp, f"out.{writer}")
         self.write_file(rst, ht)
 
         ht = ht.split('<div class="section" id="notebooks">')[0]
@@ -113,8 +113,7 @@ class TestDocPage(ExtTestCase):
             if 'WARNING' in line:
                 if "contains reference to nonexisting document" in lines[i + 1]:
                     continue
-                mes = 'WARNING issue\n  File "{0}", line {1}'.format(
-                    rst, i + 1)
+                mes = f'WARNING issue\n  File "{rst}", line {i + 1}'
                 raise Exception(mes)
 
 

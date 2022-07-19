@@ -86,7 +86,7 @@ class TestCompletion(unittest.TestCase):
         trie.update_stat_dynamic()
         for leave in trie.leaves():
             if leave.stat is None:
-                raise Exception("None for {0}".format(leave))
+                raise Exception(f"None for {leave}")
             find = trie.find(leave.value)
             self.assertEqual(id(find), id(leave))
             assert hasattr(leave, "stat")
@@ -98,11 +98,11 @@ class TestCompletion(unittest.TestCase):
                 mk2 = trie.min_dynamic_keystroke2(leave.value)
             except Exception as e:
                 raise Exception(
-                    "{0}-{1}-{2}-{3}".format(id(trie), id(leave), str(leave), leave.leave)) from e
+                    f"{id(trie)}-{id(leave)}-{str(leave)}-{leave.leave}") from e
             if mk[0] > mk1[0]:
-                raise Exception("weird {0} > {1}".format(mk, mk1))
+                raise Exception(f"weird {mk} > {mk1}")
             if mk2[0] < mk[0]:
-                raise Exception("weird {0} > {1}".format(mk, mk2))
+                raise Exception(f"weird {mk} > {mk2}")
             fLOG(leave.value, mk, "-", leave.stat.str_mks())
             self.assertEqual(
                 mk, (leave.stat.mks0, leave.stat.mks0_, leave.stat.mks1i_))
@@ -137,11 +137,10 @@ class TestCompletion(unittest.TestCase):
                                                              n2.stat.str_mks(), trie.min_keystroke(n2.value)))
                     mes.append("---")
                     for n2 in trie:
-                        mes.append("{0} || {1}".format(
-                            n2.value, n2.stat.str_mks()))
+                        mes.append(f"{n2.value} || {n2.stat.str_mks()}")
                         for i, s in enumerate(n2.stat.completions):
                             mes.append(
-                                "  {0} - {1}:{2}".format(i, s[0], s[1].value))
+                                f"  {i} - {s[0]}:{s[1].value}")
                     raise Exception("difference\n{0}".format("\n".join(mes)))
 
     def test_normalize(self):
@@ -178,8 +177,7 @@ class TestCompletion(unittest.TestCase):
             if wc not in res:
                 res[wc] = w
             else:
-                fLOG("duplicated key: '{0}', '{1}', key: '{2}'".format(
-                    w, res[wc], wc))
+                fLOG(f"duplicated key: '{w}', '{res[wc]}', key: '{wc}'")
                 dups += 1
         fLOG("len(titles)=", len(res), "duplicated", dups)
         titles = list(sorted((None, k, v) for k, v in res.items()))
@@ -218,7 +216,7 @@ class TestCompletion(unittest.TestCase):
         nb, gmks, gmksd, size = cmks(trie)
         fLOG(nb, size, gmks / nb, gmksd / nb, gmks / size, gmksd / size)
         if gmks > gmksd:
-            raise Exception("gmks={0} gmksd={1}".format(gmks, gmksd))
+            raise Exception(f"gmks={gmks} gmksd={gmksd}")
         if gmksd == 0:
             i = 0
             for node in trie:
@@ -323,12 +321,12 @@ class TestCompletion(unittest.TestCase):
                    for a, b in sug]
             nb = sum(_[1] for _ in nb_)
             if nb == 0:
-                info = "nb={0} q='{1}'".format(nb, q)
+                info = f"nb={nb} q='{q}'"
                 st = find.stat.str_mks()
                 text = find.str_all_completions()
                 text2 = find.str_all_completions(use_precompute=False)
                 raise Exception(
-                    "{4}\n---\nleave='{0}'\n{1}\n---\n{2}\n---\n{3}".format(find.value, st, text, text2, info))
+                    f"{info}\n---\nleave='{find.value}'\n{st}\n---\n{text}\n---\n{text2}")
 
 
 if __name__ == "__main__":

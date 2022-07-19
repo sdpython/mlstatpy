@@ -73,23 +73,23 @@ def _load_image(img, format='PIL', mode=None):
                 gray = img.shape[0] * img.shape[1] * img.shape[2] - d1 * d0
             else:
                 raise ValueError(  # pragma: no cover
-                    "Unexpected shape {0}".format(img.shape))
+                    f"Unexpected shape {img.shape}")
             if gray == 0:
                 img = img.reshape((d1, d0))
             else:
                 img = img.reshape((d1, d0, 3))
             return img
         raise ValueError(  # pragma: no cover
-            "Unexpected value for fomat: '{0}'".format(format))
+            f"Unexpected value for fomat: '{format}'")
     if isinstance(img, numpy.ndarray):
         if format == 'array':
             return img
         if format == 'PIL':
             return Image.fromarray(img, mode=mode)
         raise ValueError(  # pragma: no cover
-            "Unexpected value for fomat: '{0}'".format(format))
+            f"Unexpected value for fomat: '{format}'")
     raise TypeError(  # pragma: no cover
-        "numpy array expected not {0}".format(type(img)))
+        f"numpy array expected not {type(img)}")
 
 
 def compute_gradient(img, color=None):
@@ -184,7 +184,7 @@ def plot_gradient(image, gradient, more=None, direction=-1):
                 image.line([(x, y), (x, y)], fill=(0, j, i))
     else:
         raise ValueError(  # pragma: no cover
-            "Unexpected value for direction={0}".format(direction))
+            f"Unexpected value for direction={direction}")
 
     return image_
 
@@ -296,7 +296,7 @@ def detect_segments(image, proba_bin=1.0 / 16,
         if verbose and n % 1000 == 0:
             print(  # pragma: no cover
                 "n = ", n, " ... ", len(segment), " temps ",
-                "%2.2f" % (time.perf_counter() - ti), " sec",
+                f"{time.perf_counter() - ti:2.2f}", " sec",
                 "nalign", not_aligned)
 
     return segment

@@ -74,7 +74,7 @@ class _TrainingAPI:
         """
         if len(X.shape) != 1:
             raise ValueError(  # pragma: no cover
-                "X must a vector of one dimension but has shape {}.".format(X.shape))
+                f"X must a vector of one dimension but has shape {X.shape}.")
         cache = self.fill_cache(X)  # pylint: disable=E1128
         dlossds = self.dlossds(X, y, cache=cache)
         return self.gradient_backward(dlossds, X, inputs=inputs, cache=cache)
