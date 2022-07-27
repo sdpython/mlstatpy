@@ -10,7 +10,7 @@ init:
 
 install:
   - "%PYTHON%\\python -m pip install --upgrade pip"
-  - pip install wheel
+  - pip install wheel pymyinstall
   # for many packages
   # install precompiled versions not available on pypi
   - "%PYTHON%\\Scripts\\pymy_install3 llvmlite numba cartopy shapely pyproj"
