@@ -11,66 +11,66 @@ jobs:
 
       - restore_cache:
           keys:
-          - v2-dependencies-{{ checksum "requirements.txt" }}
-          - v2-dependencies-
+          - v3-dependencies-{{ checksum "requirements.txt" }}
+          - v3-dependencies-
 
       - run:
           name: Install dependencies for graphviz
           command: |
-            sudo apt-get install -y graphviz sqlite3 libtiff-dev libsqlite3-dev
+                    sudo apt-get install -y graphviz sqlite3 libtiff-dev libsqlite3-dev
 
       - run:
           name: Install dependencies for proj
           command: |
-            sudo apt-get install -y libgeos-dev proj-data
+                    sudo apt-get install -y libgeos-dev proj-data
 
       - run:
           name: build proj
           command: |
-            # see https://stackoverflow.com/questions/72442087/cant-install-proj-8-0-0-for-cartopy-linux
-            wget https://download.osgeo.org/proj/proj-9.0.0.tar.gz
-            tar -xf proj-9.0.0.tar.gz
-            cd proj-9.0.0
-            mkdir build && cd build
-            cmake ..
-            cmake --build .
-            sudo cmake --build . --target install
-            cd ..
+                    # see https://stackoverflow.com/questions/72442087/cant-install-proj-8-0-0-for-cartopy-linux
+                    wget https://download.osgeo.org/proj/proj-9.0.0.tar.gz
+                    tar -xf proj-9.0.0.tar.gz
+                    cd proj-9.0.0
+                    mkdir build && cd build
+                    cmake ..
+                    cmake --build .
+                    sudo cmake --build . --target install
+                    cd ..
 
       - run:
           name: install ldconfig
           command: |
-            sudo ldconfig
+                    sudo ldconfig
 
       - run:
           name: install dependencies
           command: |
-            pip install -r requirements.txt
+                    pip install -r requirements.txt
 
       - save_cache:
           paths:
             - ./venv
-          key: v2-dependencies-{{ checksum "requirements.txt" }}
+          key: v3-dependencies-{{ checksum "requirements.txt" }}
         
       - run:
           name: check list of dependencies
           command: |
-            pip freeze
-            apt list --installed
+                    pip freeze
+                                apt list --installed
         
       - run:
           name: run tests
           command: |
-            export PYTHONPATH=src
-            python setup.py unittests -d 20
+                                export PYTHONPATH=src
+                                python setup.py unittests -d 20
 
       - run:
           name: wheel
           command: |
-            export PYTHONPATH=src
-            python ./setup.py bdist_wheel
-            mkdir -p test-reports/dist
-            cp dist/*.whl test-reports/dist
+                    export PYTHONPATH=src
+                    python ./setup.py bdist_wheel
+                    mkdir -p test-reports/dist
+                    cp dist/*.whl test-reports/dist
             
       - store_artifacts:
           path: test-reports
