@@ -8,6 +8,7 @@ cytoolz
 dill
 ijson
 importlib_metadata
+ipython
 isort
 jdcal
 jupyter_sphinx
