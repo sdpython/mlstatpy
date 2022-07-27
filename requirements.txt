@@ -41,6 +41,7 @@ sphinx-bootstrap-theme
 sphinxcontrib.imagesvg
 statsmodels
 tqdm
+traitlets
 vprof
 wheel
 xgboost
