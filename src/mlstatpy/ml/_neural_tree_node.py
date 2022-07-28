@@ -196,9 +196,6 @@ class NeuralTreeNode(_TrainingAPI):
 
         elif len(weights.shape) == 2:
             self.n_outputs = weights.shape[0]
-            if self.n_outputs == 1:
-                raise RuntimeError(  # pragma: no cover
-                    f"Unexpected unsqueezed weights shape: {weights.shape}")
             if bias is None:
                 bias = rnd.randn(self.n_outputs)
             shape = list(weights.shape)

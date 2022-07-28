@@ -152,8 +152,9 @@ class NeuralTreeNet(_TrainingAPI):
         elif len(node.input_weights.shape) == 2:
             if node.input_weights.shape[1] != len(inputs):
                 raise RuntimeError(  # pragma: no cover
-                    "Dimension mismatch between weights [{}] and inputs [{}].".format(
-                        node.input_weights.shape[1], len(inputs)))
+                    f"Dimension mismatch between weights "
+                    f"[{node.input_weights.shape[1]}] "
+                    f"and inputs [{len(inputs)}].")
             node.nodeid = len(self.nodes)
             self.nodes.append(node)
             first_coef = (
@@ -228,7 +229,7 @@ class NeuralTreeNet(_TrainingAPI):
                 f"Only decision tree as supported not {type(tree)!r}.")
         if tree.n_classes_ > 2:
             raise RuntimeError(  # pragma: no cover
-                "The function only support binary classification problem.")
+                "The function only supports binary classification problem.")
 
         n_nodes = tree.tree_.node_count
         children_left = tree.tree_.children_left
@@ -318,17 +319,27 @@ class NeuralTreeNet(_TrainingAPI):
         if not isinstance(tree, BaseDecisionTree):
             raise TypeError(  # pragma: no cover
                 f"Only decision tree as supported not {type(tree)!r}.")
-        if tree.n_classes_ > 2:
-            raise RuntimeError(  # pragma: no cover
-                "The function only support binary classification problem.")
+        if isinstance(tree, ClassifierMixin):
+            is_classifier = True
+            if tree.n_classes_ > 2:
+                raise RuntimeError(  # pragma: no cover
+                    "The function only supports binary classification problem.")
+        else:
+            is_classifier = False
+            if tree.n_outputs_ != 1:
+                raise RuntimeError(  # pragma: no cover
+                    "The function only supports single regression problem.")
 
         n_nodes = tree.tree_.node_count
         children_left = tree.tree_.children_left
         children_right = tree.tree_.children_right
         feature = tree.tree_.feature
         threshold = tree.tree_.threshold
-        value = tree.tree_.value.reshape((-1, 2))
-        output_class = (value[:, 1] > value[:, 0]).astype(numpy.int64)
+        if is_classifier:
+            value = tree.tree_.value.reshape((-1, 2))
+            output_class = (value[:, 1] > value[:, 0]).astype(numpy.int64)
+        else:
+            output_value = tree.tree_.value.ravel()
         max_features_ = tree.max_features_
         feat_index = numpy.arange(0, max_features_)
 
@@ -373,8 +384,11 @@ class NeuralTreeNet(_TrainingAPI):
 
             path = []
             last = i
-            lr = "class", output_class[i]
-            output.append(output_class[i])
+            if is_classifier:
+                lr = "class", output_class[i]
+                output.append(output_class[i])
+            else:
+                lr = "reg", output_value[i]
             while last is not None:
                 path.append((last, lr))
                 if last not in parents:
@@ -394,9 +408,9 @@ class NeuralTreeNet(_TrainingAPI):
             for ip, lr in path:
                 if isinstance(lr, tuple):
                     lr, value = lr
-                    if lr != 'class':
-                        raise RuntimeError(
-                            "algorithm issue")  # pragma: no cover
+                    if lr not in ('class', 'reg'):
+                        raise RuntimeError(  # pragma: no cover
+                            "algorithm issue")
                 else:
                     r = rows[ip]
                     if lr == 'right':
@@ -417,9 +431,9 @@ class NeuralTreeNet(_TrainingAPI):
         root.append(node2, th_index)
 
         # final node
-        coef = numpy.zeros(
-            (tree.n_classes_, coef2.shape[0]), dtype=numpy.float64)
-        bias = [0. for i in range(tree.n_classes_)]
+        n_outputs = tree.n_classes_ if is_classifier else tree.n_outputs_
+        coef = numpy.zeros((n_outputs, coef2.shape[0]), dtype=numpy.float64)
+        bias = [0. for i in range(n_outputs)]
         for i, cls in enumerate(output):
             coef[cls, i] = -k
             coef[1 - cls, i] = k
@@ -427,9 +441,10 @@ class NeuralTreeNet(_TrainingAPI):
             bias[1 - cls] += -k / 2
         findex = numpy.arange(max_features_ + coef1.shape[0],
                               max_features_ + coef1.shape[0] + coef2.shape[0])
+        activation = 'softmax4' if is_classifier else 'identity'
         root.append(
             NeuralTreeNode(coef, bias=bias,
-                           activation='softmax4', tag="final"),
+                           activation=activation, tag="final"),
             findex)
 
         # end
