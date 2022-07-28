@@ -1,24 +1,15 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
+import warnings
 from pyquickhelper.helpgen.default_conf import set_sphinx_variables
+import pydata_sphinx_theme
 
-choice = "pydata_sphinx_theme"
+# see https://sphinx-gallery.github.io/stable/configuration.html#removing-warnings
+warnings.simplefilter("ignore", category=UserWarning)
 
-if choice == "sphtheme":
-    import sphinx_theme_pd as sphtheme
-    html_theme = sphtheme.__name__
-    html_theme_path = [sphtheme.get_html_theme_path()]
-elif choice == "bootstrap":
-    import sphinx_bootstrap_theme
-    html_theme = 'bootstrap'
-    html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
-elif choice == 'pydata_sphinx_theme':
-    import pydata_sphinx_theme
-    html_theme = 'pydata_sphinx_theme'
-    html_theme_path = ['_static']
-else:
-    raise NotImplementedError()
+html_theme = 'pydata_sphinx_theme'
+html_theme_path = ['_static']
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.split(__file__)[0])))
 
