@@ -590,26 +590,16 @@ class TestNeuralTree(ExtTestCase):
         self.assertEqualArray(exp, got2)
 
     def test_convert_reg_compact(self):
-        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        X = numpy.arange(32).astype(numpy.float64).reshape((-1, 2))
         y = (X[:, 0] + X[:, 1] * 2).astype(numpy.float64)
-
-        tree = DecisionTreeRegressor(max_depth=2)
-        tree.fit(X, y)
-        self.assertRaise(
-            lambda: NeuralTreeNet.create_from_tree(tree, arch="k"),
-            ValueError)
-        self.assertRaise(
-            lambda: NeuralTreeNet.create_from_tree(tree, arch="compact"),
-            RuntimeError)
-
-        tree = DecisionTreeRegressor(max_depth=2)
+        tree = DecisionTreeRegressor(max_depth=3)
         tree.fit(X, y)
         root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
         self.assertNotEmpty(root)
         exp = tree.predict(X)
         got = root.predict(X)
         self.assertEqual(exp.shape[0], got.shape[0])
-        self.assertEqualArray(exp + 1e-8, got[:, -2:] + 1e-8)
+        self.assertEqualArray(exp, got[:, -1:])
         dot = root.to_dot()
         self.assertIn("s3a4:f4 -> s5a6:f6", dot)
 

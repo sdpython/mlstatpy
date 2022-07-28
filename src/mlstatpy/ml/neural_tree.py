@@ -139,8 +139,9 @@ class NeuralTreeNet(_TrainingAPI):
         if len(node.input_weights.shape) == 1:
             if node.input_weights.shape[0] != len(inputs):
                 raise RuntimeError(
-                    "Dimension mismatch between weights [{}] and inputs [{}].".format(
-                        node.input_weights.shape[0], len(inputs)))
+                    f"Dimension mismatch between weights "
+                    f"[{node.input_weights.shape[0]}] "
+                    f"and inputs [{len(inputs)}].")
             node.nodeid = len(self.nodes)
             self.nodes.append(node)
             first_coef = (
@@ -154,7 +155,8 @@ class NeuralTreeNet(_TrainingAPI):
                 raise RuntimeError(  # pragma: no cover
                     f"Dimension mismatch between weights "
                     f"[{node.input_weights.shape[1]}] "
-                    f"and inputs [{len(inputs)}].")
+                    f"and inputs [{len(inputs)}], tag={node.tag!r}, "
+                    f"node={node!r}.")
             node.nodeid = len(self.nodes)
             self.nodes.append(node)
             first_coef = (
@@ -167,7 +169,8 @@ class NeuralTreeNet(_TrainingAPI):
             self.nodes_attr.append(attr)
         else:
             raise RuntimeError(  # pragma: no cover
-                f"Coefficients should have 1 or 2 dimension not {node.input_weights.shape}.")
+                f"Coefficients should have 1 or 2 dimension not "
+                f"{node.input_weights.shape}.")
         self._update_members(node, attr)
 
     def __getitem__(self, i):
@@ -315,7 +318,6 @@ class NeuralTreeNet(_TrainingAPI):
     @staticmethod
     def _create_from_tree_compact(tree, k=1.):
         "Implements strategy 'compact'. See @see meth create_from_tree."
-
         if not isinstance(tree, BaseDecisionTree):
             raise TypeError(  # pragma: no cover
                 f"Only decision tree as supported not {type(tree)!r}.")
@@ -389,6 +391,7 @@ class NeuralTreeNet(_TrainingAPI):
                 output.append(output_class[i])
             else:
                 lr = "reg", output_value[i]
+                output.append(output_value[i])
             while last is not None:
                 path.append((last, lr))
                 if last not in parents:
@@ -432,13 +435,19 @@ class NeuralTreeNet(_TrainingAPI):
 
         # final node
         n_outputs = tree.n_classes_ if is_classifier else tree.n_outputs_
-        coef = numpy.zeros((n_outputs, coef2.shape[0]), dtype=numpy.float64)
-        bias = [0. for i in range(n_outputs)]
+        if is_classifier:
+            coef = numpy.zeros((n_outputs, coef2.shape[0]), dtype=numpy.float64)
+        else:
+            coef = numpy.zeros(coef2.shape[0], dtype=numpy.float64)
+        bias = numpy.zeros(n_outputs, dtype=numpy.float64)
         for i, cls in enumerate(output):
-            coef[cls, i] = -k
-            coef[1 - cls, i] = k
-            bias[cls] += k / 2
-            bias[1 - cls] += -k / 2
+            if is_classifier:
+                coef[cls, i] = -k
+                coef[1 - cls, i] = k
+                bias[cls] += k / 2
+                bias[1 - cls] += -k / 2
+            else:
+                coef[i] = cls
         findex = numpy.arange(max_features_ + coef1.shape[0],
                               max_features_ + coef1.shape[0] + coef2.shape[0])
         activation = 'softmax4' if is_classifier else 'identity'
