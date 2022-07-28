@@ -579,6 +579,7 @@ class TestNeuralTree(ExtTestCase):
         exp = tree.predict_proba(X)
         self.assertEqualArray(exp, got)
         dec = root.predict(X)
+        self.assertEqualArray(exp, dec[:, -2:])
 
         x32 = X.astype(numpy.float32)
         onx = to_onnx(skl, x32, target_opset=15)
