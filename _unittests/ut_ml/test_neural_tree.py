@@ -9,8 +9,10 @@ import numpy
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn.datasets import load_iris
 from pyquickhelper.pycode import ExtTestCase
+from mlprodict.plotting.text_plot import onnx_simple_text_plot
 from mlstatpy.ml.neural_tree import (
-    NeuralTreeNode, NeuralTreeNet, label_class_to_softmax_output)
+    NeuralTreeNode, NeuralTreeNet, label_class_to_softmax_output,
+    NeuralTreeNetClassifier)
 
 
 class TestNeuralTree(ExtTestCase):
@@ -532,6 +534,61 @@ class TestNeuralTree(ExtTestCase):
         loss2 = root.loss(X, ny).sum()
         self.assertLess(loss2, loss1 + 1)
 
+    def test_convert_compact_skl(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+
+        exp = tree.predict_proba(X)
+        got = root.predict(X)
+        self.assertEqual(exp.shape[0], got.shape[0])
+        self.assertEqualArray(exp + 1e-8, got[:, -2:] + 1e-8)
+
+        skl = NeuralTreeNetClassifier(root)
+        prob = skl.predict_proba(X)
+        self.assertEqualArray(exp, prob)
+        lab = skl.predict(X)
+        self.assertEqual(lab.shape, (X.shape[0], ))
+
+    def test_convert_compact_skl_fit(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+        skl = NeuralTreeNetClassifier(root)
+        skl.fit(X, y)
+        exp = tree.predict_proba(X)
+        got = skl.predict_proba(X)
+        self.assertEqualArray(exp, got)
+
+    def test_convert_compact_skl_onnx(self):
+        from mlprodict.onnx_conv import to_onnx
+        from mlprodict.onnxrt import OnnxInference
+
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        tree = DecisionTreeClassifier(max_depth=3)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+        skl = NeuralTreeNetClassifier(root)
+        got = skl.predict_proba(X)
+        exp = tree.predict_proba(X)
+        self.assertEqualArray(exp, got)
+        dec = root.predict(X)
+
+        x32 = X.astype(numpy.float32)
+        onx = to_onnx(skl, x32, target_opset=15)
+        text = onnx_simple_text_plot(onx)
+        self.assertIn('Sigmoid(', text)
+        self.assertIn('Softmax(', text)
+        oinf = OnnxInference(onx)
+        got2 = oinf.run({'X': x32})['probabilities']
+        self.assertEqualArray(exp, got2)
+
 
 if __name__ == "__main__":
+    # TestNeuralTree().test_convert_compact_skl_onnx()
     unittest.main()

@@ -8,7 +8,7 @@ import numpy
 from .kppv import NuagePoints
 
 
-class NuagePointsLaesa (NuagePoints):
+class NuagePointsLaesa(NuagePoints):
     """
     Implémente l'algorithme des plus proches voisins,
     version :ref:`LAESA <space_metric_algo_laesa_prime>`_

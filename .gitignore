@@ -52,6 +52,7 @@ x64/
 build/
 [Bb]in/
 [Oo]bj/
+.eggs/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -268,13 +269,10 @@ _doc/notebooks/Untitled.ipynb
 _doc/notebooks/ml/*.clean_cache
 _doc/notebooks/ml/img-*.png
 _doc/notebooks/ml/*.pickle
-
 _doc/sphinxdoc/source/nbcov.png
 _doc/notebooks/dsgarden/arbre.png
 _doc/notebooks/dsgarden/arbre.dot
-_doc/notebooks/nlp/output_30_0.jpeg
-_doc/notebooks/nlp/output_38_0.jpeg
-_doc/notebooks/nlp/output_41_0.jpeg
+_doc/notebooks/nlp/output_*.jpeg
 _doc/sphinxdoc/source/c_ml/math/*.png
-_doc/sphinxdoc/source/c_ml/piecewise_.html
-_unittests/ut_graph/test_graph_distance.py.prof
+_doc/sphinxdoc/source/c_ml/*.html
+_unittests/ut_graph/*.prof

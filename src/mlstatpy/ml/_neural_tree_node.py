@@ -299,6 +299,13 @@ class NeuralTreeNode(_TrainingAPI):
         return self.coef.shape[1] - 1
 
     @property
+    def ndim_out(self):
+        "Returns the output dimension."
+        if len(self.coef.shape) == 1:
+            return 1
+        return self.coef.shape[0]
+
+    @property
     def training_weights(self):
         "Returns the weights stored in the neuron."
         return self.coef.ravel()

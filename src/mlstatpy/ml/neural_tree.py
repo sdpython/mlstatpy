@@ -6,6 +6,8 @@
 from io import BytesIO
 import pickle
 import numpy
+from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.tree import BaseDecisionTree
 from ._neural_tree_api import _TrainingAPI
 from ._neural_tree_node import NeuralTreeNode
 
@@ -219,10 +221,13 @@ class NeuralTreeNet(_TrainingAPI):
 
     @staticmethod
     def _create_from_tree_one(tree, k=1.):
-        "Implements strategy one. See @see meth create_from_tree."
+        "Implements strategy 'one'. See @see meth create_from_tree."
 
+        if not isinstance(tree, BaseDecisionTree):
+            raise TypeError(  # pragma: no cover
+                f"Only decision tree as supported not {type(tree)!r}.")
         if tree.n_classes_ > 2:
-            raise RuntimeError(
+            raise RuntimeError(  # pragma: no cover
                 "The function only support binary classification problem.")
 
         n_nodes = tree.tree_.node_count
@@ -308,10 +313,13 @@ class NeuralTreeNet(_TrainingAPI):
 
     @staticmethod
     def _create_from_tree_compact(tree, k=1.):
-        "Implements strategy one. See @see meth create_from_tree."
+        "Implements strategy 'compact'. See @see meth create_from_tree."
 
+        if not isinstance(tree, BaseDecisionTree):
+            raise TypeError(  # pragma: no cover
+                f"Only decision tree as supported not {type(tree)!r}.")
         if tree.n_classes_ > 2:
-            raise RuntimeError(
+            raise RuntimeError(  # pragma: no cover
                 "The function only support binary classification problem.")
 
         n_nodes = tree.tree_.node_count
@@ -641,3 +649,189 @@ class NeuralTreeNet(_TrainingAPI):
         if inputs:
             return whole_gradx
         return whole_gradw
+
+
+class NeuralTreeNetClassifier(ClassifierMixin, BaseEstimator):
+    """
+    Classifier following :epkg:`scikit-learn` API.
+
+    :param estimator: instance of @see cl NeuralTreeNet.
+    :param X: training set
+    :param y: training labels
+    :param optimizer: optimizer, by default, it is
+        :class:`SGDOptimizer <mlstatpy.optim.sgd.SGDOptimizer>`.
+    :param max_iter: number maximum of iterations
+    :param early_th: early stopping threshold
+    :param verbose: more verbose
+    :param lr: to overwrite *learning_rate_init* if
+        *optimizer* is None (unused otherwise)
+    :param lr_schedule: to overwrite *lr_schedule* if
+        *optimizer* is None (unused otherwise)
+    :param l1: L1 regularization if *optimizer* is None
+        (unused otherwise)
+    :param l2: L2 regularization if *optimizer* is None
+        (unused otherwise)
+    :param momentum: used if *optimizer* is None
+    """
+
+    def __init__(self, estimator,
+                 optimizer=None, max_iter=100, early_th=None, verbose=False,
+                 lr=None, lr_schedule=None, l1=0., l2=0., momentum=0.9):
+        if not isinstance(estimator, NeuralTreeNet):
+            raise ValueError(  # pragma: no cover
+                f"estimator must be an instance of NeuralTreeNet not {type(estimator)!r}.")
+        BaseEstimator.__init__(self)
+        ClassifierMixin.__init__(self)
+        self.estimator_ = estimator
+        self.optimizer = None
+        self.max_iter = max_iter
+        self.early_th = early_th
+        self.verbose = verbose
+        self.lr = lr
+        self.lr_schedule = lr_schedule
+        self.l1 = l1
+        self.l2 = l2
+        self.momentum = momentum
+
+    def predict(self, X):
+        """
+        Returns the predicted classes.
+
+        :param X: inputs
+        :return: classes
+        """
+        probas = self.predict_proba(X)
+        return numpy.argmax(probas, axis=1)
+
+    def predict_proba(self, X):
+        """
+        Returns the classification probabilities.
+
+        :param X: inputs
+        :return: probabilities
+        """
+        return self.decision_function(X)[:, -2:]
+
+    def decision_function(self, X):
+        """
+        Returns the classification probabilities.
+
+        :param X: inputs
+        :return: probabilities
+        """
+        return self.estimator_.predict(X)
+
+    def fit(self, X, y, sample_weights=None):
+        """
+        Trains the estimator.
+
+        :param X: input features
+        :param y: expected classes (binary)
+        :param sample_weights: sample weights
+        :return: self
+        """
+        if sample_weights is not None:
+            raise NotImplementedError(  # pragma: no cover
+                "sample_weights is not supported yet.")
+        ny = label_class_to_softmax_output(y)
+        self.estimator_.fit(X, ny, optimizer=self.optimizer, max_iter=self.max_iter,
+                            early_th=self.early_th, verbose=self.verbose,
+                            lr=self.lr, lr_schedule=self.lr_schedule,
+                            l1=self.l1, l2=self.l2, momentum=self.momentum)
+        return self
+
+    @staticmethod
+    def onnx_shape_calculator():
+        """
+        Shape calculator when converting this model into ONNX.
+        See :epkg:`skearn-onnx`.
+        """
+        from skl2onnx.common.data_types import Int64TensorType
+
+        def shape_calculator(operator):
+            op = operator.raw_operator
+            input_type = operator.inputs[0].type.__class__
+            input_dim = operator.inputs[0].get_first_dimension()
+            output_type = input_type(
+                [input_dim, op.estimator_.nodes[-1].ndim_out])
+            operator.outputs[0].type = Int64TensorType([input_dim, 1])
+            operator.outputs[1].type = output_type
+        return shape_calculator
+
+    @staticmethod
+    def onnx_converter():
+        """
+        Converts this model into ONNX.
+        """
+        from skl2onnx.common.data_types import guess_numpy_type
+        from skl2onnx.algebra.onnx_ops import (  # pylint: disable=E0611
+            OnnxIdentity, OnnxArgMax, OnnxAdd, OnnxMatMul,
+            OnnxSigmoid, OnnxMul, OnnxSoftmax)
+
+        def converter(scope, operator, container):
+            op = operator.raw_operator
+            net = op.estimator_
+            out = operator.outputs
+            opv = container.target_opset
+
+            X = operator.inputs[0]
+            dtype = guess_numpy_type(X.type)
+
+            res = {'inputs': X}
+            last = None
+            for node, attr in zip(net.nodes, net.nodes_attr):
+
+                # verification
+                coef = (node.coef.reshape((1, -1)) if len(node.coef.shape) == 1
+                        else node.coef)
+                if len(coef.shape) != 2:
+                    raise RuntimeError(  # pragma: no cover
+                        f"coef must be a 2D matrix not {coef.shape!r}.")
+                if coef.shape[1] < 2:
+                    raise RuntimeError(  # pragma: no cover
+                        f"coef must be a 2D matrix with at least 2 columns "
+                        f"not {coef.shape!r}.")
+
+                # input, output, names
+                name = ('inputs' if attr['inputs'][0] == 0 else 
+                        "r_%s" % ("_".join(map(str, attr['inputs']))))
+                if name not in res:
+                    raise KeyError(  # pragma: no cover
+                        f"Unable to find {name!r} in {set(res)}.")
+                output_name = (
+                    "r_%d" % attr['output'] if isinstance(attr['output'], int)
+                    else "r_%s" % ("_".join(map(str, attr['output']))))
+                x = res[name]
+
+                # conversion of one node
+                tr = OnnxAdd(OnnxMatMul(x, coef[:, 1:].T.astype(dtype),
+                                        op_version=opv),
+                             coef[:, 0].astype(dtype), op_version=opv)
+
+                # activation
+                if node.activation == "sigmoid4":
+                    final = OnnxSigmoid(OnnxMul(tr, numpy.array([4], dtype=dtype),
+                                                op_version=opv),
+                                        op_version=opv)
+                elif node.activation == "sigmoid":
+                    final = OnnxSigmoid(tr, op_version=opv)
+                elif node.activation == "softmax4":
+                    final = OnnxSoftmax(OnnxMul(tr, numpy.array([4], dtype=dtype),
+                                                op_version=opv),
+                                        op_version=opv)
+                elif node.activation == "softmax":
+                    final = OnnxSoftmax(tr, op_version=opv)
+                else:
+                    raise NotImplementedError(
+                        f"Unable to convert activation {node.activation!r} "
+                        f"function into ONNX.")
+
+                res[output_name] = final
+                last = final
+
+            prob = OnnxIdentity(last, op_version=opv, output_names=[out[1]])
+            prob.add_to(scope, container)
+            labels = OnnxArgMax(prob, axis=1, keepdims=1, op_version=opv,
+                                output_names=[out[0]])
+            labels.add_to(scope, container)
+        return converter
