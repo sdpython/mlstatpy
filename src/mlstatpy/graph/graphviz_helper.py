@@ -76,7 +76,8 @@ def edges2gv(vertices, edges):
         elif len(v) == 1:
             li.append(f"\"{k}\" [label=\"{v[0]}\"];")
         elif len(v) == 2:
-            li.append(f"\"{k}\" [label=\"{v[0]}\",fillcolor={v[1]},color={v[1]}];")
+            li.append(
+                f"\"{k}\" [label=\"{v[0]}\",fillcolor={v[1]},color={v[1]}];")
         else:
             raise ValueError("unable to understand " + str(v))
 
