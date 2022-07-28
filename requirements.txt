@@ -19,8 +19,10 @@ mako
 matplotlib
 memory_profiler
 mlinsights
+mlprodict>=0.9
 nbconvert
 notebook
+onnxruntime>=1.12
 pandas
 pillow
 psutil
@@ -36,6 +38,7 @@ seaborn
 setuptools
 snakeviz
 scikit-learn>=1.1
+skl2onnx
 sphinx
 sphinx-bootstrap-theme
 sphinxcontrib.imagesvg
