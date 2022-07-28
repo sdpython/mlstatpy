@@ -19,7 +19,7 @@ mako
 matplotlib
 memory_profiler
 mlinsights
-mlprodict>=0.9
+mlprodict>=0.8
 nbconvert
 notebook
 onnxruntime>=1.12
