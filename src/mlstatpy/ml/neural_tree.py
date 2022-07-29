@@ -378,6 +378,7 @@ class NeuralTreeNet(_TrainingAPI):
         coef2 = []
         bias2 = []
         output = []
+        paths = []
 
         for i in range(n_nodes):
             if children_left[i] != children_right[i]:
@@ -424,6 +425,7 @@ class NeuralTreeNet(_TrainingAPI):
                         bias += k / 2
             coef2.append(coef)
             bias2.append(bias)
+            paths.append(path)
 
         coef2 = numpy.vstack(coef2)
         if len(bias2) == 1:
@@ -435,26 +437,32 @@ class NeuralTreeNet(_TrainingAPI):
 
         # final node
         n_outputs = tree.n_classes_ if is_classifier else tree.n_outputs_
+        
+        index1 = max_features_ + coef1.shape[0]
+        index2 = index1 + coef2.shape[0]
+        findex = numpy.arange(index1, index2)
+
         if is_classifier:
             coef = numpy.zeros((n_outputs, coef2.shape[0]), dtype=numpy.float64)
-        else:
-            coef = numpy.zeros(coef2.shape[0], dtype=numpy.float64)
-        bias = numpy.zeros(n_outputs, dtype=numpy.float64)
-        for i, cls in enumerate(output):
-            if is_classifier:
+            bias = numpy.zeros(n_outputs, dtype=numpy.float64)
+            for i, cls in enumerate(output):
                 coef[cls, i] = -k
                 coef[1 - cls, i] = k
                 bias[cls] += k / 2
                 bias[1 - cls] += -k / 2
-            else:
-                coef[i] = cls
-        findex = numpy.arange(max_features_ + coef1.shape[0],
-                              max_features_ + coef1.shape[0] + coef2.shape[0])
-        activation = 'softmax4' if is_classifier else 'identity'
-        root.append(
-            NeuralTreeNode(coef, bias=bias,
-                           activation=activation, tag="final"),
-            findex)
+            root.append(
+                NeuralTreeNode(coef, bias=bias,
+                               activation='softmax4', tag="final"),
+                findex)
+        else:
+            coef = numpy.array(output, dtype=numpy.float64)
+            bias = numpy.zeros(n_outputs, dtype=numpy.float64)
+            for i, reg in enumerate(output):
+                coef[i] = reg
+            root.append(
+                NeuralTreeNode(coef, bias=bias,
+                               activation='identity', tag="final"),
+                findex)
 
         # end
         return root

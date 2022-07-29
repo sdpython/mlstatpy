@@ -9,6 +9,7 @@ import numpy
 from sklearn.tree import (
     DecisionTreeClassifier, DecisionTreeRegressor, export_graphviz)
 from sklearn.datasets import load_iris
+from sklearn.tree import export_text
 from pyquickhelper.pycode import ExtTestCase
 from mlprodict.plotting.text_plot import onnx_simple_text_plot
 from mlstatpy.ml.neural_tree import (
@@ -595,16 +596,29 @@ class TestNeuralTree(ExtTestCase):
         y = (X[:, 0] + X[:, 1] * 2).astype(numpy.float64)
         tree = DecisionTreeRegressor(max_depth=3)
         tree.fit(X, y)
+        text = export_text(tree, feature_names=['x1', 'x2'])
+        self.assertIn("[5.00]", text)
         root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+        if __name__ == '__main__':
+            print(text)
+            for n in root.nodes:
+                print(n)
+            print('--------------')
+            t = X[0:1]
+            print(t)
+            for n in root.nodes:
+                print('*')
+                h = n.predict(t)
+                print((h * 10 + 0.01).astype(numpy.int64) / 10.)
+                t = h
         self.assertNotEmpty(root)
         exp = tree.predict(X)
         got = root.predict(X)
-        self.assertEqual(exp.shape[0], got.shape[0])
-        self.assertEqualArray(exp, got[:, -1:])
+        self.assertEqualArray(exp, got[:, -1])
         dot = root.to_dot()
         self.assertIn("s3a4:f4 -> s5a6:f6", dot)
 
 
 if __name__ == "__main__":
-    # TestNeuralTree().test_convert_reg_compact()
+    TestNeuralTree().test_convert_reg_compact()
     unittest.main()
