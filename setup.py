@@ -51,7 +51,7 @@ setup(
     packages=packages,
     package_dir=package_dir,
     package_data=package_data,
-    setup_requires=["pyquicksetup"],
+    setup_requires=["pyquicksetup>0.2"],
     install_requires=['numpy>=1.16', 'scipy>=1.4',
                       'mlinsights>=0.2', 'cpyquickhelper>=0.2',
                       'mlprodict>=0.8', 'onnxruntime>=1.12', 'skl2onnx'],
