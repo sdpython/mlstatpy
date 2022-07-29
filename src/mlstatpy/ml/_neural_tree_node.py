@@ -12,6 +12,13 @@ from ._neural_tree_api import _TrainingAPI
 class NeuralTreeNode(_TrainingAPI):
     """
     One node in a neural network.
+
+    :param weights: weights
+    :param bias: bias, if None, draws a random number
+    :param activation: activation function
+    :param nodeid: node id
+    :param tag: unused but to add information
+        on how this node was created
     """
 
     @staticmethod
@@ -169,14 +176,6 @@ class NeuralTreeNode(_TrainingAPI):
 
     def __init__(self, weights, bias=None, activation='sigmoid', nodeid=-1,
                  tag=None):
-        """
-        @param      weights     weights
-        @param      bias        bias, if None, draws a random number
-        @param      activation  activation function
-        @param      nodeid      node id
-        @param      tag         unused but to add information
-                                on how this node was created
-        """
         self.tag = tag
         if isinstance(weights, int):
             if activation.startswith('softmax'):
@@ -275,18 +274,15 @@ class NeuralTreeNode(_TrainingAPI):
         "Computes inputs of the activation function."
         if self.n_outputs == 1:
             return X @ self.coef[1:] + self.coef[0]
+        if len(X.shape) == 2:
+            return X @ self.coef[:, 1:].T + self.coef[:, 0]
         res = X.reshape((1, -1)) @ self.coef[:, 1:].T + self.coef[:, 0]
         return res.ravel()
 
     def predict(self, X):
         "Computes neuron outputs."
-        if self.n_outputs == 1:
-            return self.activation_(X @ self.coef[1:] + self.coef[0])
-        if len(X.shape) == 2:
-            return self.activation_(
-                (X @ self.coef[:, 1:].T + self.coef[:, 0]))
-        return self.activation_(
-            (X.reshape((1, -1)) @ self.coef[:, 1:].T + self.coef[:, 0]).ravel())
+        y = self._predict(X)
+        return self.activation_(y)
 
     @property
     def ndim(self):

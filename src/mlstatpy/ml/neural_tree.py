@@ -6,7 +6,7 @@
 from io import BytesIO
 import pickle
 import numpy
-from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
 from sklearn.tree import BaseDecisionTree
 from ._neural_tree_api import _TrainingAPI
 from ._neural_tree_node import NeuralTreeNode
@@ -40,6 +40,9 @@ class NeuralTreeNet(_TrainingAPI):
     """
     Node ensemble.
 
+    :param dim: space dimension
+    :param empty: empty network, other adds an identity node
+
     .. runpython::
         :showcode:
 
@@ -64,10 +67,6 @@ class NeuralTreeNet(_TrainingAPI):
     """
 
     def __init__(self, dim, empty=True):
-        """
-        @param      dim     space dimension
-        @param      empty   empty network, other adds an identity node
-        """
         self.dim = dim
         if empty:
             self.nodes = []
@@ -133,8 +132,8 @@ class NeuralTreeNet(_TrainingAPI):
         """
         Appends a node into the graph.
 
-        @param      node        node to add
-        @param      inputs      index of input nodes
+        :param node: node to add
+        :param inputs: index of input nodes
         """
         if len(node.input_weights.shape) == 1:
             if node.input_weights.shape[0] != len(inputs):
@@ -202,10 +201,10 @@ class NeuralTreeNet(_TrainingAPI):
         Creates a @see cl NeuralTreeNet instance from a
         :epkg:`DecisionTreeClassifier`
 
-        @param  tree    :epkg:`DecisionTreeClassifier`
-        @param  k       slant of the sigmoïd
-        @param  arch    architecture, see below
-        @return         @see cl NeuralTreeNet
+        :param tree: :epkg:`DecisionTreeClassifier`
+        :param k: slant of the sigmoïd
+        :param arch: architecture, see below
+        :return: @see cl NeuralTreeNet
 
         The function only works for binary problems.
         Available architecture:
@@ -230,6 +229,10 @@ class NeuralTreeNet(_TrainingAPI):
         if not isinstance(tree, BaseDecisionTree):
             raise TypeError(  # pragma: no cover
                 f"Only decision tree as supported not {type(tree)!r}.")
+        if not isinstance(tree, ClassifierMixin):
+            raise TypeError(  # pragma: no cover
+                f"Only a classifier can be converted by this function "
+                f"not {type(tree)!r}, arch='compact' should be used.")
         if tree.n_classes_ > 2:
             raise RuntimeError(  # pragma: no cover
                 "The function only supports binary classification problem.")
@@ -408,7 +411,9 @@ class NeuralTreeNet(_TrainingAPI):
                 last = par
 
             coef = numpy.zeros((coef1.shape[0], ), dtype=numpy.float64)
-            bias = 0.
+            # This bias is different from the one implemented in
+            # _create_from_tree_one where bias=0.
+            bias = - k * (len(path) - 2) / 2
             for ip, lr in path:
                 if isinstance(lr, tuple):
                     lr, value = lr
@@ -417,12 +422,13 @@ class NeuralTreeNet(_TrainingAPI):
                             "algorithm issue")
                 else:
                     r = rows[ip]
+                    # coefficients are the opposite in _create_from_tree_one
                     if lr == 'right':
-                        coef[r] = k
-                        bias -= k / 2
-                    else:
                         coef[r] = -k
                         bias += k / 2
+                    else:
+                        coef[r] = k
+                        bias -= k / 2
             coef2.append(coef)
             bias2.append(bias)
             paths.append(path)
@@ -437,19 +443,21 @@ class NeuralTreeNet(_TrainingAPI):
 
         # final node
         n_outputs = tree.n_classes_ if is_classifier else tree.n_outputs_
-        
+
         index1 = max_features_ + coef1.shape[0]
         index2 = index1 + coef2.shape[0]
         findex = numpy.arange(index1, index2)
 
         if is_classifier:
-            coef = numpy.zeros((n_outputs, coef2.shape[0]), dtype=numpy.float64)
+            # coefficients are the opposite in _create_from_tree_one
+            coef = numpy.zeros(
+                (n_outputs, coef2.shape[0]), dtype=numpy.float64)
             bias = numpy.zeros(n_outputs, dtype=numpy.float64)
             for i, cls in enumerate(output):
-                coef[cls, i] = -k
-                coef[1 - cls, i] = k
-                bias[cls] += k / 2
-                bias[1 - cls] += -k / 2
+                coef[cls, i] = k
+                coef[1 - cls, i] = -k
+                bias[cls] -= k / 2
+                bias[1 - cls] += k / 2
             root.append(
                 NeuralTreeNode(coef, bias=bias,
                                activation='softmax4', tag="final"),
@@ -471,7 +479,7 @@ class NeuralTreeNet(_TrainingAPI):
         """
         Exports the neural network into :epkg:`dot`.
 
-        @param  X   input as an example
+        :param X: input as an example
         """
         y = None
         if X is not None:
@@ -683,9 +691,9 @@ class NeuralTreeNet(_TrainingAPI):
         return whole_gradw
 
 
-class NeuralTreeNetClassifier(ClassifierMixin, BaseEstimator):
+class BaseNeuralTreeNet(BaseEstimator):
     """
-    Classifier following :epkg:`scikit-learn` API.
+    Classifier or regressor following :epkg:`scikit-learn` API.
 
     :param estimator: instance of @see cl NeuralTreeNet.
     :param X: training set
@@ -713,7 +721,6 @@ class NeuralTreeNetClassifier(ClassifierMixin, BaseEstimator):
             raise ValueError(  # pragma: no cover
                 f"estimator must be an instance of NeuralTreeNet not {type(estimator)!r}.")
         BaseEstimator.__init__(self)
-        ClassifierMixin.__init__(self)
         self.estimator_ = estimator
         self.optimizer = None
         self.max_iter = max_iter
@@ -724,25 +731,6 @@ class NeuralTreeNetClassifier(ClassifierMixin, BaseEstimator):
         self.l1 = l1
         self.l2 = l2
         self.momentum = momentum
-
-    def predict(self, X):
-        """
-        Returns the predicted classes.
-
-        :param X: inputs
-        :return: classes
-        """
-        probas = self.predict_proba(X)
-        return numpy.argmax(probas, axis=1)
-
-    def predict_proba(self, X):
-        """
-        Returns the classification probabilities.
-
-        :param X: inputs
-        :return: probabilities
-        """
-        return self.decision_function(X)[:, -2:]
 
     def decision_function(self, X):
         """
@@ -786,8 +774,12 @@ class NeuralTreeNetClassifier(ClassifierMixin, BaseEstimator):
             input_dim = operator.inputs[0].get_first_dimension()
             output_type = input_type(
                 [input_dim, op.estimator_.nodes[-1].ndim_out])
-            operator.outputs[0].type = Int64TensorType([input_dim, 1])
-            operator.outputs[1].type = output_type
+            if isinstance(op, ClassifierMixin):
+                operator.outputs[0].type = Int64TensorType([input_dim, 1])
+                operator.outputs[1].type = output_type
+            else:
+                operator.outputs[0].type = output_type
+
         return shape_calculator
 
     @staticmethod
@@ -825,7 +817,7 @@ class NeuralTreeNetClassifier(ClassifierMixin, BaseEstimator):
                         f"not {coef.shape!r}.")
 
                 # input, output, names
-                name = ('inputs' if attr['inputs'][0] == 0 else 
+                name = ('inputs' if attr['inputs'][0] == 0 else
                         "r_%s" % ("_".join(map(str, attr['inputs']))))
                 if name not in res:
                     raise KeyError(  # pragma: no cover
@@ -853,6 +845,8 @@ class NeuralTreeNetClassifier(ClassifierMixin, BaseEstimator):
                                         op_version=opv)
                 elif node.activation == "softmax":
                     final = OnnxSoftmax(tr, op_version=opv)
+                elif node.activation == "identity":
+                    final = OnnxIdentity(tr, op_version=opv)
                 else:
                     raise NotImplementedError(
                         f"Unable to convert activation {node.activation!r} "
@@ -861,9 +855,116 @@ class NeuralTreeNetClassifier(ClassifierMixin, BaseEstimator):
                 res[output_name] = final
                 last = final
 
-            prob = OnnxIdentity(last, op_version=opv, output_names=[out[1]])
-            prob.add_to(scope, container)
-            labels = OnnxArgMax(prob, axis=1, keepdims=1, op_version=opv,
-                                output_names=[out[0]])
-            labels.add_to(scope, container)
+            if isinstance(op, ClassifierMixin):
+                prob = OnnxIdentity(last, op_version=opv,
+                                    output_names=[out[1]])
+                prob.add_to(scope, container)
+                labels = OnnxArgMax(prob, axis=1, keepdims=1, op_version=opv,
+                                    output_names=[out[0]])
+                labels.add_to(scope, container)
+            else:
+                pred = OnnxIdentity(last, op_version=opv,
+                                    output_names=[out[0]])
+                pred.add_to(scope, container)
+
         return converter
+
+
+class NeuralTreeNetClassifier(ClassifierMixin, BaseNeuralTreeNet):
+    """
+    Classifier following :epkg:`scikit-learn` API.
+
+    :param estimator: instance of @see cl NeuralTreeNet.
+    :param X: training set
+    :param y: training labels
+    :param optimizer: optimizer, by default, it is
+        :class:`SGDOptimizer <mlstatpy.optim.sgd.SGDOptimizer>`.
+    :param max_iter: number maximum of iterations
+    :param early_th: early stopping threshold
+    :param verbose: more verbose
+    :param lr: to overwrite *learning_rate_init* if
+        *optimizer* is None (unused otherwise)
+    :param lr_schedule: to overwrite *lr_schedule* if
+        *optimizer* is None (unused otherwise)
+    :param l1: L1 regularization if *optimizer* is None
+        (unused otherwise)
+    :param l2: L2 regularization if *optimizer* is None
+        (unused otherwise)
+    :param momentum: used if *optimizer* is None
+    """
+
+    def __init__(self, estimator,
+                 optimizer=None, max_iter=100, early_th=None, verbose=False,
+                 lr=None, lr_schedule=None, l1=0., l2=0., momentum=0.9):
+        if not isinstance(estimator, NeuralTreeNet):
+            raise ValueError(  # pragma: no cover
+                f"estimator must be an instance of NeuralTreeNet not {type(estimator)!r}.")
+        ClassifierMixin.__init__(self)
+        BaseNeuralTreeNet.__init__(
+            self, estimator=estimator, optimizer=optimizer, max_iter=max_iter,
+            early_th=early_th, verbose=verbose, lr=lr,
+            lr_schedule=lr_schedule, l1=l1, l2=l2, momentum=momentum)
+
+    def predict(self, X):
+        """
+        Returns the predicted classes.
+
+        :param X: inputs
+        :return: classes
+        """
+        probas = self.predict_proba(X)
+        return numpy.argmax(probas, axis=1)
+
+    def predict_proba(self, X):
+        """
+        Returns the classification probabilities.
+
+        :param X: inputs
+        :return: probabilities
+        """
+        return self.decision_function(X)[:, -2:]
+
+
+class NeuralTreeNetRegressor(RegressorMixin, BaseNeuralTreeNet):
+    """
+    Regressor following :epkg:`scikit-learn` API.
+
+    :param estimator: instance of @see cl NeuralTreeNet.
+    :param X: training set
+    :param y: training labels
+    :param optimizer: optimizer, by default, it is
+        :class:`SGDOptimizer <mlstatpy.optim.sgd.SGDOptimizer>`.
+    :param max_iter: number maximum of iterations
+    :param early_th: early stopping threshold
+    :param verbose: more verbose
+    :param lr: to overwrite *learning_rate_init* if
+        *optimizer* is None (unused otherwise)
+    :param lr_schedule: to overwrite *lr_schedule* if
+        *optimizer* is None (unused otherwise)
+    :param l1: L1 regularization if *optimizer* is None
+        (unused otherwise)
+    :param l2: L2 regularization if *optimizer* is None
+        (unused otherwise)
+    :param momentum: used if *optimizer* is None
+    """
+
+    def __init__(self, estimator,
+                 optimizer=None, max_iter=100, early_th=None, verbose=False,
+                 lr=None, lr_schedule=None, l1=0., l2=0., momentum=0.9):
+        if not isinstance(estimator, NeuralTreeNet):
+            raise ValueError(  # pragma: no cover
+                f"estimator must be an instance of NeuralTreeNet not {type(estimator)!r}.")
+        RegressorMixin.__init__(self)
+        BaseNeuralTreeNet.__init__(
+            self, estimator=estimator, optimizer=optimizer, max_iter=max_iter,
+            early_th=early_th, verbose=verbose, lr=lr,
+            lr_schedule=lr_schedule, l1=l1, l2=l2, momentum=momentum)
+
+    def predict(self, X):
+        """
+        Returns the predicted classes.
+
+        :param X: inputs
+        :return: classes
+        """
+        return self.decision_function(X)[:, -1:]

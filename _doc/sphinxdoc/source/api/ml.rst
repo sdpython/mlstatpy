@@ -25,7 +25,6 @@ Matrices
 
 .. autosignature:: mlstatpy.ml.matrices.streaming_linear_regression_gram_schmidt
 
-
 Métriques
 +++++++++
 
@@ -49,4 +48,8 @@ Tree and neural networks
 
 .. autosignature:: mlstatpy.ml.neural_tree.NeuralTreeNet
 
+.. autosignature:: mlstatpy.ml.neural_tree.BaseNeuralTreeNet
+
 .. autosignature:: mlstatpy.ml.neural_tree.NeuralTreeNetClassifier
+
+.. autosignature:: mlstatpy.ml.neural_tree.NeuralTreeNetRegressor
