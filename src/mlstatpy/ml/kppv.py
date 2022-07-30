@@ -52,7 +52,6 @@ class NuagePoints:
 
         for i in range(X.shape[0]):
             row = X[i, :]
-            row.resize((1, X.shape[1]))
             r = self.ppv(row)
             dist[i], ind[i] = r
         return dist, ind
@@ -95,6 +94,8 @@ class NuagePoints:
         @param      obj     object
         @return             ``tuple(dist, index)``
         """
+        if len(obj.shape) == 1:
+            obj = obj.reshape((1, -1))
         ones = numpy.ones((self.nuage.shape[0], 1))
         mat = ones @ obj
         if len(mat.shape) == 1:

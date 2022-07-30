@@ -69,7 +69,7 @@ def _load_image(img, format='PIL', mode=None):
                 gray = img.shape[0] - d1 * d0
             elif len(img.shape) == 2:
                 gray = img.shape[0] * img.shape[1] - d1 * d0
-            elif(img.shape) == 3:
+            elif len(img.shape) == 3:
                 gray = img.shape[0] * img.shape[1] * img.shape[2] - d1 * d0
             else:
                 raise ValueError(  # pragma: no cover
