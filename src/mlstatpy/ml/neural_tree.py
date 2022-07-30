@@ -721,6 +721,7 @@ class BaseNeuralTreeNet(BaseEstimator):
             raise ValueError(  # pragma: no cover
                 f"estimator must be an instance of NeuralTreeNet not {type(estimator)!r}.")
         BaseEstimator.__init__(self)
+        self.estimator = None
         self.estimator_ = estimator
         self.optimizer = None
         self.max_iter = max_iter
