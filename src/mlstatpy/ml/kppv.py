@@ -72,7 +72,12 @@ class NuagePoints:
         @param      obj2        object 2
         @return                 distance
         """
-        return euclidean(obj1, obj2)
+        try:
+            return euclidean(obj1, obj2)
+        except ValueError as e:
+            raise ValueError(
+                f"Unable to compute euclidean distance with shapes "
+                f"{obj1.shape} and {obj2.shape}.") from e
 
     def label(self, i):
         """
