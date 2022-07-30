@@ -6,6 +6,7 @@ cpyquickhelper
 Cython
 cytoolz
 dill
+hummingbird-ml
 ijson
 importlib_metadata
 ipython

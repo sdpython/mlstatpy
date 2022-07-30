@@ -646,7 +646,7 @@ class TestNeuralTree(ExtTestCase):
         skl.fit(X, y)
         exp = tree.predict(X)
         got = skl.predict(X)
-        self.assertEqualArray(exp, got)
+        self.assertEqualArray(exp, got.ravel())
 
     def test_convert_compact_skl_onnx_reg(self):
         from mlprodict.onnx_conv import to_onnx

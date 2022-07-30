@@ -753,7 +753,10 @@ class BaseNeuralTreeNet(BaseEstimator):
         if sample_weights is not None:
             raise NotImplementedError(  # pragma: no cover
                 "sample_weights is not supported yet.")
-        ny = label_class_to_softmax_output(y)
+        if isinstance(self, ClassifierMixin):
+            ny = label_class_to_softmax_output(y) if len(y.shape) == 1 else y
+        else:
+            ny = y
         self.estimator_.fit(X, ny, optimizer=self.optimizer, max_iter=self.max_iter,
                             early_th=self.early_th, verbose=self.verbose,
                             lr=self.lr, lr_schedule=self.lr_schedule,
