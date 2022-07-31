@@ -52,7 +52,6 @@ class NuagePoints:
 
         for i in range(X.shape[0]):
             row = X[i, :]
-            row.resize((1, X.shape[1]))
             r = self.ppv(row)
             dist[i], ind[i] = r
         return dist, ind
@@ -72,7 +71,12 @@ class NuagePoints:
         @param      obj2        object 2
         @return                 distance
         """
-        return euclidean(obj1, obj2)
+        try:
+            return euclidean(obj1, obj2)
+        except ValueError as e:
+            raise ValueError(
+                f"Unable to compute euclidean distance with shapes "
+                f"{obj1.shape} and {obj2.shape}.") from e
 
     def label(self, i):
         """
@@ -90,6 +94,8 @@ class NuagePoints:
         @param      obj     object
         @return             ``tuple(dist, index)``
         """
+        if len(obj.shape) == 1:
+            obj = obj.reshape((1, -1))
         ones = numpy.ones((self.nuage.shape[0], 1))
         mat = ones @ obj
         if len(mat.shape) == 1:

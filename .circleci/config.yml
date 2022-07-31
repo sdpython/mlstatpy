@@ -11,8 +11,8 @@ jobs:
 
       - restore_cache:
           keys:
-          - v3-dependencies-{{ checksum "requirements.txt" }}
-          - v3-dependencies-
+          - v4-dependencies-{{ checksum "requirements.txt" }}
+          - v4-dependencies-
 
       - run:
           name: Install dependencies for graphviz
@@ -51,7 +51,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v3-dependencies-{{ checksum "requirements.txt" }}
+          key: v4-dependencies-{{ checksum "requirements.txt" }}
         
       - run:
           name: check list of dependencies

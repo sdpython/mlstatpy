@@ -12,6 +12,13 @@ from ._neural_tree_api import _TrainingAPI
 class NeuralTreeNode(_TrainingAPI):
     """
     One node in a neural network.
+
+    :param weights: weights
+    :param bias: bias, if None, draws a random number
+    :param activation: activation function
+    :param nodeid: node id
+    :param tag: unused but to add information
+        on how this node was created
     """
 
     @staticmethod
@@ -169,14 +176,6 @@ class NeuralTreeNode(_TrainingAPI):
 
     def __init__(self, weights, bias=None, activation='sigmoid', nodeid=-1,
                  tag=None):
-        """
-        @param      weights     weights
-        @param      bias        bias, if None, draws a random number
-        @param      activation  activation function
-        @param      nodeid      node id
-        @param      tag         unused but to add information
-                                on how this node was created
-        """
         self.tag = tag
         if isinstance(weights, int):
             if activation.startswith('softmax'):
@@ -196,9 +195,6 @@ class NeuralTreeNode(_TrainingAPI):
 
         elif len(weights.shape) == 2:
             self.n_outputs = weights.shape[0]
-            if self.n_outputs == 1:
-                raise RuntimeError(  # pragma: no cover
-                    f"Unexpected unsqueezed weights shape: {weights.shape}")
             if bias is None:
                 bias = rnd.randn(self.n_outputs)
             shape = list(weights.shape)
@@ -278,18 +274,15 @@ class NeuralTreeNode(_TrainingAPI):
         "Computes inputs of the activation function."
         if self.n_outputs == 1:
             return X @ self.coef[1:] + self.coef[0]
+        if len(X.shape) == 2:
+            return X @ self.coef[:, 1:].T + self.coef[:, 0]
         res = X.reshape((1, -1)) @ self.coef[:, 1:].T + self.coef[:, 0]
         return res.ravel()
 
     def predict(self, X):
         "Computes neuron outputs."
-        if self.n_outputs == 1:
-            return self.activation_(X @ self.coef[1:] + self.coef[0])
-        if len(X.shape) == 2:
-            return self.activation_(
-                (X @ self.coef[:, 1:].T + self.coef[:, 0]))
-        return self.activation_(
-            (X.reshape((1, -1)) @ self.coef[:, 1:].T + self.coef[:, 0]).ravel())
+        y = self._predict(X)
+        return self.activation_(y)
 
     @property
     def ndim(self):
@@ -297,6 +290,13 @@ class NeuralTreeNode(_TrainingAPI):
         if len(self.coef.shape) == 1:
             return self.coef.shape[0] - 1
         return self.coef.shape[1] - 1
+
+    @property
+    def ndim_out(self):
+        "Returns the output dimension."
+        if len(self.coef.shape) == 1:
+            return 1
+        return self.coef.shape[0]
 
     @property
     def training_weights(self):

@@ -102,7 +102,8 @@ class ROC:
         Shows first elements, precision rate.
         """
         rows = []
-        rows.append(f"Overall precision: {self.precision():3.2f} - AUC={self.auc():f}")
+        rows.append(
+            f"Overall precision: {self.precision():3.2f} - AUC={self.auc():f}")
         rows.append("--------------")
         rows.append(str(self.data.head(min(5, len(self)))))
         rows.append("--------------")

@@ -15,3 +15,4 @@ des modèles de machine learning.
     kppv
     missing_values_mf
     ../notebooks/neural_tree
+    ../notebooks/neural_tree_onnx

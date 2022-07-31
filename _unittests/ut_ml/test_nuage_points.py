@@ -5,13 +5,15 @@
 import unittest
 import numpy
 from numpy.testing import assert_array_equal
+from pyquickhelper.pycode import ExtTestCase, ignore_warnings
 from sklearn.neighbors import NearestNeighbors
 from mlstatpy.ml.kppv import NuagePoints
 from mlstatpy.ml.kppv_laesa import NuagePointsLaesa
 
 
-class TestNuagePoints(unittest.TestCase):
+class TestNuagePoints(ExtTestCase):
 
+    @ignore_warnings(DeprecationWarning)
     def test_nuage_points_1d(self):
         X = numpy.array([[0], [3], [1]])
         neigh = NearestNeighbors(n_neighbors=1)
@@ -25,6 +27,7 @@ class TestNuagePoints(unittest.TestCase):
         assert_array_equal(y.ravel(), y2.ravel())
         assert_array_equal(dist.ravel(), dist2.ravel())
 
+    @ignore_warnings(DeprecationWarning)
     def test_nuage_points_1d_leasa(self):
         X = numpy.array([[0], [3], [1]])
         neigh = NearestNeighbors(n_neighbors=1)
@@ -38,6 +41,7 @@ class TestNuagePoints(unittest.TestCase):
         assert_array_equal(y.ravel(), y2.ravel())
         assert_array_equal(dist.ravel(), dist2.ravel())
 
+    @ignore_warnings(DeprecationWarning)
     def test_nuage_points_2d(self):
         X = numpy.array([[0, 0], [3, 3], [1, 1]])
         neigh = NearestNeighbors(n_neighbors=1)
@@ -51,6 +55,7 @@ class TestNuagePoints(unittest.TestCase):
         assert_array_equal(y.ravel(), y2.ravel())
         assert_array_equal(dist.ravel(), dist2.ravel())
 
+    @ignore_warnings(DeprecationWarning)
     def test_nuage_points_2d_leasa(self):
         X = numpy.array([[0, 0], [3, 3], [1, 1]])
         neigh = NearestNeighbors(n_neighbors=1)

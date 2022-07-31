@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-@brief      test log(time=3s)
+@brief      test log(time=23s)
 """
 import io
 import unittest
 import pickle
 import numpy
-from sklearn.tree import DecisionTreeClassifier, export_graphviz
+from sklearn.tree import (
+    DecisionTreeClassifier, DecisionTreeRegressor, export_graphviz)
 from sklearn.datasets import load_iris
+from sklearn.tree import export_text
 from pyquickhelper.pycode import ExtTestCase
+from mlprodict.plotting.text_plot import onnx_simple_text_plot
 from mlstatpy.ml.neural_tree import (
-    NeuralTreeNode, NeuralTreeNet, label_class_to_softmax_output)
+    NeuralTreeNode, NeuralTreeNet, label_class_to_softmax_output,
+    NeuralTreeNetClassifier, NeuralTreeNetRegressor)
 
 
 class TestNeuralTree(ExtTestCase):
@@ -532,6 +536,144 @@ class TestNeuralTree(ExtTestCase):
         loss2 = root.loss(X, ny).sum()
         self.assertLess(loss2, loss1 + 1)
 
+    def test_convert_compact_skl(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+
+        exp = tree.predict_proba(X)
+        got = root.predict(X)
+        self.assertEqual(exp.shape[0], got.shape[0])
+        self.assertEqualArray(exp + 1e-8, got[:, -2:] + 1e-8)
+
+        skl = NeuralTreeNetClassifier(root)
+        prob = skl.predict_proba(X)
+        self.assertEqualArray(exp, prob)
+        lab = skl.predict(X)
+        self.assertEqual(lab.shape, (X.shape[0], ))
+
+    def test_convert_compact_skl_fit(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        tree = DecisionTreeClassifier(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+        skl = NeuralTreeNetClassifier(root)
+        skl.fit(X, y)
+        exp = tree.predict_proba(X)
+        got = skl.predict_proba(X)
+        self.assertEqualArray(exp, got)
+
+    def test_convert_compact_skl_onnx(self):
+        from mlprodict.onnx_conv import to_onnx
+        from mlprodict.onnxrt import OnnxInference
+
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
+        tree = DecisionTreeClassifier(max_depth=3)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+        skl = NeuralTreeNetClassifier(root)
+        got = skl.predict_proba(X)
+        exp = tree.predict_proba(X)
+        self.assertEqualArray(exp, got)
+        dec = root.predict(X)
+        self.assertEqualArray(exp, dec[:, -2:])
+
+        x32 = X.astype(numpy.float32)
+        onx = to_onnx(skl, x32, target_opset=15)
+        text = onnx_simple_text_plot(onx)
+        self.assertIn('Sigmoid(', text)
+        self.assertIn('Softmax(', text)
+        oinf = OnnxInference(onx)
+        got2 = oinf.run({'X': x32})['probabilities']
+        self.assertEqualArray(exp, got2)
+
+    def test_convert_reg_compact(self):
+        X = numpy.arange(32).astype(numpy.float64).reshape((-1, 2))
+        y = (X[:, 0] + X[:, 1] * 2).astype(numpy.float64)
+        tree = DecisionTreeRegressor(max_depth=3)
+        tree.fit(X, y)
+        text = export_text(tree, feature_names=['x1', 'x2'])
+        self.assertIn("[5.00]", text)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+        # if __name__ == '__main__':
+        #     print(text)
+        #     for n in root.nodes:
+        #         print(n)
+        #     print('--------------')
+        #     t = X[2:3]
+        #     print(t)
+        #     for n in root.nodes:
+        #         print('*')
+        #         ii = n._predict(t)
+        #         print((ii * 10 + 0.01).astype(numpy.int64) / 10.)
+        #         h = n.predict(t)
+        #         print((h * 10 + 0.01).astype(numpy.int64) / 10.)
+        #         t = h
+        self.assertNotEmpty(root)
+        exp = tree.predict(X)
+        got = root.predict(X)
+        self.assertEqualArray(exp, got[:, -1], decimal=6)
+        dot = root.to_dot()
+        self.assertIn("9 -> 17", dot)
+
+    def test_convert_compact_skl_reg(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = X[:, 0] + X[:, 1] * 2
+        tree = DecisionTreeRegressor(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+
+        exp = tree.predict(X)
+        got = root.predict(X)
+        self.assertEqual(exp.shape[0], got.shape[0])
+        self.assertEqualArray(exp, got[:, -1])
+
+        skl = NeuralTreeNetRegressor(root)
+        prob = skl.predict(X)
+        self.assertEqualArray(exp, prob.ravel())
+
+    def test_convert_compact_skl_fit_reg(self):
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = X[:, 0] + X[:, 1] * 2
+        tree = DecisionTreeRegressor(max_depth=2)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+        skl = NeuralTreeNetRegressor(root)
+        skl.fit(X, y)
+        exp = tree.predict(X)
+        got = skl.predict(X)
+        self.assertEqualArray(exp, got.ravel())
+
+    def test_convert_compact_skl_onnx_reg(self):
+        from mlprodict.onnx_conv import to_onnx
+        from mlprodict.onnxrt import OnnxInference
+
+        X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
+        y = X[:, 0] + X[:, 1] * 2
+        tree = DecisionTreeRegressor(max_depth=3)
+        tree.fit(X, y)
+        root = NeuralTreeNet.create_from_tree(tree, 10, arch='compact')
+        skl = NeuralTreeNetRegressor(root)
+        got = skl.predict(X)
+        exp = tree.predict(X)
+        self.assertEqualArray(exp, got.ravel())
+        dec = root.predict(X)
+        self.assertEqualArray(exp, dec[:, -1])
+
+        x32 = X.astype(numpy.float32)
+        onx = to_onnx(skl, x32, target_opset=15)
+        text = onnx_simple_text_plot(onx)
+        self.assertIn('Sigmoid(', text)
+        self.assertNotIn('Softmax(', text)
+        oinf = OnnxInference(onx)
+        got2 = oinf.run({'X': x32})['variable']
+        self.assertEqualArray(exp, got2.ravel())
+
 
 if __name__ == "__main__":
+    # TestNeuralTree().test_convert_reg_compact()
     unittest.main()
