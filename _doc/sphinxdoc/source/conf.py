@@ -131,4 +131,7 @@ epkg_dictionary.update({
 nblinks = {
     'l-reglin-piecewise-streaming':
         'http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/c_ml/piecewise.html#streaming-linear-regression',
+    'cl-NeuralTreeNet':
+        'http://www.xavierdupre.fr/app/mlstatpy/helpsphinx//mlstatpy/ml/'
+        'neural_tree.html#mlstatpy.ml.neural_tree.NeuralTreeNet',
 }
