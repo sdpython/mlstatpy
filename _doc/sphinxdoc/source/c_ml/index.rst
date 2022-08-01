@@ -16,3 +16,4 @@ des modèles de machine learning.
     missing_values_mf
     ../notebooks/neural_tree
     ../notebooks/neural_tree_onnx
+    ../notebooks/neural_tree_cost
