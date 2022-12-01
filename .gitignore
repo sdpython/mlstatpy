@@ -278,3 +278,5 @@ _doc/sphinxdoc/source/c_ml/*.html
 _unittests/ut_graph/*.prof
 _doc/notebooks/ml/onnxruntime*.json
 _doc/notebooks/ml/tree_*.onnx
+*.out
+*.err
