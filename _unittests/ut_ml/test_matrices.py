@@ -21,7 +21,7 @@ class TestMatrices(ExtTestCase):
 
         mat = numpy.array([[1, 0.5], [0.5, 1]], dtype=float)
         res = gram_schmidt(mat)
-        self.assertEqualArray(mat1, res @ res.T)
+        self.assertEqualArray(mat1, res @ res.T, atol=1e-10)
         res2 = gram_schmidt(mat.T).T
 
         res2, change2 = gram_schmidt(mat, change=True)
@@ -40,7 +40,7 @@ class TestMatrices(ExtTestCase):
         mat1 = numpy.array(
             [[1, 0.5, 0], [0, 0.5, 1], [1, 0.5, 1]], dtype=float)
         res = gram_schmidt(mat1)
-        self.assertEqualArray(numpy.identity(3), res @ res.T)
+        self.assertEqualArray(numpy.identity(3), res @ res.T, atol=1e-10)
 
     def test_gram_schmidt_xx(self):
         X = numpy.array([[1, 0.5, 0], [0, 0.4, 2]], dtype=float).T
@@ -49,11 +49,11 @@ class TestMatrices(ExtTestCase):
         T = T.T
         m = P.T @ X.T
         z = m @ m.T
-        self.assertEqual(z, numpy.identity(2))
+        self.assertEqualArray(z, numpy.identity(2), atol=1e-10)
         m = X @ P
-        self.assertEqual(m, T)
+        self.assertEqualArray(m, T, atol=1e-10)
         z2 = m.T @ m
-        self.assertEqual(z2, numpy.identity(2))
+        self.assertEqualArray(z2, numpy.identity(2), atol=1e-10)
 
     def test_linear_regression(self):
         X = numpy.array([[1, 0.5, 0], [0, 0.4, 2]], dtype=float).T
@@ -118,7 +118,7 @@ class TestMatrices(ExtTestCase):
         self.assertEqual(Pt.shape, (X.shape[1], X.shape[1]))
         _Tt = Pt @ Xt
         self.assertEqualArray(_Tt, Tt)
-        self.assertEqualArray(Tt @ Tt.T, numpy.identity(Tt.shape[0]))
+        self.assertEqualArray(Tt @ Tt.T, numpy.identity(Tt.shape[0]), atol=1e-10)
 
         beta1 = numpy.linalg.inv(Xt @ X) @ Xt @ y
         beta2 = Tt @ y @ Pt
@@ -140,8 +140,8 @@ class TestMatrices(ExtTestCase):
                 algo1_t.append(t)
                 algo1.append(p)
                 t_ = X[:i] @ p.T
-                self.assertEqualArray(t @ t.T, idd)
-                self.assertEqualArray(t_.T @ t_, idd)
+                self.assertEqualArray(t @ t.T, idd, atol=1e-10)
+                self.assertEqualArray(t_.T @ t_, idd, atol=1e-10)
             algo2 = []
             self.assertRaise(lambda: list(streaming_gram_schmidt(X)),  # pylint: disable=W0640
                              RuntimeError)
@@ -151,7 +151,7 @@ class TestMatrices(ExtTestCase):
                 algo2.append(p2)
                 self.assertNotEmpty(t2)
                 self.assertNotEmpty(p2)
-                self.assertEqualArray(t2.T @ t2, idd)
+                self.assertEqualArray(t2.T @ t2, idd, atol=1e-10)
             self.assertEqual(len(algo1), len(algo2))
 
     def test_streaming_linear_regression(self):
@@ -210,17 +210,17 @@ class TestMatrices(ExtTestCase):
         res = self.profile(lambda: list(
             streaming_linear_regression_gram_schmidt(X, y)))
         if __name__ == "__main__":
-            print(res[1])
+            print("***", res[1])
         self.assertIn("streaming", res[1])
         res = self.profile(lambda: list(streaming_linear_regression(X, y)))
         if __name__ == "__main__":
-            print(res[1])
+            print("***", res[1])
         self.assertIn("streaming", res[1])
 
     def test_norm2(self):
         X = numpy.array([[1, 0.5, 0], [0, 0.4, 2]], dtype=float).T
         n2 = norm2(X)
-        print(n2)
+        self.assertNotEmpty(n2)
 
 
 if __name__ == "__main__":

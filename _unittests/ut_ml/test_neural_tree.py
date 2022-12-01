@@ -105,7 +105,7 @@ class TestNeuralTree(ExtTestCase):
         exp = tree.predict_proba(X)
         got = root.predict(X)
         self.assertEqual(exp.shape[0], got.shape[0])
-        self.assertEqualArray(exp, got[:, -2:])
+        self.assertEqualArray(exp, got[:, -2:], atol=1e-10)
 
     def test_dot(self):
         data = load_iris()
@@ -550,7 +550,7 @@ class TestNeuralTree(ExtTestCase):
 
         skl = NeuralTreeNetClassifier(root)
         prob = skl.predict_proba(X)
-        self.assertEqualArray(exp, prob)
+        self.assertEqualArray(exp, prob, atol=1e-10)
         lab = skl.predict(X)
         self.assertEqual(lab.shape, (X.shape[0], ))
 
@@ -564,7 +564,7 @@ class TestNeuralTree(ExtTestCase):
         skl.fit(X, y)
         exp = tree.predict_proba(X)
         got = skl.predict_proba(X)
-        self.assertEqualArray(exp, got)
+        self.assertEqualArray(exp, got, atol=1e-10)
 
     def test_convert_compact_skl_onnx(self):
         from mlprodict.onnx_conv import to_onnx
@@ -578,9 +578,9 @@ class TestNeuralTree(ExtTestCase):
         skl = NeuralTreeNetClassifier(root)
         got = skl.predict_proba(X)
         exp = tree.predict_proba(X)
-        self.assertEqualArray(exp, got)
+        self.assertEqualArray(exp, got, atol=1e-10)
         dec = root.predict(X)
-        self.assertEqualArray(exp, dec[:, -2:])
+        self.assertEqualArray(exp, dec[:, -2:], atol=1e-10)
 
         x32 = X.astype(numpy.float32)
         onx = to_onnx(skl, x32, target_opset=15)
@@ -589,7 +589,7 @@ class TestNeuralTree(ExtTestCase):
         self.assertIn('Softmax(', text)
         oinf = OnnxInference(onx)
         got2 = oinf.run({'X': x32})['probabilities']
-        self.assertEqualArray(exp, got2)
+        self.assertEqualArray(exp, got2, atol=1e-10)
 
     def test_convert_reg_compact(self):
         X = numpy.arange(32).astype(numpy.float64).reshape((-1, 2))
