@@ -9,7 +9,7 @@ import pydata_sphinx_theme
 warnings.simplefilter("ignore", category=UserWarning)
 
 html_theme = 'pydata_sphinx_theme'
-html_theme_path = ['_static']
+html_theme_path = ['_static', '_images']
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.split(__file__)[0])))
 
