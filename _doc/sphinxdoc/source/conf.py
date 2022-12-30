@@ -18,8 +18,9 @@ local_template = os.path.join(os.path.abspath(
 
 set_sphinx_variables(__file__, "mlstatpy", "Xavier Dupré", 2021,
                      html_theme, html_theme_path, locals(),
-                     extlinks=dict(
-                         issue=('https://github.com/sdpython/mlstatpy/issues/%s', 'issue')),
+                     extlinks=dict(issue=(
+                         'https://github.com/sdpython/mlstatpy/issues/%s',
+                         'issue %s')),
                      title="Machine Learning, Statistiques et Programmation", book=True, nblayout='table')
 
 # next
