@@ -26,7 +26,7 @@ set_sphinx_variables(__file__, "mlstatpy", "Xavier Dupré", 2023,
 # next
 
 blog_root = "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/"
-html_logo = "phdoc_static/project_ico_small.png"
+html_logo = "_static/project_ico_small.png"
 language = "fr"
 
 preamble = '''
