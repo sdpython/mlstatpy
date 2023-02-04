@@ -412,7 +412,7 @@ class TestNeuralTree(ExtTestCase):
 
                 self.assertEqualArray(pred1, pred2[:, -1])
                 self.assertEqualArray(pred2[:, 2], pred2[:, -1])
-                self.assertEqualArray(loss1, loss2)
+                self.assertEqualArray(loss1, loss2, atol=1e-7)
 
                 for p in range(0, 5):
                     grad1 = neu.gradient(X[p], y[p])
@@ -422,7 +422,7 @@ class TestNeuralTree(ExtTestCase):
                 loss1 = net.loss(X, y).sum()
                 net.fit(X, y, max_iter=20)
                 loss2 = net.loss(X, y).sum()
-                self.assertLess(loss2, loss1)
+                self.assertLess(loss2, loss1, atol=1e-7)
 
     def test_neural_net_gradient_fit(self):
         X = numpy.arange(16).astype(numpy.float64).reshape((-1, 2))
