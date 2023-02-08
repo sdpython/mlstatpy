@@ -33,7 +33,7 @@ pydata_sphinx_theme
 pyensae>=1.2.788
 pyinstrument
 pylint>=2.14.0
-pyquickhelper>=1.11.3755
+pyquickhelper>=1.12
 pyquicksetup>=0.2.4
 seaborn
 setuptools
