@@ -2,6 +2,7 @@
 """
 @brief      test log(time=3s)
 """
+# pylint: disable=W0719
 import os
 import unittest
 import itertools
@@ -86,7 +87,7 @@ class TestCompletion(unittest.TestCase):
         trie.update_stat_dynamic()
         for leave in trie.leaves():
             if leave.stat is None:
-                raise Exception(f"None for {leave}")
+                raise AssertionError(f"None for {leave}")
             find = trie.find(leave.value)
             self.assertEqual(id(find), id(leave))
             assert hasattr(leave, "stat")
@@ -97,12 +98,12 @@ class TestCompletion(unittest.TestCase):
                 mk = trie.min_dynamic_keystroke(leave.value)
                 mk2 = trie.min_dynamic_keystroke2(leave.value)
             except Exception as e:
-                raise Exception(
+                raise AssertionError(
                     f"{id(trie)}-{id(leave)}-{str(leave)}-{leave.leave}") from e
             if mk[0] > mk1[0]:
-                raise Exception(f"weird {mk} > {mk1}")
+                raise AssertionError(f"weird {mk} > {mk1}")
             if mk2[0] < mk[0]:
-                raise Exception(f"weird {mk} > {mk2}")
+                raise AssertionError(f"weird {mk} > {mk2}")
             fLOG(leave.value, mk, "-", leave.stat.str_mks())
             self.assertEqual(
                 mk, (leave.stat.mks0, leave.stat.mks0_, leave.stat.mks1i_))
@@ -141,7 +142,7 @@ class TestCompletion(unittest.TestCase):
                         for i, s in enumerate(n2.stat.completions):
                             mes.append(
                                 f"  {i} - {s[0]}:{s[1].value}")
-                    raise Exception("difference\n{0}".format("\n".join(mes)))
+                    raise AssertionError("difference\n{0}".format("\n".join(mes)))
 
     def test_normalize(self):
         fLOG(
@@ -191,12 +192,12 @@ class TestCompletion(unittest.TestCase):
             lines = "\n".join(str(_) for _ in nodes[:5])
             lines2 = "\n".join(str(_) for _ in titles[:5])
             info = ";".join(k for k, v in sorted(trie.children.items()))
-            raise Exception("{0} != {1}\n{2}\nTITLES\n{3}\nINFO\n{4}".format(
+            raise AssertionError("{0} != {1}\n{2}\nTITLES\n{3}\nINFO\n{4}".format(
                 str(nodes[1]), exp_value, lines, lines2, info))
         if str(nodes[-1]) != "[#:grand russe:w=354]":
             lines = "\n".join(str(_) for _ in nodes[-5:])
             lines2 = "\n".join(str(_) for _ in titles[-5:])
-            raise Exception("{0} != {1}\n{2}\nTITLES\n{3}".format(
+            raise AssertionError("{0} != {1}\n{2}\nTITLES\n{3}".format(
                 str(nodes[-1]), "[#:grand russe:w=354]", lines, lines2))
         self.assertEqual(len(nodes), 3753)
 
@@ -216,7 +217,7 @@ class TestCompletion(unittest.TestCase):
         nb, gmks, gmksd, size = cmks(trie)
         fLOG(nb, size, gmks / nb, gmksd / nb, gmks / size, gmksd / size)
         if gmks > gmksd:
-            raise Exception(f"gmks={gmks} gmksd={gmksd}")
+            raise AssertionError(f"gmks={gmks} gmksd={gmksd}")
         if gmksd == 0:
             i = 0
             for node in trie:
@@ -325,7 +326,7 @@ class TestCompletion(unittest.TestCase):
                 st = find.stat.str_mks()
                 text = find.str_all_completions()
                 text2 = find.str_all_completions(use_precompute=False)
-                raise Exception(
+                raise AssertionError(
                     f"{info}\n---\nleave='{find.value}'\n{st}\n---\n{text}\n---\n{text2}")
 
 
