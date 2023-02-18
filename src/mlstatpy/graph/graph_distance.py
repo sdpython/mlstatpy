@@ -723,8 +723,10 @@ class GraphDistance:
 
         mini = min(cleft, cright)
         if len(matrix) < mini:
-            raise Exception("impossible: the smallest set should get all" +
-                            "its element associated to at least one coming from the other set")
+            raise RuntimeError(
+                "impossible: the smallest set should get all "
+                "its element associated to at least one coming "
+                "from the other set")
 
     def _private_string_path_matching(self, path, skipEdge=False):
         temp = []

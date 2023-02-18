@@ -44,7 +44,7 @@ class TestLONGCompletion(unittest.TestCase):
                 fLOG(i)
             leave = trie.find(q[1])
             if leave.stat is None:
-                raise Exception(f"None for {leave}")
+                raise AssertionError(f"None for {leave}")
 
             self.assertTrue(hasattr(leave, "stat"))
             self.assertTrue(hasattr(leave.stat, "mks0"))
@@ -61,7 +61,7 @@ class TestLONGCompletion(unittest.TestCase):
                 st = leave.stat.str_mks()
                 text = leave.str_all_completions()
                 text2 = leave.str_all_completions(use_precompute=False)
-                raise Exception(
+                raise AssertionError(
                     f"{info}\n---\nleave='{leave.value}'\n{st}\n---\n{text}\n---\n{text2}")
 
             mk1 = trie.min_keystroke0(leave.value)
@@ -69,21 +69,24 @@ class TestLONGCompletion(unittest.TestCase):
                 mk = trie.min_dynamic_keystroke(leave.value)
                 mk2 = trie.min_dynamic_keystroke2(leave.value)
             except Exception as e:
-                raise Exception(
+                raise RuntimeError(
                     f"{id(trie)}-{id(leave)}-{str(leave)}-{leave.leave}") from e
 
             if mk[0] > mk1[0]:
                 st = leave.stat.str_mks()
                 text = leave.str_all_completions()
                 text2 = leave.str_all_completions(use_precompute=False)
-                raise Exception("weird {0} > {1} -- leave='{2}'\n{3}\n---\n{4}\n---\n{5}".format(
-                    mk, mk1, leave.value, st, text, text2))
+                raise RuntimeError(
+                    "weird {0} > {1} -- leave='{2}'\n{3}\n---\n"
+                    "{4}\n---\n{5}".format(
+                        mk, mk1, leave.value, st, text, text2))
             if mk2[0] < mk[0]:
                 st = leave.stat.str_mks()
                 text = leave.str_all_completions()
                 text2 = leave.str_all_completions(use_precompute=False)
-                raise Exception("weird {0} > {1} -- leave='{2}'\n{3}\n---\n{4}\n---\n{5}".format(
-                    mk, mk2, leave.value, st, text, text2))
+                raise RuntimeError(
+                    "weird {0} > {1} -- leave='{2}'\n{3}\n---\n{4}\n---\n{5}".format(
+                        mk, mk2, leave.value, st, text, text2))
         clog("end")
         fLOG("end")
 

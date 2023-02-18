@@ -38,7 +38,7 @@ class TestCompletionSimple(unittest.TestCase):
         diffs = trie.compare_with_trie(fLOG=fLOG)
         if diffs:
             res = [_[-1] for _ in diffs]
-            raise Exception("\n".join(res))
+            raise AssertionError("\n".join(res))
         r = trie[2]
         assert r._info
         s = trie[2].str_all_completions()
@@ -47,7 +47,7 @@ class TestCompletionSimple(unittest.TestCase):
         for k, v in sorted(r._info._completions.items()):
             assert isinstance(v, list)
             if k != '' and len(v) > 2:
-                raise Exception(v)
+                raise AssertionError(v)
             assert v
             fLOG(k, v)
             for _ in v:
@@ -72,7 +72,7 @@ class TestCompletionSimple(unittest.TestCase):
             diffs = trie.compare_with_trie()
             if diffs:
                 res = [_[-1] for _ in diffs]
-                raise Exception("\n".join(res))
+                raise AssertionError("\n".join(res))
 
     def test_mks_consistency(self):
         fLOG(
@@ -86,14 +86,14 @@ class TestCompletionSimple(unittest.TestCase):
         diffs = trie.compare_with_trie()
         if diffs:
             res = [_[-1] for _ in diffs]
-            raise Exception("\n".join(res))
+            raise AssertionError("\n".join(res))
 
         titles.append((None, '"la sequestree"', '"La séquestrée'))
         trie = CompletionSystem(titles)
         diffs = trie.compare_with_trie()
         if diffs:
             res = [_[-1] for _ in diffs]
-            raise Exception("\n".join(res))
+            raise AssertionError("\n".join(res))
 
     def test_mks_consistency_port(self):
         fLOG(
@@ -107,7 +107,7 @@ class TestCompletionSimple(unittest.TestCase):
         diffs = trie.compare_with_trie()
         if diffs:
             res = [_[-1] for _ in diffs]
-            raise Exception("\n".join(res))
+            raise AssertionError("\n".join(res))
 
         titles = ["po", "po rouge", "po vert", "po orange",
                   "port", "port blanc", "port rouge"]
@@ -115,7 +115,7 @@ class TestCompletionSimple(unittest.TestCase):
         diffs = trie.compare_with_trie()
         if diffs:
             res = [_[-1] for _ in diffs]
-            raise Exception("\n".join(res))
+            raise AssertionError("\n".join(res))
 
     def test_completions(self):
         fLOG(
@@ -134,7 +134,7 @@ class TestCompletionSimple(unittest.TestCase):
             res = [_[-1] for _ in diffs]
             if len(res) > 3:
                 res = res[:3]
-            raise Exception("\n".join(res))
+            raise AssertionError("\n".join(res))
         assert len(trie) > 0
 
     def test_exception(self):
@@ -166,7 +166,7 @@ class TestCompletionSimple(unittest.TestCase):
                 if len(diffs) > 3:
                     diffs = diffs[:3]
                 res = [_[-1] for _ in diffs]
-                raise Exception("\n".join(res))
+                raise AssertionError("\n".join(res))
 
             gmks = 0.0
             gmksd = 0.0
@@ -177,8 +177,10 @@ class TestCompletionSimple(unittest.TestCase):
                 if n.mks2 < n.mks1 or (n.value == "baaaab" and n.mks1 != 4):
                     info = ""  # n.str_all_completions()
                     info2 = ""  # n.str_all_completions(use_precompute=True)
-                    raise Exception("issue with query '{0}'\n{1}\n##########\n{2}\n############\n{3}".format(
-                        n.value, n.str_mks(), info, info2))
+                    raise AssertionError(
+                        "issue with query '{0}'\n{1}\n##########\n"
+                        "{2}\n############\n{3}".format(
+                            n.value, n.str_mks(), info, info2))
 
                 gmks += len(n.value) - n.mks0
                 gmksd += len(n.value) - n.mks1
@@ -234,7 +236,7 @@ class TestCompletionSimple(unittest.TestCase):
             res = [_[-1] for _ in diffs]
             if len(res) > 3:
                 res = res[:3]
-            raise Exception("\n".join(res))
+            raise AssertionError("\n".join(res))
         assert len(ens) > 0
         m = ens.find("portes blanche")
         self.assertEqual(m.mks2, 7.8)

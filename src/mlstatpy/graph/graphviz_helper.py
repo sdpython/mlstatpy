@@ -19,7 +19,7 @@ def run_graphviz(filename, image, engine="dot"):
     """
     ext = os.path.splitext(image)[-1]
     if ext != ".png":
-        raise Exception("extension should be .png not " + str(ext))
+        raise RuntimeError("extension should be .png not " + str(ext))
     if sys.platform.startswith("win"):
         bin_ = os.path.dirname(find_graphviz_dot())
         # if bin not in os.environ["PATH"]:
@@ -29,7 +29,7 @@ def run_graphviz(filename, image, engine="dot"):
         cmd = f'"{engine}" -Tpng "{filename}" -o "{image}"'
     out, err = run_cmd(cmd, wait=True)
     if len(err) > 0:
-        raise Exception(
+        raise RuntimeError(
             f"Unable to run Graphviz\nCMD:\n{cmd}\nOUT:\n{out}\nERR:\n{err}")
     return out
 

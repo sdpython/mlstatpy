@@ -44,7 +44,7 @@ class TestCompletionLonger(unittest.TestCase):
                     if s[1].value == "Cannes 2005":
                         verif += 1
         if verif == 0:
-            raise Exception(leave.str_all_completions(use_precompute=True))
+            raise AssertionError(leave.str_all_completions(use_precompute=True))
 
         sugg = leave.all_completions()
         assert len(sugg) > 0
@@ -55,7 +55,7 @@ class TestCompletionLonger(unittest.TestCase):
                     if s == "Cannes 2005":
                         verif += 1
         if verif == 0:
-            raise Exception(leave.str_all_completions(use_precompute=False))
+            raise AssertionError(leave.str_all_completions(use_precompute=False))
 
 
 if __name__ == "__main__":

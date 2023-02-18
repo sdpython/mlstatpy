@@ -38,18 +38,18 @@ class TestGraphDistance(ExtTestCase):
         graph2["C"].label = "c"
         store = {}
         if len(list(graph1.enumerate_all_paths(True))) != 17:
-            raise Exception("expecting 17 here")
+            raise AssertionError("expecting 17 here")
         if len(list(graph2.enumerate_all_paths(True))) != 19:
-            raise Exception("expecting 19 here")
+            raise AssertionError("expecting 19 here")
 
         distance, graph = graph1.distance_matching_graphs_paths(graph2,
                                                                 use_min=False, store=store)
 
         if graph["h"].Label != "h":
-            raise Exception("we expect this node to be merged in the process")
+            raise AssertionError("we expect this node to be merged in the process")
 
         if distance is None:
-            raise Exception("expecting something different from None")
+            raise AssertionError("expecting something different from None")
 
         outfile1 = os.path.join(temp, "unittest_GraphDistance4_sub1.png")
         outfile2 = os.path.join(temp, "unittest_GraphDistance4_sub2.png")

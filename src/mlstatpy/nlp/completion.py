@@ -581,7 +581,7 @@ class CompletionTrieNode:
                         sug.stat.mks2i_ = self.mks_iter
                         update += 1
                 else:
-                    raise Exception("this case should not happen")
+                    raise RuntimeError("this case should not happen")
 
             # optimisation of second case of modified metric
             # in a separate function for profiling
