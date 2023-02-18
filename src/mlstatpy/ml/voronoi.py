@@ -75,7 +75,7 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
         for j in range(i + 1, L.shape[0]):
             li = L[i, :]
             lj = L[j, :]
-            c = (li - lj)
+            c = li - lj
             nc = (c.T @ c) ** 0.5
 
             # first condition
