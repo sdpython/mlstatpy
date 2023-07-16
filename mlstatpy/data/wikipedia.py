@@ -8,8 +8,9 @@ from pyquickhelper.filehelper import get_url_content_timeout, ungzip_files
 from .data_exceptions import DataException
 
 
-def download_pageviews(dt, folder=".", unzip=True, timeout=-1,
-                       overwrite=False, fLOG=noLOG):
+def download_pageviews(
+    dt, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG
+):
     """
     Downloads wikipedia pagacount for a precise date (up to the hours),
     the url follows the pattern::
@@ -33,22 +34,25 @@ def download_pageviews(dt, folder=".", unzip=True, timeout=-1,
     name = os.path.join(folder, file)
     unzipname = os.path.splitext(name)[0]
     if overwrite or (not os.path.exists(name) and not os.path.exists(unzipname)):
-        get_url_content_timeout(url, timeout=timeout,
-                                encoding=None, output=name, chunk=2**20, fLOG=fLOG)
+        get_url_content_timeout(
+            url, timeout=timeout, encoding=None, output=name, chunk=2**20, fLOG=fLOG
+        )
     if unzip and not os.path.exists(unzipname):
         names = ungzip_files(name, unzip=False, where_to=folder)
         os.remove(name)
         if isinstance(names, list):
             if len(names) != 1:
                 raise DataException(  # pragma: no cover
-                    f"Expecting only one file, not '{names}'")
+                    f"Expecting only one file, not '{names}'"
+                )
             return names[0]
         return names
     return name
 
 
-def download_dump(country, name, folder=".", unzip=True, timeout=-1,
-                  overwrite=False, fLOG=noLOG):
+def download_dump(
+    country, name, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG
+):
     """
     Downloads *wikipedia dumps* from
     `dumps.wikimedia.org/frwiki/latest/
@@ -62,28 +66,30 @@ def download_dump(country, name, folder=".", unzip=True, timeout=-1,
     @param      overwrite   overwrite
     @param      fLOG        logging function
     """
-    url = "https://dumps.wikimedia.org/{0}wiki/latest/{0}wiki-{1}".format(
-        country, name)
+    url = "https://dumps.wikimedia.org/{0}wiki/latest/{0}wiki-{1}".format(country, name)
     file = url.split("/")[-1]  # pylint: disable=C0207
     name = os.path.join(folder, file)
     unzipname = os.path.splitext(name)[0]
     if overwrite or (not os.path.exists(name) and not os.path.exists(unzipname)):
-        get_url_content_timeout(url, timeout=timeout,
-                                encoding=None, output=name, chunk=2**20, fLOG=fLOG)
+        get_url_content_timeout(
+            url, timeout=timeout, encoding=None, output=name, chunk=2**20, fLOG=fLOG
+        )
     if unzip and not os.path.exists(unzipname):
         names = ungzip_files(name, unzip=False, where_to=folder)
         os.remove(name)
         if isinstance(names, list):
             if len(names) != 1:
                 raise DataException(  # pragma: no cover
-                    f"Expecting only one file, not '{names}'")
+                    f"Expecting only one file, not '{names}'"
+                )
             return names[0]
         return names
-    return name[:-3] if name.endswith('.gz') else name
+    return name[:-3] if name.endswith(".gz") else name
 
 
-def download_titles(country, folder=".", unzip=True, timeout=-1,
-                    overwrite=False, fLOG=noLOG):
+def download_titles(
+    country, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG
+):
     """
     Downloads wikipedia titles from
     `dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz
@@ -96,9 +102,15 @@ def download_titles(country, folder=".", unzip=True, timeout=-1,
     @param      overwrite   overwrite
     @param      fLOG        logging function
     """
-    return download_dump(country, "latest-all-titles-in-ns0.gz",
-                         folder, unzip=unzip, timeout=timeout,
-                         overwrite=overwrite, fLOG=fLOG)
+    return download_dump(
+        country,
+        "latest-all-titles-in-ns0.gz",
+        folder,
+        unzip=unzip,
+        timeout=timeout,
+        overwrite=overwrite,
+        fLOG=fLOG,
+    )
 
 
 def normalize_wiki_text(text):

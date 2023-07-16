@@ -8,7 +8,6 @@ from mlstatpy.image.detection_segment import Point, Segment
 
 
 class TestGeometrie(unittest.TestCase):
-
     def test_point(self):
         p = Point(2, 2)
         pp = Point(3, 5)
@@ -23,7 +22,7 @@ class TestGeometrie(unittest.TestCase):
         ar = pp.arrondi()
         self.assertEqual(ar, Point(3, 4))
         sc = ar.scalaire(ar)
-        no = ar.norme()**2
+        no = ar.norme() ** 2
         self.assertEqual(sc, no)
         a = Point(1, 1).angle()
         b = Point(-1, 1).angle()

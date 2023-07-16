@@ -5,13 +5,17 @@
 import os
 import unittest
 from pyquickhelper.helpgen import rst2html
-from pyquickhelper.pycode import get_temp_folder, skipif_travis, skipif_appveyor, ExtTestCase
+from pyquickhelper.pycode import (
+    get_temp_folder,
+    skipif_travis,
+    skipif_appveyor,
+    ExtTestCase,
+)
 from pyquickhelper.filehelper import synchronize_folder
 
 
 class TestDocPage(ExtTestCase):
-
-    preamble = '''
+    preamble = """
             \\usepackage{etex}
             \\usepackage{fixltx2e} % LaTeX patches, \\textsubscript
             \\usepackage{cmap} % fix search and cut-and-paste in Acrobat
@@ -34,7 +38,9 @@ class TestDocPage(ExtTestCase):
             \\newcommand{\\R}{\\mathbb{R}}
             \\newcommand{\\HRule}{\\rule{\\linewidth}{0.5mm}}
             %\\titleformat{\\chapter}[hang]{\\Huge\\bfseries\\sffamily}{\\thechapter\\hsp}{0pt}{\\Huge\\bfseries\\sffamily}
-            '''.replace("            ", "")
+            """.replace(
+        "            ", ""
+    )
 
     custom_preamble = """\n
             \\usepackage[all]{xy}
@@ -47,8 +53,10 @@ class TestDocPage(ExtTestCase):
             \\newcommand{\\fleche}[1]{\\overrightarrow{ #1 }}
             \\newcommand{\\intervalle}[2]{\\left\\{#1,\\cdots,#2\\right\\}}
             \\newcommand{\\independant}[0]
-            {\\;\\makebox[3ex]{\\makebox[0ex]{\\rule[-0.2ex]{3ex}{.1ex}}\\!\\!\\!\\!\\makebox[.5ex][l]
-            {\\rule[-.2ex]{.1ex}{2ex}}\\makebox[.5ex][l]{\\rule[-.2ex]{.1ex}{2ex}}} \\,\\,}
+            {\\;\\makebox[3ex]{\\makebox[0ex]{\\rule[-0.2ex]
+            {3ex}{.1ex}}\\!\\!\\!\\!\\makebox[.5ex][l]
+            {\\rule[-.2ex]{.1ex}{2ex}}\\makebox[.5ex][l]
+            {\\rule[-.2ex]{.1ex}{2ex}}} \\,\\,}
             \\newcommand{\\esp}{\\mathbb{E}}
             \\newcommand{\\espf}[2]{\\mathbb{E}_{#1}\\pa{#2}}
             \\newcommand{\\var}{\\mathbb{V}}
@@ -69,7 +77,9 @@ class TestDocPage(ExtTestCase):
             \\newcommand{\\loimultinomiale}[1]{{\\cal M} \\pa{#1}}
             \\newcommand{\\variance}[1]{\\mathbb{V}\\pa{#1}}
             \\newcommand{\\scal}[2]{\\left<#1,#2\\right>}
-            """.replace("            ", "")
+            """.replace(
+        "            ", ""
+    )
 
     @skipif_travis("latex is not installed")
     @skipif_appveyor("latex is not installed")
@@ -77,40 +87,46 @@ class TestDocPage(ExtTestCase):
         temp = get_temp_folder(__file__, "temp_doc_page")
         preamble = TestDocPage.preamble + TestDocPage.custom_preamble
         this = os.path.abspath(os.path.dirname(__file__))
-        root = os.path.join(this, "..", "..", "_doc",
-                            "sphinxdoc", "source", "c_ml")
+        root = os.path.join(this, "..", "..", "_doc", "sphinxdoc", "source", "c_ml")
         image_path = "piecewise"
         rst = os.path.join(root, "piecewise.rst")
         imgs = os.path.join(root, image_path)
         content = self.read_file(rst)
-        synchronize_folder(imgs, os.path.join(
-            temp, image_path), create_dest=True)
+        synchronize_folder(imgs, os.path.join(temp, image_path), create_dest=True)
 
         epkg_dictionary = {
-            'XD': 'http://www.xavierdupre.fr',
-            'scikit-learn': 'https://scikit-learn.org/stable/',
-            'sklearn': ('http://scikit-learn.org/stable/',
-                        ('http://scikit-learn.org/stable/modules/generated/{0}.html', 1),
-                        ('http://scikit-learn.org/stable/modules/generated/{0}.{1}.html', 2)),
-            'ICML 2016': 'link',
+            "XD": "http://www.xavierdupre.fr",
+            "scikit-learn": "https://scikit-learn.org/stable/",
+            "sklearn": (
+                "http://scikit-learn.org/stable/",
+                ("http://scikit-learn.org/stable/modules/generated/{0}.html", 1),
+                ("http://scikit-learn.org/stable/modules/generated/{0}.{1}.html", 2),
+            ),
+            "ICML 2016": "link",
         }
-        writer = 'html'
-        ht = rst2html(content, writer=writer, layout="sphinx", keep_warnings=True,
-                      imgmath_latex_preamble=preamble, outdir=temp,
-                      epkg_dictionary=epkg_dictionary)
+        writer = "html"
+        ht = rst2html(
+            content,
+            writer=writer,
+            layout="sphinx",
+            keep_warnings=True,
+            imgmath_latex_preamble=preamble,
+            outdir=temp,
+            epkg_dictionary=epkg_dictionary,
+        )
         ht = ht.replace('src="_images/', 'src="')
-        ht = ht.replace('/scripts\\bokeh', '../bokeh_plot\\bokeh')
-        ht = ht.replace('/scripts/bokeh', '../bokeh_plot/bokeh')
+        ht = ht.replace("/scripts\\bokeh", "../bokeh_plot\\bokeh")
+        ht = ht.replace("/scripts/bokeh", "../bokeh_plot/bokeh")
         rst = os.path.join(temp, f"out.{writer}")
         self.write_file(rst, ht)
 
         ht = ht.split('<div class="section" id="notebooks">')[0]
 
         # Tests the content.
-        self.assertNotIn('runpythonerror', ht)
-        lines = ht.split('\n')
+        self.assertNotIn("runpythonerror", ht)
+        lines = ht.split("\n")
         for i, line in enumerate(lines):
-            if 'WARNING' in line:
+            if "WARNING" in line:
                 if "contains reference to nonexisting document" in lines[i + 1]:
                     continue
                 mes = f'WARNING issue\n  File "{rst}", line {i + 1}'

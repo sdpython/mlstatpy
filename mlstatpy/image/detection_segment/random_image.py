@@ -26,7 +26,7 @@ def random_noise_image(size, ratio=0.1):
     return img
 
 
-def random_segment_image(image, lmin=0.1, lmax=1., noise=0.01, density=1.):
+def random_segment_image(image, lmin=0.1, lmax=1.0, noise=0.01, density=1.0):
     """
     Ajoute un segment aléatoire à une image.
     Génère des points le long d'un segment aléatoire.
@@ -38,6 +38,7 @@ def random_segment_image(image, lmin=0.1, lmax=1., noise=0.01, density=1.):
     @param      noise       bruit
     @return                 dictionary with *size, angle, x1, y1, x2, y2, nbpoints*
     """
+
     def move_coordinate(x1, y1, x2, y2, X, Y):
         if x2 < 0:
             x1 -= x2
@@ -46,7 +47,7 @@ def random_segment_image(image, lmin=0.1, lmax=1., noise=0.01, density=1.):
         x2 = min(max(x2, 0), X - 1)
         y1 = min(max(y1, 0), Y - 1)
         y2 = min(max(y2, 0), Y - 1)
-        size = int(((x1 - x2)**2 + (y1 - y2) ** 2) ** 0.5)
+        size = int(((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5)
         return x1, y1, x2, y2, size
 
     mind = min(image.shape)
@@ -54,30 +55,37 @@ def random_segment_image(image, lmin=0.1, lmax=1., noise=0.01, density=1.):
     lmax = int(mind * lmax)
     size = nprnd.randint(lmin, lmax)
     angle = nprnd.random() * math.pi  # pylint: disable=E1101
-    x1 = nprnd.randint(
-        image.shape[1] - int(size * abs(math.cos(angle)) - 1))
+    x1 = nprnd.randint(image.shape[1] - int(size * abs(math.cos(angle)) - 1))
     y1 = nprnd.randint(image.shape[0] - int(size * math.sin(angle) - 1))
     x2 = x1 + size * math.cos(angle)
     y2 = y1 + size * math.sin(angle)
     x1, y1, x2, y2, size = move_coordinate(
-        x1, y1, x2, y2, image.shape[1], image.shape[0])
+        x1, y1, x2, y2, image.shape[1], image.shape[0]
+    )
     t = nprnd.randint(0, size, int(size * density))
     xs = t * math.cos(angle) + x1
     ys = t * math.sin(angle) + x2
-    noise = nprnd.randn(  # pylint: disable=E1101
-        xs.shape[0] * 2).reshape(xs.shape[0], 2) * noise * mind
+    noise = (
+        nprnd.randn(xs.shape[0] * 2).reshape(xs.shape[0], 2)  # pylint: disable=E1101
+        * noise
+        * mind
+    )
     xs += noise[:, 0]
     ys += noise[:, 1]
     xs = numpy.maximum(xs, numpy.zeros(xs.shape[0]))  # pylint: disable=E1111
-    ys = numpy.maximum(ys, numpy.zeros(
-        xs.shape[0]))  # pylint: disable=E1111,E1101,E1136
-    xs = numpy.minimum(xs, numpy.zeros(  # pylint: disable=E1101,E1136
-        xs.shape[0]) + image.shape[1] - 1)  # pylint: disable=E1111,E1101,E1136
-    ys = numpy.minimum(ys, numpy.zeros(  # pylint: disable=E1101,E1136
-        xs.shape[0]) + image.shape[0] - 1)  # pylint: disable=E1111,E1101,E1136
+    ys = numpy.maximum(
+        ys, numpy.zeros(xs.shape[0])
+    )  # pylint: disable=E1111,E1101,E1136
+    xs = numpy.minimum(
+        xs, numpy.zeros(xs.shape[0]) + image.shape[1] - 1  # pylint: disable=E1101,E1136
+    )  # pylint: disable=E1111,E1101,E1136
+    ys = numpy.minimum(
+        ys, numpy.zeros(xs.shape[0]) + image.shape[0] - 1  # pylint: disable=E1101,E1136
+    )  # pylint: disable=E1111,E1101,E1136
     xs = xs.astype(numpy.int32)  # pylint: disable=E1101
     ys = ys.astype(numpy.int32)  # pylint: disable=E1101
     image[ys, xs] = 1
-    res = dict(size=size, angle=angle, x1=x1, y1=y1, x2=x2, y2=y2,
-               nbpoints=xs.shape[0])  # pylint: disable=E1136
+    res = dict(
+        size=size, angle=angle, x1=x1, y1=y1, x2=x2, y2=y2, nbpoints=xs.shape[0]
+    )  # pylint: disable=E1136
     return res

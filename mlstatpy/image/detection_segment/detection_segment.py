@@ -27,12 +27,12 @@ def convert_array2PIL(img, mode=None):
     Le mode ``'binary'`` convertit une image issue
     de la fonction @see fn random_noise_image.
     """
-    if mode == 'binary':
+    if mode == "binary":
         fimg = img.astype(numpy.float32)
-        img255 = (- fimg + 1) * 255
+        img255 = (-fimg + 1) * 255
         img = img255.astype(numpy.uint8)
         mode = None
-    return _load_image(img, 'PIL', mode=mode)
+    return _load_image(img, "PIL", mode=mode)
 
 
 def convert_PIL2array(img):
@@ -43,10 +43,10 @@ def convert_PIL2array(img):
     @param      img     :epkg:`Pillow`
     @return             :epkg:`numpy:array`
     """
-    return _load_image(img, 'array')
+    return _load_image(img, "array")
 
 
-def _load_image(img, format='PIL', mode=None):
+def _load_image(img, format="PIL", mode=None):
     """
     Charge une image en différents formats.
 
@@ -60,9 +60,9 @@ def _load_image(img, format='PIL', mode=None):
         img = Image.open(img)
         return _load_image(img, format)
     if isinstance(img, Image.Image):
-        if format == 'PIL':
+        if format == "PIL":
             return img
-        if format == 'array':
+        if format == "array":
             d1, d0 = img.size[1], img.size[0]
             img = numpy.array(img.getdata(), dtype=numpy.uint8)
             if len(img.shape) == 1:
@@ -72,24 +72,20 @@ def _load_image(img, format='PIL', mode=None):
             elif len(img.shape) == 3:
                 gray = img.shape[0] * img.shape[1] * img.shape[2] - d1 * d0
             else:
-                raise ValueError(  # pragma: no cover
-                    f"Unexpected shape {img.shape}")
+                raise ValueError(f"Unexpected shape {img.shape}")  # pragma: no cover
             if gray == 0:
                 img = img.reshape((d1, d0))
             else:
                 img = img.reshape((d1, d0, 3))
             return img
-        raise ValueError(  # pragma: no cover
-            f"Unexpected value for fomat: '{format}'")
+        raise ValueError(f"Unexpected value for fomat: '{format}'")  # pragma: no cover
     if isinstance(img, numpy.ndarray):
-        if format == 'array':
+        if format == "array":
             return img
-        if format == 'PIL':
+        if format == "PIL":
             return Image.fromarray(img, mode=mode)
-        raise ValueError(  # pragma: no cover
-            f"Unexpected value for fomat: '{format}'")
-    raise TypeError(  # pragma: no cover
-        f"numpy array expected not {type(img)}")
+        raise ValueError(f"Unexpected value for fomat: '{format}'")  # pragma: no cover
+    raise TypeError(f"numpy array expected not {type(img)}")  # pragma: no cover
 
 
 def compute_gradient(img, color=None):
@@ -112,7 +108,7 @@ def _calcule_gradient(img, color=None):
     @return             array of *shape (y, x, 2)*, first dimension is *dx*,
                         second one is *dy*
     """
-    img = _load_image(img, 'array')
+    img = _load_image(img, "array")
     img = img.astype(numpy.float32)
     if color is not None:
         img = img[:, :, color]
@@ -138,7 +134,7 @@ def plot_gradient(image, gradient, more=None, direction=-1):
     si direction > 0, cette fonction affiche egalement le gradient sur
     l'image tous les 10 pixels si direction vaut 10.
     """
-    image_ = _load_image(image, 'PIL')
+    image_ = _load_image(image, "PIL")
     image = ImageDraw.Draw(image_)
     X, Y = image_.size
     if direction != -1:
@@ -146,7 +142,7 @@ def plot_gradient(image, gradient, more=None, direction=-1):
             for y in range(0, Y - 1):
                 n = gradient[y, x]
                 if more is None:
-                    v = int((n[0]**2 + n[1] ** 2)**0.5 + 0.5)
+                    v = int((n[0] ** 2 + n[1] ** 2) ** 0.5 + 0.5)
                 elif more == "x":
                     v = int(n[0] / 2 + 127 + 0.5)
                 else:
@@ -159,7 +155,7 @@ def plot_gradient(image, gradient, more=None, direction=-1):
         for x in range(0, X, direction):
             for y in range(0, Y, direction):
                 n = gradient[y, x]
-                t = (n[0]**2 + n[1] ** 2)**0.5
+                t = (n[0] ** 2 + n[1] ** 2) ** 0.5
                 if t == 0:
                     continue
                 m = copy.copy(n)
@@ -169,8 +165,7 @@ def plot_gradient(image, gradient, more=None, direction=-1):
                 if t < 2:
                     t = 2
                 m *= t
-                image.line([(x, y), (x + int(m[0]), y + int(m[1]))],
-                           fill=(255, 255, 0))
+                image.line([(x, y), (x + int(m[0]), y + int(m[1]))], fill=(255, 255, 0))
     elif direction == -2:
         # derniere solution, la couleur represente l'orientation
         # en chaque point de l'image
@@ -184,7 +179,8 @@ def plot_gradient(image, gradient, more=None, direction=-1):
                 image.line([(x, y), (x, y)], fill=(0, j, i))
     else:
         raise ValueError(  # pragma: no cover
-            f"Unexpected value for direction={direction}")
+            f"Unexpected value for direction={direction}"
+        )
 
     return image_
 
@@ -200,7 +196,7 @@ def plot_segments(image, segments, outfile=None, color=(255, 0, 0)):
     @param  color       couleur
     @return             nom de fichier ou image
     """
-    image = _load_image(image, 'PIL')
+    image = _load_image(image, "PIL")
     draw = ImageDraw.Draw(image)
     for seg in segments:
         draw.line([(seg.a.x, seg.a.y), (seg.b.x, seg.b.y)], fill=color)
@@ -210,10 +206,16 @@ def plot_segments(image, segments, outfile=None, color=(255, 0, 0)):
     return image
 
 
-def detect_segments(image, proba_bin=1.0 / 16,
-                    cos_angle=math.cos(1.0 / 16 / 2 * (math.pi * 2)),
-                    seuil_nfa=1e-5, seuil_norme=2, angle=math.pi / 24.0,
-                    stop=-1, verbose=False):
+def detect_segments(
+    image,
+    proba_bin=1.0 / 16,
+    cos_angle=math.cos(1.0 / 16 / 2 * (math.pi * 2)),
+    seuil_nfa=1e-5,
+    seuil_norme=2,
+    angle=math.pi / 24.0,
+    stop=-1,
+    verbose=False,
+):
     """
     Détecte les segments dans une image.
 
@@ -232,7 +234,7 @@ def detect_segments(image, proba_bin=1.0 / 16,
     @param  verbose     affiche l'avancement
     @return             les segments
     """
-    gray_image = _load_image(image, 'PIL').convert('L')
+    gray_image = _load_image(image, "PIL").convert("L")
     grad = _calcule_gradient(gray_image)
 
     # on calcule les tables de la binomiale pour eviter d'avoir a le fait a
@@ -242,7 +244,8 @@ def detect_segments(image, proba_bin=1.0 / 16,
     binomiale = tabule_queue_binom(nbbin, proba_bin)
 
     # nb_seg est le nombre total de segment de l'image
-    # il y a xx * yy pixels possibles dont (xx*yy)^2 couples de pixels (donc de segments)
+    # il y a xx * yy pixels possibles dont (xx*yy)^2
+    # couples de pixels (donc de segments)
     nb_seg = xx * xx * yy * yy
 
     # on cree une instance de la classe permettant de parcourir
@@ -254,13 +257,12 @@ def detect_segments(image, proba_bin=1.0 / 16,
     ti = time.perf_counter()  # memorise l'heure de depart
     # pour savoir combien de segments on a deja visite (seg)
     n = 0
-    cont = True         # condition d'arret de la boucle
+    cont = True  # condition d'arret de la boucle
 
     # on cree une classe permettant de recevoir les informations relatives
     # a l'image et au gradient pour un segment reliant deux points
     # du contour de l'image
-    points = [InformationPoint(Point(0, 0), False, 0)
-              for i in range(0, xx + yy)]
+    points = [InformationPoint(Point(0, 0), False, 0) for i in range(0, xx + yy)]
     ligne = LigneGradient(points, seuil_norme=seuil_norme, seuil_nfa=seuil_nfa)
 
     # premier segment
@@ -271,7 +273,6 @@ def detect_segments(image, proba_bin=1.0 / 16,
 
     # tant qu'on a pas fini
     while cont:
-
         # calcule les informations relative a un segment de l'image reliant deux bords
         # position des pixels, norme du gradient, alignement avec le segment
         seg.decoupe_gradient(grad, cos_angle, ligne, seuil_norme)
@@ -295,8 +296,15 @@ def detect_segments(image, proba_bin=1.0 / 16,
         # pour verifier que cela avance
         if verbose and n % 1000 == 0:
             print(  # pragma: no cover
-                "n = ", n, " ... ", len(segment), " temps ",
-                f"{time.perf_counter() - ti:2.2f}", " sec",
-                "nalign", not_aligned)
+                "n = ",
+                n,
+                " ... ",
+                len(segment),
+                " temps ",
+                f"{time.perf_counter() - ti:2.2f}",
+                " sec",
+                "nalign",
+                not_aligned,
+            )
 
     return segment

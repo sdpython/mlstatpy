@@ -40,7 +40,7 @@ def proba_poisson(lx, i):
     lorsque :math:`X` suit une loi de Poisson de paramètre
     :math:`\\lambda`.
     """
-    return math.exp(-lx) * (lx ** i) / factorielle(i)
+    return math.exp(-lx) * (lx**i) / factorielle(i)
 
 
 def esperance(X, p, q, s, lx):
@@ -84,7 +84,8 @@ def find_maximum(res):
     Trouver le couple (nombre de poulets achetés, profit)
     lorsque le profit est maximum.
 
-    @param      res         résultat de la fonction :func:`maximum <mlstatpy.garden.poulet.maximum>`
+    @param      res         résultat de la fonction
+                            :func:`maximum <mlstatpy.garden.poulet.maximum>`
     @return                 ``(X, profit)`` maximum
     """
     m = (0, 0)
@@ -99,7 +100,7 @@ def exponentielle(lx):
     Simule une loi exponentielle de paramètre :math:`\\lambda`.
     """
     u = random.random()
-    return - 1.0 / lx * math.log(1.0 - u)
+    return -1.0 / lx * math.log(1.0 - u)
 
 
 def poisson(lx):
@@ -119,7 +120,8 @@ def poisson_melange(params, coef):
     Simule une variable selon un mélange de loi de Poisson.
 
     @param      params      liste de paramètre :math:`\\lambda`
-    @param      coef        ``coef[i]`` coefficient associé à la loi de paramètre ``params[i]``
+    @param      coef        ``coef[i]`` coefficient associé
+                            à la loi de paramètre ``params[i]``
     @return                 valeur simulée
     """
     s = 0
@@ -134,7 +136,8 @@ def histogramme_poisson_melange(params, coef, n=100000):
     Calcule un histogramme d'un mélange de loi de Poisson.
 
     @param      params      liste de paramètre :math:`\\lambda`
-    @param      coef        ``coef[i]`` coefficient associé à la loi de paramètre ``params[i]``
+    @param      coef        ``coef[i]`` coefficient associé
+                            à la loi de paramètre ``params[i]``
     @return                 histogramme
     """
     h = [0.0 for i in range(0, 4 * max(params))]
@@ -162,12 +165,14 @@ def f_proba_poisson_melange():
         lorsque :math:`X` suit un mélange de lois.
 
         @param      params      liste de paramètre :math:`\\lambda`
-        @param      coef        ``coef[i]`` coefficient associé à la loi de paramètre ``params[i]``
+        @param      coef        ``coef[i]`` coefficient associé
+                                à la loi de paramètre ``params[i]``
         @return                 valeur
         """
         if len(proba_poisson_melange_tableau) == 0:
             proba_poisson_melange_tableau.extend(
-                histogramme_poisson_melange(params, coef))
+                histogramme_poisson_melange(params, coef)
+            )
         if i >= len(proba_poisson_melange_tableau):
             return 0.0  # pragma: no cover
         return proba_poisson_melange_tableau[i]

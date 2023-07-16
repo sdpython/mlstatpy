@@ -97,9 +97,12 @@ class LigneGradient:
         ext = []
         if self.has_aligned_point():
             for i in range(0, len(self)):
-                if self.info_ligne[i].aligne and \
-                        (i == 0 or i == len(self) - 1 or not self.info_ligne[i - 1].aligne or
-                         not self.info_ligne[i + 1].aligne):
+                if self.info_ligne[i].aligne and (
+                    i == 0
+                    or i == len(self) - 1
+                    or not self.info_ligne[i - 1].aligne
+                    or not self.info_ligne[i + 1].aligne
+                ):
                     ext.append(i)
         return ext
 
@@ -157,7 +160,7 @@ class LigneGradient:
 
         # premier couple d'extrémités
         ij = self.premier_chemin(ext)
-        res = []       # pour memoriser les segments significatifs
+        res = []  # pour memoriser les segments significatifs
 
         while ij is not None:  # tant qu'il reste un couple d'extremite
             # probabilite de fausses alarmes pour ce segment
@@ -167,9 +170,11 @@ class LigneGradient:
                 # si cette proba est suffisamment faible,
                 # l'agencement est un cas rare (non aleatoire),
                 # il est significatif
-                seg = SegmentNFA(self.info_ligne[ext[ij[0]]].pos,
-                                 self.info_ligne[ext[ij[1]]].pos,
-                                 nfa)
+                seg = SegmentNFA(
+                    self.info_ligne[ext[ij[0]]].pos,
+                    self.info_ligne[ext[ij[1]]].pos,
+                    nfa,
+                )
                 # on l'ajoute a la liste
                 res.append(seg)
 

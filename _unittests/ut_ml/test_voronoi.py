@@ -13,60 +13,71 @@ from pyquickhelper.pycode import ExtTestCase, add_missing_development_version
 
 
 class TestVoronoi(ExtTestCase):
-
     def setUp(self):
         add_missing_development_version(["mlinsights"], __file__, hide=True)
 
     def test_iris(self):
         from mlstatpy.ml import voronoi_estimation_from_lr
+
         data = load_iris()
         X, y = data.data[:, :2], data.target
         clr = LogisticRegression(solver="liblinear")
         clr.fit(X, y)
-        C = [1., 0.]
-        D = 3.
-        self.assertRaise(lambda: voronoi_estimation_from_lr(
-            clr.coef_, clr.intercept_, C, None), ValueError)
-        self.assertRaise(lambda: voronoi_estimation_from_lr(
-            clr.coef_, clr.intercept_, C, [D]), TypeError)
+        C = [1.0, 0.0]
+        D = 3.0
+        self.assertRaise(
+            lambda: voronoi_estimation_from_lr(clr.coef_, clr.intercept_, C, None),
+            ValueError,
+        )
+        self.assertRaise(
+            lambda: voronoi_estimation_from_lr(clr.coef_, clr.intercept_, C, [D]),
+            TypeError,
+        )
 
         std = StringIO()
         with redirect_stdout(std):
             points = voronoi_estimation_from_lr(
-                clr.coef_, clr.intercept_, C, D, qr=False, verbose=True)
+                clr.coef_, clr.intercept_, C, D, qr=False, verbose=True
+            )
             self.assertEqual(points.shape, (3, 2))
             expected_values = numpy.array(
-                [[3., 4.137], [5.044, 0.281], [5.497, 0.184]])
+                [[3.0, 4.137], [5.044, 0.281], [5.497, 0.184]]
+            )
             self.assertEqualArray(expected_values, points, decimal=2)
 
             points = voronoi_estimation_from_lr(
-                clr.coef_, clr.intercept_, C, D, qr=True, verbose=True)
+                clr.coef_, clr.intercept_, C, D, qr=True, verbose=True
+            )
             self.assertEqual(points.shape, (3, 2))
             expected_values = numpy.array(
-                [[3., 4.137], [5.044, 0.281], [5.497, 0.184]])
+                [[3.0, 4.137], [5.044, 0.281], [5.497, 0.184]]
+            )
             self.assertEqualArray(expected_values, points, decimal=2)
         std = std.getvalue()
-        self.assertIn('[voronoi_estimation_from_lr] iter=', std)
+        self.assertIn("[voronoi_estimation_from_lr] iter=", std)
 
     def test_iris_dim4(self):
         from mlstatpy.ml.voronoi import voronoi_estimation_from_lr
+
         data = load_iris()
         X, y = data.data[:, :4], data.target
         clr = LogisticRegression(solver="liblinear")
         clr.fit(X, y)
-        C = [1., 0.]
-        D = 3.
-        self.assertRaise(lambda: voronoi_estimation_from_lr(
-            clr.coef_, clr.intercept_, C, None), ValueError)
-        self.assertRaise(lambda: voronoi_estimation_from_lr(
-            clr.coef_, clr.intercept_, C, [D]), ValueError)
+        C = [1.0, 0.0]
+        D = 3.0
+        self.assertRaise(
+            lambda: voronoi_estimation_from_lr(clr.coef_, clr.intercept_, C, None),
+            ValueError,
+        )
+        self.assertRaise(
+            lambda: voronoi_estimation_from_lr(clr.coef_, clr.intercept_, C, [D]),
+            ValueError,
+        )
 
-        C = [1., 0., 0., 0.]
-        points = voronoi_estimation_from_lr(
-            clr.coef_, clr.intercept_, C, D, qr=False)
+        C = [1.0, 0.0, 0.0, 0.0]
+        points = voronoi_estimation_from_lr(clr.coef_, clr.intercept_, C, D, qr=False)
         self.assertEqual(points.shape, (3, 4))
-        points2 = voronoi_estimation_from_lr(
-            clr.coef_, clr.intercept_, C, D, qr=True)
+        points2 = voronoi_estimation_from_lr(clr.coef_, clr.intercept_, C, D, qr=True)
         self.assertEqual(points2.shape, (3, 4))
         self.assertEqualArray(points2, points2, decimal=5)
 
@@ -88,8 +99,9 @@ class TestVoronoi(ExtTestCase):
         clr = LogisticRegression(solver="liblinear")
         clr.fit(X, Y)
 
-        points = voronoi_estimation_from_lr(clr.coef_, clr.intercept_, qr=True,
-                                            verbose=False)
+        points = voronoi_estimation_from_lr(
+            clr.coef_, clr.intercept_, qr=True, verbose=False
+        )
         self.assertEqual(points.shape, (12, 2))
         self.assertGreater(points.ravel().min(), -35)
         self.assertLesser(points.ravel().max(), 7.2)
@@ -126,14 +138,15 @@ class TestVoronoi(ExtTestCase):
 
         std = StringIO()
         with redirect_stdout(std):
-            points = voronoi_estimation_from_lr(clr.coef_, clr.intercept_, qr=True,
-                                                verbose=True, max_iter=20)
+            points = voronoi_estimation_from_lr(
+                clr.coef_, clr.intercept_, qr=True, verbose=True, max_iter=20
+            )
         self.assertEqual(points.shape, (16, 2))
         self.assertGreater(points.ravel().min(), -15)
         self.assertLesser(points.ravel().max(), 16)
         std = std.getvalue()
-        self.assertIn('del P', std)
-        self.assertIn('[voronoi_estimation_from_lr] iter', std)
+        self.assertIn("del P", std)
+        self.assertIn("[voronoi_estimation_from_lr] iter", std)
 
 
 if __name__ == "__main__":

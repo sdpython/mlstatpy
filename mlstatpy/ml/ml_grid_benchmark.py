@@ -17,9 +17,19 @@ class MlGridBenchMark(GridBenchMark):
     The class tests a list of model over a list of datasets.
     """
 
-    def __init__(self, name, datasets, clog=None, fLOG=noLOG, path_to_images=".",
-                 cache_file=None, progressbar=None, graphx=None, graphy=None,
-                 **params):
+    def __init__(
+        self,
+        name,
+        datasets,
+        clog=None,
+        fLOG=noLOG,
+        path_to_images=".",
+        cache_file=None,
+        progressbar=None,
+        graphx=None,
+        graphy=None,
+        **params,
+    ):
         """
         @param      name            name of the test
         @param      datasets        list of dictionary of dataframes
@@ -43,9 +53,17 @@ class MlGridBenchMark(GridBenchMark):
         * ``'X'``: features
         * ``'Y'``: labels (optional)
         """
-        GridBenchMark.__init__(self, name=name, datasets=datasets, clog=clog, fLOG=fLOG,
-                               path_to_images=path_to_images, cache_file=cache_file,
-                               progressbar=progressbar, **params)
+        GridBenchMark.__init__(
+            self,
+            name=name,
+            datasets=datasets,
+            clog=clog,
+            fLOG=fLOG,
+            path_to_images=path_to_images,
+            cache_file=cache_file,
+            progressbar=progressbar,
+            **params,
+        )
         self._xaxis = graphx
         self._yaxis = graphy
 
@@ -57,8 +75,7 @@ class MlGridBenchMark(GridBenchMark):
         @param      params      additional parameters
         @return                 dataset (like info), dictionary for metrics
         """
-        ds, appe, params = GridBenchMark.preprocess_dataset(
-            self, dsi, **params)
+        ds, appe, params = GridBenchMark.preprocess_dataset(self, dsi, **params)
 
         no_split = ds["no_split"] if "no_split" in ds else False
 
@@ -70,8 +87,7 @@ class MlGridBenchMark(GridBenchMark):
         spl = ["X", "Y", "weight", "group"]
         names = [_ for _ in spl if _ in ds]
         if len(names) == 0:
-            raise ValueError(  # pragma: no cover
-                "No dataframe or matrix was found.")
+            raise ValueError("No dataframe or matrix was found.")  # pragma: no cover
         mats = [ds[_] for _ in names]
 
         pars = {"train_size", "test_size"}
@@ -98,10 +114,10 @@ class MlGridBenchMark(GridBenchMark):
         """
         if not isinstance(ds, tuple) and len(ds) != 2:
             raise TypeError(  # pragma: no cover
-                "ds must a tuple with two dictionaries train, test")
+                "ds must a tuple with two dictionaries train, test"
+            )
         if "model" not in params:
-            raise KeyError(  # pragma: no cover
-                "params must contains key 'model'")
+            raise KeyError("params must contains key 'model'")  # pragma: no cover
         model = params["model"]
         # we assume model is a function which creates a model
         model = model()
@@ -114,10 +130,10 @@ class MlGridBenchMark(GridBenchMark):
         """
         if not isinstance(ds, tuple) and len(ds) != 2:
             raise TypeError(  # pragma: no cover
-                "ds must a tuple with two dictionaries train, test")
+                "ds must a tuple with two dictionaries train, test"
+            )
         if "model" in params:
-            raise KeyError(  # pragma: no cover
-                "params must not contains key 'model'")
+            raise KeyError("params must not contains key 'model'")  # pragma: no cover
         return self.score(ds[1], model, **params)
 
     def fit(self, ds, model, **params):
@@ -128,11 +144,11 @@ class MlGridBenchMark(GridBenchMark):
         @param      model       model to train
         """
         if "X" not in ds:
-            raise KeyError(  # pragma: no cover
-                "ds must contain key 'X'")
+            raise KeyError("ds must contain key 'X'")  # pragma: no cover
         if "model" in params:
             raise KeyError(  # pragma: no cover
-                "params must not contain key 'model', this is the model to train")
+                "params must not contain key 'model', this is the model to train"
+            )
         X = ds["X"]
         Y = ds.get("Y", None)
         weight = ds.get("weight", None)
@@ -155,8 +171,7 @@ class MlGridBenchMark(GridBenchMark):
         Y = ds.get("Y", None)
 
         if "weight" in ds:
-            raise NotImplementedError(  # pragma: no cover
-                "weight are not used yet")
+            raise NotImplementedError("weight are not used yet")  # pragma: no cover
 
         metrics = {}
         appe = {}
@@ -195,6 +210,7 @@ class MlGridBenchMark(GridBenchMark):
         """
         import matplotlib.pyplot as plt  # pylint: disable=C0415
         import matplotlib.cm as mcm  # pylint: disable=C0415
+
         df = self.to_df()
 
         def local_graph(vx, vy, ax=None, text=True, figsize=(5, 5)):
@@ -214,11 +230,24 @@ class MlGridBenchMark(GridBenchMark):
                     tx = subset[vx].mean()
                     ty = subset[vy].mean()
                     if not numpy.isnan(tx) and not numpy.isnan(ty):
-                        subset.plot(x=vx, y=vy, kind="scatter",
-                                    label=btry, ax=ax, color=colors[i])
+                        subset.plot(
+                            x=vx,
+                            y=vy,
+                            kind="scatter",
+                            label=btry,
+                            ax=ax,
+                            color=colors[i],
+                        )
                         if text:
-                            ax.text(tx, ty + decy, btry, size='small',
-                                    color=colors[i], ha='center', va='bottom')
+                            ax.text(
+                                tx,
+                                ty + decy,
+                                btry,
+                                size="small",
+                                color=colors[i],
+                                ha="center",
+                                va="bottom",
+                            )
             ax.set_xlabel(vx)
             ax.set_ylabel(vy)
             return ax
@@ -228,21 +257,24 @@ class MlGridBenchMark(GridBenchMark):
             for vx in self._xaxis:
                 for vy in self._yaxis:
                     self.fLOG(f"Plotting {vx} x {vy}")
-                    func_graph = lambda ax=None, text=True, vx=vx, vy=vy, **kwargs: \
-                        local_graph(vx, vy, ax=ax, text=text, **kwargs)
+                    func_graph = (
+                        lambda ax=None, text=True, vx=vx, vy=vy, **kwargs: local_graph(
+                            vx, vy, ax=ax, text=text, **kwargs
+                        )
+                    )
 
                     if path_to_images is not None:
                         img = os.path.join(
-                            path_to_images, f"img-{self.Name}-{vx}x{vy}.png")
-                        gr = self.LocalGraph(
-                            func_graph, img, root=path_to_images)
+                            path_to_images, f"img-{self.Name}-{vx}x{vy}.png"
+                        )
+                        gr = self.LocalGraph(func_graph, img, root=path_to_images)
                         self.fLOG(f"Saving '{img}'")
                         fig, ax = plt.subplots(1, 1, figsize=(8, 8))
                         gr.plot(ax=ax, text=True)
                         fig.savefig(img)
                         self.fLOG("Done")
                         res.append(gr)
-                        plt.close('all')
+                        plt.close("all")
                     else:
                         gr = self.LocalGraph(func_graph)
                         res.append(gr)
@@ -268,15 +300,17 @@ class MlGridBenchMark(GridBenchMark):
 
         if grid is None:
             import matplotlib.pyplot as plt  # pylint: disable=C0415
-            fg = kwargs.get('figsize', (5 * size[0], 10))
+
+            fg = kwargs.get("figsize", (5 * size[0], 10))
             _, grid = plt.subplots(size[0], size[1], figsize=fg)
-            if 'figsize' in kwargs:
-                del kwargs['figsize']  # pragma: no cover
+            if "figsize" in kwargs:
+                del kwargs["figsize"]  # pragma: no cover
         else:
             shape = grid.shape
             if shape[0] * shape[1] < nb:
                 raise ValueError(  # pragma: no cover
-                    f"The graph is not big enough {shape} < {nb}")
+                    f"The graph is not big enough {shape} < {nb}"
+                )
 
         x = 0
         y = 0

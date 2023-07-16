@@ -30,7 +30,8 @@ def run_graphviz(filename, image, engine="dot"):
     out, err = run_cmd(cmd, wait=True)
     if len(err) > 0:
         raise RuntimeError(
-            f"Unable to run Graphviz\nCMD:\n{cmd}\nOUT:\n{out}\nERR:\n{err}")
+            f"Unable to run Graphviz\nCMD:\n{cmd}\nOUT:\n{out}\nERR:\n{err}"
+        )
     return out
 
 
@@ -74,22 +75,20 @@ def edges2gv(vertices, edges):
         if v is None:
             li.append(f"{k} ;")
         elif len(v) == 1:
-            li.append(f"\"{k}\" [label=\"{v[0]}\"];")
+            li.append(f'"{k}" [label="{v[0]}"];')
         elif len(v) == 2:
-            li.append(
-                f"\"{k}\" [label=\"{v[0]}\",fillcolor={v[1]},color={v[1]}];")
+            li.append(f'"{k}" [label="{v[0]}",fillcolor={v[1]},color={v[1]}];')
         else:
             raise ValueError("unable to understand " + str(v))
 
     for edge in edges:
         i, j = edge[:2]
         if len(edge) == 2:
-            li.append(f"\"{i}\" -> \"{j}\";")
+            li.append(f'"{i}" -> "{j}";')
         elif len(edge) == 3:
-            li.append(f"\"{i}\" -> \"{j}\" [label=\"{edge[2]}\"];")
+            li.append(f'"{i}" -> "{j}" [label="{edge[2]}"];')
         elif len(edge) == 4:
-            li.append(
-                f"\"{i}\" -> \"{j}\" [label=\"{edge[2]}\",color={edge[3]}];")
+            li.append(f'"{i}" -> "{j}" [label="{edge[2]}",color={edge[3]}];')
         else:
             raise ValueError("unable to understand " + str(edge))
     li.append("}")
@@ -126,6 +125,5 @@ def draw_graph_graphviz(vertices, edges, image=None, engine="dot"):
 
     out = run_graphviz(filename, image, engine=engine)
     if not os.path.exists(image):
-        raise FileNotFoundError(
-            f"GraphViz failed with no reason. '{image}' not found.")
+        raise FileNotFoundError(f"GraphViz failed with no reason. '{image}' not found.")
     return out

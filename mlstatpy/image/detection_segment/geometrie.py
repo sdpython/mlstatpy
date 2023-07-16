@@ -15,6 +15,7 @@ class Point:
     Définit un point de l'image ou un vecteur,
     deux coordonnées *x* et *y* qui sont réelles.
     """
+
     __slots__ = "x", "y"
 
     def __init__(self, x, y):
@@ -24,17 +25,17 @@ class Point:
 
     def __str__(self):
         """permet d'afficher un point avec l'instruction print"""
-        return f'({self.x},{self.y})'
+        return f"({self.x},{self.y})"
 
     def __repr__(self):
         """usuel"""
-        return f'Point({self.x}, {self.y})'
+        return f"Point({self.x}, {self.y})"
 
     def normalise(self):
         """normalise le vecteur, sa norme devient 1"""
         v = self.x * self.x + self.y * self.y
         v = math.sqrt(v)
-        if v > 0:   # evite les erreurs si sa norme est nulle
+        if v > 0:  # evite les erreurs si sa norme est nulle
             self.x /= v
             self.y /= v
 
@@ -61,7 +62,7 @@ class Point:
         """
         return numpy.array([self.x, self.y])
 
-    def scalaire(self, k: 'Point') -> float:
+    def scalaire(self, k: "Point") -> float:
         """
         Calcule le produit scalaire.
 
@@ -80,7 +81,7 @@ class Point:
         """ajoute un vecteur a celui-ci"""
         return Point(self.x + ad.x, self.y + ad.y)
 
-    def arrondi(self) -> 'Point':
+    def arrondi(self) -> "Point":
         """
         retourne les coordonnées arrondies à l'entier le plus proche
         """

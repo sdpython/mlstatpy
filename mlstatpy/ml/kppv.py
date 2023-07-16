@@ -42,10 +42,12 @@ class NuagePoints:
         """
         if n_neighbors != 1:
             raise NotImplementedError(  # pragma: no cover
-                "Not implemented when n_neighbors != 1.")
+                "Not implemented when n_neighbors != 1."
+            )
         if not return_distance:
             raise NotImplementedError(  # pragma: no cover
-                "Not implemented when return_distance is False.")
+                "Not implemented when return_distance is False."
+            )
 
         dist = numpy.zeros(X.shape[0])
         ind = numpy.zeros(X.shape[0], dtype=numpy.int64)
@@ -76,7 +78,8 @@ class NuagePoints:
         except ValueError as e:
             raise ValueError(
                 f"Unable to compute euclidean distance with shapes "
-                f"{obj1.shape} and {obj2.shape}.") from e
+                f"{obj1.shape} and {obj2.shape}."
+            ) from e
 
     def label(self, i):
         """

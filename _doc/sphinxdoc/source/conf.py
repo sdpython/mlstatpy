@@ -3,25 +3,32 @@ import sys
 import os
 import warnings
 from pyquickhelper.helpgen.default_conf import set_sphinx_variables
-import pydata_sphinx_theme
 
 # see https://sphinx-gallery.github.io/stable/configuration.html#removing-warnings
 warnings.simplefilter("ignore", category=UserWarning)
 
-html_theme = 'pydata_sphinx_theme'
-html_theme_path = ['_static', '_images']
+html_theme = "pydata_sphinx_theme"
+html_theme_path = ["_static", "_images"]
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.split(__file__)[0])))
 
-local_template = os.path.join(os.path.abspath(
-    os.path.dirname(__file__)), "phdoc_templates")
+local_template = os.path.join(
+    os.path.abspath(os.path.dirname(__file__)), "phdoc_templates"
+)
 
-set_sphinx_variables(__file__, "mlstatpy", "Xavier Dupré", 2023,
-                     html_theme, html_theme_path, locals(),
-                     extlinks=dict(issue=(
-                         'https://github.com/sdpython/mlstatpy/issues/%s',
-                         'issue %s')),
-                     title="Machine Learning, Statistiques et Programmation", book=True, nblayout='table')
+set_sphinx_variables(
+    __file__,
+    "mlstatpy",
+    "Xavier Dupré",
+    2023,
+    html_theme,
+    html_theme_path,
+    locals(),
+    extlinks=dict(issue=("https://github.com/sdpython/mlstatpy/issues/%s", "issue %s")),
+    title="Machine Learning, Statistiques et Programmation",
+    book=True,
+    nblayout="table",
+)
 
 # next
 
@@ -29,7 +36,7 @@ blog_root = "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/"
 html_logo = "_static/project_ico_small.png"
 language = "fr"
 
-preamble = '''
+preamble = """
 \\usepackage{etex}
 \\usepackage{fixltx2e} % LaTeX patches, \\textsubscript
 \\usepackage{cmap} % fix search and cut-and-paste in Acrobat
@@ -52,7 +59,7 @@ preamble = '''
 \\newcommand{\\R}{\\mathbb{R}}
 \\newcommand{\\HRule}{\\rule{\\linewidth}{0.5mm}}
 %\\titleformat{\\chapter}[hang]{\\Huge\\bfseries\\sffamily}{\\thechapter\\hsp}{0pt}{\\Huge\\bfseries\\sffamily}
-'''
+"""
 
 custom_preamble = """\n
 \\usepackage[all]{xy}
@@ -89,50 +96,43 @@ custom_preamble = """\n
 # \\usepackage{eepic}
 
 imgmath_latex_preamble = preamble + custom_preamble
-latex_elements['preamble'] = preamble + custom_preamble
+latex_elements["preamble"] = preamble + custom_preamble
 mathdef_link_only = True
 
-epkg_dictionary.update({
-    'ACP': 'https://fr.wikipedia.org/wiki/Analyse_en_composantes_principales',
-    "AESA": "https://tavianator.com/aesa/",
-    'ApproximateNMFPredictor':
-        'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/anmf_predictor.html',
-    "B+ tree": "https://en.wikipedia.org/wiki/B%2B_tree",
-    "Branch and Bound": "https://en.wikipedia.org/wiki/Branch_and_bound",
-    "Custom Criterion for DecisionTreeRegressor":
-        "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
-    'cython': 'https://cython.org/',
-    'DecisionTreeClassifier':
-        'https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html',
-    'DecisionTreeRegressor optimized for Linear Regression':
-        "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
-    'dot': 'https://fr.wikipedia.org/wiki/DOT_(langage)',
-    'ICML 2016': 'https://icml.cc/2016/index.html',
-    'KMeans': 'https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html',
-    "LAESA": "https://tavianator.com/aesa/",
-    'LAPACK': 'http://www.netlib.org/lapack/',
-    'mlinsights': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/index.html',
-    'PiecewiseTreeRegressor':
-        'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/'
-        'piecewise_tree_regression.html#mlinsights.mlmodel.piecewise_tree_regression.PiecewiseTreeRegressor',
-    'Predictable t-SNE': 'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/predictable_tsne.html',
-    "R-tree": "https://en.wikipedia.org/wiki/R-tree",
-    "R* tree": "https://en.wikipedia.org/wiki/R*_tree",
-    'Regression with confidence interval':
-        'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/regression_confidence_interval.html',
-    'relu': 'https://en.wikipedia.org/wiki/Rectifier_(neural_networks)',
-    'ROC': 'https://fr.wikipedia.org/wiki/Courbe_ROC',
-    'statsmodels': 'http://www.statsmodels.org/stable/index.html',
-    'SVD': 'https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res',
-    'Visualize a scikit-learn pipeline':
-        'http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/visualize_pipeline.html',
-    "X-tree": "https://en.wikipedia.org/wiki/X-tree",
-})
+epkg_dictionary.update(
+    {
+        "ACP": "https://fr.wikipedia.org/wiki/Analyse_en_composantes_principales",
+        "AESA": "https://tavianator.com/aesa/",
+        "ApproximateNMFPredictor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/anmf_predictor.html",
+        "B+ tree": "https://en.wikipedia.org/wiki/B%2B_tree",
+        "Branch and Bound": "https://en.wikipedia.org/wiki/Branch_and_bound",
+        "Custom Criterion for DecisionTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
+        "cython": "https://cython.org/",
+        "DecisionTreeClassifier": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html",
+        "DecisionTreeRegressor optimized for Linear Regression": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
+        "dot": "https://fr.wikipedia.org/wiki/DOT_(langage)",
+        "ICML 2016": "https://icml.cc/2016/index.html",
+        "KMeans": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html",
+        "LAESA": "https://tavianator.com/aesa/",
+        "LAPACK": "http://www.netlib.org/lapack/",
+        "mlinsights": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/index.html",
+        "PiecewiseTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/"
+        "piecewise_tree_regression.html#mlinsights.mlmodel.piecewise_tree_regression.PiecewiseTreeRegressor",
+        "Predictable t-SNE": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/predictable_tsne.html",
+        "R-tree": "https://en.wikipedia.org/wiki/R-tree",
+        "R* tree": "https://en.wikipedia.org/wiki/R*_tree",
+        "Regression with confidence interval": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/regression_confidence_interval.html",
+        "relu": "https://en.wikipedia.org/wiki/Rectifier_(neural_networks)",
+        "ROC": "https://fr.wikipedia.org/wiki/Courbe_ROC",
+        "statsmodels": "http://www.statsmodels.org/stable/index.html",
+        "SVD": "https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res",
+        "Visualize a scikit-learn pipeline": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/visualize_pipeline.html",
+        "X-tree": "https://en.wikipedia.org/wiki/X-tree",
+    }
+)
 
 nblinks = {
-    'l-reglin-piecewise-streaming':
-        'http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/c_ml/piecewise.html#streaming-linear-regression',
-    'cl-NeuralTreeNet':
-        'http://www.xavierdupre.fr/app/mlstatpy/helpsphinx//mlstatpy/ml/'
-        'neural_tree.html#mlstatpy.ml.neural_tree.NeuralTreeNet',
+    "l-reglin-piecewise-streaming": "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/c_ml/piecewise.html#streaming-linear-regression",
+    "cl-NeuralTreeNet": "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx//mlstatpy/ml/"
+    "neural_tree.html#mlstatpy.ml.neural_tree.NeuralTreeNet",
 }

@@ -8,14 +8,10 @@ from mlstatpy.nlp.completion_simple import CompletionSystem
 
 
 class TestCompletionSimpleOptimisation(unittest.TestCase):
-
     def test_build_trie_simple(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
+        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
 
-        comp = [(1, 'a'), (2, 'ab'), (3, 'abc'), (4, 'abcd'), (5, 'bc')]
+        comp = [(1, "a"), (2, "ab"), (3, "abc"), (4, "abcd"), (5, "bc")]
         cset = CompletionSystem(comp)
         cset.compute_metrics(fLOG=fLOG)
         queries = [(q, w) for w, q in comp]
@@ -38,10 +34,10 @@ class TestCompletionSimpleOptimisation(unittest.TestCase):
         self.assertEqual(res["hist"]["l"], {1: 1, 2: 2, 3: 1, 4: 1})
 
         # one suggestion in the completion set
-        comp = ['a', 'abc', 'bc']
+        comp = ["a", "abc", "bc"]
         cset = CompletionSystem(comp)
         cset.compute_metrics(fLOG=fLOG)
-        queries = [(q, 1) for q in comp] + [('abcd', 1)]
+        queries = [(q, 1) for q in comp] + [("abcd", 1)]
         for el, found in cset.enumerate_test_metric(queries):
             if found is None:
                 fLOG(el.str_mks(), "*", el.value)

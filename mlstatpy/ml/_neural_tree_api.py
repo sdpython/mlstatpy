@@ -15,8 +15,7 @@ class _TrainingAPI:
     @property
     def training_weights(self):
         "Returns the weights."
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
+        raise NotImplementedError("This should be overwritten.")  # pragma: no cover
 
     def update_training_weights(self, grad, add=True):
         """
@@ -25,8 +24,7 @@ class _TrainingAPI:
         :param grad: vector to add to the weights such as gradient
         :param add: addition or replace
         """
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
+        raise NotImplementedError("This should be overwritten.")  # pragma: no cover
 
     def fill_cache(self, X):
         """
@@ -38,15 +36,13 @@ class _TrainingAPI:
         """
         Computes the loss. Returns a float.
         """
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
+        raise NotImplementedError("This should be overwritten.")  # pragma: no cover
 
     def dlossds(self, X, y, cache=None):
         """
         Computes the loss derivative due to prediction error.
         """
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
+        raise NotImplementedError("This should be overwritten.")  # pragma: no cover
 
     def gradient_backward(self, graddx, X, inputs=False, cache=None):
         """
@@ -59,8 +55,7 @@ class _TrainingAPI:
         :param cache: cache intermediate results to avoid more computation
         :return: gradient
         """
-        raise NotImplementedError(  # pragma: no cover
-            "This should be overwritten.")
+        raise NotImplementedError("This should be overwritten.")  # pragma: no cover
 
     def gradient(self, X, y, inputs=False):
         """
@@ -74,13 +69,26 @@ class _TrainingAPI:
         """
         if len(X.shape) != 1:
             raise ValueError(  # pragma: no cover
-                f"X must a vector of one dimension but has shape {X.shape}.")
+                f"X must a vector of one dimension but has shape {X.shape}."
+            )
         cache = self.fill_cache(X)  # pylint: disable=E1128
         dlossds = self.dlossds(X, y, cache=cache)
         return self.gradient_backward(dlossds, X, inputs=inputs, cache=cache)
 
-    def fit(self, X, y, optimizer=None, max_iter=100, early_th=None, verbose=False,
-            lr=None, lr_schedule=None, l1=0., l2=0., momentum=0.9):
+    def fit(
+        self,
+        X,
+        y,
+        optimizer=None,
+        max_iter=100,
+        early_th=None,
+        verbose=False,
+        lr=None,
+        lr_schedule=None,
+        l1=0.0,
+        l2=0.0,
+        momentum=0.9,
+    ):
         """
         Fits a neuron.
 
@@ -104,9 +112,13 @@ class _TrainingAPI:
         """
         if optimizer is None:
             optimizer = SGDOptimizer(
-                self.training_weights, learning_rate_init=lr or 0.002,
-                lr_schedule=lr_schedule or 'invscaling',
-                l1=l1, l2=l2, momentum=momentum)
+                self.training_weights,
+                learning_rate_init=lr or 0.002,
+                lr_schedule=lr_schedule or "invscaling",
+                l1=l1,
+                l2=l2,
+                momentum=momentum,
+            )
 
         def fct_loss(coef, lx, ly, neuron=self):
             neuron.update_training_weights(coef, False)
@@ -120,8 +132,14 @@ class _TrainingAPI:
             return neuron.gradient(lx, ly).ravel()
 
         optimizer.train(
-            X, y, fct_loss, fct_grad, max_iter=max_iter,
-            early_th=early_th, verbose=verbose)
+            X,
+            y,
+            fct_loss,
+            fct_grad,
+            max_iter=max_iter,
+            early_th=early_th,
+            verbose=verbose,
+        )
 
         self.update_training_weights(optimizer.coef, False)
         return self

@@ -14,10 +14,13 @@ class VoronoiEstimationError(Exception):
     """
     Raised when the algorithm failed.
     """
+
     pass
 
 
-def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=None, verbose=False):
+def voronoi_estimation_from_lr(
+    L, B, C=None, D=None, cl=0, qr=True, max_iter=None, verbose=False
+):
     """
     Determines a Voronoi diagram close to a convex
     partition defined by a logistic regression in *n* classes.
@@ -44,9 +47,11 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
     .. math::
 
         \\begin{array}{rcl}
-        & \\Longrightarrow & \\left\\{\\begin{array}{l}\\scal{\\frac{L_i-L_j}{\\norm{L_i-L_j}}}{P_i + P_j} +
+        & \\Longrightarrow & \\left\\{\\begin{array}{l}
+        \\scal{\\frac{L_i-L_j}{\\norm{L_i-L_j}}}{P_i + P_j} +
         2 \\frac{B_i - B_j}{\\norm{L_i-L_j}} = 0 \\\\
-        \\scal{P_i-  P_j}{u_{ij}} - \\scal{P_i - P_j}{\\frac{L_i-L_j}{\\norm{L_i-L_j}}} \\scal{\\frac{L_i-L_j}{\\norm{L_i-L_j}}}{u_{ij}}=0
+        \\scal{P_i-  P_j}{u_{ij}} - \\scal{P_i - P_j}{\\frac{L_i-L_j}
+        {\\norm{L_i-L_j}}} \\scal{\\frac{L_i-L_j}{\\norm{L_i-L_j}}}{u_{ij}}=0
         \\end{array} \\right.
         \\end{array}
 
@@ -85,7 +90,7 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
             d = -2 * (B[i] - B[j])
             matB.append(d)
             matL.append(mat.ravel())
-            labels_inv[i, j, 'eq1'] = len(matL) - 1
+            labels_inv[i, j, "eq1"] = len(matL) - 1
             nb_constraints[i] += 1
             nb_constraints[j] += 1
 
@@ -104,7 +109,8 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
             if not found:
                 raise ValueError(  # pragma: no cover
                     "Matrix L has two similar rows {0} and {1}. "
-                    "Problem cannot be solved.".format(i, j))
+                    "Problem cannot be solved.".format(i, j)
+                )
 
             c /= nc
             c2 = c * c[coor]
@@ -116,7 +122,7 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
             mat[j, coor] -= 1
             matB.append(0)
             matL.append(mat.ravel())
-            labels_inv[i, j, 'eq2'] = len(matL) - 1
+            labels_inv[i, j, "eq2"] = len(matL) - 1
             nb_constraints[i] += 1
             nb_constraints[j] += 1
 
@@ -130,7 +136,8 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
     if nbeq * 2 <= L.shape[0] * L.shape[1]:
         if C is None and D is None:
             warnings.warn(  # pragma: no cover
-                "[voronoi_estimation_from_lr] Additional condition are required.")
+                "[voronoi_estimation_from_lr] Additional condition are required."
+            )
         if C is not None and D is not None:
             matL = numpy.vstack([matL, numpy.zeros((1, matL.shape[1]))])
             a = cl * L.shape[1]
@@ -142,18 +149,17 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
         elif C is None and D is None:
             pass  # pragma: no cover
         else:
-            raise ValueError(
-                "C and D must be None together or not None together.")
+            raise ValueError("C and D must be None together or not None together.")
 
     sample_weight = numpy.ones((matL.shape[0],))
     tol = numpy.abs(matL.ravel()).max() * 1e-8 / matL.shape[0]
     order_removed = []
     removed = set()
     for it in range(0, max(max_iter, 1)):
-
         if qr:
             clr = QuantileLinearRegression(
-                fit_intercept=False, max_iter=max(matL.shape))
+                fit_intercept=False, max_iter=max(matL.shape)
+            )
         else:
             clr = LinearRegression(fit_intercept=False)
 
@@ -166,22 +172,26 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
         # early stopping
         if score < tol:
             if verbose:
-                print('[voronoi_estimation_from_lr] iter={0}/{1} score={2} tol={3}'.format(
-                    it + 1, max_iter, score, tol))
+                print(
+                    "[voronoi_estimation_from_lr] iter={0}/{1} "
+                    "score={2} tol={3}".format(it + 1, max_iter, score, tol)
+                )
             break
 
         # defines the best pair of points to remove
         dist2 = pairwise_distances(res, res)
-        dist = [(d, n // dist2.shape[0], n % dist2.shape[1])
-                for n, d in enumerate(dist2.ravel())]
+        dist = [
+            (d, n // dist2.shape[0], n % dist2.shape[1])
+            for n, d in enumerate(dist2.ravel())
+        ]
         dist = [_ for _ in dist if _[1] < _[2]]
         dist.sort(reverse=True)
 
         # test equal points
         if dist[-1][0] < tol:
             _, i, j = dist[-1]
-            eq1 = labels_inv[i, j, 'eq1']
-            eq2 = labels_inv[i, j, 'eq2']
+            eq1 = labels_inv[i, j, "eq1"]
+            eq2 = labels_inv[i, j, "eq2"]
             if sample_weight[eq1] == 0 and sample_weight[eq2] == 0:
                 sample_weight[eq1] = 1
                 sample_weight[eq2] = 1
@@ -193,8 +203,8 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
                 while pos >= 0:
                     i, j = order_removed[pos]
                     if i in keep or j in keep:
-                        eq1 = labels_inv[i, j, 'eq1']
-                        eq2 = labels_inv[i, j, 'eq2']
+                        eq1 = labels_inv[i, j, "eq1"]
+                        eq2 = labels_inv[i, j, "eq2"]
                         if sample_weight[eq1] == 0 and sample_weight[eq2] == 0:
                             sample_weight[eq1] = 1
                             sample_weight[eq2] = 1
@@ -204,9 +214,10 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
                     pos -= 1
                 if pos < 0:
                     raise VoronoiEstimationError(  # pragma: no cover
-                        'Two classes have been merged in a single Voronoi point '
-                        '(dist={0} < {1}). max_iter should be lower than '
-                        '{2}'.format(dist[-1][0], tol, it))
+                        "Two classes have been merged in a single Voronoi point "
+                        "(dist={0} < {1}). max_iter should be lower than "
+                        "{2}".format(dist[-1][0], tol, it)
+                    )
 
         dmax, i, j = dist[0]
         pos = 0
@@ -219,15 +230,19 @@ def voronoi_estimation_from_lr(L, B, C=None, D=None, cl=0, qr=True, max_iter=Non
             break
         removed.add((i, j))
         order_removed.append((i, j))
-        eq1 = labels_inv[i, j, 'eq1']
-        eq2 = labels_inv[i, j, 'eq2']
+        eq1 = labels_inv[i, j, "eq1"]
+        eq2 = labels_inv[i, j, "eq2"]
         sample_weight[eq1] = 0
         sample_weight[eq2] = 0
         nb_constraints[i] -= 1
         nb_constraints[j] -= 1
 
         if verbose:
-            print('[voronoi_estimation_from_lr] iter={0}/{1} score={2:.3g} tol={3:.3g} del P{4},{5} d={6:.3g}'.format(
-                it + 1, max_iter, score, tol, i, j, dmax))
+            print(
+                "[voronoi_estimation_from_lr] iter={0}/{1} "
+                "score={2:.3g} tol={3:.3g} del P{4},{5} d={6:.3g}".format(
+                    it + 1, max_iter, score, tol, i, j, dmax
+                )
+            )
 
     return res

@@ -8,12 +8,8 @@ from pyquickhelper.pycode import get_temp_folder
 
 
 class TestReadme(unittest.TestCase):
-
     def test_venv_docutils08_readme(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
+        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
 
         fold = os.path.dirname(os.path.abspath(__file__))
         readme = os.path.join(fold, "..", "..", "README.rst")

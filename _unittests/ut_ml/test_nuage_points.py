@@ -12,7 +12,6 @@ from mlstatpy.ml.kppv_laesa import NuagePointsLaesa
 
 
 class TestNuagePoints(ExtTestCase):
-
     @ignore_warnings(DeprecationWarning)
     def test_nuage_points_1d(self):
         X = numpy.array([[0], [3], [1]])

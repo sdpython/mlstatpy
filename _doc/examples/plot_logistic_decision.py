@@ -44,7 +44,7 @@ def random_set_1d(n, kind):
 def plot_ds(X, y, ax=None, title=None):
     if ax is None:
         ax = plt.gca()
-    ax.scatter(X[:, 0], X[:, 1], c=y, s=20, edgecolor='k', lw=0.5)
+    ax.scatter(X[:, 0], X[:, 1], c=y, s=20, edgecolor="k", lw=0.5)
     if title is not None:
         ax.set_title(title)
     return ax
@@ -79,12 +79,12 @@ def plog2(p):
 
 
 def logistic(x):
-    return 1. / (1. + numpy.exp(-x))
+    return 1.0 / (1.0 + numpy.exp(-x))
 
 
-def likelihood(x, y, theta=1., th=0.):
+def likelihood(x, y, theta=1.0, th=0.0):
     lr = logistic((x - th) * theta)
-    return y * lr + (1. - y) * (1 - lr)
+    return y * lr + (1.0 - y) * (1 - lr)
 
 
 def criteria(X, y):
@@ -102,13 +102,14 @@ def criteria(X, y):
         p2 = numpy.sum(y[i:]) / (y.shape[0] - i)
         res[i, 2] = p1
         res[i, 3] = p2
-        res[i, 4] = 1 - p1**2 - (1 - p1)**2 + 1 - p2**2 - (1 - p2)**2
-        res[i, 5] = - plog2(p1) - plog2(1 - p1) - plog2(p2) - plog2(1 - p2)
+        res[i, 4] = 1 - p1**2 - (1 - p1) ** 2 + 1 - p2**2 - (1 - p2) ** 2
+        res[i, 5] = -plog2(p1) - plog2(1 - p1) - plog2(p2) - plog2(1 - p2)
         th = x[i]
-        res[i, 6] = logistic(th * 10.)
-        res[i, 7] = numpy.sum(likelihood(x, y, 10., th)) / res.shape[0]
-    return DataFrame(res[1:-1], columns=[
-        'X', 'y', 'p1', 'p2', 'Gini', 'Gain', 'lr', 'LL-10'])
+        res[i, 6] = logistic(th * 10.0)
+        res[i, 7] = numpy.sum(likelihood(x, y, 10.0, th)) / res.shape[0]
+    return DataFrame(
+        res[1:-1], columns=["X", "y", "p1", "p2", "Gini", "Gain", "lr", "LL-10"]
+    )
 
 
 X1, y1 = random_set_1d(1000, False)
@@ -124,7 +125,7 @@ print(df.head())
 def plot_ds(X, y, ax=None, title=None):
     if ax is None:
         ax = plt.gca()
-    ax.scatter(X[:, 0], X[:, 1], c=y, s=20, edgecolor='k', lw=0.5)
+    ax.scatter(X[:, 0], X[:, 1], c=y, s=20, edgecolor="k", lw=0.5)
     if title is not None:
         ax.set_title(title)
     return ax
@@ -136,8 +137,8 @@ df2 = criteria(X2, y2)
 fig, ax = plt.subplots(1, 2, figsize=(12, 6), sharey=True)
 plot_ds(X1, y1, ax=ax[0], title="easy")
 plot_ds(X2, y2, ax=ax[1], title="difficult")
-df1.plot(x='X', y=['Gini', 'Gain', 'LL-10', 'p1', 'p2'], ax=ax[0], lw=5.)
-df2.plot(x='X', y=['Gini', 'Gain', 'LL-10', 'p1', 'p2'], ax=ax[1], lw=5.)
+df1.plot(x="X", y=["Gini", "Gain", "LL-10", "p1", "p2"], ax=ax[0], lw=5.0)
+df2.plot(x="X", y=["Gini", "Gain", "LL-10", "p1", "p2"], ax=ax[1], lw=5.0)
 
 ########################################
 # Le premier exemple est le cas simple et tous les

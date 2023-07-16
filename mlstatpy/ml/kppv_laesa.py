@@ -56,7 +56,8 @@ class NuagePointsLaesa(NuagePoints):
         for i in range(self.nuage.shape[0]):
             for j in range(len(self.pivots)):  # pylint: disable=C0200
                 self.dist[i, j] = self.distance(
-                    self.nuage[i, :], self.nuage[self.pivots[j], :])
+                    self.nuage[i, :], self.nuage[self.pivots[j], :]
+                )
 
     def ppv(self, obj):
         """
@@ -68,15 +69,16 @@ class NuagePointsLaesa(NuagePoints):
         """
 
         # initialisation
-        dp = [(self.distance(obj, self.nuage[p, :]), p, i)
-              for i, p in enumerate(self.pivots)]
+        dp = [
+            (self.distance(obj, self.nuage[p, :]), p, i)
+            for i, p in enumerate(self.pivots)
+        ]
 
         # pivots le plus proche
         dm, im, _ = min(dp)
 
         # améliorations
         for i in range(0, self.nuage.shape[0]):
-
             # on regarde si un pivot permet d'éliminer l'élément i
             calcul = True
             for d, p, ip in dp:

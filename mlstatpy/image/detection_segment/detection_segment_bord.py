@@ -74,7 +74,7 @@ class SegmentBord_Commun(Segment):
             g = gradient[a.y, a.x]
 
             # on calcul sa norme
-            t.norme = (g[0] ** 2 + g[1]**2) ** 0.5
+            t.norme = (g[0] ** 2 + g[1] ** 2) ** 0.5
 
             # on place les coordonnees du pixel dans t
             t.pos.x = p.x
@@ -90,7 +90,7 @@ class SegmentBord_Commun(Segment):
 
             # on passe au pixel suivant
             p += n
-            a = p.arrondi()   # calcul de l'arrondi
+            a = p.arrondi()  # calcul de l'arrondi
             i += 1
 
         # on indique a ligne_gradient le nombre de pixel pris en compte

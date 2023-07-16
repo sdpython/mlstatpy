@@ -9,12 +9,8 @@ from mlstatpy.data.wikipedia import download_titles
 
 
 class TestLONGWikipediaPageCount(ExtTestCase):
-
     def test_wikipedia_page_count(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
+        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
 
         temp = get_temp_folder(__file__, "temp_wikipedia_title")
         name = download_titles("fr", folder=temp, fLOG=fLOG)

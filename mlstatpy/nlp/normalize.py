@@ -19,6 +19,6 @@ def remove_diacritics(input_str):
 
     .. versionadded:: 1.0
     """
-    nkfd_form = unicodedata.normalize('NFKD', input_str)
-    only_ascii = nkfd_form.encode('ASCII', 'ignore')
+    nkfd_form = unicodedata.normalize("NFKD", input_str)
+    only_ascii = nkfd_form.encode("ASCII", "ignore")
     return only_ascii.decode("utf8")

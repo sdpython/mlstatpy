@@ -14,8 +14,7 @@ class CompletionTrieNode:
     It should be done another way (:epkg:`cython`, :epkg:`C++`).
     """
 
-    __slots__ = ("value", "children", "weight",
-                 "leave", "stat", "parent", "disp")
+    __slots__ = ("value", "children", "weight", "leave", "stat", "parent", "disp")
 
     def __init__(self, value, leave, weight=1.0, disp=None):
         """
@@ -25,8 +24,7 @@ class CompletionTrieNode:
         @param      disp        original string, use this to identify the node
         """
         if not isinstance(value, str):
-            raise TypeError(
-                f"value must be str not '{value}' - type={type(value)}")
+            raise TypeError(f"value must be str not '{value}' - type={type(value)}")
         self.value = value
         self.children = None
         self.weight = weight
@@ -69,7 +67,7 @@ class CompletionTrieNode:
             child.parent = self
         return self
 
-    def items_list(self) -> List['CompletionTrieNode']:
+    def items_list(self) -> List["CompletionTrieNode"]:
         """
         All children nodes inluding itself in a list.
 
@@ -91,8 +89,7 @@ class CompletionTrieNode:
             node = stack.pop()
             yield node
             if node.children:
-                stack.extend(v for k, v in sorted(
-                    node.children.items(), reverse=True))
+                stack.extend(v for k, v in sorted(node.children.items(), reverse=True))
 
     def unsorted_iter(self):
         """
@@ -105,7 +102,7 @@ class CompletionTrieNode:
             if node.children:
                 stack.extend(node.children.values())
 
-    def items(self) -> Iterator[Tuple[float, str, 'CompletionTrieNode']]:
+    def items(self) -> Iterator[Tuple[float, str, "CompletionTrieNode"]]:
         """
         Iterates on children, iterates on weight, key, child.
         """
@@ -119,6 +116,7 @@ class CompletionTrieNode:
 
         @param      max_weight  keep all value under this threshold or None for all
         """
+
         def iter_local(node):
             if node.leave and (max_weight is None or node.weight <= max_weight):
                 yield node.weight, None, node.value
@@ -129,7 +127,7 @@ class CompletionTrieNode:
         for w, _, v in sorted(iter_local(self)):
             yield w, v
 
-    def leaves(self) -> Iterator['CompletionTrieNode']:
+    def leaves(self) -> Iterator["CompletionTrieNode"]:
         """
         Iterators on leaves.
         """
@@ -141,7 +139,7 @@ class CompletionTrieNode:
             if pop.children:
                 stack.extend(pop.children.values())
 
-    def all_completions(self) -> List[Tuple['CompletionTrieNone', List[str]]]:
+    def all_completions(self) -> List[Tuple["CompletionTrieNode", List[str]]]:
         """
         Retrieves all completions for a node,
         the method does not need @see me precompute_stat to be run first.
@@ -161,7 +159,9 @@ class CompletionTrieNode:
         all_res.reverse()
         return all_res
 
-    def all_mks_completions(self) -> List[Tuple['CompletionTrieNone', List['CompletionTrieNone']]]:
+    def all_mks_completions(
+        self,
+    ) -> List[Tuple["CompletionTrieNode", List["CompletionTrieNode"]]]:
         """
         Retrieves all completions for a node,
         the method assumes @see me precompute_stat was run.
@@ -182,33 +182,40 @@ class CompletionTrieNode:
         prefixes along the paths.
 
         @param      maxn            maximum number of completions to show
-        @param      use_precompute  use intermediate results built by @see me precompute_stat
+        @param      use_precompute  use intermediate results
+                                    built by @see me precompute_stat
         @return                     str
         """
         res = self.all_mks_completions() if use_precompute else self.all_completions()
         rows = []
         for node, sug in res:
-            rows.append("l={3} p='{0}' {1} {2}".format(node.value, "-" * 10, node.stat.str_mks(),
-                                                       '+' if node.leave else '-'))
+            rows.append(
+                "l={3} p='{0}' {1} {2}".format(
+                    node.value,
+                    "-" * 10,
+                    node.stat.str_mks(),
+                    "+" if node.leave else "-",
+                )
+            )
             for i, s in enumerate(sug):
                 if isinstance(s, str):
                     rows.append(f"  {i + 1}-'{s}'")
                 else:
-                    rows.append(
-                        f"  {i + 1}-w{s[0]}-'{s[1].value}'")
+                    rows.append(f"  {i + 1}-w{s[0]}-'{s[1].value}'")
                 if maxn is not None and i > maxn:
                     break
         return "\n".join(rows)
 
     @staticmethod
-    def build(words) -> 'CompletionTrieNode':
+    def build(words) -> "CompletionTrieNode":
         """
         Builds a trie.
 
-        @param  words       list of ``(word)`` or ``(weight, word)`` or ``(weight, word, display string)``
+        @param  words       list of ``(word)`` or ``(weight, word)``
+                            or ``(weight, word, display string)``
         @return             root of the trie (CompletionTrieNode)
         """
-        root = CompletionTrieNode('', False)
+        root = CompletionTrieNode("", False)
         nb = 0
         minw = None
         for wword in words:
@@ -220,7 +227,10 @@ class CompletionTrieNode:
                     w, word, disp = wword
                 else:
                     raise ValueError(
-                        f"Unexpected number of values, it should be (weight, word) or (weight, word, dispplay string): {wword}")
+                        f"Unexpected number of values, it should be "
+                        f"(weight, word) or (weight, word, "
+                        f"dispplay string): {wword}"
+                    )
             else:
                 w = 1.0
                 word = wword
@@ -237,14 +247,14 @@ class CompletionTrieNode:
                         node.weight = min(node.weight, w)
                     node = node.children[c]
                 else:
-                    new_node = CompletionTrieNode(
-                        node.value + c, False, weight=w)
+                    new_node = CompletionTrieNode(node.value + c, False, weight=w)
                     node._add(c, new_node)
                     node = new_node
             if new_node is None:
                 if node.leave:
                     raise ValueError(
-                        f"Value '{word}' appears twice in the input list (not allowed).")
+                        f"Value '{word}' appears twice in the input list (not allowed)."
+                    )
                 new_node = node
             new_node.leave = True
             new_node.weight = w
@@ -254,7 +264,7 @@ class CompletionTrieNode:
         root.weight = minw
         return root
 
-    def find(self, prefix: str) -> 'CompletionTrieNode':
+    def find(self, prefix: str) -> "CompletionTrieNode":
         """
         Returns the node which holds all completions starting with a given prefix.
 
@@ -266,7 +276,8 @@ class CompletionTrieNode:
                 return self
             else:
                 raise ValueError(
-                    f"find '{prefix}' but node is not empty '{self.value}'")
+                    f"find '{prefix}' but node is not empty '{self.value}'"
+                )
         node = self
         for c in prefix:
             if node.children is not None and c in node.children:
@@ -341,12 +352,17 @@ class CompletionTrieNode:
         node = self.find(word)
         if node is None:
             raise NotImplementedError(
-                f"this metric is not yet computed for a query outside the trie: '{word}'")
+                f"this metric is not yet computed for a "
+                f"query outside the trie: '{word}'"
+            )
         if not hasattr(node, "stat"):
             raise AttributeError("run precompute_stat and update_stat_dynamic")
         if not hasattr(node.stat, "mks1"):
-            raise AttributeError("run precompute_stat and update_stat_dynamic\nnode={0}\n{1}".format(
-                self, "\n".join(sorted(self.stat.__dict__.keys()))))
+            raise AttributeError(
+                "run precompute_stat and update_stat_dynamic\nnode={0}\n{1}".format(
+                    self, "\n".join(sorted(self.stat.__dict__.keys()))
+                )
+            )
         return node.stat.mks0, node.stat.mks0_, 0
 
     def min_dynamic_keystroke(self, word: str) -> Tuple[int, int]:
@@ -365,18 +381,24 @@ class CompletionTrieNode:
 
             \\begin{eqnarray*}
             K(q, k, S) &=& \\min\\acc{ i | s_i \\succ q[1..k], s_i \\in S } \\\\
-            M'(q, S) &=& \\min_{0 \\infegal k \\infegal l(q)} \\acc{ M'(q[1..k], S) + K(q, k, S) | q[1..k] \\in S }
+            M'(q, S) &=& \\min_{0 \\infegal k \\infegal l(q)}
+            \\acc{ M'(q[1..k], S) + K(q, k, S) | q[1..k] \\in S }
             \\end{eqnarray*}
         """
         node = self.find(word)
         if node is None:
             raise NotImplementedError(
-                f"this metric is not yet computed for a query outside the trie: '{word}'")
+                f"this metric is not yet computed for "
+                f"a query outside the trie: '{word}'"
+            )
         if not hasattr(node, "stat"):
             raise AttributeError("run precompute_stat and update_stat_dynamic")
         if not hasattr(node.stat, "mks1"):
-            raise AttributeError("run precompute_stat and update_stat_dynamic\nnode={0}\n{1}".format(
-                self, "\n".join(sorted(self.stat.__dict__.keys()))))
+            raise AttributeError(
+                "run precompute_stat and update_stat_dynamic\nnode={0}\n{1}".format(
+                    self, "\n".join(sorted(self.stat.__dict__.keys()))
+                )
+            )
         return node.stat.mks1, node.stat.mks1_, node.stat.mks1i_
 
     def min_dynamic_keystroke2(self, word: str) -> Tuple[int, int]:
@@ -396,20 +418,29 @@ class CompletionTrieNode:
             \\begin{eqnarray*}
             K(q, k, S) &=& \\min\\acc{ i | s_i \\succ q[1..k], s_i \\in S } \\\\
             M"(q, S) &=& \\min \\left\\{ \\begin{array}{l}
-                            \\min_{1 \\infegal k \\infegal l(q)} \\acc{ M"(q[1..k-1], S) + 1 + K(q, k, S) | q[1..k] \\in S } \\\\
-                            \\min_{0 \\infegal k \\infegal l(q)} \\acc{ M"(q[1..k], S) + \\delta + K(q, k, S) | q[1..k] \\in S }
+                            \\min_{1 \\infegal k \\infegal l(q)}
+                            \\acc{ M"(q[1..k-1], S) + 1 + K(q, k, S) | q[1..k]
+                            \\in S } \\\\
+                            \\min_{0 \\infegal k \\infegal l(q)}
+                            \\acc{ M"(q[1..k], S) + \\delta + K(q, k, S) | q[1..k]
+                            \\in S }
                             \\end{array} \\right .
             \\end{eqnarray*}
         """
         node = self.find(word)
         if node is None:
             raise NotImplementedError(
-                f"this metric is not yet computed for a query outside the trie: '{word}'")
+                f"this metric is not yet computed for a "
+                f"query outside the trie: '{word}'"
+            )
         if not hasattr(node, "stat"):
             raise AttributeError("run precompute_stat and update_stat_dynamic")
         if not hasattr(node.stat, "mks2"):
-            raise AttributeError("run precompute_stat and update_stat_dynamic\nnode={0}\n{1}".format(
-                self, "\n".join(sorted(self.stat.__dict__.keys()))))
+            raise AttributeError(
+                "run precompute_stat and update_stat_dynamic\nnode={0}\n{1}".format(
+                    self, "\n".join(sorted(self.stat.__dict__.keys()))
+                )
+            )
         return node.stat.mks2, node.stat.mks2_, node.stat.mks2i_
 
     def precompute_stat(self):
@@ -470,7 +501,8 @@ class CompletionTrieNode:
                 if pop.stat.iter_ > itera:
                     continue
                 updates += pop.stat.update_dynamic_minimum_keystroke(
-                    len(pop.value), delta)
+                    len(pop.value), delta
+                )
                 if pop.children:
                     stack.extend(pop.children.values())
                 pop.stat.iter_ += 1
@@ -500,13 +532,15 @@ class CompletionTrieNode:
         * *mks2i*: iteration when it converged
         """
 
-        def merge_completions(self, prefix: int, nodes: '[CompletionTrieNode]'):
+        def merge_completions(self, prefix: int, nodes: "[CompletionTrieNode]"):
             """
             Merges list of completions and cut the list, we assume
             given lists are sorted.
             """
+
             class Fake:
                 pass
+
             res = []
             indexes = [0 for _ in nodes]
             indexes.append(0)
@@ -514,14 +548,22 @@ class CompletionTrieNode:
             last.value = None
             last.stat = CompletionTrieNode._Stat()
             last.stat.completions = list(
-                sorted((_.weight, _) for _ in nodes if _.leave))
+                sorted((_.weight, _) for _ in nodes if _.leave)
+            )
             nodes = list(nodes)
             nodes.append(last)
 
             maxl = 0
             while True:
-                en = [(_.stat.completions[indexes[i]][0], i, _.stat.completions[indexes[i]][1])
-                      for i, _ in enumerate(nodes) if indexes[i] < len(_.stat.completions)]
+                en = [
+                    (
+                        _.stat.completions[indexes[i]][0],
+                        i,
+                        _.stat.completions[indexes[i]][1],
+                    )
+                    for i, _ in enumerate(nodes)
+                    if indexes[i] < len(_.stat.completions)
+                ]
                 if not en:
                     break
                 e = min(en)
@@ -530,7 +572,8 @@ class CompletionTrieNode:
                 indexes[i] += 1
                 maxl = max(maxl, len(res[-1][1].value))
 
-            # maxl - len(prefix) represents the longest list which reduces the number of keystrokes
+            # maxl - len(prefix) represents the longest list
+            # which reduces the number of keystrokes
             # however, as the method aggregates completions at a lower lovel,
             # we must keep longer completions for lower levels
             ind = maxl
@@ -603,7 +646,8 @@ class CompletionTrieNode:
             update = second_step(update)
 
             # finally we need to update mks, mks2 for every prefix
-            # this is not necessary a leave so it does not appear in the list of completions
+            # this is not necessary a leave so it does not
+            # appear in the list of completions
             # but we need to update mks for these strings, we assume it just
             # requires an extra character, somehow, we propagate the values
             if hasattr(self, "next_nodes"):
@@ -662,6 +706,13 @@ class CompletionTrieNode:
             s0 = self.str_mks0()
             if hasattr(self, "mks1"):
                 return s0 + " |'={0} *={1},{2} |\"={3} *={4},{5} |nn={6}".format(
-                    self.mks1, self.mks1_, self.mks1i_, self.mks2, self.mks2i_, self.mks2i_, '+' if hasattr(self, "next_nodes") else '-')
+                    self.mks1,
+                    self.mks1_,
+                    self.mks1i_,
+                    self.mks2,
+                    self.mks2i_,
+                    self.mks2i_,
+                    "+" if hasattr(self, "next_nodes") else "-",
+                )
             else:
                 return s0
