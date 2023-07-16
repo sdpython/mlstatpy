@@ -1,5 +1,5 @@
 
-.. image:: https://travis-ci.com/sdpython/mlstatpy.svg?branch=master
+.. image:: https://travis-ci.com/sdpython/mlstatpy.svg?branch=main
     :target: https://app.travis-ci.com/github/sdpython/mlstatpy
     :alt: Build status
 
@@ -7,8 +7,8 @@
     :target: https://ci.appveyor.com/project/sdpython/mlstatpy
     :alt: Build Status Windows
 
-.. image:: https://circleci.com/gh/sdpython/mlstatpy/tree/master.svg?style=svg
-    :target: https://circleci.com/gh/sdpython/mlstatpy/tree/master
+.. image:: https://circleci.com/gh/sdpython/mlstatpy/tree/main.svg?style=svg
+    :target: https://circleci.com/gh/sdpython/mlstatpy/tree/main
 
 .. image:: https://badge.fury.io/py/mlstatpy.svg
     :target: https://pypi.org/project/mlstatpy/
@@ -17,8 +17,8 @@
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT
 
-.. image:: https://codecov.io/github/sdpython/mlstatpy/coverage.svg?branch=master
-    :target: https://codecov.io/github/sdpython/mlstatpy?branch=master
+.. image:: https://codecov.io/github/sdpython/mlstatpy/coverage.svg?branch=main
+    :target: https://codecov.io/github/sdpython/mlstatpy?branch=main
 
 .. image:: http://img.shields.io/github/issues/sdpython/mlstatpy.png
     :alt: GitHub Issues
