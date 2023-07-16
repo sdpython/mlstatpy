@@ -40,7 +40,7 @@ jobs:
       #  run: python -m pip install -e .
 
       - name: Documentation
-        run: python -m sphinx ./_doc ./dist/html
+        run: python -m sphinx ./_doc/sphinxdoc/source ./dist/html
 
       - uses: actions/upload-artifact@v3
         with:
