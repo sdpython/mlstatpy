@@ -46,7 +46,7 @@ jobs:
       #- name: Documentation
       #  run: python -m sphinx ./_doc/sphinxdoc/source ./dist/html
       - name: Documentation
-        run: python setup build_sphinx
+        run: python setup.py build_sphinx
 
       - uses: actions/upload-artifact@v3
         with:
