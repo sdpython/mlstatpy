@@ -19,7 +19,6 @@ mako
 matplotlib
 memory_profiler
 mlinsights
-mlprodict
 nbconvert
 notebook
 onnx_array_api
