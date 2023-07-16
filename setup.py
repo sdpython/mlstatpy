@@ -3,6 +3,7 @@ import sys
 import os
 from setuptools import find_packages, setup
 from pyquicksetup import read_version, read_readme, default_cmdclass
+from pyquicksetup.pyquick import _SetupCommand
 
 #########
 # settings
@@ -36,6 +37,38 @@ packages = find_packages()
 package_dir = {k: os.path.join(".", k.replace(".", "/")) for k in packages}
 package_data = {}
 
+
+class SetupCommandSphinx(_SetupCommand):
+    description = "Builds documentation."
+
+    user_options = [
+        ("layout=", None, "format generation, default is html,rst."),
+        (
+            "nbformats=",
+            None,
+            "format generation, default is ipynb,slides,html,python,rst,github",
+        ),
+    ]
+
+    def initialize_options(self):
+        self.layout = "html,rst"
+        self.nbformats = "ipynb,html,python,rst,github"
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        from pyquickhelper.pycode import process_standard_options_for_setup
+
+        parameters = self.get_parameters()
+        parameters["argv"] = ["build_sphinx"]
+        parameters["layout"] = self.layout.split(",")
+        parameters["nbformats"] = self.nbformats.split(",")
+        process_standard_options_for_setup(**parameters)
+
+
+defcla = default_cmdclass().copy()
+defcla["build_sphinx"] = SetupCommandSphinx
 
 setup(
     name=project_var_name,
