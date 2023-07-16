@@ -8,13 +8,18 @@ import math
 from pyquickhelper.pycode import ExtTestCase, get_temp_folder
 from mlstatpy.image.detection_segment.geometrie import Point
 from mlstatpy.image.detection_segment.detection_segment_segangle import SegmentBord
-from mlstatpy.image.detection_segment.detection_segment import detect_segments, plot_segments
-from mlstatpy.image.detection_segment.detection_segment import _calcule_gradient, plot_gradient
+from mlstatpy.image.detection_segment.detection_segment import (
+    detect_segments,
+    plot_segments,
+)
+from mlstatpy.image.detection_segment.detection_segment import (
+    _calcule_gradient,
+    plot_gradient,
+)
 from mlstatpy import __file__ as rootfile
 
 
 class TestSegments(ExtTestCase):
-
     visual = False
 
     def test_segment_bord(self):
@@ -51,16 +56,15 @@ class TestSegments(ExtTestCase):
                             break
 
             import pygame  # pylint: disable=C0415
+
             pygame.init()
             screen = pygame.display.set_mode((xx * 4, yy * 4))
             screen.fill((255, 255, 255))
             pygame.display.flip()
 
             for i in range(1, 4):
-                pygame.draw.line(screen, (255, 0, 0),
-                                 (0, i * yy), (xx * 4, i * yy))
-                pygame.draw.line(screen, (255, 0, 0),
-                                 (xx * i, 0), (xx * i, 4 * yy))
+                pygame.draw.line(screen, (255, 0, 0), (0, i * yy), (xx * 4, i * yy))
+                pygame.draw.line(screen, (255, 0, 0), (xx * i, 0), (xx * i, 4 * yy))
 
         s = SegmentBord(Point(xx, yy), math.pi / 6)
         s.premier()
@@ -69,8 +73,16 @@ class TestSegments(ExtTestCase):
         n = True
         angle = 0
         x, y = 0, 0
-        couleur = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255),
-                   (255, 0, 255), (0, 0, 0), (128, 128, 128)]
+        couleur = [
+            (255, 0, 0),
+            (0, 255, 0),
+            (0, 0, 255),
+            (255, 255, 0),
+            (0, 255, 255),
+            (255, 0, 255),
+            (0, 0, 0),
+            (128, 128, 128),
+        ]
         segs = []
         c = 0
         while n:
@@ -89,8 +101,7 @@ class TestSegments(ExtTestCase):
             n = s.next()  # pylint: disable=E1102
             if angle != s.angle:
                 if TestSegments.visual and __name__ == "__main__":
-                    print("changement angle = ", angle,
-                          " --> ", s.angle, "   clic ", s)
+                    print("changement angle = ", angle, " --> ", s.angle, "   clic ", s)
                     pygame.draw.line(screen, couleur[c % len(couleur)], a, b)
                     pygame.display.flip()
                     # attendre_clic(screen)
@@ -111,13 +122,15 @@ class TestSegments(ExtTestCase):
         self.assertEqual(seg.b.y, 122)
 
     def test_gradient_profile(self):
-        img = os.path.join(os.path.dirname(__file__),
-                           "data", "eglise_zoom2.jpg")
-        rootrem = os.path.normpath(os.path.abspath(
-            os.path.join(os.path.dirname(rootfile), '..')))
-        _, res = self.profile(lambda: _calcule_gradient(  # pylint: disable=W0632
-            img, color=0), rootrem=rootrem)
-        short = "\n".join(res.split('\n')[:15])
+        img = os.path.join(os.path.dirname(__file__), "data", "eglise_zoom2.jpg")
+        rootrem = os.path.normpath(
+            os.path.abspath(os.path.join(os.path.dirname(rootfile), ".."))
+        )
+        _, res = self.profile(
+            lambda: _calcule_gradient(img, color=0),  # pylint: disable=W0632
+            rootrem=rootrem,
+        )
+        short = "\n".join(res.split("\n")[:15])
         self.assertIn("_calcule_gradient", short)
 
     def test_gradient(self):
@@ -131,22 +144,24 @@ class TestSegments(ExtTestCase):
             imgrad.save(grfile)
             self.assertExists(grfile)
 
-        with open(os.path.join(temp, "..", "data", "gradient--2.png"), 'rb') as f:
+        with open(os.path.join(temp, "..", "data", "gradient--2.png"), "rb") as f:
             c1 = f.read()
-        with open(os.path.join(temp, "..", "data", "gradient--2b.png"), 'rb') as f:
+        with open(os.path.join(temp, "..", "data", "gradient--2b.png"), "rb") as f:
             c1b = f.read()
-        with open(os.path.join(temp, "gradient--2.png"), 'rb') as f:
+        with open(os.path.join(temp, "gradient--2.png"), "rb") as f:
             c2 = f.read()
         self.assertIn(c2, (c1, c1b))
 
     def test_segment_detection_profile(self):
-        img = os.path.join(os.path.dirname(__file__),
-                           "data", "eglise_zoom2.jpg")
-        rootrem = os.path.normpath(os.path.abspath(
-            os.path.join(os.path.dirname(rootfile), '..')))
-        _, res = self.profile(lambda: detect_segments(  # pylint: disable=W0632
-            img, stop=100), rootrem=rootrem)
-        short = "\n".join(res.split('\n')[:25])
+        img = os.path.join(os.path.dirname(__file__), "data", "eglise_zoom2.jpg")
+        rootrem = os.path.normpath(
+            os.path.abspath(os.path.join(os.path.dirname(rootfile), ".."))
+        )
+        _, res = self.profile(
+            lambda: detect_segments(img, stop=100),  # pylint: disable=W0632
+            rootrem=rootrem,
+        )
+        short = "\n".join(res.split("\n")[:25])
         if __name__ == "__main__":
             print(short)
         self.assertIn("detect_segments", short)

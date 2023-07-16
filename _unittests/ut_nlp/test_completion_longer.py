@@ -9,31 +9,32 @@ from mlstatpy.nlp.completion import CompletionTrieNode
 
 
 class TestCompletionLonger(unittest.TestCase):
-
     def test_check_bug_about_mergeing_completions(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
+        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
 
-        data = os.path.join(os.path.abspath(
-            os.path.dirname(__file__)), "data", "sample20000.txt")
+        data = os.path.join(
+            os.path.abspath(os.path.dirname(__file__)), "data", "sample20000.txt"
+        )
         with open(data, "r", encoding="utf-8") as f:
             lines = [_.strip("\n\r\t ") for _ in f.readlines()]
         queries = [(None, _) for _ in lines]
         fLOG("build trie")
         trie = CompletionTrieNode.build(queries)
-        fLOG(len(queries), len(set(_[1] for _ in queries)),
-             len(list(trie.leaves())), len(set(trie.leaves())))
+        fLOG(
+            len(queries),
+            len(set(_[1] for _ in queries)),
+            len(list(trie.leaves())),
+            len(set(trie.leaves())),
+        )
         assert "Cannes 2005" in set(_[1] for _ in queries)
         assert "Cannes 2005" in set(_.value for _ in trie.leaves())
         fLOG("bug precompute")
         trie.precompute_stat()
         fLOG("bug checking")
-        find = trie.find('Cann')
+        find = trie.find("Cann")
         sug = find.stat.completions
         self.assertEqual(len(sug), 2)
-        leave = trie.find('Cannes 2005')
+        leave = trie.find("Cannes 2005")
 
         sugg = leave.all_mks_completions()
         assert len(sugg) > 0

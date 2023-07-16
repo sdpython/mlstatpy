@@ -9,23 +9,21 @@ from mlstatpy.graph.graphviz_helper import draw_graph_graphviz
 
 
 class TestGraphviz(unittest.TestCase):
-
     @skipif_appveyor("no graphviz")
     @skipif_travis("no graphviz")
     def test_draw_graph_graphviz(self):
         temp = get_temp_folder(__file__, "temp_graphviz")
         fout = os.path.join(temp, "image.png")
 
-        draw_graph_graphviz([(1, "eee", "red")],
-                            [(1, 2, "blue"), (3, 4), (1, 3)], fout)
+        draw_graph_graphviz([(1, "eee", "red")], [(1, 2, "blue"), (3, 4), (1, 3)], fout)
 
         self.assertTrue(os.path.exists(fout))
         self.assertTrue(os.path.exists(fout + ".gv"))
 
     def test_draw_graph_graphviz_no_image(self):
-        res = draw_graph_graphviz([(1, "eee", "red")],
-                                  [(1, 2, "blue"), (3, 4), (1, 3)],
-                                  image=None)
+        res = draw_graph_graphviz(
+            [(1, "eee", "red")], [(1, 2, "blue"), (3, 4), (1, 3)], image=None
+        )
         self.assertIn('[label="eee"', res)
 
 

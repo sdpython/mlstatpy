@@ -7,20 +7,20 @@ import unittest
 from pyquickhelper.loghelper import fLOG
 from pyquickhelper.pycode import get_temp_folder, add_missing_development_version
 from pyquickhelper.ipythonhelper import (
-    execute_notebook_list, execute_notebook_list_finalize_ut, get_additional_paths)
+    execute_notebook_list,
+    execute_notebook_list_finalize_ut,
+    get_additional_paths,
+)
 import mlstatpy as thismodule
 
 
 class TestRunNotebooksML(unittest.TestCase):
-
     def setUp(self):
-        fLOG(
-            __file__,
-            self._testMethodName,
-            OutputPrint=__name__ == "__main__")
+        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
 
-        add_missing_development_version(["pyensae", "jyquickhelper"],
-                                        __file__, hide=True)
+        add_missing_development_version(
+            ["pyensae", "jyquickhelper"], __file__, hide=True
+        )
 
     def a_test_notebook_runner(self, name, folder, valid=None):
         fLOG(f"notebook {name!r} in {folder!r}")
@@ -33,10 +33,13 @@ class TestRunNotebooksML(unittest.TestCase):
         import pyquickhelper  # pylint: disable=C0415
         import jyquickhelper  # pylint: disable=C0415
         import pyensae  # pylint: disable=C0415
+
         add_path = get_additional_paths(
-            [jyquickhelper, pyquickhelper, pyensae, thismodule])
+            [jyquickhelper, pyquickhelper, pyensae, thismodule]
+        )
         res = execute_notebook_list(
-            temp, keepnote, additional_path=add_path, valid=valid)
+            temp, keepnote, additional_path=add_path, valid=valid
+        )
         execute_notebook_list_finalize_ut(res, fLOG=fLOG, dump=thismodule)
 
     def test_notebook_benchmark(self):

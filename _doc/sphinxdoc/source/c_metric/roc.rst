@@ -329,7 +329,7 @@ Ce premier paragraphe détaille la manière dont
 est construite une courbe ROC (voir :ref:`Courbe ROC <def_roc_2>`).
 
 .. mathdef::
-    :title: Courbe ROC
+    :title: Calcul de la courbe ROC
     :tag: Algorithme
     :lid: algo_courb_ROC
 
@@ -445,8 +445,8 @@ Cette expérience a été reproduite plusieurs fois
 et ces bornes sont assez stables contrairement (`\pm 0,05 \%`) aux extremas
 (`\pm 1\%`).
 
-Aire sous la courbe
-+++++++++++++++++++
+Aire sous la courbe et intervalles de confiance
++++++++++++++++++++++++++++++++++++++++++++++++
 
 La méthode bootstrap peut elle aussi être appliquée pour
 calculer un intervalle de confiance pour l'aire sous la courbe (AUC).

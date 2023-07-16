@@ -10,7 +10,6 @@ from mlstatpy import check, _setup_hook
 
 
 class TestInitFunction(ExtTestCase):
-
     def test_check(self):
         check()
 
@@ -18,7 +17,7 @@ class TestInitFunction(ExtTestCase):
         buf = io.StringIO()
         with redirect_stdout(buf):
             _setup_hook(True)
-        self.assertIn('Success', buf.getvalue())
+        self.assertIn("Success", buf.getvalue())
 
 
 if __name__ == "__main__":

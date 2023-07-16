@@ -2,7 +2,6 @@ astroid
 autopep8
 blockdiag
 coverage
-cpyquickhelper
 Cython
 cytoolz
 dill
@@ -20,9 +19,9 @@ mako
 matplotlib
 memory_profiler
 mlinsights
-mlprodict>=0.8
 nbconvert
 notebook
+onnx_array_api
 onnxruntime>=1.12
 pandas
 pillow
@@ -39,7 +38,7 @@ seaborn
 setuptools
 snakeviz
 scikit-learn>=1.1
-skl2onnx
+git+https://github.com/onnx/sklearn-onnx.git
 sphinx
 sphinx-bootstrap-theme
 sphinxcontrib.imagesvg
