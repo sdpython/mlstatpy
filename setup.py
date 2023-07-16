@@ -30,19 +30,19 @@ CLASSIFIERS = [
 # data
 #######
 
-packages = find_packages('src', exclude='src')
-package_dir = {k: "src/" + k.replace(".", "/") for k in packages}
+packages = find_packages()
+package_dir = {k: os.path.join('.', k.replace(".", "/")) for k in packages}
 package_data = {}
 
 
 setup(
     name=project_var_name,
-    version=read_version(__file__, project_var_name, subfolder='src'),
+    version=read_version(__file__, project_var_name),
     author='Xavier Dupré',
     author_email='xavier.dupre@gmail.com',
     license="MIT",
-    url="http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html",
-    download_url="https://github.com/sdpython/mlstatpy/",
+    url=f"http://www.xavierdupre.fr/app/{project_var_name}/helpsphinx/index.html",
+    download_url=f"https://github.com/sdpython/{project_var_name}/",
     description=DESCRIPTION,
     long_description=read_readme(__file__),
     cmdclass=default_cmdclass(),

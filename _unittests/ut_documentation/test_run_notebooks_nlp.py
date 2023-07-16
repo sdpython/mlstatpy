@@ -44,11 +44,7 @@ class TestRunNotebooksNLP(unittest.TestCase):
 
         # additionnal path to add
         addpaths = [os.path.normpath(os.path.join(
-            os.path.abspath(os.path.dirname(__file__)), "..", "..", "src")),
-            os.path.normpath(os.path.join(
-                os.path.abspath(os.path.dirname(__file__)), "..", "..", "..", "jyquickhelper", "src")),
-            os.path.normpath(os.path.join(
-                os.path.abspath(os.path.dirname(__file__)), "..", "..", "..", "pyquickhelper", "src"))
+            os.path.abspath(os.path.dirname(__file__)), "..", "..")),
         ]
 
         # run the notebooks
