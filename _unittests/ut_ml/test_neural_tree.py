@@ -10,7 +10,7 @@ from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_g
 from sklearn.datasets import load_iris
 from sklearn.tree import export_text
 from pyquickhelper.pycode import ExtTestCase
-from mlprodict.plotting.text_plot import onnx_simple_text_plot
+from onnx_array_api.plotting.text_plot import onnx_simple_text_plot
 from mlstatpy.ml.neural_tree import (
     NeuralTreeNode,
     NeuralTreeNet,
@@ -567,8 +567,8 @@ class TestNeuralTree(ExtTestCase):
         self.assertEqualArray(exp, got, atol=1e-10)
 
     def test_convert_compact_skl_onnx(self):
-        from mlprodict.onnx_conv import to_onnx
-        from mlprodict.onnxrt import OnnxInference
+        from skl2onnx import to_onnx
+        from onnx.reference import ReferenceEvaluator
 
         X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
         y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
@@ -587,8 +587,8 @@ class TestNeuralTree(ExtTestCase):
         text = onnx_simple_text_plot(onx)
         self.assertIn("Sigmoid(", text)
         self.assertIn("Softmax(", text)
-        oinf = OnnxInference(onx)
-        got2 = oinf.run({"X": x32})["probabilities"]
+        oinf = ReferenceEvaluator(onx)
+        got2 = oinf.run(None, {"X": x32})[0]
         self.assertEqualArray(exp, got2, atol=1e-10)
 
     def test_convert_reg_compact(self):
@@ -649,8 +649,8 @@ class TestNeuralTree(ExtTestCase):
         self.assertEqualArray(exp, got.ravel())
 
     def test_convert_compact_skl_onnx_reg(self):
-        from mlprodict.onnx_conv import to_onnx
-        from mlprodict.onnxrt import OnnxInference
+        from skl2onnx import to_onnx
+        from onnx.reference import ReferenceEvaluator
 
         X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
         y = X[:, 0] + X[:, 1] * 2
@@ -669,8 +669,8 @@ class TestNeuralTree(ExtTestCase):
         text = onnx_simple_text_plot(onx)
         self.assertIn("Sigmoid(", text)
         self.assertNotIn("Softmax(", text)
-        oinf = OnnxInference(onx)
-        got2 = oinf.run({"X": x32})["variable"]
+        oinf = ReferenceEvaluator(onx)
+        got2 = oinf.run(None, {"X": x32})[0]
         self.assertEqualArray(exp, got2.ravel())
 
 
