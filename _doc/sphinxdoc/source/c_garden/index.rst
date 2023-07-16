@@ -16,3 +16,4 @@ découvrir quelques poussières sous le tapis.
     file_dattente
     strategie_avec_alea
     ../notebooks/discret_gradient
+    quantization

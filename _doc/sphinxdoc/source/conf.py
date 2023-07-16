@@ -92,6 +92,7 @@ custom_preamble = """\n
 \\newcommand{\\loibinomiale}[2]{{\\cal B} \\pa{#1,#2}}
 \\newcommand{\\loimultinomiale}[1]{{\\cal M} \\pa{#1}}
 \\newcommand{\\variance}[1]{\\mathbb{V}\\pa{#1}}
+\\newcommand{\\intf}[1]{\\left\\lfloor #1 \\right\\rfloor}
 """
 # \\usepackage{eepic}
 
