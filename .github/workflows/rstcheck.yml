@@ -25,4 +25,4 @@ jobs:
         run: python -m pip install sphinx tomli rstcheck[toml,sphinx]
 
       - name: rstcheck
-        run: rstcheck -r _doc onnx_array_api
+        run: rstcheck -r _doc mlstatpy

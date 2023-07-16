@@ -2,7 +2,6 @@ astroid
 autopep8
 blockdiag
 coverage
-cpyquickhelper
 Cython
 cytoolz
 dill

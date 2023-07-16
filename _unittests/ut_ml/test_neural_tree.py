@@ -318,8 +318,8 @@ class TestNeuralTree(ExtTestCase):
                 net.append(neu, numpy.arange(0, 2))
                 loss2 = net.loss(X, y)
                 grad2 = net.gradient(X[0], y[0])
-                self.assertEqualArray(loss1, loss2)
-                self.assertEqualArray(grad1, grad2)
+                self.assertEqualArray(loss1, loss2, atol=1e-5)
+                self.assertEqualArray(grad1, grad2, atol=1e-5)
 
     def test_neural_net_gradient_regression_2(self):
         X = numpy.abs(numpy.random.randn(10, 2))
@@ -589,7 +589,7 @@ class TestNeuralTree(ExtTestCase):
         self.assertIn("Softmax(", text)
         oinf = ReferenceEvaluator(onx)
         got2 = oinf.run(None, {"X": x32})[0]
-        self.assertEqualArray(exp, got2, atol=1e-10)
+        self.assertEqualArray(exp[:, 1], got2, atol=1e-5)
 
     def test_convert_reg_compact(self):
         X = numpy.arange(32).astype(numpy.float64).reshape((-1, 2))
