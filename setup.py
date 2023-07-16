@@ -80,7 +80,7 @@ setup(
     download_url=f"https://github.com/sdpython/{project_var_name}/",
     description=DESCRIPTION,
     long_description=read_readme(__file__),
-    cmdclass=default_cmdclass(),
+    cmdclass=defcla,
     keywords=KEYWORDS,
     classifiers=CLASSIFIERS,
     packages=packages,
