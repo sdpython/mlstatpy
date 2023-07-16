@@ -53,7 +53,7 @@ Explications
 ============
 
 La présentation
-`Détection des images dans les images digitales <https://github.com/sdpython/mlstatpy/blob/master/_todo/segment_detection/presentation.pdf>`_
+`Détection des images dans les images digitales <https://github.com/sdpython/mlstatpy/blob/main/_todo/segment_detection/presentation.pdf>`_
 détaille le principe de l'algorithme. L'idée de l'algorithme est assez
 proche de la `transformée de Hough <https://fr.wikipedia.org/wiki/Transform%C3%A9e_de_Hough>`_.
 Celle-ci est implémentée dans le module
