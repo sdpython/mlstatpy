@@ -1,14 +1,39 @@
 [tool.rstcheck]
 report_level = "INFO"
 ignore_directives = [
+    "autosignature",
     "autoclass",
     "autofunction",
     "automodule",
+    "blogpost",
+    "blogpostagg",
+    "exref",
+    "exreflist",
+    "faqreflist",
     "gdot",
     "image-sg",
+    "inheritance-diagram",
+    "mathdef",
+    "mathdeflist",
+    "plot",
     "runpython",
+    "tocdelay",
+    "todoext",
+    "todoextlist",
 ]
-ignore_roles = ["epkg"]
+ignore_roles = ["epkg", "githublink", "issue"]
+ignore_messages = [
+    ".*Hyperlink target .* is not referenced.*",
+    ".*Document or section may not begin with a transition.*",
+    ".*Unknown target name: .*[0-9]{4}.*",
+    ".*Duplicate explicit target name: .pdf..*",
+    ".*Unexpected possible title overline or transition..*",
+    #
+    ".*Duplicate implicit target name: .((complétion)|(analyse de survie)|(régression linéaire))..*",
+    ".*Duplicate implicit target name: .((courbe roc)|(diagramme de voronoï)|(régression logistique))..*",
+    ".*kppv.rst:11[560].*",
+    ".*rn_biblio.rst:7.*",
+]
 
 [tool.ruff]
 

@@ -54,8 +54,8 @@ initiaux sont les frontières du diagramme de Voronoï formé
 par ces *n* points ? Les paragraphes qui suivent expliquent
 explorent cette hypothèse.
 
-Régression logistique
-=====================
+Régression logistique et classification
+=======================================
 
 :epkg:`scikit-learn` a rendu populaire le jeu de données
 `Iris <http://scikit-learn.org/stable/auto_examples/linear_model/plot_iris_logistic.html#sphx-glr-auto-examples-linear-model-plot-iris-logistic-py>`_

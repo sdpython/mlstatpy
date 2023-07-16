@@ -109,7 +109,7 @@ La table suivante donne quelques exemples de contributions possibles.
 
 .. list-table::
     :header-rows: 0
-    :widths: auto
+    :widths: 5 10
 
 	* - fonction constante 	
       - :math:`\omega\pa{x,y} = 1`
@@ -437,7 +437,7 @@ et l'élément :math:`x` soit connue et que l'ensemble
 
 L'algorithme développé dans [Farago1993]_ permet de trouver
 le point de plus proche d'un élément :math:`x` dans un
-ensemble :math:`E = \ensemble{x_1}{x_N}`selon l'algorithme suivant :
+ensemble :math:`E = \ensemble{x_1}{x_N}` selon l'algorithme suivant :
 
 .. mathdef::
     :title: plus proche voisin d'après [Farago1993]_

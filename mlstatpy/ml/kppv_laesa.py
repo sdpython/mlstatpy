@@ -11,7 +11,7 @@ from .kppv import NuagePoints
 class NuagePointsLaesa(NuagePoints):
     """
     Implémente l'algorithme des plus proches voisins,
-    version :ref:`LAESA <space_metric_algo_laesa_prime>`_
+    version :ref:`LAESA <space_metric_algo_laesa_prime>`.
     """
 
     def __init__(self, nb_pivots):

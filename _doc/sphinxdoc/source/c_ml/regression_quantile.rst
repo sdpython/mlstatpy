@@ -1,9 +1,9 @@
 
 .. _l-reg-quantile:
 
-===================
-Régression quantile
-===================
+====================================
+Régression quantile ou régression L1
+====================================
 
 La régression quantile est moins sensible aux points aberrants.
 Elle peut être définie comme une régression avec une norme
@@ -66,8 +66,8 @@ que n'importe quel point dans cet intervalle minimise
 :math:`\abs{X_1 - M} + \abs{X_n - M} + \abs{X_2 - M} + \abs{X_{n-1} - M} + ... = E`.
 La propriété est démontrée.
 
-Régression quantile
-===================
+Régression et quantile
+======================
 
 Maintenant que la médiane est définie par un problème
 de minimisation, il est possible de l'appliquer à un
@@ -93,8 +93,7 @@ de descente de gradient puisque la fonction
 partout dérivable. Une autre option consiste à
 utiliser l'algorithme
 `Iteratively reweighted least squares <https://en.wikipedia.org/wiki/Iteratively_reweighted_least_squares>`_.
-L'implémentation est faite par la classe
-`QuantileLinearRegression <http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/quantile_regression.html#mlinsights.mlmodel.quantile_regression.QuantileLinearRegression>`_.
+L'implémentation est faite par la classe :epkg:`QuantileLinearRegression`.
 L'algorithme est tiré de [Chen2014]_.
 
 .. mathdef::
@@ -192,7 +191,7 @@ la médiane avec :math:`p=\frac{1}{2}`. Il faut démontrer
 que la solution de ce programme d'optimisation
 atterrit dans l'intervalle souhaité.
 
-.. images:: qureg/q02.png
+.. image:: qureg/q02.png
     :height: 80
 
 On choisit un réel *P* à l'intérieur d'un intervale et on calcule :
@@ -245,9 +244,7 @@ de descente de gradient puisque la fonction
 à minimiser est presque
 partout dérivable. On peut aussi
 adapter l'algorithme :ref:`Iteratively reweighted least squares <iteratiive-least-square>`.
-L'implémentation est faite par la classe
-`QuantileLinearRegression
-<http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/quantile_regression.html#mlinsights.mlmodel.quantile_regression.QuantileLinearRegression>`_
+L'implémentation est faite par la classe :epkg:`QuantileLinearRegression`
 (voir [Koenker2017]_).
 
 .. mathdef::

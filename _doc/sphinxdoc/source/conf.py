@@ -111,6 +111,7 @@ epkg_dictionary.update(
         "DecisionTreeClassifier": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html",
         "DecisionTreeRegressor optimized for Linear Regression": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
         "dot": "https://fr.wikipedia.org/wiki/DOT_(langage)",
+        "Holm–Bonferroni method": "https://en.wikipedia.org/wiki/Holm%E2%80%93Bonferroni_method>",
         "ICML 2016": "https://icml.cc/2016/index.html",
         "KMeans": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html",
         "LAESA": "https://tavianator.com/aesa/",
