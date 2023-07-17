@@ -141,7 +141,7 @@ On note la métrique :math:`M'_b`.
     :math:`S` comme étant le minimum obtenu :
 
     .. math::
-        :label: completion-metric2
+        :label: completion-metric2-back
         :nowrap:
 
         \begin{eqnarray*}

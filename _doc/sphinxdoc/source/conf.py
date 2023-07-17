@@ -105,7 +105,9 @@ epkg_dictionary.update(
         "ACP": "https://fr.wikipedia.org/wiki/Analyse_en_composantes_principales",
         "AESA": "https://tavianator.com/aesa/",
         "ApproximateNMFPredictor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/anmf_predictor.html",
+        "AUC": "https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve",
         "B+ tree": "https://en.wikipedia.org/wiki/B%2B_tree",
+        "BLAS": "https://www.netlib.org/blas/",
         "Branch and Bound": "https://en.wikipedia.org/wiki/Branch_and_bound",
         "Custom Criterion for DecisionTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
         "cython": "https://cython.org/",
@@ -118,6 +120,7 @@ epkg_dictionary.update(
         "LAESA": "https://tavianator.com/aesa/",
         "LAPACK": "http://www.netlib.org/lapack/",
         "mlinsights": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/index.html",
+        "mlstatpy": "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html",
         "PiecewiseTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/"
         "piecewise_tree_regression.html#mlinsights.mlmodel.piecewise_tree_regression.PiecewiseTreeRegressor",
         "Predictable t-SNE": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/predictable_tsne.html",
@@ -127,6 +130,7 @@ epkg_dictionary.update(
         "Regression with confidence interval": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/regression_confidence_interval.html",
         "relu": "https://en.wikipedia.org/wiki/Rectifier_(neural_networks)",
         "ROC": "https://fr.wikipedia.org/wiki/Courbe_ROC",
+        "sklearn-onnx": "https://onnx.ai/sklearn-onnx/",
         "statsmodels": "http://www.statsmodels.org/stable/index.html",
         "SVD": "https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res",
         "Visualize a scikit-learn pipeline": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/visualize_pipeline.html",
@@ -139,3 +143,5 @@ nblinks = {
     "cl-NeuralTreeNet": "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx//mlstatpy/ml/"
     "neural_tree.html#mlstatpy.ml.neural_tree.NeuralTreeNet",
 }
+
+imgmath_image_format = "png"

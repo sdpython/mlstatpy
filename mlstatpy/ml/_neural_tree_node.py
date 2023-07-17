@@ -318,7 +318,7 @@ class NeuralTreeNode(_TrainingAPI):
         """
         Updates weights.
 
-        :param grad: vector to add to the weights such as gradient
+        :param X: training datasets
         :param add: addition or replace
         """
         if add:

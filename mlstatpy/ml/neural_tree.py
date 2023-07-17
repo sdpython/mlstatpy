@@ -609,7 +609,7 @@ class NeuralTreeNet(_TrainingAPI):
         """
         Updates weights.
 
-        :param grad: vector to add to the weights such as gradient
+        :param X: training dataset
         :param add: addition or replace
         """
         pos = 0
@@ -833,7 +833,7 @@ class BaseNeuralTreeNet(BaseEstimator):
     def onnx_shape_calculator():
         """
         Shape calculator when converting this model into ONNX.
-        See :epkg:`skearn-onnx`.
+        See :epkg:`sklearn-onnx`.
         """
         from skl2onnx.common.data_types import Int64TensorType
 
@@ -963,8 +963,6 @@ class NeuralTreeNetClassifier(ClassifierMixin, BaseNeuralTreeNet):
     Classifier following :epkg:`scikit-learn` API.
 
     :param estimator: instance of @see cl NeuralTreeNet.
-    :param X: training set
-    :param y: training labels
     :param optimizer: optimizer, by default, it is
         :class:`SGDOptimizer <mlstatpy.optim.sgd.SGDOptimizer>`.
     :param max_iter: number maximum of iterations
@@ -1039,8 +1037,6 @@ class NeuralTreeNetRegressor(RegressorMixin, BaseNeuralTreeNet):
     Regressor following :epkg:`scikit-learn` API.
 
     :param estimator: instance of @see cl NeuralTreeNet.
-    :param X: training set
-    :param y: training labels
     :param optimizer: optimizer, by default, it is
         :class:`SGDOptimizer <mlstatpy.optim.sgd.SGDOptimizer>`.
     :param max_iter: number maximum of iterations

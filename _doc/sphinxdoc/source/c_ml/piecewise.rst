@@ -643,10 +643,10 @@ est que le coût de la mise à jour pour l'itération *k+1*
 ne dépend pas de *k*.
 
 On suppose donc que :math:`(T_k, P_k)` sont les deux matrices
-retournées par l'algorithme de :ref:`algo_gram_schmidt <Gram-Schmidt>`.
+retournées par l'algorithme de :ref:`Gram-Schmidt <algo_gram_schmidt>`.
 On construit la matrice :math:`V_{k+1} = [ T_k, X_{k+1} P_k ]` :
 on ajoute une ligne à la matrice :math:`T_k`. On applique
-une itération de algorithme de :ref:`algo_gram_schmidt <Gram-Schmidt>`
+une itération de algorithme de :ref:`Gram-Schmidt <algo_gram_schmidt>`
 pour obtenir :math:`(T_{k+1}, P)`. On en déduit que
 :math:`(T_{k+1}, P_{k+1}) = (T_{k+1}, P_k P)`. L'expression
 de la régression ne change pas mais il reste à l'expression
