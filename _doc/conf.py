@@ -2,6 +2,7 @@
 import sys
 import os
 import warnings
+from mlstatpy import __version__
 
 extensions = [
     "sphinx.ext.autodoc",
@@ -17,8 +18,12 @@ extensions = [
     "sphinx_gallery.gen_gallery",
     "matplotlib.sphinxext.plot_directive",
     "pyquickhelper.sphinxext.sphinx_epkg_extension",
-    "pyquickhelper.sphinxext.sphinx_gdot_extension",
     "pyquickhelper.sphinxext.sphinx_runpython_extension",
+    #
+    "pyquickhelper.sphinxext.sphinx_gdot_extension",
+    #
+    "pyquickhelper.sphinxext.sphinx_exref_extension",
+    "pyquickhelper.sphinxext.sphinx_mathdef_extension",
 ]
 
 templates_path = ["_templates"]

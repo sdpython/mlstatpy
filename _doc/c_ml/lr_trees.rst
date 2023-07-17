@@ -270,16 +270,6 @@ serait meilleure qu'une seule régression logistique sur
 la réunion des deux parties. Cet algorithme devrait trouver à
 la fois les modèles et la séparation entre les deux parties.
 
-.. todoext::
-    :title: Arbre de régressions logistiques et EM
-    :tag: idée
-    :issue: 28
-
-    Chaque noeud du graphe serait modélisé comme étant la réunion
-    de trois régressions logistiques, une pour diviser
-    l'espace en deux, deux autres apprenant à classifier sur chacune
-    des parties.
-
 .. _l-decnntrees:
 
 Lien vers les réseaux de neurones
@@ -416,18 +406,14 @@ vecteurs :math:`\Theta_1, \Theta_2` pour maximiser la vraisemblance
 sur chacune des parties. Il ne reste plus qu'à montrer que la vraisemblance
 globale sera supérieur à celle obtenue par la première régression logistique.
 
-.. todoext::
-    :title: Arbre de régressions logistiques en cascade orthogonale
-    :tag: idée
-    :issue: 29
+On pourrait implémenter l'algorithme suivant
+(Arbre de régressions logistiques en cascade orthogonale) :
 
-    Implémenter la l'algorithme suivant :
-
-    * Apprendre une régression logistique
-    * Choisir un hyperplan perpendiculaire en optimisation
-      un critère :ref:`l-criteria-reg-log`
-    * Apprendre une régression logistique sur chacune des parties.
-    * Continuer jusqu'à ce l'amélioration soit négligeable
+* Apprendre une régression logistique
+* Choisir un hyperplan perpendiculaire en optimisation
+    un critère :ref:`l-criteria-reg-log`
+* Apprendre une régression logistique sur chacune des parties.
+* Continuer jusqu'à ce l'amélioration soit négligeable
 
 Interprétabilité
 ================

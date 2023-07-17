@@ -110,10 +110,7 @@ Il y a un brin de poésie dans ce +1. L'application de l'implémentation du calc
 de la métrique montre que :math:`M'` et :math:`M"` sont très souvent égales.
 Je vais laisser ce :math:`\delta` sous forme de poésie pour le moment.
 
-.. todoext::
-    :title: terminer la démonstration pour *M*
-
-    La côte anglaise.
+Il faudrait terminer la démonstration pour *M*...
 
 Complétions emboîtées
 +++++++++++++++++++++

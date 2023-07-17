@@ -24,11 +24,8 @@ Le site est aussi disponible (format brut de fonderie) sur
     c_metric/index
     c_algo/index
     c_garden/index
-    i_examples
     api/index
-    end_index
-
-    gyexamples/index
+    auto_examples/index
 
 On fait beaucoup de choses avec l'informatique mais en pratique
 on doit maintenir, on doit réécrire sans cesse.
