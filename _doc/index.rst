@@ -15,7 +15,6 @@ Le site est aussi disponible (format brut de fonderie) sur
 .. toctree::
     :maxdepth: 2
 
-    introduction
     c_clus/index
     c_ml/index
     c_ml/index_reg_lin

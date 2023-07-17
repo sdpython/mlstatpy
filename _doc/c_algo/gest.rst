@@ -43,7 +43,7 @@ Illustration
 .. toctree::
     :maxdepth: 1
 
-    ../notebooks/segment_detection
+    ../notebooks/image/segment_detection
 
 La fonction
 :func:`detect_segments <mlstatpy.image.detection_segment.detection_segment.detect_segments>`

@@ -370,4 +370,4 @@ unité de l'espace des features.
 .. toctree::
     :maxdepth: 1
 
-    ../notebooks/logreg_voronoi
+    ../notebooks/ml/logreg_voronoi

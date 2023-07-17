@@ -174,4 +174,6 @@ nblinks = {
     "neural_tree.html#mlstatpy.ml.neural_tree.NeuralTreeNet",
 }
 
+nbsphinx_execute = "never"
+
 imgmath_image_format = "png"

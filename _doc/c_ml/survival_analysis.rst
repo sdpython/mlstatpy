@@ -192,7 +192,7 @@ Notebooks
 .. toctree::
     :maxdepth: 1
 
-    ../notebooks/survival
+    ../notebooks/ml/survival
 
 Liens, articles
 ===============

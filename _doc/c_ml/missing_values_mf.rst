@@ -45,7 +45,7 @@ Dans ce cas, on cherchera les matrices qui minimise :
 Quelques cas simples
 ====================
 
-Le notebook :ref:`valeursmanquantesmfrst` montre la décroissante de l'erreur
+Le notebook :ref:`valeurs_manquantes_mf.ipynb` montre la décroissante de l'erreur
 en fonction du rang et l'impact de la corrélation sur cette même erreur.
 Le dernier paragraphe montre qu'il n'existe pas de solution unique à un problème donné.
 L'exemple suivant s'intéresse à une matrice 3x3.
@@ -215,7 +215,6 @@ Dans notre cas, chaque ligne de la matrice :math:`M` est un vecteur :math:`X_i`.
 La matrice :math:`W_k` est identique à celle cherchée lors du problème de factorisation
 de matrices. Les colonnes de la matrice :math:`H_k` sont égales à :math:`W'X_i`.
 Il reste à montrer que le minimum trouvé dans les deux problèmes est le même.
-Le notebook :ref:`mfacprst` montre que cela fonctionne sur un exemple.
 La démonstration du théorème montre également que :math:`W'W = I_d`
 et dans ce cas précis, :math:`WW'X_i` représente les coordonnées de la projection
 du point :math:`X_i` sur le plan défini par les vecteurs :math:`W`.
@@ -242,11 +241,19 @@ On peut alors essayer de forcer la factorisation de matrice vers une matrice
 :math:`H` avec pas de un 1 sur chaque colonne et des zéros partout ailleurs.
 Le résultat sera assez proche d'un clustering.
 
+.. _l-mf-acp-notebook:
+
 Quelques résultats
 ==================
 
-Le notebook :ref:`mfacprst` illustre le lien entre ACP et
-factorisation de matrice en deux dimensions.
+Le notebook suivant illustre le lien entre ACP et
+factorisation de matrices en deux dimensions.
+
+.. toctree::
+
+    ../notebooks/ml/mf_acp
+    ../notebooks/ml/valeurs_manquantes_mf
+
 
 Prolongements
 =============

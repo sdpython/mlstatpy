@@ -291,7 +291,7 @@ Notebook
 
 .. toctree::
 
-    ../notebooks/quantile_regression_example
+    ../notebooks/dsgarden/quantile_regression_example
 
 Bilbiographie
 =============

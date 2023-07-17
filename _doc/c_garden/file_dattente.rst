@@ -508,7 +508,7 @@ La valeur obtenue est proche de :math:`S \mu = 100`.
 
 .. toctree::
 
-    ../notebooks/file_dattente
+    ../notebooks/dsgarden/file_dattente_ex
 
 Bibliographie
 =============

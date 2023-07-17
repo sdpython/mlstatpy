@@ -11,9 +11,12 @@ découvrir quelques poussières sous le tapis.
 .. toctree::
     :maxdepth: 1
 
-    ../notebooks/split_train_test
-    ../notebooks/correlation_non_lineaire
+    ../notebooks/dsgarden/split_train_test
+    ../notebooks/dsgarden/correlation_non_lineaire
     file_dattente
     strategie_avec_alea
-    ../notebooks/discret_gradient
+    ../notebooks/dsgarden/discret_gradient
     quantization
+    ../notebooks/dsgarden/classification_multiple
+    ../notebooks/dsgarden/benchmark
+    

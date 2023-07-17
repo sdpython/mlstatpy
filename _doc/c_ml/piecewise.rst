@@ -5,7 +5,7 @@
 Régression linéaire par morceaux
 ================================
 
-Le paragraphe :ref:`regressionlineairerst`
+Le paragraphe :ref:`regression_lineaire.ipynb`
 étudie le lien entre le coefficient :math:`R^2`
 et la corrélation pour finalement illustrer
 une façon de réaliser une régression linéaire par
@@ -50,7 +50,7 @@ implémentée selon l'API de :epkg:`scikit-learn`.
 .. toctree::
     :maxdepth: 1
 
-    ../notebooks/piecewise_linear_regression
+    ../notebooks/ml/piecewise_linear_regression
 
 .. image:: piecewise/piecenaive.png
     :width: 250
@@ -483,7 +483,7 @@ de Gram-Schmidt qui est implémentée dans la fonction
 
 L'avantage est que cette formulation s'exprime
 uniquement à partir de produits scalaires.
-Voir le notebook :ref:`regressionnoinversionrst`.
+Voir le notebook svuiant :ref:`regression_no_inversion.ipynb`.
 
 .. _l-reglin-acp-svd:
 
@@ -849,7 +849,7 @@ Notebooks
 
 .. toctree::
 
-    ../notebooks/regression_no_inversion
+    ../notebooks/ml/regression_no_inversion
 
 Implémentations
 ===============

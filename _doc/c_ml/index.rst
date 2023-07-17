@@ -14,6 +14,6 @@ des modèles de machine learning.
     rn/rn
     kppv
     missing_values_mf
-    ../notebooks/neural_tree
-    ../notebooks/neural_tree_onnx
-    ../notebooks/neural_tree_cost
+    ../notebooks/ml/neural_tree
+    ../notebooks/ml/neural_tree_onnx
+    ../notebooks/ml/neural_tree_cost

@@ -17,7 +17,11 @@ la performance d'un classifieur. Il introduit aussi des termes comme précision,
 rappel, :epkg:`AUC`,
 qui sont présents dans la plupart des articles qui traitent de machine learning.
 Le module :mod:`roc <mlstatpy.ml.roc>` implémente les calculs ci-dessous
-qu'on peut tester avec le notebook :ref:`rocexamplerst`.
+qu'on peut tester avec le notebook suivant :
+
+.. toctree::
+
+    ../notebooks/metric/roc_example
 
 Définitions
 ===========
