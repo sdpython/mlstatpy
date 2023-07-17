@@ -3,7 +3,7 @@ Propriétés mathématiques
 ========================
 
 On s'intéresse principalement à la métrique :math:`M'` définie par
-:ref:`Dynamic Minimum Keystroke <completion-metric2>` mais les résultats
+Dynamic Minimum Keystroke :eq:`completion-metric2` mais les résultats
 seront étendues aux autres quand cela est possible.
 
 .. contents::

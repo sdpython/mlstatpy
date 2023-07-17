@@ -166,6 +166,8 @@ epkg_dictionary = {
     "Regression with confidence interval": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/regression_confidence_interval.html",
     "relu": "https://en.wikipedia.org/wiki/Rectifier_(neural_networks)",
     "ROC": "https://fr.wikipedia.org/wiki/Courbe_ROC",
+    "scikit-learn": "https://scikit-learn.org/stable/index.html",
+    "sklearn": "https://scikit-learn.org/stable/index.html",
     "sklearn-onnx": "https://onnx.ai/sklearn-onnx/",
     "statsmodels": "http://www.statsmodels.org/stable/index.html",
     "SVD": "https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res",

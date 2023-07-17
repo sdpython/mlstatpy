@@ -36,6 +36,7 @@ pyinstrument
 pylint>=2.14.0
 pyquickhelper>=1.12
 pyquicksetup>=0.2.4
+pytest
 seaborn
 setuptools
 snakeviz

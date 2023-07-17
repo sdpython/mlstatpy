@@ -57,7 +57,7 @@ d'un algorithme de type `Expectation Maximization (EM) <https://fr.wikipedia.org
 (voir [Dempster1977]_) ou de ses variantes
 `SEM <https://fr.wikipedia.org/wiki/Algorithme_esp%C3%A9rance-maximisation#Algorithme_SEM>`_,
 `SAEM <http://wiki.webpopix.org/index.php/The_SAEM_algorithm_for_estimating_population_parameters>`_, ...
-(voir [Celeux1995]_, [Celeux1985b]_).
+(voir [Celeux1985]_, [Celeux1985b]_).
 La sélection du nombre de lois dans le mélange reste un
 problème ouvert abordé par l'article [Biernacki2001]_.
 
@@ -169,7 +169,7 @@ est dérivé de l'algorithme EM :
 
     Dans le cas contraire, on estime les probabilités
     :math:`P_{split}(m, \theta)` et :math:`P_{merge}(m,l, \theta)`
-    définie par les expressions :ref:`eq_split_merge`. On choisit aléatoirement
+    définie par les expressions :eq:`eq_split_merge`. On choisit aléatoirement
     une division ou un regroupement (les choix les plus probables ayant le plus de chance
     d'être sélectionnés). Ceci mène au paramètre :math:`\theta'_t` dont la partie modifiée par rapport à
     :math:`\hat{\theta}_t` est déterminée de manière aléatoire. L'algorithme EM est alors appliqué aux

@@ -133,7 +133,7 @@ mot *actuellement*, plus long sans que cela souffre d'ambiguïté.
 Définition avancée
 ++++++++++++++++++
 
-Dans les faits, le :ref:`Dynamic Minimum Keystroke <completion-metric2>` sous-estime
+Dans les faits, le Dynamic Minimum Keystroke :eq:`completion-metric2` sous-estime
 le nombre de caractères nécessaires. Lorsqu'on utilise un mot comme tremplin, on
 peut aisément le compléter mais il faut presser une touche ou attendre un peu
 pour voir les nouvelles complétions associées à la première complétion choisie et maintenant

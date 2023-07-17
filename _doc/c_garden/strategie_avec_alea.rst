@@ -54,12 +54,12 @@ La figure suivante montre l'allure de cette distribution.
 
     \pr{X=i} = e^{-\lambda} \frac{ \lambda^i}{i!}
 
-.. figure:: images/poisson.png
+.. image:: images/poisson.png
 
-    Ce graphe répresente la fonction de densité d'une loi de Poisson de paramètre 80.
-    On observe que le pic est obtenu pour une valeur
-    proche de 80, c'est la valeur la plus probable.
-    Ceci signifie que le nombre de poulets achetés le plus probable est 80.
+Ce graphe répresente la fonction de densité d'une loi de Poisson de paramètre 80.
+On observe que le pic est obtenu pour une valeur
+proche de 80, c'est la valeur la plus probable.
+Ceci signifie que le nombre de poulets achetés le plus probable est 80.
 
 Comme le nombre de poulets achetés varie d'une semaine à l'autre,
 le bénéfice du supermarché varie aussi d'une semaine à l'autre.
@@ -115,26 +115,24 @@ les dernières lignes servent à tracer la courbe présentée par la figure qui 
     # res est la courbe affichée plus bas
     print(res[:4])
 
-.. figure::
+.. list-table::
+    :widths: auto
+    :header-rows: 0
 
-    .. list-table::
-        :widths: auto
-        :header-rows: 0
+    * - .. image:: images/poissonb.png
+      - .. image:: images/poissonb2.png
 
-        * - .. image:: images/poissonb.png
-          - .. image:: images/poissonb2.png
-
-        Cette courbe est celle de l'évolution des profits en fonction du
-        nombre de poulets commandés. On suppose que
-        le nombre de poulets achetés suit une loi de Poisson de paramètre 80,
-        que les poulets sont achetés 2 euros, revendu 5 euros et soldés 1 euros.
-        Le maximum de 228 euros est obtenu pour 86 poulets.
-        La seconde courbe montre le résultat dans le cas où les poulets
-        soldés sont vendus 2 euros
-        égal au prix des poulets achetés. Le modèle montre ses limites dans ce
-        cas car il suppose que tous les poulets
-        soldés seront achetés et que les contraintes de stockage
-        sont négligeables.
+Cette courbe est celle de l'évolution des profits en fonction du
+nombre de poulets commandés. On suppose que
+le nombre de poulets achetés suit une loi de Poisson de paramètre 80,
+que les poulets sont achetés 2 euros, revendu 5 euros et soldés 1 euros.
+Le maximum de 228 euros est obtenu pour 86 poulets.
+La seconde courbe montre le résultat dans le cas où les poulets
+soldés sont vendus 2 euros
+égal au prix des poulets achetés. Le modèle montre ses limites dans ce
+cas car il suppose que tous les poulets
+soldés seront achetés et que les contraintes de stockage
+sont négligeables.
 
 Modélisation de la demande
 ==========================
@@ -298,12 +296,12 @@ variable suivant une loi de Poisson avec :math:`\lambda=10`
 puis on compte le nombre de fois qu'on obtient chaque entier compris
 entre 0 et 40. La figure qui suit permet de comparer les résultats obtenus.
 
-.. figure:: images/poishis.png
+.. image:: images/poishis.png
 
-    Comparaison entre une fonction de densité estimée
-    empiriquement pour la loi de Poisson de paramètre
-    :math:`\lambda=10` et sa densité théorique
-    :math:`f(i) = e^{-\lambda} \frac{ \lambda^i}{i!}`.
+Comparaison entre une fonction de densité estimée
+empiriquement pour la loi de Poisson de paramètre
+:math:`\lambda=10` et sa densité théorique
+:math:`f(i) = e^{-\lambda} \frac{ \lambda^i}{i!}`.
 
 On cherche maintenant à calculer les probabilités
 :math:`\pr{N = i}` sachant que :math:`N = N_1 + 2 N_2 + 3 N_3`
@@ -320,34 +318,32 @@ De la même manière, on estime l'histogramme du mélange avec cette fois-ci
 un plus grand nombre de tirages (10000) pour aboutir
 à la figure suivante.
 
-.. figure::
+.. list-table::
+    :widths: auto
+    :header-rows: 0
 
-    .. list-table::
-        :widths: auto
-        :header-rows: 0
+    * - .. image:: images/poishist2.png
+      - .. image:: images/poishist3.png
 
-        * - .. image:: images/poishist2.png
-          - .. image:: images/poishist3.png
-
-    Comparaison entre une fonction de densité estimée empiriquement
-    pour un mélange de loi Poisson :math:`N = N_1 + 2 N_2 + 3 N_3`
-    vérifiant :math:`N_1 \sim \mathcal{P}(48)`,
-    :math:`N_2 \sim \mathcal{P}(10)`, :math:`N_3 \sim \mathcal{P}(4)`
-    avec la densité de la loi de Poisson de paramètre :math:`\lambda=80=48+2*10+3*4`.
-    Il apparaît que ce sont deux densités différentes, celle du mélange
-    étant plus applatie. La seconde image montre ce qu'on obtient lorsque
-    le nombre de tirages n'est pas assez important.
+Comparaison entre une fonction de densité estimée empiriquement
+pour un mélange de loi Poisson :math:`N = N_1 + 2 N_2 + 3 N_3`
+vérifiant :math:`N_1 \sim \mathcal{P}(48)`,
+:math:`N_2 \sim \mathcal{P}(10)`, :math:`N_3 \sim \mathcal{P}(4)`
+avec la densité de la loi de Poisson de paramètre :math:`\lambda=80=48+2*10+3*4`.
+Il apparaît que ce sont deux densités différentes, celle du mélange
+étant plus applatie. La seconde image montre ce qu'on obtient lorsque
+le nombre de tirages n'est pas assez important.
 
 On utilise ces éléments pour modéliser la demande de poulets
 selon ce mélange de lois Poisson. Le premier programme est modifié
 pour aboutir au suivant.
 
-.. figure:: images/poulet10.png
+.. image:: images/poulet10.png
 
-    Dans le cas du mélange de lois Poisson,
-    le maximum est cette-fois ci obtenu pour 87 poulets et est
-    de 225 euros. Ces résultats sont légèrement différents
-    de ceux obtenus par une simple loi Poisson (80).
+Dans le cas du mélange de lois Poisson,
+le maximum est cette-fois ci obtenu pour 87 poulets et est
+de 225 euros. Ces résultats sont légèrement différents
+de ceux obtenus par une simple loi Poisson (80).
 
 Variations saisonnières et prolongations
 ========================================

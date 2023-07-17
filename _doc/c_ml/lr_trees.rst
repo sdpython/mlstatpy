@@ -421,10 +421,10 @@ Interprétabilité
 Bibliographie
 =============
 
-[Scott2013] `Expectation-maximization for logistic regression <https://arxiv.org/pdf/1306.0040.pdf>`_,
+.. [Scott2013] `Expectation-maximization for logistic regression <https://arxiv.org/pdf/1306.0040.pdf>`_,
     James G. Scott, Liang Sun
 
-[Nakandalam2020] A Tensor-based Approach for One-size-fits-all ML Prediction Serving.
+.. [Nakandalam2020] A Tensor-based Approach for One-size-fits-all ML Prediction Serving.
     Supun Nakandalam, Karla Saur, Gyeong-In Yu, Konstantinos Karanasos, Carlo Curino,
     Markus Weimer, Matteo Interlandi. To appear at `OSDI 2020
     <https://www.usenix.org/conference/osdi20>`_.

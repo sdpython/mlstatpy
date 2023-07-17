@@ -111,7 +111,7 @@ La table suivante donne quelques exemples de contributions possibles.
     :header-rows: 0
     :widths: 5 10
 
-	* - fonction constante 	
+    * - fonction constante 	
       - :math:`\omega\pa{x,y} = 1`
     * - distance inverse
       - :math:`\omega\pa{x,y} = \frac{1}{1 + d\pa{x,y}}`
@@ -185,19 +185,17 @@ de manière globale - construction de l'arbre sachant l'ensemble de points à cl
 ou de manière progressive - insertion des points dans l'arbre les uns à la suite des autres -.
 Toutefois, ces méthodes sont resteintes à des espaces vectoriels.
 
-.. figure::
+.. list-table::
+    :header-rows: 0
+    :widths: auto
 
-    .. list-table::
-        :header-rows: 0
-        :widths: auto
+    * - .. image:: knnimg/rtree1.png
+      - .. image:: knnimg/rtree2.png
 
-        * - .. image:: knnimg/rtree1.png
-          - .. image:: knnimg/rtree2.png
-
-    	Illustration d'un :epkg:`R-tree` en deux dimensions,
-        figure extraite de [Sellis1987]_, la première image montre des rectangles
-        pointillés englobant d'autres rectangles en trait plein. Chaque style de trait correspond
-        à un niveau dans le graphe de la seconde image.
+Illustration d'un :epkg:`R-tree` en deux dimensions,
+figure extraite de [Sellis1987]_, la première image montre des rectangles
+pointillés englobant d'autres rectangles en trait plein. Chaque style de trait correspond
+à un niveau dans le graphe de la seconde image.
     		
 Il n'existe pas une seule manière de construire un :epkg:`R-tree`,
 les noeuds de ces arbres suivent toujours la contrainte des

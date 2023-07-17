@@ -299,7 +299,7 @@ D'où :
     d\pa{m_1,m_3} \infegal d\pa{m_1,m_2} + d \pa{m_2,m_3} \label{edit_demo_eq_3}
     \end{eqnarray}
 
-Les assertions :ref:`1 <edit_demo_eq_1>`, :ref:`2 <edit_demo_eq_2>`, :ref:`3 <edit_demo_eq_3>`
+Les assertions :eq:`1 <edit_demo_eq_1>`, :eq:`2 <edit_demo_eq_2>`, :eq:`3 <edit_demo_eq_3>`
 montrent que :math:`d` est bien une distance. Le tableau suivant
 illustre la démonstration pour les suites :math:`M_1,M_2,M_3` pour les mots
 et les mots ``idtzance``, ``tonce``, ``distances``.
@@ -402,8 +402,6 @@ Cette suite tronquée permet d'obtenir le résultat de la propriété suivante :
     où :math:`d` est la distance d'édition définie en :ref:`1 <defition_distance_edition_1>`
     ou :ref:`2 <defition_distance_edition_2>`.
 
-Cette factorisation des calculs est illustrée par les tableaux de
-cette :ref:`figure <figure_distance_edition_exemple_deux>`.
 La démonstration s'effectue par récurrence, la définition :ref:`3 <definition_edit_dist_tronc>`
 est bien sûr équivalente :ref:`1 <defition_distance_edition_1>`
 pour des mots de longueur un. On suppose donc que ce résultat est

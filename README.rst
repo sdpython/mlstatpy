@@ -50,4 +50,3 @@ an algorithm to convert decision trees into neural network.
 
 * `GitHub/mlstatpy <https://github.com/sdpython/mlstatpy/>`_
 * `documentation <http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html>`_
-* `Blog <http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/blog/main_0000.html#ap-main-0>`_
