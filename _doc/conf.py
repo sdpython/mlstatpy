@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
-import warnings
 from mlstatpy import __version__
 
 extensions = [
@@ -157,7 +156,7 @@ epkg_dictionary = {
     "LAPACK": "http://www.netlib.org/lapack/",
     "mlinsights": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/index.html",
     "mlstatpy": "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html",
-    "numpy": "https://numpy.org/",    
+    "numpy": "https://numpy.org/",
     "PiecewiseTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/"
     "piecewise_tree_regression.html#mlinsights.mlmodel.piecewise_tree_regression.PiecewiseTreeRegressor",
     "Pillow": "https://pillow.readthedocs.io/en/stable/",
