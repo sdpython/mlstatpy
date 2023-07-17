@@ -30,8 +30,8 @@
 
 .. _l-README:
 
-mlstatpy
-========
+mlstatpy: détours mathématiques autour du machine learning
+==========================================================
 
 Le module contient essentiellement des digressions mathématiques
 autour du machine learning. Parmi les choses intéressantes,
