@@ -9,5 +9,5 @@ Graphes
 Distance
 ++++++++
 
-.. autosignature:: mlstatpy.graph.graph_distance.GraphDistance
+.. autoclass:: mlstatpy.graph.graph_distance.GraphDistance
     :members: distance_matching_graphs_paths

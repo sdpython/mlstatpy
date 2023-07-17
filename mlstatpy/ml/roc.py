@@ -552,11 +552,11 @@ class ROC:
         @see me roc_intersect.
 
         @param      x           x
-        @param      nb          number of curves to draw    
+        @param      nb          number of curves to draw
         @param      curve       see :class:`CurveType <mlstatpy.ml.roc.ROC.CurveType>`
         @param      bootstrap   number of random estimations
         @param      alpha       confidence interval
-        @return                 dictionary        
+        @return                 dictionary
         """
 
         rate = []

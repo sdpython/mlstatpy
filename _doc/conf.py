@@ -2,39 +2,64 @@
 import sys
 import os
 import warnings
-from pyquickhelper.helpgen.default_conf import set_sphinx_variables
 
-# see https://sphinx-gallery.github.io/stable/configuration.html#removing-warnings
-warnings.simplefilter("ignore", category=UserWarning)
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.todo",
+    "sphinx.ext.coverage",
+    "nbsphinx",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.githubpages",
+    "sphinx.ext.napoleon",
+    "sphinx_gallery.gen_gallery",
+    "matplotlib.sphinxext.plot_directive",
+    "pyquickhelper.sphinxext.sphinx_epkg_extension",
+    "pyquickhelper.sphinxext.sphinx_gdot_extension",
+    "pyquickhelper.sphinxext.sphinx_runpython_extension",
+]
+
+templates_path = ["_templates"]
+html_logo = "_static/logo.png"
+source_suffix = ".rst"
+master_doc = "index"
+project = "mlstatpy"
+copyright = "2016-2023, Xavier Dupré"
+author = "Xavier Dupré"
+version = __version__
+release = __version__
+language = "fr"
+exclude_patterns = []
+pygments_style = "sphinx"
+todo_include_todos = True
 
 html_theme = "pydata_sphinx_theme"
-html_theme_path = ["_static", "_images"]
+html_theme_path = ["_static"]
+html_theme_options = {}
+html_static_path = ["_static"]
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.split(__file__)[0])))
 
-local_template = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), "phdoc_templates"
-)
+intersphinx_mapping = {
+    "onnx": ("https://onnx.ai/onnx/", None),
+    "matplotlib": ("https://matplotlib.org/", None),
+    "numpy": ("https://numpy.org/doc/stable", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
+    "python": (f"https://docs.python.org/{sys.version_info.major}", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
+    "sklearn-onnx": ("https://onnx.ai/sklearn-onnx/", None),
+    "torch": ("https://pytorch.org/docs/stable/", None),
+}
 
-set_sphinx_variables(
-    __file__,
-    "mlstatpy",
-    "Xavier Dupré",
-    2023,
-    html_theme,
-    html_theme_path,
-    locals(),
-    extlinks=dict(issue=("https://github.com/sdpython/mlstatpy/issues/%s", "issue %s")),
-    title="Machine Learning, Statistiques et Programmation",
-    book=True,
-    nblayout="table",
-)
+sphinx_gallery_conf = {
+    # path to your examples scripts
+    "examples_dirs": os.path.join(os.path.dirname(__file__), "examples"),
+    # path where to save gallery generated examples
+    "gallery_dirs": "auto_examples",
+}
 
 # next
-
-blog_root = "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/"
-html_logo = "_static/project_ico_small.png"
-language = "fr"
 
 preamble = """
 \\usepackage{etex}

@@ -9,20 +9,20 @@ Image
 Conversion
 ++++++++++
 
-.. autosignature:: mlstatpy.image.detection_segment.detection_segment.convert_array2PIL
+.. autofunction:: mlstatpy.image.detection_segment.detection_segment.convert_array2PIL
 
-.. autosignature:: mlstatpy.image.detection_segment.detection_segment.convert_PIL2array
+.. autofunction:: mlstatpy.image.detection_segment.detection_segment.convert_PIL2array
 
 Images aléatoires
 +++++++++++++++++
 
-.. autosignature:: mlstatpy.image.detection_segment.random_image.random_noise_image
+.. autofunction:: mlstatpy.image.detection_segment.random_image.random_noise_image
 
-.. autosignature:: mlstatpy.image.detection_segment.random_image.random_segment_image
+.. autofunction:: mlstatpy.image.detection_segment.random_image.random_segment_image
 
 Segments
 ++++++++
 
-.. autosignature:: mlstatpy.image.detection_segment.detection_segment.detect_segments
+.. autofunction:: mlstatpy.image.detection_segment.detection_segment.detect_segments
 
-.. autosignature:: mlstatpy.image.detection_segment.detection_segment.plot_segments
+.. autofunction:: mlstatpy.image.detection_segment.detection_segment.plot_segments
