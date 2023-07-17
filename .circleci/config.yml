@@ -63,7 +63,7 @@ jobs:
       - run:
           name: run tests
           command: |
-              python setup.py unittests -d 20
+              python -m pytest _unittests --durations=10 --ignore-glob=**LONG*.py
 
       - run:
           name: wheel

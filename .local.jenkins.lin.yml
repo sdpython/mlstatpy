@@ -18,8 +18,8 @@ install:
   - $PYINT -m pip freeze
 
 script:
-  - { CMD: "$PYINT -u setup.py unittests --covtoken=ab2da06c-1ff3-4875-97fa-145e594bd7f9", NAME: "UT", TIMEOUT: 3000 }
-  - { CMD: "$PYINT -u setup.py unittests_LONG", NAME: "UT_LONG", TIMEOUT: 7200, SCHEDULER: "H H(1-2) 11 * *" }
+  - { CMD: "$PYINT -m pytest _unittests --durations=10 --ignore-glob=**LONG*.py", NAME: "UT", TIMEOUT: 3000 }
+  - { CMD: "$PYINT -m pytest _unittests/ut_run_long --durations=10", NAME: "UT", TIMEOUT: 7200 }
 
 after_script:
   - $PYINT -u setup.py bdist_wheel
