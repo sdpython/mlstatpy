@@ -9,12 +9,12 @@ Source de données
 Wikipédia
 +++++++++
 
-.. autosignature:: mlstatpy.data.wikipedia.download_dump
+.. autofunction:: mlstatpy.data.wikipedia.download_dump
 
-.. autosignature:: mlstatpy.data.wikipedia.download_pageviews
+.. autofunction:: mlstatpy.data.wikipedia.download_pageviews
 
-.. autosignature:: mlstatpy.data.wikipedia.download_titles
+.. autofunction:: mlstatpy.data.wikipedia.download_titles
 
-.. autosignature:: mlstatpy.data.wikipedia.enumerate_titles
+.. autofunction:: mlstatpy.data.wikipedia.enumerate_titles
 
-.. autosignature:: mlstatpy.data.wikipedia.download_dump
+.. autofunction:: mlstatpy.data.wikipedia.download_dump

@@ -9,4 +9,4 @@ Optimisation
 Gradient
 ++++++++
 
-.. autosignature:: mlstatpy.optim.sgd.SGDOptimizer
+.. autoclass:: mlstatpy.optim.sgd.SGDOptimizer

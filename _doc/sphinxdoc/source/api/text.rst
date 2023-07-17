@@ -9,15 +9,15 @@ Traitement du langage naturel
 Complétion
 ++++++++++
 
-.. autosignature:: mlstatpy.nlp.completion_simple.CompletionElement
+.. autoclass:: mlstatpy.nlp.completion_simple.CompletionElement
     :members:
 
-.. autosignature:: mlstatpy.nlp.completion_simple.CompletionSystem
+.. autoclass:: mlstatpy.nlp.completion_simple.CompletionSystem
     :members:
 
 Normalisation
 +++++++++++++
 
-.. autosignature:: mlstatpy.data.wikipedia.normalize_wiki_text
+.. autofunction:: mlstatpy.data.wikipedia.normalize_wiki_text
 
-.. autosignature:: mlstatpy.nlp.normalize.remove_diacritics
+.. autofunction:: mlstatpy.nlp.normalize.remove_diacritics
