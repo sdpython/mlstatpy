@@ -49,6 +49,8 @@ jobs:
         run: cp LICENSE* ./_doc
       - name: Copy readme
         run: cp README* ./_doc
+      - name: Copy changelogs
+        run: cp CHANGELOGS* ./_doc
 
       - name: Documentation
         run: python -m sphinx ./_doc ./dist/html

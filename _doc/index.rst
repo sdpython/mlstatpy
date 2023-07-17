@@ -25,6 +25,9 @@ Le site est aussi disponible (format brut de fonderie) sur
     c_garden/index
     api/index
     auto_examples/index
+    CHANGELOGS
+    README
+    license
 
 On fait beaucoup de choses avec l'informatique mais en pratique
 on doit maintenir, on doit réécrire sans cesse.
