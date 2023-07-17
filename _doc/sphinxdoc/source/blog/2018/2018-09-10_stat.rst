@@ -1,9 +1,0 @@
-
-.. blogpost::
-    :title: One Hundred Probability/Statistics Inequalities
-    :keywords: inégalités
-    :date: 2018-08-10
-    :categories: statistiques
-
-    Découvert dans un tweet :
-    `One Hundred Probability/Statistics Inequalities <http://www.npslagle.info/articles/onehundredprobabilityinequalities.pdf>`_.

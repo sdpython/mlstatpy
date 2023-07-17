@@ -13,12 +13,13 @@ install:
   - $PYINT -m pip install --upgrade --no-cache-dir --no-deps --index http://localhost:8067/simple/ jyquickhelper pyquickhelper pyensae pymmails pymyinstall pyrsslocal --extra-index-url=https://pypi.python.org/simple/
   - $PYINT -m pip install --upgrade --no-cache-dir --no-deps --index http://localhost:8067/simple/ mlinsights>=0.3 --extra-index-url=https://pypi.python.org/simple/
   - $PYINT -m pip install -r requirements.txt
+  - $PYINT -m pip install -r requirements-dev.txt
   - $PYINT --version
   - $PYINT -m pip freeze
 
 script:
-  - { CMD: "$PYINT -u setup.py unittests --covtoken=ab2da06c-1ff3-4875-97fa-145e594bd7f9", NAME: "UT", TIMEOUT: 3000 }
-  - { CMD: "$PYINT -u setup.py unittests_LONG", NAME: "UT_LONG", TIMEOUT: 7200, SCHEDULER: "H H(1-2) 11 * *" }
+  - { CMD: "$PYINT -m pytest _unittests --durations=10 --ignore-glob=**LONG*.py", NAME: "UT", TIMEOUT: 3000 }
+  - { CMD: "$PYINT -m pytest _unittests/ut_run_long --durations=10", NAME: "UT", TIMEOUT: 7200 }
 
 after_script:
   - $PYINT -u setup.py bdist_wheel

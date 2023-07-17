@@ -11,7 +11,7 @@ jobs:
 
       - restore_cache:
           keys:
-          - v4-dependencies-{{ checksum "requirements.txt" }}
+          - v4-dependencies-{{ checksum "requirements-dev.txt" }}
           - v4-dependencies-
 
       - run:
@@ -47,11 +47,12 @@ jobs:
           name: install dependencies
           command: |
               pip install -r requirements.txt
+              pip install -r requirements-dev.txt
 
       - save_cache:
           paths:
             - ./venv
-          key: v4-dependencies-{{ checksum "requirements.txt" }}
+          key: v4-dependencies-{{ checksum "requirements-dev.txt" }}
         
       - run:
           name: check list of dependencies
@@ -62,7 +63,7 @@ jobs:
       - run:
           name: run tests
           command: |
-              python setup.py unittests -d 20
+              python -m pytest _unittests --durations=10 --ignore-glob=**LONG*.py
 
       - run:
           name: wheel

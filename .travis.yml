@@ -16,6 +16,7 @@ before_install:
 install:
   - pip install wheel pyquicksetup
   - pip install -r requirements.txt
+  - pip install -r requirements-dev.txt
 
 script:
-  - python setup.py unittests
+  - python -m pytest _unittests --durations=10 --ignore-glob=**LONG*.py

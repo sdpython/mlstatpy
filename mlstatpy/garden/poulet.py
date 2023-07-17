@@ -21,12 +21,12 @@ def profit(N, X, p, q, s):
     """
     Calcule le profit.
 
-    @param      N       nombre de poulets vendus
-    @param      X       nombre de poulets achetés
-    @param      p       prix d'achat
-    @param      q       prix de vente
-    @param      s       prix soldé
-    @return             profit
+    :param N: nombre de poulets vendus
+    :param X: nombre de poulets achetés
+    :param p: prix d'achat
+    :param q: prix de vente
+    :param s: prix soldé
+    :return: profit
     """
     if X <= N:
         return X * (q - p)
@@ -48,12 +48,12 @@ def esperance(X, p, q, s, lx):
     Espérance du profit en faisant varier
     le nombre de poulet vendus.
 
-    @param      X       nombre de poulets achetés
-    @param      p       prix d'achat
-    @param      q       prix de vente
-    @param      s       prix soldé
-    @param      lx      paramètre :math:`\\lambda`
-    @return             espérance du profit
+    :param X: nombre de poulets achetés
+    :param p: prix d'achat
+    :param q: prix de vente
+    :param s: prix soldé
+    :param lx: paramètre :math:`\\lambda`
+    :return: espérance du profit
     """
     res = 0.0
     for i in range(0, lx * 2):
@@ -66,11 +66,11 @@ def maximum(p, q, s, lx):
     Calcule les espérances de profit pour différents nombres
     de poulets achetés.
 
-    @param      p       prix d'achat
-    @param      q       prix de vente
-    @param      s       prix soldé
-    @param      lx      paramètre :math:`\\lambda`
-    @return             liste ``(X, profit)``
+    :param p: prix d'achat
+    :param q: prix de vente
+    :param s: prix soldé
+    :param lx: paramètre :math:`\\lambda`
+    :return: liste ``(X, profit)``
     """
     res = []
     for X in range(0, 2 * lx):
@@ -84,9 +84,9 @@ def find_maximum(res):
     Trouver le couple (nombre de poulets achetés, profit)
     lorsque le profit est maximum.
 
-    @param      res         résultat de la fonction
-                            :func:`maximum <mlstatpy.garden.poulet.maximum>`
-    @return                 ``(X, profit)`` maximum
+    :param res: résultat de la fonction
+        :func:`maximum <mlstatpy.garden.poulet.maximum>`
+    :return: ``(X, profit)`` maximum
     """
     m = (0, 0)
     for r in res:
@@ -119,10 +119,10 @@ def poisson_melange(params, coef):
     """
     Simule une variable selon un mélange de loi de Poisson.
 
-    @param      params      liste de paramètre :math:`\\lambda`
-    @param      coef        ``coef[i]`` coefficient associé
-                            à la loi de paramètre ``params[i]``
-    @return                 valeur simulée
+    :param params: liste de paramètre :math:`\\lambda`
+    :param coef: ``coef[i]`` coefficient associé
+        à la loi de paramètre ``params[i]``
+    :return: valeur simulée
     """
     s = 0
     for i, pa in enumerate(params):
@@ -135,10 +135,10 @@ def histogramme_poisson_melange(params, coef, n=100000):
     """
     Calcule un histogramme d'un mélange de loi de Poisson.
 
-    @param      params      liste de paramètre :math:`\\lambda`
-    @param      coef        ``coef[i]`` coefficient associé
-                            à la loi de paramètre ``params[i]``
-    @return                 histogramme
+    :param params: liste de paramètre :math:`\\lambda`
+    :param coef: ``coef[i]`` coefficient associé
+        à la loi de paramètre ``params[i]``
+    :return: histogramme
     """
     h = [0.0 for i in range(0, 4 * max(params))]
     for i in range(0, n):
@@ -164,10 +164,10 @@ def f_proba_poisson_melange():
         Calcule la probabilité :math:`\\pr{X=i}``
         lorsque :math:`X` suit un mélange de lois.
 
-        @param      params      liste de paramètre :math:`\\lambda`
-        @param      coef        ``coef[i]`` coefficient associé
-                                à la loi de paramètre ``params[i]``
-        @return                 valeur
+        :param params: liste de paramètre :math:`\\lambda`
+        :param coef: ``coef[i]`` coefficient associé
+            à la loi de paramètre ``params[i]``
+        :return: valeur
         """
         if len(proba_poisson_melange_tableau) == 0:
             proba_poisson_melange_tableau.extend(

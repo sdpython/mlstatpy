@@ -17,13 +17,13 @@ def download_pageviews(
 
         https://dumps.wikimedia.org/other/pageviews/%Y/%Y-%m/pagecounts-%Y%m%d-%H0000.gz
 
-    @param      dt          datetime
-    @param      folder      where to download
-    @param      unzip       unzip the file
-    @param      timeout     timeout
-    @param      overwrite   overwrite
-    @param      fLOG        logging function
-    @return                 filename
+    :param dt: datetime
+    :param folder: where to download
+    :param unzip: unzip the file
+    :param timeout: timeout
+    :param overwrite: overwrite
+    :param fLOG: logging function
+    :return: filename
 
     More information on page
     `pageviews <https://dumps.wikimedia.org/other/pageviews/>`_.
@@ -58,13 +58,13 @@ def download_dump(
     `dumps.wikimedia.org/frwiki/latest/
     <https://dumps.wikimedia.org/frwiki/latest/>`_.
 
-    @param      country     country
-    @param      name        name of the stream to download
-    @param      folder      where to download
-    @param      unzip       unzip the file
-    @param      timeout     timeout
-    @param      overwrite   overwrite
-    @param      fLOG        logging function
+    :param country     country
+    :param name        name of the stream to download
+    :param folder      where to download
+    :param unzip       unzip the file
+    :param timeout     timeout
+    :param overwrite   overwrite
+    :param fLOG        logging function
     """
     url = "https://dumps.wikimedia.org/{0}wiki/latest/{0}wiki-{1}".format(country, name)
     file = url.split("/")[-1]  # pylint: disable=C0207
@@ -95,12 +95,12 @@ def download_titles(
     `dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz
     <https://dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz>`_.
 
-    @param      country     country
-    @param      folder      where to download
-    @param      unzip       unzip the file
-    @param      timeout     timeout
-    @param      overwrite   overwrite
-    @param      fLOG        logging function
+    :param country     country
+    :param folder      where to download
+    :param unzip       unzip the file
+    :param timeout     timeout
+    :param overwrite   overwrite
+    :param fLOG        logging function
     """
     return download_dump(
         country,
@@ -117,7 +117,7 @@ def normalize_wiki_text(text):
     """
     Normalizes a text such as a wikipedia title.
 
-    @param      text        text to normalize
+    :param text        text to normalize
     @return                 normalized text
     """
     return text.replace("_", " ").replace("''", '"')
@@ -127,9 +127,9 @@ def enumerate_titles(filename, norm=True, encoding="utf8"):
     """
     Enumerates titles from a file.
 
-    @param      filename        filename
-    @param      norm            normalize in the function
-    @param      encoding        encoding
+    :param filename        filename
+    :param norm            normalize in the function
+    :param encoding        encoding
     """
     if norm:
         with open(filename, "r", encoding=encoding) as f:

@@ -158,7 +158,7 @@ def streaming_gram_schmidt_update(Xk, Pk):
     Updates matrix :math:`P_k` to produce :math:`P_{k+1}`
     which is the matrix *P* in algorithm
     :ref:`Streaming Linear Regression
-    <algo_reg_lin_gram_schmidt_streaming>`.
+    <l-piecewise-linear-regression>`.
     The function modifies the matrix *Pk*
     given as an input.
 
@@ -200,7 +200,7 @@ def streaming_gram_schmidt(mat, start=None):
     find :math:`\\beta` which minimizes
     :math:`\\norme{y - X\\beta}`, based on
     algorithm :ref:`Streaming Gram-Schmidt
-    <algo_reg_lin_gram_schmidt_streaming>`.
+    <l-piecewise-linear-regression>`.
 
     @param      mat     matrix
     @param      start   first row to start iteration, ``X.shape[1]`` by default

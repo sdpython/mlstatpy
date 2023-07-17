@@ -219,7 +219,7 @@ class ROC:
 
         @param      nb          number of points for the curve
         @param      curve       see :class:`CurveType <mlstatpy.ml.roc.ROC.CurveType>`
-        @param      boostrap    builds the curve after resampling
+        @param      bootstrap   builds the curve after resampling
         @return                 DataFrame (metrics and threshold)
 
         If *curve* is *SKROC*, the parameter *nb* is not taken into account.
@@ -361,7 +361,7 @@ class ROC:
 
         @param      nb          number of points
         @param      curve       see :class:`CurveType <mlstatpy.ml.roc.ROC.CurveType>`
-        @param      boostrap    number of curves for the boostrap (0 for None)
+        @param      bootstrap   number of curves for the boostrap (0 for None)
         @param      ax          axis
         @param      thresholds  use thresholds for the X axis
         @param      kwargs      sent to `pandas.plot <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.plot.html>`_
@@ -485,7 +485,7 @@ class ROC:
         """
         Determines a confidence interval for the :epkg:`AUC` with bootstrap.
 
-        @param      bootstrap       number of random estimation
+        @param      bootstrap       number of random estimations
         @param      alpha           define the confidence interval
         @return                     dictionary of values
         """
@@ -551,9 +551,11 @@ class ROC:
         Computes a confidence interval for the value returned by
         @see me roc_intersect.
 
-        @param      roc         ROC curve
         @param      x           x
+        @param      nb          number of curves to draw
         @param      curve       see :class:`CurveType <mlstatpy.ml.roc.ROC.CurveType>`
+        @param      bootstrap   number of random estimations
+        @param      alpha       confidence interval
         @return                 dictionary
         """
 
