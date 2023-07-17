@@ -472,7 +472,7 @@ La première fonction simule une variable exponentielle de paramètre :math:`\mu
 
     print(generate_expo(2))
 
-Le module :epkg:`*py:random` propose aussi une fonction
+Le module :mod:`random` propose aussi une fonction
 qui simule automatiquement une variable exponentielle.
 
 .. runpython::

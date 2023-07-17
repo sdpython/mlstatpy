@@ -518,7 +518,7 @@ Implémentation
 
 La classe :class:`NuagePoints <mlstatpy.ml.kppv.NuagePoints>` implémente
 les nuages de points sans optimisation. Il utilise la même interface que
-:epkg:`sklearn:neighbors:NearestNeighbors`. La second classe
+:class:`sklearn.neighbors.NearestNeighbors`. La second classe
 :class:`NuagePointsLeasa <mlstatpy.ml.kppv_laesa.NuagePointsLeasa>`.
 
 .. runpython::

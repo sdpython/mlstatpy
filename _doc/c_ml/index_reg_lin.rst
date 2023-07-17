@@ -43,7 +43,7 @@ ni de valeurs propres.
 .. toctree::
     :maxdepth: 1
 
-    ../notebooks/ml/regression_lineaire
+    ../notebooks/dsgarden/regression_lineaire
     regression_quantile
     piecewise
     l1l2

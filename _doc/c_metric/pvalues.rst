@@ -432,7 +432,7 @@ The following notebook produces the figures displayed in this document.
 
 .. toctree::
 
-    ../notebooks/metrics/pvalues_examples
+    ../notebooks/metric/pvalues_examples
 
 Bibliographie
 =============

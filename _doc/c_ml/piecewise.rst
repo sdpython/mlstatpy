@@ -91,7 +91,7 @@ oranges.
 
 Il suffirait donc de remplacer l'erreur *E* par celle obtenue
 par une régression linéaire. Mais si c'était aussi simple,
-l'implémentation de :epkg:`sklearn:tree:DecisionTreeRegressor`
+l'implémentation de :class:`sklearn.tree.DecisionTreeRegressor`
 la proposerait. Alors pourquoi ?
 La raison principale est que cela coûte trop cher en
 temps de calcul. Pour trouver l'indice *k*, il faut calculer
@@ -204,11 +204,11 @@ calculer rapidement :
     A_{k-1} - A_k = (X_{1..k-1}'X_{1..k-1})^{-1} X'_{1..k-1} Y_{1..k-1} -
     (X_{1..k}'X_{1..k})^{-1} X'_{1..k} Y_{1..k}
 
-La documentation de :epkg:`sklearn:tree:DecisionTreeRegressor`
+La documentation de :class:`sklearn.tree.DecisionTreeRegressor`
 ne mentionne que deux critères pour apprendre un arbre de décision
 de régression, *MSE* pour
-:epkg:`sklearn:metrics:mean_squared_error` et *MAE* pour
-:epkg:`sklearn:metrics:mean_absolute_error`. Les autres critères n'ont
+:func:`sklearn.metrics.mean_squared_error` et *MAE* pour
+:func:`sklearn.metrics.mean_absolute_error`. Les autres critères n'ont
 probablement pas été envisagés. L'article [Acharya2016]_ étudie la possibilité
 de ne pas calculer la matrice :math:`A_k` pour tous les *k*.
 Le paragraphe :ref:`l-piecewise-linear-regression` utilise

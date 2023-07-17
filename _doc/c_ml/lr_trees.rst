@@ -248,7 +248,7 @@ On remarque que :
 Cela explique pour on utilise souvent cette fonction pour transformer
 une distance en probabilité pour un classifieur binaire.
 L'apprentissage d'un arbre de décision
-:epkg:`sklearn:tree:DecisionTreeClassifier` propose le
+:class:`sklearn.tree.DecisionTreeClassifier` propose le
 paramètre ``min_samples_leaf``. On se propose dans le cadre
 de la régression logistique de chercher le paramètre
 :math:`\beta_0` qui permet de vérifier la contrainte
@@ -348,7 +348,7 @@ sans doute pas porteuse d'une innovation majeure. Et ce n'est
 pas la première fois que quelqu'un se lance dans la conversion
 d'un arbre en réseaux de neurones.
 
-J'ai quand même essayé avec le notebook :ref:`neural_tree.ipynb`
+J'ai quand même essayé avec le notebook :ref:`ml/neural_tree.ipynb`
 et les classes :class:`NeuralTreeNode <mlstatpy.ml.neural_tree.NeuralTreeNode>`,
 :class:`NeuralTreeNet <mlstatpy.ml.neural_tree.NeuralTreeNet>`.
 Si l'idée de départ est séduisante, elle requiert une contrainte

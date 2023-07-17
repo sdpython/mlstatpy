@@ -293,7 +293,7 @@ Pour de nouvelles observations :math:`M_2=X_{q+1}`,
 la fonction `transform
 <https://scikit-learn.org/stable/modules/generated/sklearn.decomposition
 .NMF.html#sklearn.decomposition.NMF.transform>`_
-de la classe :epkg:`sklearn:decomposition:NMF` réestime une matrice
+de la classe :class:`sklearn.decomposition.NMF` réestime une matrice
 :math:`W_2` qui projette les vecteurs lignes de :math:`M_2` sur
 les vecteurs de *H* en conservant des coefficients de projection positifs.
 

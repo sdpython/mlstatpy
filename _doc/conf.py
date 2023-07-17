@@ -157,8 +157,10 @@ epkg_dictionary = {
     "LAPACK": "http://www.netlib.org/lapack/",
     "mlinsights": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/index.html",
     "mlstatpy": "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html",
+    "numpy": "https://numpy.org/",    
     "PiecewiseTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/"
     "piecewise_tree_regression.html#mlinsights.mlmodel.piecewise_tree_regression.PiecewiseTreeRegressor",
+    "Pillow": "https://pillow.readthedocs.io/en/stable/",
     "Predictable t-SNE": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/predictable_tsne.html",
     "QuantileLinearRegression": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/quantile_regression.html#mlinsights.mlmodel.quantile_regression.QuantileLinearRegression",
     "R-tree": "https://en.wikipedia.org/wiki/R-tree",
