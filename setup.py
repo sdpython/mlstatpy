@@ -55,6 +55,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
         "Topic :: Scientific/Engineering",
+        "Topic :: Scientific/Engineering :: Mathematics",
         "Topic :: Education",
         "Development Status :: 5 - Production/Stable",
         "Operating System :: OS Independent",
