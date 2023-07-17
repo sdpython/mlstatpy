@@ -42,14 +42,12 @@ jobs:
       #- name: Install
       #  run: python -m pip install -e .
       - name: Copy license
-        run: cp LICENSE* ./_doc/sphinxdoc/source
+        run: cp LICENSE* ./_doc
       - name: Copy readme
-        run: cp README* ./_doc/sphinxdoc/source
+        run: cp README* ./_doc
 
-      #- name: Documentation
-      #  run: python -m sphinx ./_doc/sphinxdoc/source ./dist/html
       - name: Documentation
-        run: python setup.py build_sphinx
+        run: python -m sphinx ./_doc ./dist/html
 
       - uses: actions/upload-artifact@v3
         with:
