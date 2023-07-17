@@ -45,6 +45,13 @@ html_theme_path = ["_static"]
 html_theme_options = {}
 html_static_path = ["_static"]
 
+latex_elements = {
+    "papersize": "a4",
+    "pointsize": "10pt",
+    "docclass": "book",
+    "title": project,
+}
+
 
 intersphinx_mapping = {
     "onnx": ("https://onnx.ai/onnx/", None),
