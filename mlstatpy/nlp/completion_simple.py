@@ -145,13 +145,13 @@ class CompletionElement:
         self, position: int, completions: List["CompletionElement"] = None
     ):
         """
-        initiate the metrics
+        Initializes the metrics.
 
-        @param      position    position in the completion system when prefix is null,
-                                *position starting from 0*
-        @param      completions displayed completions, if not None, the method will
-                                store them in member *_completions*
-        @return                 boolean which indicates there was an update
+        :param position: position in the completion system when prefix is null,
+            *position starting from 0*
+        :param completions: displayed completions, if not None, the method will
+            store them in member *_completions*
+        :return: boolean which indicates there was an update
         """
         if completions is not None:
             log_imp = True
