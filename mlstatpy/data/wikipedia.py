@@ -3,14 +3,11 @@
 @brief Functions to retrieve data from Wikipedia
 """
 import os
-from pyquickhelper.loghelper import noLOG
 from pyquickhelper.filehelper import get_url_content_timeout, ungzip_files
 from .data_exceptions import DataException
 
 
-def download_pageviews(
-    dt, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG
-):
+def download_pageviews(dt, folder=".", unzip=True, timeout=-1, overwrite=False):
     """
     Downloads wikipedia pagacount for a precise date (up to the hours),
     the url follows the pattern::
@@ -22,7 +19,6 @@ def download_pageviews(
     :param unzip: unzip the file
     :param timeout: timeout
     :param overwrite: overwrite
-    :param fLOG: logging function
     :return: filename
 
     More information on page
@@ -35,7 +31,7 @@ def download_pageviews(
     unzipname = os.path.splitext(name)[0]
     if overwrite or (not os.path.exists(name) and not os.path.exists(unzipname)):
         get_url_content_timeout(
-            url, timeout=timeout, encoding=None, output=name, chunk=2**20, fLOG=fLOG
+            url, timeout=timeout, encoding=None, output=name, chunk=2**20
         )
     if unzip and not os.path.exists(unzipname):
         names = ungzip_files(name, unzip=False, where_to=folder)
@@ -50,9 +46,7 @@ def download_pageviews(
     return name
 
 
-def download_dump(
-    country, name, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG
-):
+def download_dump(country, name, folder=".", unzip=True, timeout=-1, overwrite=False):
     """
     Downloads :epkg:`wikipedia dumps`.
 
@@ -62,7 +56,6 @@ def download_dump(
     :param unzip: unzip the file
     :param timeout: timeout
     :param overwrite: overwrite
-    :param fLOG: logging function
     """
     url = "https://dumps.wikimedia.org/{0}wiki/latest/{0}wiki-{1}".format(country, name)
     file = url.split("/")[-1]  # pylint: disable=C0207
@@ -70,7 +63,7 @@ def download_dump(
     unzipname = os.path.splitext(name)[0]
     if overwrite or (not os.path.exists(name) and not os.path.exists(unzipname)):
         get_url_content_timeout(
-            url, timeout=timeout, encoding=None, output=name, chunk=2**20, fLOG=fLOG
+            url, timeout=timeout, encoding=None, output=name, chunk=2**20
         )
     if unzip and not os.path.exists(unzipname):
         names = ungzip_files(name, unzip=False, where_to=folder)
@@ -85,9 +78,7 @@ def download_dump(
     return name[:-3] if name.endswith(".gz") else name
 
 
-def download_titles(
-    country, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG
-):
+def download_titles(country, folder=".", unzip=True, timeout=-1, overwrite=False):
     """
     Downloads wikipedia titles from
     `dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz
@@ -98,7 +89,6 @@ def download_titles(
     :param unzip       unzip the file
     :param timeout     timeout
     :param overwrite   overwrite
-    :param fLOG        logging function
     """
     return download_dump(
         country,
@@ -107,7 +97,6 @@ def download_titles(
         unzip=unzip,
         timeout=timeout,
         overwrite=overwrite,
-        fLOG=fLOG,
     )
 
 

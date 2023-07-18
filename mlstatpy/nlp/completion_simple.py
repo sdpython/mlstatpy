@@ -2,9 +2,7 @@
 @file
 @brief About completion, simple algorithm
 """
-import time
 from typing import Tuple, List, Iterator, Dict
-from pyquickhelper.loghelper import noLOG
 from .completion import CompletionTrieNode
 
 
@@ -443,12 +441,11 @@ class CompletionSystem:
             _[-1] for _ in sorted((e.weight, e.value, e) for e in self)
         )
 
-    def compare_with_trie(self, delta=0.8, fLOG=noLOG):
+    def compare_with_trie(self, delta=0.8):
         """
         Compares the results with the other implementation.
 
         @param      delta       parameter *delta* in the dynamic modified mks
-        @param      fLOG        logging function
         @return                 None or differences
         """
 
@@ -468,7 +465,7 @@ class CompletionSystem:
             return s
 
         trie = CompletionTrieNode.build(self.tuples())
-        self.compute_metrics(delta=delta, fLOG=fLOG, details=True)
+        self.compute_metrics(delta=delta, details=True)
         trie.precompute_stat()
         trie.update_stat_dynamic(delta=delta)
         diffs = []
@@ -492,16 +489,13 @@ class CompletionSystem:
         """
         return {el.value: el for el in self}
 
-    def compute_metrics(
-        self, ffilter=None, delta=0.8, details=False, fLOG=noLOG
-    ) -> int:
+    def compute_metrics(self, ffilter=None, delta=0.8, details=False) -> int:
         """
         Computes the metric for the completion itself.
 
         @param      ffilter     filter function
         @param      delta       parameter *delta* in the dynamic modified mks
         @param      details     log more details about displayed completions
-        @param      fLOG        logging function
         @return                 number of iterations
 
         The function ends by sorting the set of completion by alphabetical order.
@@ -515,8 +509,8 @@ class CompletionSystem:
             store_completions = {"": []}
 
         improved = {}
-        to = time.perf_counter()
-        fLOG("init_metrics:", len(self))
+        # to = time.perf_counter()
+        # print("init_metrics:", len(self))
         for i, el in enumerate(self._elements):
             if details:
                 store_completions[""].append(el)
@@ -525,8 +519,8 @@ class CompletionSystem:
                 r = el.init_metrics(i)
             if r and el.value not in improved:
                 improved[el.value] = el
-        t = time.perf_counter()
-        fLOG(f"interation 0: #={len(self)} dt={t - to} - log details={details}")
+        # t = time.perf_counter()
+        # print(f"interation 0: #={len(self)} dt={t - to} - log details={details}")
 
         updates = 1
         it = 1
@@ -556,8 +550,8 @@ class CompletionSystem:
                         if el.value not in improved:
                             improved[el.value] = el
                         updates += 1
-            t = time.perf_counter()
-            fLOG(f"interation {it}: updates={updates} dt={t - to}")
+            # t = time.perf_counter()
+            # print(f"interation {it}: updates={updates} dt={t - to}")
             it += 1
 
         self.sort_values()

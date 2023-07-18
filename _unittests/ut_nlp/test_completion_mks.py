@@ -4,14 +4,11 @@
 """
 import os
 import unittest
-from pyquickhelper.loghelper import fLOG
 from mlstatpy.nlp.completion import CompletionTrieNode
 
 
 class TestCompletionMks(unittest.TestCase):
     def test_mks_consistency(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         def cmks(trie):
             trie.precompute_stat()
             trie.update_stat_dynamic()
@@ -61,14 +58,14 @@ class TestCompletionMks(unittest.TestCase):
         )
         with open(this, "r", encoding="utf-8") as f:
             titles = [_.strip(" \n\r\t") for _ in f.readlines()]
-        fLOG(titles[:5])
+        # print(titles[:5])
         trie = CompletionTrieNode.build([(None, q) for q in titles])
         nb, gmks, gmksd, gmksd2, size = cmks(trie)
         gain, gain_dyn, gain_dyn2, ave_length = gain_dynamique_moyen_par_mot(
             titles, [1.0] * len(titles)
         )
-        fLOG("***", 1, nb, size, "*", gmks / size, gmksd / size, gmksd2 / size)
-        fLOG("***", gain, gain_dyn, gain_dyn2, ave_length)
+        # print("***", 1, nb, size, "*", gmks / size, gmksd / size, gmksd2 / size)
+        # print("***", gain, gain_dyn, gain_dyn2, ave_length)
         self.assertEqual(nb, 494)
 
 

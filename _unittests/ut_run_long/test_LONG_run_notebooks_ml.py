@@ -4,7 +4,6 @@
 """
 import os
 import unittest
-from pyquickhelper.loghelper import fLOG
 from pyquickhelper.pycode import get_temp_folder, add_missing_development_version
 from pyquickhelper.ipythonhelper import (
     execute_notebook_list,
@@ -16,14 +15,11 @@ import mlstatpy as thismodule
 
 class TestRunNotebooksML(unittest.TestCase):
     def setUp(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         add_missing_development_version(
             ["pyensae", "jyquickhelper"], __file__, hide=True
         )
 
     def a_test_notebook_runner(self, name, folder, valid=None):
-        fLOG(f"notebook {name!r} in {folder!r}")
         temp = get_temp_folder(__file__, f"temp_notebook_ml_{name}")
         doc = os.path.join(temp, "..", "..", "..", "_doc", "notebooks", folder)
         self.assertTrue(os.path.exists(doc))
@@ -40,7 +36,7 @@ class TestRunNotebooksML(unittest.TestCase):
         res = execute_notebook_list(
             temp, keepnote, additional_path=add_path, valid=valid
         )
-        execute_notebook_list_finalize_ut(res, fLOG=fLOG, dump=thismodule)
+        execute_notebook_list_finalize_ut(res, dump=thismodule)
 
     def test_notebook_benchmark(self):
         self.a_test_notebook_runner("benchmark", "ml")

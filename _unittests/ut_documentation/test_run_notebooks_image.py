@@ -5,7 +5,6 @@
 import os
 import unittest
 import shutil
-from pyquickhelper.loghelper import fLOG
 from pyquickhelper.pycode import get_temp_folder
 from pyquickhelper.ipythonhelper import (
     execute_notebook_list,
@@ -16,8 +15,6 @@ import mlstatpy
 
 class TestRunNotebooksImage(unittest.TestCase):
     def test_run_notebook(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         temp = get_temp_folder(__file__, "temp_run_notebooks_image")
 
         # selection of notebooks
@@ -52,9 +49,9 @@ class TestRunNotebooksImage(unittest.TestCase):
 
         # run the notebooks
         res = execute_notebook_list(
-            temp, keepnote, fLOG=fLOG, valid=valid, additional_path=addpaths
+            temp, keepnote, valid=valid, additional_path=addpaths
         )
-        execute_notebook_list_finalize_ut(res, fLOG=fLOG, dump=mlstatpy)
+        execute_notebook_list_finalize_ut(res, dump=mlstatpy)
 
 
 if __name__ == "__main__":

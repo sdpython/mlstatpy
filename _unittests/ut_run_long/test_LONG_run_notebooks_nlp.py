@@ -4,7 +4,7 @@
 """
 import os
 import unittest
-from pyquickhelper.loghelper import fLOG, CustomLog
+from pyquickhelper.loghelper import CustomLog
 from pyquickhelper.pycode import get_temp_folder, add_missing_development_version
 from pyquickhelper.ipythonhelper import (
     execute_notebook_list,
@@ -20,8 +20,6 @@ class TestLONGRunNotebooksNLP(unittest.TestCase):
         )
 
     def test_long_run_notebook(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         temp = get_temp_folder(__file__, "temp_run_notebooks_nlp")
 
         # selection of notebooks
@@ -74,7 +72,7 @@ class TestLONGRunNotebooksNLP(unittest.TestCase):
             additional_path=addpaths,
         )
         clog("END")
-        execute_notebook_list_finalize_ut(res, fLOG=fLOG, dump=mlstatpy)
+        execute_notebook_list_finalize_ut(res, dump=mlstatpy)
 
 
 if __name__ == "__main__":

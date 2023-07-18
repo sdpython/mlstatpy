@@ -6,16 +6,13 @@ import os
 import unittest
 from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.datasets import make_blobs
-from pyquickhelper.loghelper import fLOG
 from pyquickhelper.pycode import get_temp_folder, fix_tkinter_issues_virtualenv
 from mlstatpy.ml import MlGridBenchMark
 
 
 class TestMlGridBenchMark(unittest.TestCase):
     def test_ml_benchmark(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
-        fix_tkinter_issues_virtualenv(fLOG=fLOG)
+        fix_tkinter_issues_virtualenv()
         import matplotlib.pyplot as plt  # pylint: disable=C0415
 
         try:
@@ -66,7 +63,6 @@ class TestMlGridBenchMark(unittest.TestCase):
             bench = MlGridBenchMark(
                 "TestName",
                 datasets,
-                fLOG=fLOG,
                 clog=temp,
                 path_to_images=temp,
                 cache_file=os.path.join(temp, "cache.pickle"),

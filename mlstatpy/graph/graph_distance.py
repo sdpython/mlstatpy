@@ -813,7 +813,6 @@ class GraphDistance:
         weight_vertex=1.0,
         weight_edge=1.0,
         verbose=0,
-        fLOG=print,
     ):
         """
         Computes an alignment between two graphs.
@@ -834,7 +833,6 @@ class GraphDistance:
         :param weight_vertex: a weight for every vertex
         :param weight_edge: a weight for every edge
         :param verbose: display some progress with :epkg:`tqdm`
-        :param fLOG: logging functino
         :return: 2 tuple (a distance, a graph containing
             the aligned paths between the two graphs)
 
@@ -853,20 +851,20 @@ class GraphDistance:
             store["nbpath2"] = len(paths2)
 
         matrix_distance = {}
-        if verbose > 0 and fLOG is not None:
-            fLOG("[distance_matching_graphs_paths] builds matrix_distance")
+        if verbose > 0:
+            print("[distance_matching_graphs_paths] builds matrix_distance")
             from tqdm import tqdm
 
             loop1 = tqdm(list(enumerate(paths1)))
         else:
             loop1 = enumerate(paths1)
         loop2 = list(enumerate(paths2))
-        if verbose > 0 and fLOG is not None:
-            fLOG(
+        if verbose > 0:
+            print(
                 "[distance_matching_graphs_paths] len(loop1)=%d"
                 % len(list(enumerate(paths1)))
             )
-            fLOG(f"[distance_matching_graphs_paths] len(loop2)={len(loop2)}")
+            print(f"[distance_matching_graphs_paths] len(loop2)={len(loop2)}")
         cache = {}
         for i1, p1 in loop1:
             for i2, p2 in loop2:
@@ -880,22 +878,22 @@ class GraphDistance:
                     use_min=use_min,
                     cache=cache,
                 )
-        if verbose > 0 and fLOG is not None:
-            fLOG(f"[distance_matching_graphs_paths] len(cache)={len(cache)}")
+        if verbose > 0:
+            print(f"[distance_matching_graphs_paths] len(cache)={len(cache)}")
 
         if store is not None:
             store["matrix_distance"] = matrix_distance
         reduction = [(v[0], k) for k, v in matrix_distance.items()]
         if store is not None:
             store["path_mat1"] = copy.deepcopy(reduction)
-        if verbose > 0 and fLOG is not None:
-            fLOG("[distance_matching_graphs_paths] private_kruskal_matrix")
+        if verbose > 0:
+            print("[distance_matching_graphs_paths] private_kruskal_matrix")
         self.private_kruskal_matrix(reduction, False)
         if store is not None:
             store["path_mat2"] = copy.deepcopy(reduction)
 
-        if verbose > 0 and fLOG is not None:
-            fLOG("[distance_matching_graphs_paths] pair_count_vertex")
+        if verbose > 0:
+            print("[distance_matching_graphs_paths] pair_count_vertex")
         pair_count_edge = {}
         pair_count_vertex = {}
         for k, v in reduction:
@@ -928,8 +926,8 @@ class GraphDistance:
         if store is not None:
             store["vertex_mat2"] = copy.copy(reduction_vertex)
 
-        if verbose > 0 and fLOG is not None:
-            fLOG("[distance_matching_graphs_paths] private_count_left_right")
+        if verbose > 0:
+            print("[distance_matching_graphs_paths] private_count_left_right")
         count_edge_left, count_edge_right = self.private_count_left_right(
             reduction_edge
         )
@@ -941,8 +939,8 @@ class GraphDistance:
         doneVertex = {}
         done_edge = {}
 
-        if verbose > 0 and fLOG is not None:
-            fLOG("[distance_matching_graphs_paths] builds merged graph")
+        if verbose > 0:
+            print("[distance_matching_graphs_paths] builds merged graph")
         for k, v in self.vertices.items():
             newv = Vertex(v.nb, v.label, weight_vertex)
             res_graph.vertices[k] = newv
@@ -993,8 +991,8 @@ class GraphDistance:
             res_graph.edges[newe.nb] = newe  # pylint: disable=E1101
             newe.pair = (None, e)
 
-        if verbose > 0 and fLOG is not None:
-            fLOG(
+        if verbose > 0:
+            print(
                 "[distance_matching_graphs_paths] "
                 "compute_predecessor, compute_successor"
             )

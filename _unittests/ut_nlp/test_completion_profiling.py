@@ -10,7 +10,6 @@ import unittest
 import cProfile
 import pstats
 import io
-from pyquickhelper.loghelper import fLOG
 from pyquickhelper.pycode import get_temp_folder
 from mlstatpy.nlp.completion import CompletionTrieNode
 
@@ -32,8 +31,6 @@ class TestCompletionProfiling(unittest.TestCase):
         return gain, gain_dyn, gain_dyn2, ave_length
 
     def test_profiling(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         temp = get_temp_folder(__file__, "temp_profiling")
         data = os.path.join(temp, "..", "data", "sample1000.txt")
         with open(data, "r", encoding="utf-8") as f:
@@ -54,14 +51,14 @@ class TestCompletionProfiling(unittest.TestCase):
             rem = os.path.normpath(os.path.join(temp, "..", "..", ".."))
             res = s.getvalue().replace(rem, "")
             if show:
-                fLOG(res)
+                print(res)
             with open(
                 os.path.join(temp, "profiling%d.txt" % n), "w"
             ) as f:  # pylint: disable=W1514
                 f.write(res)
 
         prof(1, show=False)
-        prof(2, show=True)
+        # prof(2, show=True)
 
 
 if __name__ == "__main__":

@@ -4,7 +4,6 @@
 """
 import os
 import unittest
-from pyquickhelper.loghelper import fLOG
 from pyquickhelper.pycode import get_temp_folder, add_missing_development_version
 from pyquickhelper.ipythonhelper import (
     execute_notebook_list,
@@ -37,16 +36,12 @@ class TestNotebook123Coverage(unittest.TestCase):
         res = execute_notebook_list(
             temp, keepnote, additional_path=add_path, valid=valid
         )
-        execute_notebook_list_finalize_ut(res, fLOG=fLOG, dump=thismodule)
+        execute_notebook_list_finalize_ut(res, dump=thismodule)
 
     def test_notebook_roc(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         self.a_test_notebook_runner("roc", "metric")
 
     def test_notebook_pvalue(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         self.a_test_notebook_runner("pvalue", "metric")
 
 
