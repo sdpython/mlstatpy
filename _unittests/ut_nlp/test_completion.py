@@ -6,12 +6,13 @@
 import os
 import unittest
 import itertools
+from pyquickhelper.pycode import ExtTestCase
 from mlstatpy.nlp.completion import CompletionTrieNode
 from mlstatpy.data.wikipedia import normalize_wiki_text, enumerate_titles
 from mlstatpy.nlp.normalize import remove_diacritics
 
 
-class TestCompletion(unittest.TestCase):
+class TestCompletion(ExtTestCase):
     def test_build_trie(self):
         queries = [(1, "a"), (2, "ab"), (3, "abc"), (4, "abcd"), (5, "bc")]
         trie = CompletionTrieNode.build(queries)
