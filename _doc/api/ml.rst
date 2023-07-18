@@ -28,8 +28,6 @@ Matrices
 Métriques
 +++++++++
 
-.. autoclass:: mlstatpy.ml.ml_grid_benchmark.MlGridBenchMark
-
 .. autoclass:: mlstatpy.ml.roc.ROC
 
 .. autofunction:: mlstatpy.ml.voronoi.voronoi_estimation_from_lr
