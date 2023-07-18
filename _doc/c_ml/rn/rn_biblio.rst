@@ -3,7 +3,7 @@ Bibliographie
 =============
 
 .. [Bottou1991] Une approche théorique de l'apprentissage connexionniste,
-    Application à la reconnaissance de la parole, Léon Bottou,
+   Application à la reconnaissance de la parole, Léon Bottou,
    *Thèse de l'Université de Paris Sud, Centre d'Orsay*.
 
 .. [Broyden1967] Quasi-Newton methods and their application to function minimization (1967),
@@ -46,9 +46,6 @@ Bibliographie
 .. [Rumelhart1986] Learning internal representations by error propagation (1986),
    D. E. Rumelhart, G. E. Hinton, R. J. Williams
    in *Parallel distributed processing: explorations in the microstructures of cohniyionn MIT Press, Cambridge*
-
-.. [Saporta1990] Probabilités, analyse des données et statistique (1990),
-   Gilbert Saporta, *Editions Technip*
 
 .. [Song1997] Self-organizing algorithm of robust PCA based on single layer NN (1997)
    Song Wang, Shaowei Xia,

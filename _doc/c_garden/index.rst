@@ -18,5 +18,4 @@ découvrir quelques poussières sous le tapis.
     ../notebooks/dsgarden/discret_gradient
     quantization
     ../notebooks/dsgarden/classification_multiple
-    ../notebooks/dsgarden/benchmark
-    
+   

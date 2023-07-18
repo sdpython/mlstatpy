@@ -851,6 +851,8 @@ Notebooks
 
     ../notebooks/ml/regression_no_inversion
 
+Voir aussi [Cai2020]_, [Nie2016]_, [Preda2010]_.
+
 Implémentations
 ===============
 
@@ -862,7 +864,8 @@ Bilbiographie
 .. [Acharya2016] `Fast Algorithms for Segmented Regression <https://arxiv.org/abs/1607.03990>`_,
     Jayadev Acharya, Ilias Diakonikolas, Jerry Li, Ludwig Schmidt, :epkg:`ICML 2016`
 
-.. [Cai2020] `Online Sufficient Dimension Reduction Through Sliced Inverse Regression <http://www.jmlr.org/papers/volume21/18-567/18-567.pdf>`_,
+.. [Cai2020] `Online Sufficient Dimension Reduction Through Sliced Inverse Regression
+    <http://www.jmlr.org/papers/volume21/18-567/18-567.pdf>`_,
     Zhanrui Cai, Runze Li, Liping Zhu
 
 .. [Nie2016] `Online PCA with Optimal Regret <http://jmlr.org/papers/volume17/15-320/15-320.pdf>`_,

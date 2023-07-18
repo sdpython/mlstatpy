@@ -185,8 +185,6 @@ this expression becomes:
     \loinormale{\eta_0}{\sqrt{ \frac{\var{X}}{N_1}+\frac{\var{Y}}{N_2} }}
     \end{eqnarray*}
 
-.. _l-section_pvalues_table:
-
 Application on binomial variables
 =================================
 
@@ -371,8 +369,6 @@ The metrics are correlated but it is unlikely that all metrics
 differences will be significant or not.
 The :epkg:`Holm–Bonferroni method`
 proposes a way to define an hypthesis on the top of the existing ones.
-
-.. _l-section_pvalues_table_em:
 
 Algorithm Expectation-Maximization
 ==================================

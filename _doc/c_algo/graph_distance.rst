@@ -19,7 +19,8 @@ a better solution is described in [Blondel2004]_. You can also read
 Definitions
 ===========
 
-The first approach is implemented in module :mod:`graph_distance <mlstatpy.graph.graph_distance>`.
+The first approach is implemented in module
+:mod:`graph_distance <mlstatpy.graph.graph_distance>`.
 Example of use:
 
 ::

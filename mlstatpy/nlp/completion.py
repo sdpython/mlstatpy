@@ -177,10 +177,10 @@ class CompletionTrieNode:
         Builds a string with all completions for all
         prefixes along the paths.
 
-        @param      maxn            maximum number of completions to show
-        @param      use_precompute  use intermediate results
-                                    built by @see me precompute_stat
-        @return                     str
+        :param maxn: maximum number of completions to show
+        :param use_precompute: use intermediate results
+            built by @see me precompute_stat
+        :return: str
         """
         res = self.all_mks_completions() if use_precompute else self.all_completions()
         rows = []
@@ -207,9 +207,9 @@ class CompletionTrieNode:
         """
         Builds a trie.
 
-        @param  words       list of ``(word)`` or ``(weight, word)``
-                            or ``(weight, word, display string)``
-        @return             root of the trie (CompletionTrieNode)
+        :param words: list of ``(word)`` or ``(weight, word)``
+            or ``(weight, word, display string)``
+        :return: root of the trie (CompletionTrieNode)
         """
         root = CompletionTrieNode("", False)
         nb = 0
@@ -329,11 +329,11 @@ class CompletionTrieNode:
         """
         Returns the minimum keystrokes for a word.
 
-        @param      word        word
-        @return                 number, length of best prefix, iteration it stops moving
+        :param word: word
+        :return: number, length of best prefix, iteration it stops moving
 
-        This function must be called after @see me precompute_stat
-        and @see me update_stat_dynamic.
+        This function must be called after :meth:`precompute_stat`
+        and :meth:`update_stat_dynamic`.
 
         See :ref:`l-completion-optim`.
 

@@ -295,9 +295,13 @@ Or comme la fonction :math:`c` est une distance sur :math:`\mathcal{C}'`, on peu
 :math:`d\pa{M_1,M_3} \infegal d\pa{M_1,M_2} + d \pa{M_2,M_3}`.
 D'où :
 
-    \begin{eqnarray}
-    d\pa{m_1,m_3} \infegal d\pa{m_1,m_2} + d \pa{m_2,m_3} \label{edit_demo_eq_3}
-    \end{eqnarray}
+.. math::
+    :nowrap:
+    :label: edit_demo_eq_3
+
+    \begin{eqnarray*}
+    d\pa{m_1,m_3} \infegal d\pa{m_1,m_2} + d \pa{m_2,m_3}
+    \end{eqnarray*}
 
 Les assertions :eq:`1 <edit_demo_eq_1>`, :eq:`2 <edit_demo_eq_2>`, :eq:`3 <edit_demo_eq_3>`
 montrent que :math:`d` est bien une distance. Le tableau suivant

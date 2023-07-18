@@ -24,10 +24,6 @@
     :alt: GitHub Issues
     :target: https://github.com/sdpython/mlstatpy/issues
 
-.. image:: http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/_images/nbcov.png
-    :target: http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/all_notebooks_coverage.html
-    :alt: Notebook Coverage
-
 .. _l-README:
 
 mlstatpy: détours mathématiques autour du machine learning

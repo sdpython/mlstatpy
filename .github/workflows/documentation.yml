@@ -49,8 +49,6 @@ jobs:
 
       - name: Copy license
         run: cp LICENSE* ./_doc
-      - name: Copy readme
-        run: cp README* ./_doc
       - name: Copy changelogs
         run: cp CHANGELOGS* ./_doc
 

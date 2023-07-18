@@ -24,9 +24,11 @@ Le site est aussi disponible (format brut de fonderie) sur
     c_algo/index
     c_garden/index
     api/index
+    i_ex
+    defthe_index
     auto_examples/index
+    glossary
     CHANGELOGS
-    README
     license
 
 On fait beaucoup de choses avec l'informatique mais en pratique
@@ -61,11 +63,3 @@ Xavier Dupré
     .. image:: http://img.shields.io/github/issues/sdpython/mlstatpy.png
         :alt: GitHub Issues
         :target: https://github.com/sdpython/mlstatpy/issues
-
-    .. image:: nbcov.png
-        :target: http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/all_notebooks_coverage.html
-        :alt: Notebook Coverage
-
-**Links:** `github <https://github.com/sdpython/mlstatpy/>`_,
-`documentation <http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html>`_,
-:ref:`l-README`.

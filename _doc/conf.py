@@ -46,7 +46,6 @@ html_static_path = ["_static"]
 latex_elements = {
     "papersize": "a4",
     "pointsize": "10pt",
-    "docclass": "book",
     "title": project,
 }
 
@@ -58,6 +57,7 @@ intersphinx_mapping = {
     "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
     "python": (f"https://docs.python.org/{sys.version_info.major}", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
+    "sklearn": ("https://scikit-learn.org/stable/", None),
     "sklearn-onnx": ("https://onnx.ai/sklearn-onnx/", None),
     "torch": ("https://pytorch.org/docs/stable/", None),
 }
