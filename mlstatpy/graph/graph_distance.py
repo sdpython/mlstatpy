@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief First approach for a edit distance between two graphs.
 
-See :ref:`l-graph_distance`.
-"""
 import copy
 import re
 

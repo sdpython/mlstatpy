@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Conversion from tree to neural network.
-"""
+
 import numpy
 import numpy.random as rnd
 from scipy.special import expit, softmax, kl_div as kl_fct  # pylint: disable=E0611

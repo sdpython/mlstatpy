@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief About :epkg:`ROC`.
-"""
+
 import math
 import itertools
 from enum import Enum

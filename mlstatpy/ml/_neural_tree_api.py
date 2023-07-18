@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Conversion from tree to neural network.
-"""
+
 import numpy
 from ..optim import SGDOptimizer
 

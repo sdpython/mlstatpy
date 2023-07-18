@@ -25,7 +25,7 @@ extensions = [
 ]
 
 templates_path = ["_templates"]
-html_logo = "_static/logo.png"
+html_logo = "_static/project_ico.png"
 source_suffix = ".rst"
 master_doc = "index"
 project = "mlstatpy"

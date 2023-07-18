@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Détecte les segments dans une image.
-"""
+
 import math
 import copy
 import time
@@ -19,10 +16,11 @@ def convert_array2PIL(img, mode=None):
     Convertit une image donnée sous la forme d'un array
     au format :epkg:`numpy:array`.
 
-    @param      img     :epkg:`numpy:array`
-    @param      mode    voir `modes <https://pillow.readthedocs.io/en/3.1.x/handbook/concepts.html#modes>`_,
-                        si None, essaye de deviner.
-    @return             *PIL*
+    :param img: epkg:`numpy:array`
+    :param mode: voir `modes
+        <https://pillow.readthedocs.io/en/3.1.x/handbook/concepts.html#modes>`_,
+        si None, essaye de deviner.
+    :return: *PIL*
 
     Le mode ``'binary'`` convertit une image issue
     de la fonction @see fn random_noise_image.

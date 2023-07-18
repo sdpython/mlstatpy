@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Définition de petits éléments géométriques tels que les points
-et les segments, implemente également des opérations standard
-telles le produit scalaire entre deux vecteurs, ...
-"""
+
 import math
 import copy
 import numpy

@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Génère des images aléatoires.
-"""
+
 import math
 import numpy
 import numpy.random as nprnd  # pylint: disable=E1101

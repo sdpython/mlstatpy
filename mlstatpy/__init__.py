@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Module *mlstatpy*.
-Functions and examples associated to the
-content of the :epkg:`mlstatpy`.
-"""
 
 __version__ = "0.4.0"
 __author__ = "Xavier Dupré"

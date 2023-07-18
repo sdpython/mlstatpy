@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@file
-@brief Algorithms about matrices.
-"""
 import warnings
 import numpy
 import numpy.linalg

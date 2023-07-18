@@ -1,7 +1,3 @@
-"""
-@file
-@brief About completion
-"""
 from typing import Tuple, List, Iterator
 from collections import deque
 

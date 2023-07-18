@@ -1,7 +1,3 @@
-"""
-@file
-@brief Functions to retrieve data from Wikipedia
-"""
 import os
 from pyquickhelper.filehelper import get_url_content_timeout, ungzip_files
 from .data_exceptions import DataException

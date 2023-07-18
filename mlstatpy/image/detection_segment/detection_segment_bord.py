@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Ce module définit un segment qui va parcourir l'image,
-en plus d'être un segment, cette classe inclut la dimension de l'image,
-et une fonction repérant sur ce segment les gradients presque
-orthogonaux à l'image.
-"""
+
 import copy
 import numpy
 from .geometrie import Segment, Point

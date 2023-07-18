@@ -1,7 +1,3 @@
-"""
-@file
-@brief About completion, simple algorithm
-"""
 from typing import Tuple, List, Iterator, Dict
 from .completion import CompletionTrieNode
 

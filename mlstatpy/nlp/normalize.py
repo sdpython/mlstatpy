@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Text normalization
-"""
+
 import unicodedata
 
 

@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Implements optimized k-nn.
-"""
+
 import random
 import numpy
 from .kppv import NuagePoints

@@ -1,7 +1,3 @@
-"""
-@file
-@brief Helpers on logistic regression.
-"""
 import numpy
 from pandas import DataFrame
 

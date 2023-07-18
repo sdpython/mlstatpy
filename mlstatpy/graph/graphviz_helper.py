@@ -1,7 +1,3 @@
-"""
-@file
-@brief graphviz helper
-"""
 import os
 import sys
 from pyquickhelper.loghelper import run_cmd

@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Ce module inclut une classe qui permet de
-parcourir tous les segments de l'image.
-"""
+
 import math
 import copy
 from .detection_segment_bord import SegmentBord_Commun
