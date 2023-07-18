@@ -54,17 +54,15 @@ def download_dump(
     country, name, folder=".", unzip=True, timeout=-1, overwrite=False, fLOG=noLOG
 ):
     """
-    Downloads *wikipedia dumps* from
-    `dumps.wikimedia.org/frwiki/latest/
-    <https://dumps.wikimedia.org/frwiki/latest/>`_.
+    Downloads :epkg:`wikipedia dumps`.
 
-    :param country     country
-    :param name        name of the stream to download
-    :param folder      where to download
-    :param unzip       unzip the file
-    :param timeout     timeout
-    :param overwrite   overwrite
-    :param fLOG        logging function
+    :param country: country
+    :param name: name of the stream to download
+    :param folder: where to download
+    :param unzip: unzip the file
+    :param timeout: timeout
+    :param overwrite: overwrite
+    :param fLOG: logging function
     """
     url = "https://dumps.wikimedia.org/{0}wiki/latest/{0}wiki-{1}".format(country, name)
     file = url.split("/")[-1]  # pylint: disable=C0207

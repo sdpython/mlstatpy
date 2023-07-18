@@ -15,14 +15,13 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.napoleon",
     "sphinx_gallery.gen_gallery",
+    "sphinx-issues",
     "matplotlib.sphinxext.plot_directive",
-    "pyquickhelper.sphinxext.sphinx_epkg_extension",
-    "pyquickhelper.sphinxext.sphinx_runpython_extension",
-    #
-    "pyquickhelper.sphinxext.sphinx_gdot_extension",
-    #
-    "pyquickhelper.sphinxext.sphinx_exref_extension",
-    "pyquickhelper.sphinxext.sphinx_mathdef_extension",
+    "sphinx_runpython.epkg",
+    "sphinx_runpython.gdot",
+    "sphinx_runpython.runpython",
+    "sphinx_runpython.blocdefs.sphinx_exref_extension",
+    "sphinx_runpython.blocdefs.sphinx_mathdef_extension",
 ]
 
 templates_path = ["_templates"]
@@ -156,7 +155,11 @@ epkg_dictionary = {
     "LAPACK": "http://www.netlib.org/lapack/",
     "mlinsights": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/index.html",
     "mlstatpy": "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html",
-    "numpy": "https://numpy.org/",
+    "numpy": (
+        "https://www.numpy.org/",
+        ("https://docs.scipy.org/doc/numpy/reference/generated/numpy.{0}.html", 1),
+        ("https://docs.scipy.org/doc/numpy/reference/generated/numpy.{0}.{1}.html", 2),
+    ),
     "PiecewiseTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/"
     "piecewise_tree_regression.html#mlinsights.mlmodel.piecewise_tree_regression.PiecewiseTreeRegressor",
     "Pillow": "https://pillow.readthedocs.io/en/stable/",
@@ -172,8 +175,10 @@ epkg_dictionary = {
     "sklearn-onnx": "https://onnx.ai/sklearn-onnx/",
     "statsmodels": "http://www.statsmodels.org/stable/index.html",
     "SVD": "https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res",
+    "tqdm": "https://tqdm.github.io/",
     "Visualize a scikit-learn pipeline": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/visualize_pipeline.html",
     "X-tree": "https://en.wikipedia.org/wiki/X-tree",
+    "wikipedia dumps": "https://dumps.wikimedia.org/frwiki/latest/",
 }
 
 nblinks = {

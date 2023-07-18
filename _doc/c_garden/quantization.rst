@@ -114,5 +114,3 @@ ensemble :math:`(d_1, ..., d_n)`. On réécrit le problème d'optimisation :
     \indicatrice{\intf_{f8}{\frac{x}{\lambda}} = d_k}
     \end{array}
 
-
-

@@ -117,10 +117,10 @@ class CompletionElement:
         if parameter *completions* was used when calling
         method @see me update_metrics.
 
-        @param      maxn            maximum number of completions to show
-        @param      use_precompute  use intermediate results built
-                                    by @see me precompute_stat
-        @return                     str
+        :param maxn: maximum number of completions to show
+        :param use_precompute: use intermediate results built
+            by @see me precompute_stat
+        :return: str
         """
         rows = [f"{self.weight} -- {self.value} -- {self.str_mks()}"]
         if self._info is not None:
@@ -213,18 +213,17 @@ class CompletionElement:
         """
         Updates the metrics.
 
-        @param      prefix      prefix
-        @param      position    position in the completion system
-                                when prefix has length k,
-                                *position starting from 0*
-        @param      improved    if one metrics is < to the completion length, it means
-                                it can be used to improve others queries
-        @param      delta       delta in the dynamic modified mks
-        @param      completions displayed completions, if not None, the method will
-                                store them in member *_completions*
-        @param      iteration   for debugging purpose, indicates
-                                when this improvment was detected
-        @return                 boolean which indicates there was an update
+        :param prefix: prefix
+        :param position: position in the completion system
+            when prefix has length k, *position starting from 0*
+        :param improved: if one metrics is < to the completion length, it means
+            it can be used to improve others queries
+        :param delta: delta in the dynamic modified mks
+        :param completions: displayed completions, if not None, the method will
+            store them in member *_completions*
+        :param iteration: for debugging purpose, indicates
+            when this improvment was detected
+        :return: boolean which indicates there was an update
         """
         if self.prefix is not None and len(prefix) < len(self.prefix.value):
             # no need to look into it
@@ -387,10 +386,10 @@ class CompletionSystem:
         """
         Not very efficient, finds an item in a the list.
 
-        @param      value       string to find
-        @param      is_sorted   the function will assume the elements are sorted by
-                                alphabetical order
-        @return                 element or None
+        :param value: string to find
+        :param is_sorted: the function will assume the elements are sorted by
+            alphabetical order
+        :return: element or None
         """
         if is_sorted:
             raise NotImplementedError(  # pragma: no cover
@@ -573,11 +572,10 @@ class CompletionSystem:
         with the three metrics :math:`M`, :math:`M'`, :math:`M"`
         for these particular queries.
 
-        @param      qset        list of tuple(str, float) = (query, weight)
-        @return                 list of tuple of @see cl CompletionElement,
-                                the first one is the query,
-                                the second one is the None or
-                                the matching completion
+        :param qset: list of tuple(str, float) = (query, weight)
+        :return: list of tuple of @see cl CompletionElement,
+            the first one is the query, the second one is the None or
+            the matching completion
 
         The method @see me compute_metric needs to be called first.
         """

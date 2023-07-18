@@ -268,8 +268,8 @@ class CompletionTrieNode:
         """
         Returns the node which holds all completions starting with a given prefix.
 
-        @param      prefix      prefix
-        @return                 node or None for no result
+        :param prefix: prefix
+        :return: node or None for no result
         """
         if len(prefix) == 0:
             if not self.value:

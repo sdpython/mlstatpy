@@ -93,12 +93,11 @@ def linear_regression(X, y, algo=None):
     :ref:`Arbre de décision optimisé pour les régressions linéaires
     <algo_decision_tree_mselin>`.
 
-    @param      X       features
-    @param      y       targets
-    @param      algo    None to use the standard algorithm
-                        :math:`\\beta = (X'X)^{-1} X'y`,
-                        `'gram'`, `'qr'`
-    @return             beta
+    :param X: features
+    :param y: targets
+    :param algo: None to use the standard algorithm
+        :math:`\\beta = (X'X)^{-1} X'y`, `'gram'`, `'qr'`
+    :return: beta
 
     .. runpython::
         :showcode:
@@ -321,12 +320,12 @@ def streaming_linear_regression_gram_schmidt_update(Xk, yk, Xkyk, Pk, bk):
     The function modifies the matrix *Pk*
     given as an input.
 
-    @param      Xk      kth row
-    @param      yk      kth target
-    @param      Xkyk    matrix :math:`X_{1..k}' y_{1..k}' (updated by the function)
-    @param      Pk      Gram-Schmidt matrix produced by the streaming algorithm
-                         (updated by the function)
-    @param      bk      current coefficient (updated by the function)
+    :param Xk: kth row
+    :param yk: kth target
+    :param Xkyk: matrix :math:`X_{1..k}' y_{1..k}' (updated by the function)
+    :param Pk: Gram-Schmidt matrix produced by the streaming algorithm
+        (updated by the function)
+    :return: bk current coefficient (updated by the function)
     """
     Xk = Xk.T
     streaming_gram_schmidt_update(Xk, Pk)

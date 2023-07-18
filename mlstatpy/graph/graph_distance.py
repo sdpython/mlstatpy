@@ -818,27 +818,25 @@ class GraphDistance:
         """
         Computes an alignment between two graphs.
 
-        @param      graph2                  the other graph
-        @param      function_mach_vertices  function which gives a distance
-                                            bewteen two vertices,
-                                            if None, it take the output of
-                                            @see me get_matching_functions
-        @param      function_match_edges    function which gives a distance
-                                            bewteen two edges,
-                                            if None, it take the output of
-                                            @see me get_matching_functions
-        @param      noClean                 if True, clean unmatched vertices and edges
-        @param      store                   if None, does nothing, if it is a
-                                            dictionary, the function will store
-                                            here various information about how
-                                            the matching was operated
-        @param      use_min                 @see me edit_distance_path
-        @param      weight_vertex           a weight for every vertex
-        @param      weight_edge             a weight for every edge
-        @param      verbose                 display some progress with :epkg:`tqdm`
-        @param      fLOG                    logging functino
-        @return                             2 tuple (a distance, a graph containing
-                                            the aligned paths between the two graphs)
+        :param graph2: the other graph
+        :param function_mach_vertices: function which gives a distance
+            between two vertices, if None, it take the output of
+            @see me get_matching_functions
+        :param function_match_edges: function which gives a distance
+            bewteen two edges, if None, it take the output of
+            @see me get_matching_functions
+        :param noClean: if True, clean unmatched vertices and edges
+        :param store: if None, does nothing, if it is a
+            dictionary, the function will store
+            here various information about how
+            the matching was operated
+        :param use_min: @see me edit_distance_path
+        :param weight_vertex: a weight for every vertex
+        :param weight_edge: a weight for every edge
+        :param verbose: display some progress with :epkg:`tqdm`
+        :param fLOG: logging functino
+        :return: 2 tuple (a distance, a graph containing
+            the aligned paths between the two graphs)
 
         See :ref:`l-graph_distance`.
         """
