@@ -15,7 +15,7 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.napoleon",
     "sphinx_gallery.gen_gallery",
-    "sphinx-issues",
+    "sphinx_issues",
     "matplotlib.sphinxext.plot_directive",
     "sphinx_runpython.epkg",
     "sphinx_runpython.gdot",
