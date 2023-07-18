@@ -645,31 +645,28 @@ class GraphDistance:
         """
         Tries to align two paths from two graphs.
 
-        @param      p1                      path 1 (from g1)
-        @param      p2                      path 2 (from g2)
-        @param      g1                      graph 1
-        @param      g2                      graph 2
-        @param      function_mach_vertices  function which gives a
-                                            distance bewteen two vertices,
-                                            if None, it take the output of
-                                            @see me get_matching_functions
-        @param      function_match_edges    function which gives a distance bewteen
-                                            two edges,
-                                            if None, it take the output of
-                                            @see me get_matching_functions
-        @param      use_min                 the returned is based on a edit distance,
-                                            if this parameter is True,
-                                            the returned value will be:
+        :param p1: path 1 (from g1)
+        :param p2: path 2 (from g2)
+        :param g1: graph 1
+        :param g2: graph 2
+        :param function_mach_vertices: function which gives a
+            distance bewteen two vertices, if None, it take the output of
+            :meth:`get_matching_functions`
+        :param function_match_edges: function which gives a distance bewteen
+            two edges, if None, it take the output of
+            :meth:`get_matching_functions`
+        :param use_min: the returned is based on a edit distance,
+            if this parameter is True, the returned value will be:
 
-                                            ::
+            ::
 
-                                                if use_min :
-                                                    n = min (len(p1), len(p2))
-                                                    d = d*1.0 / n if n > 0 else 0
+                if use_min :
+                    n = min (len(p1), len(p2))
+                    d = d*1.0 / n if n > 0 else 0
 
-        @param      debug                   unused
-        @param      cache                   to cache the costs
-        @return                             2-uple: distance, aligned path
+        :param debug: unused
+        :param cache: to cache the costs
+        :return: 2-uple: distance, aligned path
         """
 
         def edge_vertex_match(x, y, g1, g2, w1, w2):

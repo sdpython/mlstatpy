@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 from io import BytesIO
 import pickle
@@ -163,7 +163,7 @@ class NeuralTreeNet(_TrainingAPI):
             self.nodes_attr.append(attr)
         elif len(node.input_weights.shape) == 2:
             if node.input_weights.shape[1] != len(inputs):
-                raise RuntimeError(  # pragma: no cover
+                raise RuntimeError(
                     f"Dimension mismatch between weights "
                     f"[{node.input_weights.shape[1]}] "
                     f"and inputs [{len(inputs)}], tag={node.tag!r}, "
@@ -187,7 +187,7 @@ class NeuralTreeNet(_TrainingAPI):
             )
             self.nodes_attr.append(attr)
         else:
-            raise RuntimeError(  # pragma: no cover
+            raise RuntimeError(
                 f"Coefficients should have 1 or 2 dimension not "
                 f"{node.input_weights.shape}."
             )
@@ -219,23 +219,24 @@ class NeuralTreeNet(_TrainingAPI):
     @staticmethod
     def create_from_tree(tree, k=1.0, arch="one"):
         """
-        Creates a @see cl NeuralTreeNet instance from a
+        Creates a :class:`NeuralTreeNet` instance from a
         :epkg:`DecisionTreeClassifier`
 
         :param tree: :epkg:`DecisionTreeClassifier`
         :param k: slant of the sigmoïd
         :param arch: architecture, see below
-        :return: @see cl NeuralTreeNet
+        :return: :class:`NeuralTreeNet`
 
         The function only works for binary problems.
         Available architecture:
+
         * `'one'`: the method adds nodes with one output, there
           is no soecific definition of layers,
         * `'compact'`: the adds two nodes, the first computes
           the threshold, the second one computes the leaves
           output, a final node merges all outputs into one
 
-        See notebook :ref:`neuraltreerst` for examples.
+        See notebook :ref:`neural_tree.ipynb` for examples.
         """
         if arch == "one":
             return NeuralTreeNet._create_from_tree_one(tree, k)
@@ -245,19 +246,17 @@ class NeuralTreeNet(_TrainingAPI):
 
     @staticmethod
     def _create_from_tree_one(tree, k=1.0):
-        "Implements strategy 'one'. See @see meth create_from_tree."
+        "Implements strategy 'one'. See :meth:`create_from_tree`."
 
         if not isinstance(tree, BaseDecisionTree):
-            raise TypeError(  # pragma: no cover
-                f"Only decision tree as supported not {type(tree)!r}."
-            )
+            raise TypeError(f"Only decision tree as supported not {type(tree)!r}.")
         if not isinstance(tree, ClassifierMixin):
-            raise TypeError(  # pragma: no cover
+            raise TypeError(
                 f"Only a classifier can be converted by this function "
                 f"not {type(tree)!r}, arch='compact' should be used."
             )
         if tree.n_classes_ > 2:
-            raise RuntimeError(  # pragma: no cover
+            raise RuntimeError(
                 "The function only supports binary classification problem."
             )
 
@@ -347,21 +346,19 @@ class NeuralTreeNet(_TrainingAPI):
 
     @staticmethod
     def _create_from_tree_compact(tree, k=1.0):
-        "Implements strategy 'compact'. See @see meth create_from_tree."
+        "Implements strategy 'compact'. See :meth:`create_from_tree`."
         if not isinstance(tree, BaseDecisionTree):
-            raise TypeError(  # pragma: no cover
-                f"Only decision tree as supported not {type(tree)!r}."
-            )
+            raise TypeError(f"Only decision tree as supported not {type(tree)!r}.")
         if isinstance(tree, ClassifierMixin):
             is_classifier = True
             if tree.n_classes_ > 2:
-                raise RuntimeError(  # pragma: no cover
+                raise RuntimeError(
                     "The function only supports binary classification problem."
                 )
         else:
             is_classifier = False
             if tree.n_outputs_ != 1:
-                raise RuntimeError(  # pragma: no cover
+                raise RuntimeError(
                     "The function only supports single regression problem."
                 )
 
@@ -439,9 +436,7 @@ class NeuralTreeNet(_TrainingAPI):
                 elif children_left[par] == last:
                     lr = "left"
                 else:
-                    raise RuntimeError(  # pragma: no cover
-                        "Inconsistent tree structure."
-                    )
+                    raise RuntimeError("Inconsistent tree structure.")
                 last = par
 
             coef = numpy.zeros((coef1.shape[0],), dtype=numpy.float64)
@@ -452,7 +447,7 @@ class NeuralTreeNet(_TrainingAPI):
                 if isinstance(lr, tuple):
                     lr, value = lr
                     if lr not in ("class", "reg"):
-                        raise RuntimeError("algorithm issue")  # pragma: no cover
+                        raise RuntimeError("algorithm issue")
                 else:
                     r = rows[ip]
                     # coefficients are the opposite in _create_from_tree_one
@@ -645,7 +640,7 @@ class NeuralTreeNet(_TrainingAPI):
             for i in range(self.size_ - nb_last, self.size_)
         )
         if len(neurones) != 1:
-            raise RuntimeError(  # pragma: no cover
+            raise RuntimeError(
                 f"Only one output node is implemented not {len(neurones)}"
             )
         return self.output_to_node_[self.size_ - 1]
@@ -735,7 +730,7 @@ class BaseNeuralTreeNet(BaseEstimator):
     """
     Classifier or regressor following :epkg:`scikit-learn` API.
 
-    :param estimator: instance of @see cl NeuralTreeNet.
+    :param estimator: instance of :class:`NeuralTreeNet`.
     :param X: training set
     :param y: training labels
     :param optimizer: optimizer, by default, it is
@@ -768,7 +763,7 @@ class BaseNeuralTreeNet(BaseEstimator):
         momentum=0.9,
     ):
         if not isinstance(estimator, NeuralTreeNet):
-            raise ValueError(  # pragma: no cover
+            raise ValueError(
                 f"estimator must be an instance of "
                 f"NeuralTreeNet not {type(estimator)!r}."
             )
@@ -804,9 +799,7 @@ class BaseNeuralTreeNet(BaseEstimator):
         :return: self
         """
         if sample_weights is not None:
-            raise NotImplementedError(  # pragma: no cover
-                "sample_weights is not supported yet."
-            )
+            raise NotImplementedError("sample_weights is not supported yet.")
         if isinstance(self, ClassifierMixin):
             ny = label_class_to_softmax_output(y) if len(y.shape) == 1 else y
         else:
@@ -882,11 +875,9 @@ class BaseNeuralTreeNet(BaseEstimator):
                     else node.coef
                 )
                 if len(coef.shape) != 2:
-                    raise RuntimeError(  # pragma: no cover
-                        f"coef must be a 2D matrix not {coef.shape!r}."
-                    )
+                    raise RuntimeError(f"coef must be a 2D matrix not {coef.shape!r}.")
                 if coef.shape[1] < 2:
-                    raise RuntimeError(  # pragma: no cover
+                    raise RuntimeError(
                         f"coef must be a 2D matrix with at least 2 columns "
                         f"not {coef.shape!r}."
                     )
@@ -898,9 +889,7 @@ class BaseNeuralTreeNet(BaseEstimator):
                     else "r_%s" % ("_".join(map(str, attr["inputs"])))
                 )
                 if name not in res:
-                    raise KeyError(  # pragma: no cover
-                        f"Unable to find {name!r} in {set(res)}."
-                    )
+                    raise KeyError(f"Unable to find {name!r} in {set(res)}.")
                 output_name = (
                     "r_%d" % attr["output"]
                     if isinstance(attr["output"], int)
@@ -959,7 +948,7 @@ class NeuralTreeNetClassifier(ClassifierMixin, BaseNeuralTreeNet):
     """
     Classifier following :epkg:`scikit-learn` API.
 
-    :param estimator: instance of @see cl NeuralTreeNet.
+    :param estimator: instance of :class:`NeuralTreeNet`.
     :param optimizer: optimizer, by default, it is
         :class:`SGDOptimizer <mlstatpy.optim.sgd.SGDOptimizer>`.
     :param max_iter: number maximum of iterations
@@ -990,7 +979,7 @@ class NeuralTreeNetClassifier(ClassifierMixin, BaseNeuralTreeNet):
         momentum=0.9,
     ):
         if not isinstance(estimator, NeuralTreeNet):
-            raise ValueError(  # pragma: no cover
+            raise ValueError(
                 f"estimator must be an instance of "
                 f"NeuralTreeNet not {type(estimator)!r}."
             )
@@ -1033,7 +1022,7 @@ class NeuralTreeNetRegressor(RegressorMixin, BaseNeuralTreeNet):
     """
     Regressor following :epkg:`scikit-learn` API.
 
-    :param estimator: instance of @see cl NeuralTreeNet.
+    :param estimator: instance of :class:`NeuralTreeNet`.
     :param optimizer: optimizer, by default, it is
         :class:`SGDOptimizer <mlstatpy.optim.sgd.SGDOptimizer>`.
     :param max_iter: number maximum of iterations
@@ -1064,7 +1053,7 @@ class NeuralTreeNetRegressor(RegressorMixin, BaseNeuralTreeNet):
         momentum=0.9,
     ):
         if not isinstance(estimator, NeuralTreeNet):
-            raise ValueError(  # pragma: no cover
+            raise ValueError(
                 f"estimator must be an instance of "
                 f"NeuralTreeNet not {type(estimator)!r}."
             )

@@ -20,6 +20,10 @@ class CompletionElement:
 
     * *mks2*: value of modified dynamic minimum keystroke
     * *mks2_*: length of the prefix to obtain *mks2*
+
+    :param value: value (a character)
+    :param weight: ordering (the lower, the first)
+    :param disp: original string, use this to identify the node
     """
 
     __slots__ = (
@@ -37,13 +41,6 @@ class CompletionElement:
     )
 
     def __init__(self, value: str, weight=1.0, disp=None):
-        """
-        constructor
-
-        @param      value       value (a character)
-        @param      weight      ordering (the lower, the first)
-        @param      disp        original string, use this to identify the node
-        """
         if not isinstance(value, str):
             raise TypeError(f"value must be str not '{value}' - type={type(value)}")
         self.value = value
@@ -109,7 +106,7 @@ class CompletionElement:
         builds a string with all completions for all
         prefixes along the paths, this is only available
         if parameter *completions* was used when calling
-        method @see me update_metrics.
+        method :meth`update_metrics`.
 
         :param maxn: maximum number of completions to show
         :param use_precompute: use intermediate results built
@@ -353,14 +350,10 @@ class CompletionElement:
 
 class CompletionSystem:
     """
-    define a completion system
+    Defines a completion system.
     """
 
     def __init__(self, elements: List[CompletionElement]):
-        """
-        fill the completion system
-        """
-
         def create_element(i, e):
             if isinstance(e, CompletionElement):
                 return e

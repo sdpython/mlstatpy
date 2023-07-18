@@ -405,7 +405,7 @@ class CompletionTrieNode:
         @return                 number, length of best prefix, iteration it stops moving
 
         This function must be called after @see me precompute_stat
-        and @see me update_stat_dynamic.
+        and :meth`update_stat_dynamic`.
         See :ref:`Modified Dynamic Minimum Keystroke <def-mks3>`.
 
         .. math::
@@ -479,9 +479,9 @@ class CompletionTrieNode:
         Must be called after @see me precompute_stat
         and computes dynamic mks (see :ref:`Dynamic Minimum Keystroke <def-mks2>`).
 
-        @param      delta       parameter :math:`\\delta` in defintion
-                                :ref:`Modified Dynamic KeyStroke <def-mks3>`
-        @return                 number of iterations to converge
+        :param delta: parameter :math:`\\delta` in defintion
+            :ref:`Modified Dynamic KeyStroke <def-mks3>`
+        :return: number of iterations to converge
         """
         for node in self.unsorted_iter():
             node.stat.init_dynamic_minimum_keystroke(len(node.value))

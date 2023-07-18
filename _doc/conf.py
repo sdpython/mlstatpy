@@ -143,6 +143,7 @@ epkg_dictionary = {
     "B+ tree": "https://en.wikipedia.org/wiki/B%2B_tree",
     "BLAS": "https://www.netlib.org/blas/",
     "Branch and Bound": "https://en.wikipedia.org/wiki/Branch_and_bound",
+    "C++": "https://fr.wikipedia.org/wiki/C%2B%2B",
     "Custom Criterion for DecisionTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
     "cython": "https://cython.org/",
     "DecisionTreeClassifier": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html",

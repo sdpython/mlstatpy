@@ -1,4 +1,3 @@
-
 Traitement du langage naturel
 =============================
 
@@ -11,9 +10,11 @@ Complétion
 
 .. autoclass:: mlstatpy.nlp.completion_simple.CompletionElement
     :members:
+    :noindex:
 
 .. autoclass:: mlstatpy.nlp.completion_simple.CompletionSystem
     :members:
+    :noindex:
 
 Normalisation
 +++++++++++++

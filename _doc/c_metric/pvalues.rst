@@ -390,9 +390,9 @@ the class we do not observe are :math:`(C_1,...C_n)`:
 .. math::
     :nowrap:
 
-    \begin{eqnarray}
+    \begin{eqnarray*}
     L(\theta) = \prod_i \cro{ p^{X_i}(1-p)^{(1-X_i)} \pi }^{1-C_i} \cro{q^{X_i}(1-q)^{(1-X_i)}  (1-\pi)  }^{C_i}
-    \end{eqnarray}
+    \end{eqnarray*}
 
 The parameters are :math:`\theta=(\pi,p,q)`. We use an algorithm
 `Expectation-Maximization (EM) <https://en.wikipedia.org/wiki/Expectation%E2%80%93maximization_algorithm>`_

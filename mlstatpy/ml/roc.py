@@ -10,6 +10,20 @@ import numpy
 class ROC:
     """
     Helper to draw a :epkg:`ROC` curve.
+
+    Initialisation with a dataframe and two or three columns:
+
+    * column 1: score (y_score)
+    * column 2: expected answer (boolean) (y_true)
+    * column 3: weight (optional) (sample_weight)
+
+    :param y_true: if *df* is None, *y_true*, *y_score*,
+        *sample_weight* must be filled, *y_true* is whether
+        or None the answer is true. *y_true* means the prediction is right.
+    :param y_score: score prediction
+    :param sample_weight: weights
+    :param df: dataframe or array or list, it must contains
+        2 or 3 columns always in the same order
     """
 
     class CurveType(Enum):
@@ -32,22 +46,6 @@ class ROC:
         SKROC = 6
 
     def __init__(self, y_true=None, y_score=None, sample_weight=None, df=None):
-        """
-        Initialisation with a dataframe and two or three columns:
-
-        * column 1: score (y_score)
-        * column 2: expected answer (boolean) (y_true)
-        * column 3: weight (optional) (sample_weight)
-
-        @param  y_true          if *df* is None, *y_true*, *y_score*,
-                                *sample_weight* must be filled,
-                                *y_true* is whether or None the answer is true.
-                                *y_true* means the prediction is right.
-        @param  y_score         score prediction
-        @param  sample_weight   weights
-        @param  df              dataframe or array or list,
-                                it must contains 2 or 3 columns always in the same order
-        """
         if df is None:
             df = pandas.DataFrame()
             df["score"] = y_score
