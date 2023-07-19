@@ -22,7 +22,7 @@ jobs:
         pip install pytest
         pip install pytest-cov
         export PYTHONPATH=.
-        pytest --cov=./_unittests/ --cov-report=xml --ignore-glob=**LONG*.py --ignore-glob=**notebook*.py
+        pytest --cov=./_unittests/ --cov-report=xml --durations=10 --ignore-glob=**LONG*.py --ignore-glob=**notebook*.py
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:

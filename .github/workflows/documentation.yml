@@ -18,7 +18,7 @@ on:
     - cron: '30 1 * * 0'
 
 jobs:
-  build_wheels:
+  run:
     name: Build documentation on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:

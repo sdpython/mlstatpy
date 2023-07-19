@@ -81,7 +81,12 @@ class TestGraphDistance(ExtTestCase):
         vertices, edges = graph1.draw_vertices_edges()
         self.assertNotEmpty(vertices)
         self.assertNotEmpty(edges)
-        draw_graph_graphviz(vertices, edges, outfile1)
+        try:
+            draw_graph_graphviz(vertices, edges, outfile1)
+        except FileNotFoundError as e:
+            if "No such file or directory: 'dot'" in str(e):
+                return
+            raise e
 
         vertices, edges = graph2.draw_vertices_edges()
         self.assertNotEmpty(vertices)
