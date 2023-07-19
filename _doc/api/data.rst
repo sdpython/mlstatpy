@@ -16,5 +16,3 @@ Wikipédia
 .. autofunction:: mlstatpy.data.wikipedia.download_titles
 
 .. autofunction:: mlstatpy.data.wikipedia.enumerate_titles
-
-.. autofunction:: mlstatpy.data.wikipedia.download_dump

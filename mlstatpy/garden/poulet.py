@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Functions for :ref:`l-exemple_optim_alea`.
-"""
+
 import math
 import random
 

@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Détecte les segments dans une image.
-"""
+
 import math
 import copy
 import time
@@ -19,10 +16,11 @@ def convert_array2PIL(img, mode=None):
     Convertit une image donnée sous la forme d'un array
     au format :epkg:`numpy:array`.
 
-    @param      img     :epkg:`numpy:array`
-    @param      mode    voir `modes <https://pillow.readthedocs.io/en/3.1.x/handbook/concepts.html#modes>`_,
-                        si None, essaye de deviner.
-    @return             *PIL*
+    :param img: epkg:`numpy:array`
+    :param mode: voir `modes
+        <https://pillow.readthedocs.io/en/3.1.x/handbook/concepts.html#modes>`_,
+        si None, essaye de deviner.
+    :return: *PIL*
 
     Le mode ``'binary'`` convertit une image issue
     de la fonction @see fn random_noise_image.
@@ -219,20 +217,19 @@ def detect_segments(
     """
     Détecte les segments dans une image.
 
-    @param  image       image (*fichier*, *array*, *PIL*)
-    @param  proba_bin   est en fait un secteur angulaire (360 / 16)
-                        qui determine la proximite de deux directions
-    @param  cos_angle   est le cosinus de l'angle correspondant à ce secteur angulaire
-    @param  seuil_nfa   au delà de ce seuil, on considere qu'un segment
-                        génère trop de fausses alertes pour être sélectionné
-    @param  seuil_norme norme en deça de laquelle un gradient est trop
-                        petit pour etre significatif (c'est du bruit)
-    @param  angle       lorsqu'on balaye l'image pour détecter les segments,
-                        on tourne en rond selon les angles 0, angle, 2*angle,
-                        3*angle, ...
-    @param  stop        arrête après avoir collecté tant de segments
-    @param  verbose     affiche l'avancement
-    @return             les segments
+    :param image: image (*fichier*, *array*, *PIL*)
+    :param proba_bin: est en fait un secteur angulaire (360 / 16)
+        qui determine la proximite de deux directions
+    :param cos_angle: est le cosinus de l'angle correspondant à ce secteur angulaire
+    :param seuil_nfa: au delà de ce seuil, on considere qu'un segment
+        génère trop de fausses alertes pour être sélectionné
+    :param seuil_norme: norme en deça de laquelle un gradient est trop
+        petit pour etre significatif (c'est du bruit)
+    :param angle: lorsqu'on balaye l'image pour détecter les segments,
+        on tourne en rond selon les angles 0, angle, 2*angle, 3*angle, ...
+    :param stop: arrête après avoir collecté tant de segments
+    :param verbose: affiche l'avancement
+    :return: les segments
     """
     gray_image = _load_image(image, "PIL").convert("L")
     grad = _calcule_gradient(gray_image)

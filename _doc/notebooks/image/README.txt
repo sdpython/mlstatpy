@@ -1,9 +1,0 @@
-
-Images
-------
-
-.. contents::
-    :local:
-    
-
-

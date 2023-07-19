@@ -1,8 +1,0 @@
-
-Machine Learning
-----------------
-
-.. contents::
-    :local:
-    
-    

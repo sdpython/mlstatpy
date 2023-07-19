@@ -21,7 +21,7 @@ On considère l'ensemble des complétions
 :math:`S` composé de deux mots *actuellement*, *actualité*.
 Le gain moyen par mots est de 9 caractères économisés.
 Si on ajoute le grand préfixe commun à la liste *actu*,
-ce gain moyen tombe à 6.33 (voir :ref:`completion_trie.ipynb`) quelque
+ce gain moyen tombe à 6.33 (voir :ref:`/notebooks/nlp/completion_trie.ipynb`) quelque
 soit l'ordre choisi pour les complétions. Toutefois, si on ne prend pas
 en compte le gain sur le mot *actu* car ce n'est pas un mot
 correct mais plus un mot qui aide la lecture de la liste, ce gain

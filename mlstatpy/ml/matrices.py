@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@file
-@brief Algorithms about matrices.
-"""
 import warnings
 import numpy
 import numpy.linalg
@@ -93,12 +88,11 @@ def linear_regression(X, y, algo=None):
     :ref:`Arbre de décision optimisé pour les régressions linéaires
     <algo_decision_tree_mselin>`.
 
-    @param      X       features
-    @param      y       targets
-    @param      algo    None to use the standard algorithm
-                        :math:`\\beta = (X'X)^{-1} X'y`,
-                        `'gram'`, `'qr'`
-    @return             beta
+    :param X: features
+    :param y: targets
+    :param algo: None to use the standard algorithm
+        :math:`\\beta = (X'X)^{-1} X'y`, `'gram'`, `'qr'`
+    :return: beta
 
     .. runpython::
         :showcode:
@@ -247,14 +241,13 @@ def streaming_gram_schmidt(mat, start=None):
 def streaming_linear_regression_update(Xk, yk, XkXk, bk):
     """
     Updates coefficients :math:`\\beta_k` to produce :math:`\\beta_{k+1}`
-    in :ref:`l-piecewise-linear-regression`.
-    The function modifies the matrix *Pk*
-    given as an input.
+    in :ref:`l-piecewise-linear-regression`. The function modifies
+    the matrix *Pk* given as an input.
 
-    @param      Xk      kth row
-    @param      yk      kth target
-    @param      XkXk    matrix :math:`X_{1..k}'X_{1..k}', updated by the function
-    @param      bk      current coefficient (updated by the function)
+    :param Xk: kth row
+    :param yk: kth target
+    :param XkXk: matrix :math:`X_{1..k}'X_{1..k}`, updated by the function
+    :param bk: current coefficient (updated by the function)
     """
     Xk = Xk.reshape((1, XkXk.shape[0]))
     xxk = Xk.T @ Xk
@@ -318,15 +311,14 @@ def streaming_linear_regression_gram_schmidt_update(Xk, yk, Xkyk, Pk, bk):
     Updates coefficients :math:`\\beta_k` to produce :math:`\\beta_{k+1}`
     in :ref:`Streaming Linear Regression
     <l-piecewise-linear-regression-gram_schmidt>`.
-    The function modifies the matrix *Pk*
-    given as an input.
+    The function modifies the matrix *Pk* given as an input.
 
-    @param      Xk      kth row
-    @param      yk      kth target
-    @param      Xkyk    matrix :math:`X_{1..k}' y_{1..k}' (updated by the function)
-    @param      Pk      Gram-Schmidt matrix produced by the streaming algorithm
-                         (updated by the function)
-    @param      bk      current coefficient (updated by the function)
+    :param Xk: kth row
+    :param yk: kth target
+    :param Xkyk: matrix :math:`X_{1..k}' y_{1..k}` (updated by the function)
+    :param Pk: Gram-Schmidt matrix produced by the streaming algorithm
+        (updated by the function)
+    :return: bk current coefficient (updated by the function)
     """
     Xk = Xk.T
     streaming_gram_schmidt_update(Xk, Pk)

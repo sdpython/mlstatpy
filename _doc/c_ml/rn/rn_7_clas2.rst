@@ -166,7 +166,7 @@ ce problème, on définit la fonction :math:`f` :
     \forall \pa{W,x} \in \R^M \times \R^p, \; f\pa{W,x} = \pa{f_1\pa{W,x}}, \dots ,
                     f_C\pa{W,x} \vspace{0.5ex}\\
     \text{et }\forall i \in \intervalle{1}{N}, \; \forall k \in \intervalle{1}{C}, \;
-    				p^k \pa{W,X_i} = \dfrac{e^{f_k\pa{W,X_i}}}
+                    p^k \pa{W,X_i} = \dfrac{e^{f_k\pa{W,X_i}}}
     {\sum_{l=1}^{C}e^{f_l\pa{W,X_i}}}
     \end{array}
 
@@ -184,13 +184,13 @@ On en déduit que :
 .. math::
     :nowrap:
 
-		\begin{eqnarray*}
-		\ln L_W & \propto & \sum_{i=1}^{N}\sum_{k=1}^{C} \; \eta_i^k  \cro{ f_k\pa{W,X_i} - \ln
-		\cro{\sum_{l=1}^{C}e^{f_l\pa{W,X_i}}}} \\
-		\ln L_W & \propto & \sum_{i=1}^{N}\sum_{k=1}^{C} \; \eta_i^k  f_k\pa{W,X_i} -
-		                  \sum_{i=1}^{N}  \ln \cro{\sum_{l=1}^{C}e^{f_l\pa{W,X_i}}}
-		                  \underset{=1}{\underbrace{\sum_{k=1}^{C} \eta_i^k}}
-		\end{eqnarray*}
+        \begin{eqnarray*}
+        \ln L_W & \propto & \sum_{i=1}^{N}\sum_{k=1}^{C} \; \eta_i^k  \cro{ f_k\pa{W,X_i} - \ln
+        \cro{\sum_{l=1}^{C}e^{f_l\pa{W,X_i}}}} \\
+        \ln L_W & \propto & \sum_{i=1}^{N}\sum_{k=1}^{C} \; \eta_i^k  f_k\pa{W,X_i} -
+                          \sum_{i=1}^{N}  \ln \cro{\sum_{l=1}^{C}e^{f_l\pa{W,X_i}}}
+                          \underset{=1}{\underbrace{\sum_{k=1}^{C} \eta_i^k}}
+        \end{eqnarray*}
 
 D'où :
 

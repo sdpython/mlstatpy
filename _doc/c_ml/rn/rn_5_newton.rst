@@ -96,7 +96,7 @@ Donc :
 
     \begin{eqnarray}
     h_{t+1} -h_{t} &=&\left\|  W_{t}-\varepsilon_{t}\,\nabla g\left( W_{t}\right) -W^{\ast }\right\|
-    			  ^{2}-\left\|W_{t}-W^{\ast}\right\| ^{2}
+                  ^{2}-\left\|W_{t}-W^{\ast}\right\| ^{2}
     \end{eqnarray}
 
 Par conséquent :
@@ -125,7 +125,7 @@ alors en multipliant des deux côtés par :math:`\pi_{t+1}`, on obtient :
     \text{d'où }\pi_{q+1}h_{q+1}-\pi_{p}h_{p} &\leqslant&
                     \sum_{t=p}^q \varepsilon_{t}^{2}\,A^{2}\pi_{t+1} \leqslant
     \sum_{t=p}^{q} \varepsilon_{t}^{2} \, A^{2}\Pi  \leqslant \sum_{t=p}^{q} \varepsilon_{t}^{2}\,A^{2}\Pi
-    			 \underset{t \longrightarrow
+                 \underset{t \longrightarrow
     \infty}{\longrightarrow} 0
     \end{array}
 

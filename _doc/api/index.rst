@@ -11,3 +11,4 @@ API
     data
     graph
     image
+    modules/index

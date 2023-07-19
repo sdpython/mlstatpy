@@ -977,7 +977,7 @@ Bibliographie
     *Arthur, D.; Vassilvitskii, S.*,
     Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms.
     Society for Industrial and Applied Mathematics Philadelphia, PA, USA. pp. 1027–1035.
-    `PDF <http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf>`_.
+    `2006-13.pdf <http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf>`_.
 
 .. [Balakrishnan1996] Comparative performance of the FSCL neural net and K-means algorithm for market segmentation (1996),
    P. V. Sundar Balakrishnan, Martha Cooper, Varghese S. Jacob, Phillip A. Lewis,
@@ -986,8 +986,8 @@ Bibliographie
 .. [Bahmani2012] Scalable K-Means++ (2012),
     *Bahman Bahmani, Benjamin Moseley, Andrea Vattani, Ravi Kumar, Sergei Vassilvitskii*,
     Proceedings of the VLDB Endowment (PVLDB), Vol. 5, No. 7, pp. 622-633 (2012)
-    `PDF <http://theory.stanford.edu/~sergei/papers/vldb12-kmpar.pdf>`_,
-    `arXiv <https://arxiv.org/abs/1203.6402>`_
+    `vldb12-kmpar.pdf <http://theory.stanford.edu/~sergei/papers/vldb12-kmpar.pdf>`_,
+    `arXiv.1203.6402 <https://arxiv.org/abs/1203.6402>`_
 
 .. [Cheung2003] :math:`k^*`-Means: A new generalized k-means clustering algorithm (2003),
    Yiu-Ming Cheung,

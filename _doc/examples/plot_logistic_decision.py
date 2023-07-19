@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 .. _l-example-logistic-decision:
 
@@ -10,7 +11,6 @@ déterminer un seuil qui sépare les deux classes ou tout
 du moins qui aboutisse à deux sous-ensemble dans lesquels
 une classe est majoritaire. Mais certains cas, c'est une
 chose compliquée.
-
 
 .. contents::
     :local:

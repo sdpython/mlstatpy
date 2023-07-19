@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-@file
-@brief Conversion from tree to neural network.
-"""
+# coding: utf-8
+
 import numpy
 import numpy.random as rnd
 from scipy.special import expit, softmax, kl_div as kl_fct  # pylint: disable=E0611
@@ -17,8 +14,7 @@ class NeuralTreeNode(_TrainingAPI):
     :param bias: bias, if None, draws a random number
     :param activation: activation function
     :param nodeid: node id
-    :param tag: unused but to add information
-        on how this node was created
+    :param tag: unused but to add information on how this node was created
     """
 
     @staticmethod
@@ -100,9 +96,9 @@ class NeuralTreeNode(_TrainingAPI):
         .. math::
 
             \\begin{array}{l}
-            f(x) &=& \frac{1}{1 + e^{-x}} \\\\
-            f'(x) &=& \frac{e^{-x}}{(1 + e^{-x})^2} = f(x)(1-f(x))
-            \\end{array}}
+            f(x) &=& \\frac{1}{1 + e^{-x}} \\\\
+            f'(x) &=& \\frac{e^{-x}}{(1 + e^{-x})^2} = f(x)(1-f(x))
+            \\end{array}
         """
         if activation == "softmax":
             return NeuralTreeNode._dsoftmax

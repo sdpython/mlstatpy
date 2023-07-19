@@ -21,8 +21,8 @@ Notion de trie
 Une implémentation des tries est décrites dans deux notebooks :
 `Arbre et Trie <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx/notebooks/_gs1a_A_arbre_trie.html>`_.
 Les résultats de ce chapitre ont été produits avec le module :mod:`completion <mlstatpy.nlp.completion>`
-et le notebook :ref:`completion_trie.ipynb`. Le notebook
-:ref:`completion_profiling.ipynb` montre les résultats du profiling.
+et le notebook :ref:`/notebooks/nlp/completion_trie.ipynb`. Le notebook
+:ref:`/notebooks/nlp/completion_profiling.ipynb` montre les résultats du profiling.
 L'implémentation Python est très gourmande en mémoire et elle serait
 plus efficace en C++.
 

@@ -6,16 +6,14 @@
 import os
 import unittest
 import itertools
-from pyquickhelper.loghelper import fLOG
+from pyquickhelper.pycode import ExtTestCase
 from mlstatpy.nlp.completion import CompletionTrieNode
 from mlstatpy.data.wikipedia import normalize_wiki_text, enumerate_titles
 from mlstatpy.nlp.normalize import remove_diacritics
 
 
-class TestCompletion(unittest.TestCase):
+class TestCompletion(ExtTestCase):
     def test_build_trie(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         queries = [(1, "a"), (2, "ab"), (3, "abc"), (4, "abcd"), (5, "bc")]
         trie = CompletionTrieNode.build(queries)
         res = list(trie.items())
@@ -37,13 +35,10 @@ class TestCompletion(unittest.TestCase):
             self.assertEqual(ks[0], ks[1])
 
     def test_build_trie_mks(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         queries = [(4, "a"), (2, "ab"), (3, "abc"), (1, "abcd")]
         trie = CompletionTrieNode.build(queries)
         nodes = trie.items_list()
         st = [str(_) for _ in nodes]
-        fLOG(st)
         self.assertEqual(
             st, ["[-::w=1]", "[#:a:w=4]", "[#:ab:w=2]", "[#:abc:w=3]", "[#:abcd:w=1]"]
         )
@@ -55,8 +50,6 @@ class TestCompletion(unittest.TestCase):
         )
 
     def test_build_trie_mks_min(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         queries = [(None, "a"), (None, "ab"), (None, "abc"), (None, "abcd")]
         trie = CompletionTrieNode.build(queries)
         gain = sum(len(w) - trie.min_keystroke(w)[0] for a, w in queries)
@@ -64,11 +57,10 @@ class TestCompletion(unittest.TestCase):
         for per in itertools.permutations(queries):
             trie = CompletionTrieNode.build(per)
             gain = sum(len(w) - trie.min_keystroke(w)[0] for a, w in per)
-            fLOG(gain, per)
+            self.assertNotEmpty(trie)
+            self.assertNotEmpty(gain)
 
     def test_build_dynamic_trie_mks_min(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         queries = [(None, "a"), (None, "ab"), (None, "abc"), (None, "abcd")]
         trie = CompletionTrieNode.build(queries)
         trie.precompute_stat()
@@ -93,7 +85,7 @@ class TestCompletion(unittest.TestCase):
                 raise AssertionError(f"weird {mk} > {mk1}")
             if mk2[0] < mk[0]:
                 raise AssertionError(f"weird {mk} > {mk2}")
-            fLOG(leave.value, mk, "-", leave.stat.str_mks())
+            # print(leave.value, mk, "-", leave.stat.str_mks())
             self.assertEqual(mk, (leave.stat.mks0, leave.stat.mks0_, leave.stat.mks1i_))
             text = leave.str_all_completions()
             assert text
@@ -101,17 +93,15 @@ class TestCompletion(unittest.TestCase):
             assert text
 
     def test_permutations(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         queries = ["actuellement", "actualité", "actu"]
         weights = [1, 1, 0]
         for per in itertools.permutations(zip(queries, weights)):
             trie = CompletionTrieNode.build([(None, w) for w, p in per])
             trie.precompute_stat()
             trie.update_stat_dynamic()
-            fLOG("----", per)
+            # print("----", per)
             for n in trie.leaves():
-                fLOG("   ", n.value, n.stat.str_mks())
+                # print("   ", n.value, n.stat.str_mks())
                 assert n.stat.mks1 <= n.stat.mks0
                 a = trie.min_dynamic_keystroke(n.value)[0]
                 self.assertEqual(a, n.stat.mks1)
@@ -134,8 +124,6 @@ class TestCompletion(unittest.TestCase):
                     raise AssertionError("difference\n{0}".format("\n".join(mes)))
 
     def test_normalize(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         this = os.path.abspath(os.path.dirname(__file__))
         this = os.path.join(this, "data", "wikititles.txt")
         with open(this, "r", encoding="utf-8") as f:
@@ -144,13 +132,11 @@ class TestCompletion(unittest.TestCase):
             line = line.strip(" \r\n\t")
             cl = normalize_wiki_text(line)
             lo = remove_diacritics(cl).lower()
-            fLOG(line, cl, lo)
+            # print(line, cl, lo)
             assert len(line) >= len(cl)
             assert len(line) >= len(lo)
 
     def test_load_titles(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         this = os.path.abspath(os.path.dirname(__file__))
         this = os.path.join(this, "data", "wikititles.txt")
         titles = sorted(enumerate_titles(this))
@@ -161,9 +147,9 @@ class TestCompletion(unittest.TestCase):
             if wc not in res:
                 res[wc] = w
             else:
-                fLOG(f"duplicated key: '{w}', '{res[wc]}', key: '{wc}'")
+                # print(f"duplicated key: '{w}', '{res[wc]}', key: '{wc}'")
                 dups += 1
-        fLOG("len(titles)=", len(res), "duplicated", dups)
+        # print("len(titles)=", len(res), "duplicated", dups)
         titles = list(sorted((None, k, v) for k, v in res.items()))
         self.assertEqual(titles[-1], (None, "grand russe", "Grand Russe"))
         self.assertEqual(titles[-2], (None, "grand rue de pera", "Grand Rue de Pera"))
@@ -204,13 +190,13 @@ class TestCompletion(unittest.TestCase):
             return nb, gmks, gmksd, size
 
         nb, gmks, gmksd, size = cmks(trie)
-        fLOG(nb, size, gmks / nb, gmksd / nb, gmks / size, gmksd / size)
+        # print(nb, size, gmks / nb, gmksd / nb, gmks / size, gmksd / size)
         if gmks > gmksd:
             raise AssertionError(f"gmks={gmks} gmksd={gmksd}")
         if gmksd == 0:
             i = 0
             for node in trie:
-                fLOG(node.value, "--", node.stat.str_mks())
+                # print(node.value, "--", node.stat.str_mks())
                 if i > 20:
                     break
                 i += 1
@@ -222,18 +208,16 @@ class TestCompletion(unittest.TestCase):
         self.assertEqual(gmks, gmks2)
         self.assertEqual(gmksd, gmksd2)
         assert gmksd > 0.62
-        fLOG(nb2, gmks2 / nb2, gmksd2 / nb2)
-        fLOG("-----")
+        # print(nb2, gmks2 / nb2, gmksd2 / nb2)
+        # print("-----")
         for i in range(1, 20):
             trie = CompletionTrieNode.build(titles[:i])
             nb, gmks, gmksd, size = cmks(trie)
             if i == 1:
                 self.assertEqual(gmks, 30)
-            fLOG(i, nb, size, gmks / nb, gmksd / nb, gmks / size, gmksd / size, gmks)
+            # print(i, nb, size, gmks / nb, gmksd / nb, gmks / size, gmksd / size, gmks)
 
     def test_mks_consistency(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         def cmks(trie):
             trie.precompute_stat()
             trie.update_stat_dynamic()
@@ -253,36 +237,35 @@ class TestCompletion(unittest.TestCase):
         ]
         trie = CompletionTrieNode.build(titles)
         nb, gmks, gmksd, size = cmks(trie)
-        fLOG("***", 1, nb, size, gmks / nb, gmksd / nb, gmks / size, gmksd / size, gmks)
+        # print("***", 1, nb, size, gmks / nb, gmksd / nb,
+        #       gmks / size, gmksd / size, gmks)
         self.assertEqual(gmks, 30)
 
         titles.append((None, '"la sequestree"', '"La séquestrée'))
         trie = CompletionTrieNode.build(titles)
         nb, gmks, gmksd, size = cmks(trie)
-        fLOG("***", 2, nb, size, gmks / nb, gmksd / nb, gmks / size, gmksd / size, gmks)
-        for n in trie.leaves():
-            fLOG("***", n.value, n.stat.str_mks())
+        # print("***", 2, nb, size, gmks / nb, gmksd / nb,
+        #       gmks / size, gmksd / size, gmks)
+        # for n in trie.leaves():
+        # print("***", n.value, n.stat.str_mks())
         self.assertEqual(gmks, 43)
 
     def test_duplicates(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         titles = ["abdcf", "abdcf"]
         try:
-            fLOG(titles)
+            # print(titles)
             trie = CompletionTrieNode.build(
                 [(None, remove_diacritics(w).lower(), w) for w in titles]
             )
-            fLOG(trie)
+            # print(trie)
             le = list(trie)
             assert len(le) == 6
             assert trie is not None
-        except ValueError as e:
-            fLOG(e)
+        except ValueError:
+            # print(e)
+            pass
 
     def test_completions(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         this = os.path.abspath(os.path.dirname(__file__))
         data = os.path.join(this, "data", "sample300.txt")
         with open(data, "r", encoding="utf-8") as f:
@@ -311,4 +294,4 @@ class TestCompletion(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)

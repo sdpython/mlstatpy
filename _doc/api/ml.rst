@@ -28,9 +28,8 @@ Matrices
 Métriques
 +++++++++
 
-.. autoclass:: mlstatpy.ml.ml_grid_benchmark.MlGridBenchMark
-
 .. autoclass:: mlstatpy.ml.roc.ROC
+    :noindex:
 
 .. autofunction:: mlstatpy.ml.voronoi.voronoi_estimation_from_lr
 
@@ -38,18 +37,25 @@ Plus proches voisins
 ++++++++++++++++++++
 
 .. autoclass:: mlstatpy.ml.kppv.NuagePoints
+    :noindex:
 
 .. autoclass:: mlstatpy.ml.kppv_laesa.NuagePointsLaesa
+    :noindex:
 
 Tree and neural networks
 ++++++++++++++++++++++++
 
 .. autoclass:: mlstatpy.ml._neural_tree_node.NeuralTreeNode
+    :noindex:
 
 .. autoclass:: mlstatpy.ml.neural_tree.NeuralTreeNet
+    :noindex:
 
 .. autoclass:: mlstatpy.ml.neural_tree.BaseNeuralTreeNet
+    :noindex:
 
 .. autoclass:: mlstatpy.ml.neural_tree.NeuralTreeNetClassifier
+    :noindex:
 
 .. autoclass:: mlstatpy.ml.neural_tree.NeuralTreeNetRegressor
+    :noindex:

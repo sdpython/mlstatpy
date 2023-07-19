@@ -1,12 +1,12 @@
 
+.. index:: p-value, intervalle de confiance
+    
 ===============================
 Confidence Interval and p-Value
 ===============================
 
 .. contents::
     :local:
-
-.. index:: p-value, intervalle de confiance
 
 This document explains the relationship between p-value and confidence intervals.
 It goes on with the specific case of a binamial law. Assuming we want to determine
@@ -184,8 +184,6 @@ this expression becomes:
     \frac{N_1}{N_2} \rightarrow x \end{subarray}}{\longrightarrow}
     \loinormale{\eta_0}{\sqrt{ \frac{\var{X}}{N_1}+\frac{\var{Y}}{N_2} }}
     \end{eqnarray*}
-
-.. _l-section_pvalues_table:
 
 Application on binomial variables
 =================================
@@ -369,10 +367,8 @@ That's allways the case when two version of the sam websire are compared
 in a test `A/B <https://fr.wikipedia.org/wiki/Test_A/B>`_.
 The metrics are correlated but it is unlikely that all metrics
 differences will be significant or not.
-The :epkg:`Holm–Bonferroni method`
+The :epkg:`Holm-Bonferroni method`
 proposes a way to define an hypthesis on the top of the existing ones.
-
-.. _l-section_pvalues_table_em:
 
 Algorithm Expectation-Maximization
 ==================================
@@ -394,9 +390,9 @@ the class we do not observe are :math:`(C_1,...C_n)`:
 .. math::
     :nowrap:
 
-    \begin{eqnarray}
+    \begin{eqnarray*}
     L(\theta) = \prod_i \cro{ p^{X_i}(1-p)^{(1-X_i)} \pi }^{1-C_i} \cro{q^{X_i}(1-q)^{(1-X_i)}  (1-\pi)  }^{C_i}
-    \end{eqnarray}
+    \end{eqnarray*}
 
 The parameters are :math:`\theta=(\pi,p,q)`. We use an algorithm
 `Expectation-Maximization (EM) <https://en.wikipedia.org/wiki/Expectation%E2%80%93maximization_algorithm>`_
@@ -418,12 +414,13 @@ We then update the parameters:
     :nowrap:
 
     \begin{eqnarray*}
-    \widehat{\pi} &=&  \frac{1}{n} \sum_{i = 1}^n w_i \\
-    \widehat{p} 	&=&  \frac{  \sum_{i = 1}^n w_i X_i }{  \sum_{i = 1}^n w_i} \\
-    \widehat{q} 	&=&  \frac{  \sum_{i = 1}^n (1-w_i) X_i }{  \sum_{i = 1}^n (1-w_i)}
+    \widehat{\pi}   &=&  \frac{1}{n} \sum_{i = 1}^n w_i \\
+    \widehat{p}     &=&  \frac{  \sum_{i = 1}^n w_i X_i }{  \sum_{i = 1}^n w_i} \\
+    \widehat{q}     &=&  \frac{  \sum_{i = 1}^n (1-w_i) X_i }{  \sum_{i = 1}^n (1-w_i)}
     \end{eqnarray*}
 
-See also `Applying the EM Algorithm: Binomial Mixtures <http://statisticalrecipes.blogspot.fr/2012/04/applying-em-algorithm-binomial-mixtures.html>`_.
+See also `Applying the EM Algorithm: Binomial Mixtures
+<https://statisticalrecipes.blogspot.fr/2012/04/applying-em-algorithm-binomial-mixtures.html>`_.
 
 Notebooks
 =========
@@ -437,6 +434,8 @@ The following notebook produces the figures displayed in this document.
 Bibliographie
 =============
 
-* `p-Value and Statistical Practice <http://www.stat.columbia.edu/~gelman/research/published/pvalues3.pdf>`_
-* `An investigation of the false discovery rate and the misinterpretation of p-values <http://rsos.royalsocietypublishing.org/content/royopensci/1/3/140216.full.pdf>`_
-* :epkg:`Holm–Bonferroni method`
+* `p-Value and Statistical Practice
+  <https://www.stat.columbia.edu/~gelman/research/published/pvalues3.pdf>`_
+* `An investigation of the false discovery rate and the misinterpretation of p-values
+  <https://rsos.royalsocietypublishing.org/content/royopensci/1/3/140216.full.pdf>`_
+* :epkg:`Holm-Bonferroni method`

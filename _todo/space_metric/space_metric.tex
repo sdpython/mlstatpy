@@ -23,13 +23,13 @@
 \sloppy
 
 
-Chercher des mots identiques ou similaires dans un dictionnaire est un problème classique et peut être défini pour tout espace métrique. \indexfr{dictionnaire}\indexfr{lexique}\indexfr{plus proches voisins}\indexfrr{distance}{édition} Soit $\pa{E,d}$ un espace métrique quelconque et $D \subset E$ un ensemble fini quelconque, $x \in E$ est un élément de $E$ et $s \in \R_+$ un réel positif. L'objectif est de trouver le sous-ensemble $D'\pa{x,s} \subset D$ des voisins les plus proches de $x$ tels que~:
+Chercher des mots identiques ou similaires dans un dictionnaire est un problï¿½me classique et peut ï¿½tre dï¿½fini pour tout espace mï¿½trique. \indexfr{dictionnaire}\indexfr{lexique}\indexfr{plus proches voisins}\indexfrr{distance}{ï¿½dition} Soit $\pa{E,d}$ un espace mï¿½trique quelconque et $D \subset E$ un ensemble fini quelconque, $x \in E$ est un ï¿½lï¿½ment de $E$ et $s \in \R_+$ un rï¿½el positif. L'objectif est de trouver le sous-ensemble $D'\pa{x,s} \subset D$ des voisins les plus proches de $x$ tels que~:
 
     $$
     D'\pa{x,s} = \acc{  y \in D \sac d\pa{x,y} \infegal s}
     $$
 
-Afin de déterminer les voisins de $x$, une méthode simple consiste à estimer toutes les distances entre $x$ et les éléments de $D$. Le coût de cette méthode est proportionnel au nombre d'éléments de $D$ et à la complexité du calcul de la distance. On distingue généralement deux directions afin d'améliorer la rapidité des algorithmes de recherche~:
+Afin de dï¿½terminer les voisins de $x$, une mï¿½thode simple consiste ï¿½ estimer toutes les distances entre $x$ et les ï¿½lï¿½ments de $D$. Le coï¿½t de cette mï¿½thode est proportionnel au nombre d'ï¿½lï¿½ments de $D$ et ï¿½ la complexitï¿½ du calcul de la distance. On distingue gï¿½nï¿½ralement deux directions afin d'amï¿½liorer la rapiditï¿½ des algorithmes de recherche~:
 
     \begin{enumerate}
     \item L'optimisation du calcul de la distance.
@@ -37,7 +37,7 @@ Afin de déterminer les voisins de $x$, une méthode simple consiste à estimer tou
     \end{enumerate}
 
 
-Les méthodes présentées dans ce chapitre concerne la seconde direction, plus générale que la première.
+Les mï¿½thodes prï¿½sentï¿½es dans ce chapitre concerne la seconde direction, plus gï¿½nï¿½rale que la premiï¿½re.
 
 
 
@@ -47,116 +47,116 @@ Les méthodes présentées dans ce chapitre concerne la seconde direction, plus gén
 
 
 %-------------------------------------------------------------------------------------------------------------
-\section{Classification ascendante hiérarchique}
+\section{Classification ascendante hiï¿½rarchique}
 %-------------------------------------------------------------------------------------------------------------
 
-Cette méthode reprend celle décrite dans l'article \citeindex{Dupré2003}.
+Cette mï¿½thode reprend celle dï¿½crite dans l'article \citeindex{Duprï¿½2003}.
 
 
 \subsection{Arbre de partitionnement}
 \label{section_partitionning_tree}
 \indexfr{partitionnement}\indexfrr{arbre}{partitionnement}
 
-L'objectif de cette partie est de construire un arbre de partitionnement qui sera utilisé ensuite afin d'améliorer la recherche des plus proches voisins au paragraphe~\ref{section_optimisation_distance}.
+L'objectif de cette partie est de construire un arbre de partitionnement qui sera utilisï¿½ ensuite afin d'amï¿½liorer la recherche des plus proches voisins au paragraphe~\ref{section_optimisation_distance}.
 
 
-			\begin{xdefinition}{rayon et centre d'un ensemble discret}
-			\indexfr{centre}\indexfr{rayon}
-			\label{definition_center_radius}%
-			Soit $D = \vecteur{y_1}{y_N} \subset E$ un ensemble fini de $E$, le centre $C\pa{D}$ de $D$ 
-			est défini par~:
-			    $$
-			    C\pa{D} \in \underset {x \in D} {\arg \min} \cro{  \underset{y \in D} {\max} \; d\pa{x,y}}
-			    $$
-			où $d\pa{x,y}$ est la distance entre les éléments $x$ et $y$. On définit aussi le rayon $R\pa{D}$ 
-			de $D$ par~:
-			    $$
-			    R\pa{D} = \underset{x \in D} {\max} \; d\pa{C\pa{D},y}
-			    $$
-			\end{xdefinition}
+            \begin{xdefinition}{rayon et centre d'un ensemble discret}
+            \indexfr{centre}\indexfr{rayon}
+            \label{definition_center_radius}%
+            Soit $D = \vecteur{y_1}{y_N} \subset E$ un ensemble fini de $E$, le centre $C\pa{D}$ de $D$ 
+            est dï¿½fini par~:
+                $$
+                C\pa{D} \in \underset {x \in D} {\arg \min} \cro{  \underset{y \in D} {\max} \; d\pa{x,y}}
+                $$
+            oï¿½ $d\pa{x,y}$ est la distance entre les ï¿½lï¿½ments $x$ et $y$. On dï¿½finit aussi le rayon $R\pa{D}$ 
+            de $D$ par~:
+                $$
+                R\pa{D} = \underset{x \in D} {\max} \; d\pa{C\pa{D},y}
+                $$
+            \end{xdefinition}
 
 
 
 \begin{xremark}{cas particulier}
 Si $A,B \subset D$ et $A \subset B$, cela n'implique pas que $R\pa{A} \infegal R\pa{B}$ comme le montre la
-figure~\ref{figure_partition_inclusion} où $$R\pa{A} = d\pa{x,y} > d\pa{x,z} = R\pa{B}$$.
+figure~\ref{figure_partition_inclusion} oï¿½ $$R\pa{A} = d\pa{x,y} > d\pa{x,z} = R\pa{B}$$.
 \end{xremark}
 
 
 
-		\begin{figure}[ht]
+        \begin{figure}[ht]
     \[
     \unitlength 1mm
     \fbox{
     \filefig{../space_metric/fig_ray}
     }
     \]
-    \caption{Exemple où ajouter un élément à un sous-ensemble aboutit à une réduction du rayon.}
+    \caption{Exemple oï¿½ ajouter un ï¿½lï¿½ment ï¿½ un sous-ensemble aboutit ï¿½ une rï¿½duction du rayon.}
     \label{figure_partition_inclusion}
-		\end{figure}
+        \end{figure}
 
 
 
-		\begin{xproperty}{rayon d'un couple d'éléments}\label{property_001}%
-		Soit $\pa{x,y} \in E^2$ deux éléments de $E$, alors $R\acc{x,y} = d\pa{x,y}$.\\
-		\end{xproperty}
+        \begin{xproperty}{rayon d'un couple d'ï¿½lï¿½ments}\label{property_001}%
+        Soit $\pa{x,y} \in E^2$ deux ï¿½lï¿½ments de $E$, alors $R\acc{x,y} = d\pa{x,y}$.\\
+        \end{xproperty}
 
 L'algorithme~\ref{algorithm_AHC}\footnote{
 Autre formulation~:
 
-			\begin{xalgorithm}{Arbre de partionnement}
-			\label{algorithm_AHC_prime}%
-			Soit $D= \vecteur{y_1}{y_N}$ un ensemble fini de $\pa{E,d}$. Soit $N\pa{n_1,n_2,C,R}$ un n\oe ud 
-			lié à ses deux précédesseurs $n_1,n_2$ et qui définit une partie dont le centre est $C$ et le rayon $R$. 
-			$L$ représente un ensemble de n\oe uds. Si $x$ est un n\oe ud, $P\pa{x}$ désigne la partie réunion 
-			de tous les centres des ancêtres de $x$.
-			
-			\begin{xalgostep}{initialisation}
-			    Pour t$ y \in D$, on ajoute le n\oe ud$N\pa{ \emptyset,\emptyset,y,0}$ à $L$.
-			\end{xalgostep}
-			    
-			\begin{xalgostep}{recherche de la meilleure réunion}\label{space_metric_step_cah_cah_2}
-			    Soit $\pa{x,y} \in \underset{ x,y \in L, \, x \neq y }
-			    																{\arg \min} \; R\pa{ P\pa{x} \cup P\pa{y} }$.
-			    Le n\oe ud \\
-			    									$	z =		 N\pa{	x,y, 
-			    													C\pa{ P\pa{x} \cup P\pa{y} } , 
-			    													R\pa{ P\pa{x} \cup P\pa{y} } }$ est créé et 
-			    $L \longleftarrow L \cup {z} - \acc{x,y}$
-			\end{xalgostep}
-			    
-			\begin{xalgostep}{terminaison}
-					Si $L$ contient plus d'un n\oe ud, retour à l'étape~\ref{space_metric_step_cah_cah_2}.
-			\end{xalgostep}
-			\end{xalgorithm}
-} est basé sur une classification ascendante hiérarchique (voir \citeindex{Saporta1990}, \citeindex{Reinert1979}),\indexfr{CAH} il construit une hiérarchie de partitions décrite par un graphe. \indexfr{n\oe ud}
+            \begin{xalgorithm}{Arbre de partionnement}
+            \label{algorithm_AHC_prime}%
+            Soit $D= \vecteur{y_1}{y_N}$ un ensemble fini de $\pa{E,d}$. Soit $N\pa{n_1,n_2,C,R}$ un n\oe ud 
+            liï¿½ ï¿½ ses deux prï¿½cï¿½desseurs $n_1,n_2$ et qui dï¿½finit une partie dont le centre est $C$ et le rayon $R$. 
+            $L$ reprï¿½sente un ensemble de n\oe uds. Si $x$ est un n\oe ud, $P\pa{x}$ dï¿½signe la partie rï¿½union 
+            de tous les centres des ancï¿½tres de $x$.
+            
+            \begin{xalgostep}{initialisation}
+                Pour t$ y \in D$, on ajoute le n\oe ud$N\pa{ \emptyset,\emptyset,y,0}$ ï¿½ $L$.
+            \end{xalgostep}
+                
+            \begin{xalgostep}{recherche de la meilleure rï¿½union}\label{space_metric_step_cah_cah_2}
+                Soit $\pa{x,y} \in \underset{ x,y \in L, \, x \neq y }
+                                                                                {\arg \min} \; R\pa{ P\pa{x} \cup P\pa{y} }$.
+                Le n\oe ud \\
+                                                    $    z =         N\pa{    x,y, 
+                                                                    C\pa{ P\pa{x} \cup P\pa{y} } , 
+                                                                    R\pa{ P\pa{x} \cup P\pa{y} } }$ est crï¿½ï¿½ et 
+                $L \longleftarrow L \cup {z} - \acc{x,y}$
+            \end{xalgostep}
+                
+            \begin{xalgostep}{terminaison}
+                    Si $L$ contient plus d'un n\oe ud, retour ï¿½ l'ï¿½tape~\ref{space_metric_step_cah_cah_2}.
+            \end{xalgostep}
+            \end{xalgorithm}
+} est basï¿½ sur une classification ascendante hiï¿½rarchique (voir \citeindex{Saporta1990}, \citeindex{Reinert1979}),\indexfr{CAH} il construit une hiï¿½rarchie de partitions dï¿½crite par un graphe. \indexfr{n\oe ud}
 
 
 
 
 
-			\begin{xalgorithm}{classification ascendante hiérarchique}\label{algorithm_AHC}%
-			Soit $D= \vecteur{y_1}{y_N}$ un sous-ensemble fini de $\pa{E,d}$. On note $P_n$
-			une partie contenant les éléments $P_n = \acc{p_{n,1} \; , ... , \; p_{n, \cro{card\pa{D}-n+1}}}$.
-			L'algorithme a pour but de construire la suite de partitions $\pa{P_n}_{n \supegal 1}$ comme suit~:
-			
-			\begin{xalgostep}{initialisation}
-			    $n = 1$ et $P_1$ est la partition où chaque élément de $D$ est un élément de $P_1$
-			\end{xalgostep}
-			
-			\begin{xalgostep}{récurrence}\label{space_cah_algo_step}
-			    \begin{xfor}{n}{1}{N-1}
-			        soit $\pa{i^*_n,j^*_n} \in \underset{ i \neq j }{\arg \min} \; R\pa{p_{ni} \cup p_{nj} }$, alors
-			        $P_{n+1} = \acc{ \pa{p_{nk}}_{k \neq i^*_n,j^*_n}, p_{ni^*} \cup p_{nj^*} }$
-			    \end{xfor}
-			\end{xalgostep}
-			
-			\end{xalgorithm}
+            \begin{xalgorithm}{classification ascendante hiï¿½rarchique}\label{algorithm_AHC}%
+            Soit $D= \vecteur{y_1}{y_N}$ un sous-ensemble fini de $\pa{E,d}$. On note $P_n$
+            une partie contenant les ï¿½lï¿½ments $P_n = \acc{p_{n,1} \; , ... , \; p_{n, \cro{card\pa{D}-n+1}}}$.
+            L'algorithme a pour but de construire la suite de partitions $\pa{P_n}_{n \supegal 1}$ comme suit~:
+            
+            \begin{xalgostep}{initialisation}
+                $n = 1$ et $P_1$ est la partition oï¿½ chaque ï¿½lï¿½ment de $D$ est un ï¿½lï¿½ment de $P_1$
+            \end{xalgostep}
+            
+            \begin{xalgostep}{rï¿½currence}\label{space_cah_algo_step}
+                \begin{xfor}{n}{1}{N-1}
+                    soit $\pa{i^*_n,j^*_n} \in \underset{ i \neq j }{\arg \min} \; R\pa{p_{ni} \cup p_{nj} }$, alors
+                    $P_{n+1} = \acc{ \pa{p_{nk}}_{k \neq i^*_n,j^*_n}, p_{ni^*} \cup p_{nj^*} }$
+                \end{xfor}
+            \end{xalgostep}
+            
+            \end{xalgorithm}
 
 
 
-La suite $\pa{P_n}_{1 \infegal n \infegal N}$ définit un graphe d'inclusion illustré par la
-figure~\ref{figure_partition_inclusion_graph}) pour cinq éléments.\\
+La suite $\pa{P_n}_{1 \infegal n \infegal N}$ dï¿½finit un graphe d'inclusion illustrï¿½ par la
+figure~\ref{figure_partition_inclusion_graph}) pour cinq ï¿½lï¿½ments.\\
 
 
 
@@ -167,7 +167,7 @@ figure~\ref{figure_partition_inclusion_graph}) pour cinq éléments.\\
 
 
 \begin{xremark}{plusieurs minima}
-L'étape~\ref{space_cah_algo_step} impose de choisir un élément dans un ensemble de minima. Lorsque celui-ci contient plus d'un élément, une règle simple consiste à choisir le plus petit regroupement de deux parties parmi celles de rayon minimum. Cette règle a peu d'influence lorsque la construction de l'arbre s'effectue dans un espace continu. En revanche, pour un espace de mot muni d'une distance d'édition comme celle de Levenstein (voir~\citeindex{Levenstein1966}), ce cas se produit fréquemment puisque la distance est à valeurs entières. Cette règle accroît sensiblement les performances.
+L'ï¿½tape~\ref{space_cah_algo_step} impose de choisir un ï¿½lï¿½ment dans un ensemble de minima. Lorsque celui-ci contient plus d'un ï¿½lï¿½ment, une rï¿½gle simple consiste ï¿½ choisir le plus petit regroupement de deux parties parmi celles de rayon minimum. Cette rï¿½gle a peu d'influence lorsque la construction de l'arbre s'effectue dans un espace continu. En revanche, pour un espace de mot muni d'une distance d'ï¿½dition comme celle de Levenstein (voir~\citeindex{Levenstein1966}), ce cas se produit frï¿½quemment puisque la distance est ï¿½ valeurs entiï¿½res. Cette rï¿½gle accroï¿½t sensiblement les performances.
 \end{xremark}
 
 
@@ -175,75 +175,75 @@ L'étape~\ref{space_cah_algo_step} impose de choisir un élément dans un ensemble 
 Chaque n\oe ud du graphe obtenu avec l'algorithme~\ref{algorithm_AHC} satisfait les conditions suivantes~:
 
 \begin{enumerate}
-\item Il n'a aucun prédécesseur\indexfr{prédécesseur} et la partie désignée par ce n\oe ud est un
+\item Il n'a aucun prï¿½dï¿½cesseur\indexfr{prï¿½dï¿½cesseur} et la partie dï¿½signï¿½e par ce n\oe ud est un
         singleton\indexfr{singleton} dont le rayon est nul. \indexfr{rayon}
-\item Il a deux prédécesseurs et la partie pointée par ce n\oe ud contient plus d'un élément, son rayon est strictement positif si au moins deux éléments sont différents.
-\item Il n'a aucun successeur\indexfr{successeur} et la partie que le n\oe ud désigne est le sous-ensemble $D$.
+\item Il a deux prï¿½dï¿½cesseurs et la partie pointï¿½e par ce n\oe ud contient plus d'un ï¿½lï¿½ment, son rayon est strictement positif si au moins deux ï¿½lï¿½ments sont diffï¿½rents.
+\item Il n'a aucun successeur\indexfr{successeur} et la partie que le n\oe ud dï¿½signe est le sous-ensemble $D$.
 \end{enumerate}
 
 
-		\begin{figure}[ht]
+        \begin{figure}[ht]
     \[\frame{
     \filefig{../space_metric/fig_cah}
     }\]
-    \caption{Graphe d'inclusion, la première partition contient une partie par élément de $D$ (les
+    \caption{Graphe d'inclusion, la premiï¿½re partition contient une partie par ï¿½lï¿½ment de $D$ (les
                 feuilles)\indexfr{feuille}, la seconde partition regroupe ensemble les plus 
-                proches éléments,
-                la troisième partition regroupe ensemble les couples d'éléments les plus proches, 
-                la quatrième partition
+                proches ï¿½lï¿½ments,
+                la troisiï¿½me partition regroupe ensemble les couples d'ï¿½lï¿½ments les plus proches, 
+                la quatriï¿½me partition
                 construit la partition de rayon minimum, le choix est entre
-                $\acc{x_1,x_2,x_3}$, $\acc{x_1,x_4,x_5}$, $\acc{x_2,x_3,x_4,x_5}$, la cinquième partition est
+                $\acc{x_1,x_2,x_3}$, $\acc{x_1,x_4,x_5}$, $\acc{x_2,x_3,x_4,x_5}$, la cinquiï¿½me partition est
                 l'ensemble $D$ complet.}
     \label{figure_partition_inclusion_graph}
-		\end{figure}
+        \end{figure}
 
 
 
-			\begin{xproperty}{nombre de n\oe uds}\label{property_node}
-			L'arbre construit par l'algorithme~\ref{algorithm_AHC} contient exactement $2N-1 = 2 * card\pa{D}-1$ 
-			n\oe uds.
-			\end{xproperty}
+            \begin{xproperty}{nombre de n\oe uds}\label{property_node}
+            L'arbre construit par l'algorithme~\ref{algorithm_AHC} contient exactement $2N-1 = 2 * card\pa{D}-1$ 
+            n\oe uds.
+            \end{xproperty}
 
 
 
 
-\begin{xdemo}{propriété}{\ref{property_node}}
-L'arbre construit par l'algorithme~\ref{algorithm_AHC} contient $N$ n\oe uds sans prédécesseur,
-\indexfr{prédécesseur} soit un n\oe ud par mot de $D$. A chaque itération, un n\oe ud est créé pour
-assembler deux parties entre elles. $N-1$ itérations sont nécessaires pour passer de $N$ parties à une seule. Donc, le nombre de n\oe ud de l'arbre est~:
+\begin{xdemo}{propriï¿½tï¿½}{\ref{property_node}}
+L'arbre construit par l'algorithme~\ref{algorithm_AHC} contient $N$ n\oe uds sans prï¿½dï¿½cesseur,
+\indexfr{prï¿½dï¿½cesseur} soit un n\oe ud par mot de $D$. A chaque itï¿½ration, un n\oe ud est crï¿½ï¿½ pour
+assembler deux parties entre elles. $N-1$ itï¿½rations sont nï¿½cessaires pour passer de $N$ parties ï¿½ une seule. Donc, le nombre de n\oe ud de l'arbre est~:
     $$ 
     N + \pa{N-1} = 2N-1
     $$
 \end{xdemo}
 
 
-Le théorème~\ref{theorem_hierarchy} montre que l'arbre construit par l'algorithme~\ref{algorithm_AHC} peut être
-considéré comme une hiérarchie pour un certain indice défini par le théorème.
+Le thï¿½orï¿½me~\ref{theorem_hierarchy} montre que l'arbre construit par l'algorithme~\ref{algorithm_AHC} peut ï¿½tre
+considï¿½rï¿½ comme une hiï¿½rarchie pour un certain indice dï¿½fini par le thï¿½orï¿½me.
 
 
-			\begin{xtheorem}{hiérarchie}\label{theorem_hierarchy}
-			\indexfr{hiérarchie}
-			Soit $\pa{P_n}_{1 \infegal n \infegal N}$ la suite construite par l'algorithme~\ref{algorithm_AHC}. 
-			Soit $i\pa{P_n}$ défini par~:
-			    $$
-			    i\pa{P_n} = \underset{p \in P_n} {\max} \, R\pa{p}
-			    $$
-			Alors, la suite $\pa{i\pa{P_n}}_{1 \infegal n \infegal N}$ est croissante.
-			\indexfrr{suite}{croissante}
-			\end{xtheorem}
+            \begin{xtheorem}{hiï¿½rarchie}\label{theorem_hierarchy}
+            \indexfr{hiï¿½rarchie}
+            Soit $\pa{P_n}_{1 \infegal n \infegal N}$ la suite construite par l'algorithme~\ref{algorithm_AHC}. 
+            Soit $i\pa{P_n}$ dï¿½fini par~:
+                $$
+                i\pa{P_n} = \underset{p \in P_n} {\max} \, R\pa{p}
+                $$
+            Alors, la suite $\pa{i\pa{P_n}}_{1 \infegal n \infegal N}$ est croissante.
+            \indexfrr{suite}{croissante}
+            \end{xtheorem}
 
 
 
 
 
-\begin{xdemo}{théorème}{\ref{theorem_hierarchy}}
+\begin{xdemo}{thï¿½orï¿½me}{\ref{theorem_hierarchy}}
 
-Afin que la démonstration soit plus claire, les partitions notées~:
+Afin que la dï¿½monstration soit plus claire, les partitions notï¿½es~:
     $$
     \pa{P_{ni}}_{  \begin{subarray}{l} 1 \infegal n \infegal N \\ 1 \infegal i \infegal N-n+1 \end{subarray}  }%
     \text{ avec } \forall \pa{n,i}, \; P_{ni} \neq \emptyset
     $$
-sont maintenant notées~:
+sont maintenant notï¿½es~:
     $$
     \pa{P_{ni}}_{\begin{subarray}{l} 1 \infegal n \infegal N \\ 1 \infegal i \infegal N \end{subarray}} %
     \text{ avec } \forall n, \; card \acc{ i | P_{ni} = \emptyset } = N-n+1
@@ -256,7 +256,7 @@ Donc~:
     \end{eqnarray*}
 
 Selon l'algorithme~\ref{algorithm_AHC}, $\exists \pa{a_{k+1},b_{k+1}} \in \intervalle{1}{N}^2$ tel que $a_{k+1}                 <         b_{k+1}$ et~:
-		$$
+        $$
     \begin{array}{l}
     P_{k+1}^{a_{k+1}}       =         P_{k}^{a_{k+1}} \cup P_{k}^{b_{k+1}} \; , \quad 
     P_{k+1}^{b_{k+1}}       =         \emptyset  \; , \quad  
@@ -266,19 +266,19 @@ Selon l'algorithme~\ref{algorithm_AHC}, $\exists \pa{a_{k+1},b_{k+1}} \in \inter
     \end{array}
     $$
 
-Soit $R_k^i = R \pa{P_k^i}$ et $C_k^i = C \pa{P^k_i}$. On impose aussi que si $P^k_i = \emptyset$ alors $R_k^i = 0$. Si l'assertion (\ref{equation_1}) est vraie alors le théorème~\ref{theorem_hierarchy} le sera aussi~:
+Soit $R_k^i = R \pa{P_k^i}$ et $C_k^i = C \pa{P^k_i}$. On impose aussi que si $P^k_i = \emptyset$ alors $R_k^i = 0$. Si l'assertion (\ref{equation_1}) est vraie alors le thï¿½orï¿½me~\ref{theorem_hierarchy} le sera aussi~:
     \begin{eqnarray}
     \forall k \in \intervalle{1}{N-1}, \, \forall i \in \intervalle{1}{N}, \, R_{k+1}^{a_{k+1}} \supegal R_{k}^i
     \label{equation_1}
     \end{eqnarray}
 
-Cette démonstratin s'effectue par récurrence. L'assertion (\ref{equation_1}) est vraie de manière évidente pour $k=2$ puisque~:
+Cette dï¿½monstratin s'effectue par rï¿½currence. L'assertion (\ref{equation_1}) est vraie de maniï¿½re ï¿½vidente pour $k=2$ puisque~:
 
     $$
     \forall i \in \intervalle{1}{N}, \, R_{1}^i = 0
     $$
 
-Donc, on suppose (\ref{equation_1}) est pour tout $k < N$, on cherche à montrer que (\ref{equation_1}) est aussi vraie pour $k+1$.
+Donc, on suppose (\ref{equation_1}) est pour tout $k < N$, on cherche ï¿½ montrer que (\ref{equation_1}) est aussi vraie pour $k+1$.
 
 
 \itemdemo
@@ -295,8 +295,8 @@ Donc :
 
     \begin{eqnarray}
     \forall i \in \intervalle{1}{N}, \, && 
-    						 i \notin \acc{a_k,b_k} \Longrightarrow R_k^{a_k} \supegal R_{k-1}^{i} = R_{k}^{i} 
-    						  \label{equation_2}
+                             i \notin \acc{a_k,b_k} \Longrightarrow R_k^{a_k} \supegal R_{k-1}^{i} = R_{k}^{i} 
+                              \label{equation_2}
     \end{eqnarray}
 
 Mais l'algorithme~\ref{theorem_hierarchy} implique que~:
@@ -310,7 +310,7 @@ Mais l'algorithme~\ref{theorem_hierarchy} implique que~:
             {\arg \min} \, R\pa{P_{k}^i \bigcup P_{k}^j}
     \end{eqnarray*}
 
-Par conséquent, $\acc{a_k,b_k} \bigcap \acc{a_{k+1},b_{k+1}} = \emptyset$ implique que~:
+Par consï¿½quent, $\acc{a_k,b_k} \bigcap \acc{a_{k+1},b_{k+1}} = \emptyset$ implique que~:
 
     \begin{eqnarray*}
     \acc{a_{k+1},b_{k+1}} \in \underset{  \begin{subarray}{c} i < j \\ i \neq a_k, j\neq b_k\\
@@ -323,7 +323,7 @@ Par conséquent, $\acc{a_k,b_k} \bigcap \acc{a_{k+1},b_{k+1}} = \emptyset$ impliq
     &\Longrightarrow& R\pa{ P_k^{a_{k}} }   \infegal R\pa{ P_{k+1}^{a_{k+1}} }
     \end{eqnarray*}
 
-D'où~:
+D'oï¿½~:
     \begin{eqnarray}
     \forall i \in \intervalle{1}{N}, \, R_{k+1}^{a_k} \supegal R_{k}^{i} \label{equation_reca_1}
     \end{eqnarray}
@@ -335,7 +335,7 @@ D'où~:
 \quad 
 \para{$2^\circ$ cas : $\acc{a_k,b_k} \bigcap \acc{a_{k+1},b_{k+1}} \neq \emptyset$} 
 
-Si $\acc{a_k,b_k} \bigcap \acc{a_{k+1},b_{k+1}} \neq \emptyset$, alors $a_{k+1} = a_k$ or $b_{k+1} = a_k$. Pour ces deux cas, la preuve est la même donc on suppose que $a_{k+1} = a_k$, alors :
+Si $\acc{a_k,b_k} \bigcap \acc{a_{k+1},b_{k+1}} \neq \emptyset$, alors $a_{k+1} = a_k$ or $b_{k+1} = a_k$. Pour ces deux cas, la preuve est la mï¿½me donc on suppose que $a_{k+1} = a_k$, alors :
     $$
     \forall i \in \intervalle{1}{N}, \, R_k^{a_k} \supegal R_{k}^{i} \quad \text{ (voir (\ref{equation_2}))}
     $$
@@ -365,14 +365,14 @@ Deux cas sont possibles~:
 \item si $C_{k+1}^{a_k} \in P_{k}^{b_{k+1}}$, alors l'algorithm~\ref{algorithm_AHC} implique que~:
     \begin{eqnarray}
     R_{k+1}^{a_k}   &=&         \max \Bigg\{  
-    														\underset{y \in P_{k}^{a_{k}}}{\max} \, d\pa{C_{k+1}^{a_k},y} , %\nonumber\\
+                                                            \underset{y \in P_{k}^{a_{k}}}{\max} \, d\pa{C_{k+1}^{a_k},y} , %\nonumber\\
                     %&& \quad \quad \quad \quad
                                 \underset{y \in P_{k}^{b_{k+1}}}{\max} \, d\pa{C_{k+1}^{a_k},y} 
                                 \Bigg \}\nonumber\\
                     &\supegal&  \max \acc{  \underset{y \in P_{k}^{a_{k}}}{\max} \, 
-                    											d\pa{C_{k+1}^{a_k},y} , R_k^{b_{k+1}} }\nonumber\\
+                                                                d\pa{C_{k+1}^{a_k},y} , R_k^{b_{k+1}} }\nonumber\\
                     &\supegal&  \max \Bigg\{  \underset{y \in P_{k-1}^{a_{k}}}{\max} \, 
-                    											d\pa{C_{k+1}^{a_k},y} , 
+                                                                d\pa{C_{k+1}^{a_k},y} , 
                                             \underset{y \in P_{k-1}^{b_{k}}}{\max} \, d\pa{C_{k+1}^{a_k},y} ,
                                             R_k^{b_{k+1}} \Bigg\}\nonumber\\
                     &\supegal&  \max \acc{  R_k^{a_{k}}  , R_k^{b_{k}} , R_k^{b_{k+1}} }\nonumber\\
@@ -381,8 +381,8 @@ Deux cas sont possibles~:
 \end{enumerate}
 
 
-En conclusion, la récurrence est démontrée par les inégalités (\ref{equation_reca_1}), (\ref{equation_reca_2}),
-(\ref{equation_reca_3}). Par conséquent, la suite d'indices $\pa{i\pa{P_n}}_{1 \infegal n \infegal N}$ est croissante.
+En conclusion, la rï¿½currence est dï¿½montrï¿½e par les inï¿½galitï¿½s (\ref{equation_reca_1}), (\ref{equation_reca_2}),
+(\ref{equation_reca_3}). Par consï¿½quent, la suite d'indices $\pa{i\pa{P_n}}_{1 \infegal n \infegal N}$ est croissante.
 
 
 \end{xdemo}
@@ -392,129 +392,129 @@ En conclusion, la récurrence est démontrée par les inégalités (\ref{equation_rec
 
 
 
-			\begin{xcorollary}{majoration du rayon}\label{corollary_AHC}%
-			Soit $D$ un sous-ensemble fini de $E$ et $A$ l'arbre obtenu grâce à l'algorithme~\ref{algorithm_AHC}, 
-			soit $n$ un n\oe ud quelconque de cet arbre, alors~:\indexfr{successeur}
-			    \begin{eqnarray}
-			    \textnormal{le successeur } s\pa{n} \text { de } n\; { existe} 
-			    \Longrightarrow R\pa{n} \infegal R\pa{s\pa{n}}
-			    \end{eqnarray}
-			\end{xcorollary}
+            \begin{xcorollary}{majoration du rayon}\label{corollary_AHC}%
+            Soit $D$ un sous-ensemble fini de $E$ et $A$ l'arbre obtenu grï¿½ce ï¿½ l'algorithme~\ref{algorithm_AHC}, 
+            soit $n$ un n\oe ud quelconque de cet arbre, alors~:\indexfr{successeur}
+                \begin{eqnarray}
+                \textnormal{le successeur } s\pa{n} \text { de } n\; { existe} 
+                \Longrightarrow R\pa{n} \infegal R\pa{s\pa{n}}
+                \end{eqnarray}
+            \end{xcorollary}
 
 
 Finalement, si $p_1$ et $p_2$ sont deux partitions de l'arbre de partitionnement, et $p_1 \subset p_2$, alors
-$R\pa{p_1} \infegal R\pa{p_2}$. Cette conclusion n'était pas évidente d'après le cas particulier de la figure~\ref{figure_partition_inclusion}. 
+$R\pa{p_1} \infegal R\pa{p_2}$. Cette conclusion n'ï¿½tait pas ï¿½vidente d'aprï¿½s le cas particulier de la figure~\ref{figure_partition_inclusion}. 
 
 
 
 
 
-L'objectif de cet algorithme est de grouper ensemble les éléments ou les parties les plus proches à chaque itération. La conséquence attendue est que le voisinage d'un mot soit concentré dans une branche de l'arbre. Néanmoins, le principal inconvénient de cet algorithme est son coût. Si on suppose que le coût de la distance est approchée par une constante $c$ et que l'ensemble à hiérarchiser contient $n$~éléments, le coût de l'algorithme est en $O\pa{c\,n^5}$. Ce coût peut être réduit en factorisant les calculs d'une itération à l'autre puisque la liste $L$ conserve $n-k-1$ n\oe uds inchangés. Cette remarque permet de ne calculer le centre et le rayon que pour les parties nouvellement créées. De la même manière, il est possible de conserver pour chaque n\oe ud, le meilleur voisin qui, à l'itération suivante, peut être resté le même ou être la partie qui vient d'être réunie. Finalement, il est possible de faire descendre le coût de l'algorithme à $O\pa{c \, n^3}$.
+L'objectif de cet algorithme est de grouper ensemble les ï¿½lï¿½ments ou les parties les plus proches ï¿½ chaque itï¿½ration. La consï¿½quence attendue est que le voisinage d'un mot soit concentrï¿½ dans une branche de l'arbre. Nï¿½anmoins, le principal inconvï¿½nient de cet algorithme est son coï¿½t. Si on suppose que le coï¿½t de la distance est approchï¿½e par une constante $c$ et que l'ensemble ï¿½ hiï¿½rarchiser contient $n$~ï¿½lï¿½ments, le coï¿½t de l'algorithme est en $O\pa{c\,n^5}$. Ce coï¿½t peut ï¿½tre rï¿½duit en factorisant les calculs d'une itï¿½ration ï¿½ l'autre puisque la liste $L$ conserve $n-k-1$ n\oe uds inchangï¿½s. Cette remarque permet de ne calculer le centre et le rayon que pour les parties nouvellement crï¿½ï¿½es. De la mï¿½me maniï¿½re, il est possible de conserver pour chaque n\oe ud, le meilleur voisin qui, ï¿½ l'itï¿½ration suivante, peut ï¿½tre restï¿½ le mï¿½me ou ï¿½tre la partie qui vient d'ï¿½tre rï¿½unie. Finalement, il est possible de faire descendre le coï¿½t de l'algorithme ï¿½ $O\pa{c \, n^3}$.
 
-Toutefois, pour des ensembles de plusieurs milliers d'éléments, l'algorithme~\ref{algorithm_AHC} demeure très long. Une optimisation consiste à adapter l'algorithme des centres mobiles\seeannex{emission_continue_centre_mobile}{centres mobiles}. L'algorithme s'inspire de l'algorithme~\ref{algo_centre_mobile} en remplaçant toutefois la notion de barycentre d'une partie par son centre (définition~\ref{definition_center_radius}) et l'inertie d'une partie par son rayon.
-
-
-			
+Toutefois, pour des ensembles de plusieurs milliers d'ï¿½lï¿½ments, l'algorithme~\ref{algorithm_AHC} demeure trï¿½s long. Une optimisation consiste ï¿½ adapter l'algorithme des centres mobiles\seeannex{emission_continue_centre_mobile}{centres mobiles}. L'algorithme s'inspire de l'algorithme~\ref{algo_centre_mobile} en remplaï¿½ant toutefois la notion de barycentre d'une partie par son centre (dï¿½finition~\ref{definition_center_radius}) et l'inertie d'une partie par son rayon.
 
 
+            
 
 
 
 
-\subsection{Ajouter un élément au graphe}
+
+
+\subsection{Ajouter un ï¿½lï¿½ment au graphe}
 \label{section_alternative}
 
-L'algorithme~\ref{algorithm_AHC} ne permet d'insérer de nouveaux n\oe uds une fois que celui-ci est construit, inconvénient auquel remédie l'algorithme~\ref{algorithm_insertion}. Ce dernier ajoute des n\oe uds au graphe de partitionnement et pourrait être également utilisé pour construire l'arbre entier en insérant un à un tous les éléments de $D$ mais cette méthode est moins efficace.
+L'algorithme~\ref{algorithm_AHC} ne permet d'insï¿½rer de nouveaux n\oe uds une fois que celui-ci est construit, inconvï¿½nient auquel remï¿½die l'algorithme~\ref{algorithm_insertion}. Ce dernier ajoute des n\oe uds au graphe de partitionnement et pourrait ï¿½tre ï¿½galement utilisï¿½ pour construire l'arbre entier en insï¿½rant un ï¿½ un tous les ï¿½lï¿½ments de $D$ mais cette mï¿½thode est moins efficace.
 
 
 
-		\begin{xalgorithm}{insertion d'un n\oe ud}\label{algorithm_insertion}
-		
-		Soit $D$ un sous-ensemble fini de $E$ et $A$ un arbre binaire, soit $n$ un n\oe quelconque de $A$, alors~:
-		    \begin{enumerate}
-		    \item $n$ définit une partie notée $P\pa{n}$ dont le rayon est $R\pa{n}$ et 
-		    				dont le centre est $C\pa{n}$.
-		    \item $n$ n'a pas de prédécesseur\indexfr{prédécesseur} si $P\pa{n}$ est 
-		    				un singleton ou deux predecessors
-		            sinon. Dans ce second cas, $P\pa{n}$ est la réunion des parties de deux prédécesseurs~:
-		             $Pr\pa{n} = \acc{ p_1\pa{n} , p_2\pa{n}}$
-		    \item $n$ n'a pas de successeur\indexfr{successeur} et il définit la partiet $D$ 
-		    						ou un successeur noté $Su\pa{n} = s\pa{n}$
-		    \end{enumerate}
-		
-		Le seul n\oe ud sans successeur est appelé \emph{racine}.\indexfr{racine} et noté $r$. 
-		Soit $m$ un élément et $x$
-		le n\oe ud associé, alors $P\pa{x} = \acc{m}$, $C\pa{x} = m$, $R\pa{x} = 0$, et $x$ n'a 
-		pour le moment aucun succeseur
-		et aucun prédécesseur. $N$ définit un ensemble de n\oe ud, le n\oe ud $x$ est inséré dans l'arbre $A$ 
-		selon les règles suivantes~:
-		
-		\begin{xalgostep}{intialisation}
-		    $N \longleftarrow \acc{r}$
-		\end{xalgostep}
-		
-		%\possiblecut
-		
-		\begin{xalgostep}{insertion}
-		    \begin{xwhile}{non fin}
-		
-		        \begin{xif}{$
-		                    \begin{array}{l} d\pa{m,C\pa{n}} > R\pa{n}
-		                    \hspace{10cm}
-		                    \refstepcounter{equation}(\theequation)
-		                    \label{amelioration_insertion_1}
-		                    \end{array}
-		                    $}
-		
-		            \begin{enumerate}
-		            \item soit $ n\in \arg \min \acc{ d\pa{m,C\pa{n'}} \;|\; n' \in N}$, le n\oe ud $y$ est créé
-		            \item le successeur de $y$ devient : $s\pa{y} \longleftarrow s\pa{n}$
-		            \item le prédécesseur de $y$ devient : $p_1\pa{y} \longleftarrow x$ 
-		            									and $p_2\pa{y} \longleftarrow n$
-		            \item si le successeur de $n$ existe alors :
-		                $$
-		                \exists i \in \acc{1,2} \text{ tel que } p_i\pa{s\pa{n}} = n \text{ et } 
-		                					p_i\pa{s\pa{n}} \longleftarrow  p_i\pa{s\pa{n}} = y
-		                $$
-		            \item le successeur de $n$ devient : $s\pa{n} \longleftarrow y$
-		            \item le successeur de $x$ devient : $s\pa{x} \longleftarrow y$
-		            \item si $r = n$, alors $r \longleftarrow y$
-		            \item le centre et le rayon sont reestimés pour toutes les parties définies par
-		                    les éléments $\pa{n_1,...}$ de la suite the serie :
-		                            $$
-		                            n_0 = n \textnormal{ et pour } k \supegal 0, \;
-		                                                n_{k+1} = \left\{
-		                                                            \begin{array}{l}
-		                                                            s\pa{n_k} \textnormal{ si } r \neq n_k \\
-		                                                            r \textnormal{ sinon }
-		                                                            \end{array}
-		                                                            \right.
-		                            $$
-		            \item fin
-		            \end{enumerate}
-		
-		        \xelse
-		            $$
-		            \begin{array}{lr}
-		            \exists n \in N \text{ tel que } d\pa{m,C\pa{n}} \infegal R\pa{n} &
-		                                        \hspace{6.5cm}\refstepcounter{equation}(\theequation)
-		                                         \label{amelioration_insertion_2} \\
-		            \text{et } N \longleftarrow \acc{N - \acc{n} } \cup \acc{p_1\pa{n},p_2\pa{n}} &
-		            \end{array}
-		            $$
-		        \end{xif}
-		    \end{xwhile}
-		\end{xalgostep}
-		\end{xalgorithm}
+        \begin{xalgorithm}{insertion d'un n\oe ud}\label{algorithm_insertion}
+        
+        Soit $D$ un sous-ensemble fini de $E$ et $A$ un arbre binaire, soit $n$ un n\oe quelconque de $A$, alors~:
+            \begin{enumerate}
+            \item $n$ dï¿½finit une partie notï¿½e $P\pa{n}$ dont le rayon est $R\pa{n}$ et 
+                            dont le centre est $C\pa{n}$.
+            \item $n$ n'a pas de prï¿½dï¿½cesseur\indexfr{prï¿½dï¿½cesseur} si $P\pa{n}$ est 
+                            un singleton ou deux predecessors
+                    sinon. Dans ce second cas, $P\pa{n}$ est la rï¿½union des parties de deux prï¿½dï¿½cesseurs~:
+                     $Pr\pa{n} = \acc{ p_1\pa{n} , p_2\pa{n}}$
+            \item $n$ n'a pas de successeur\indexfr{successeur} et il dï¿½finit la partiet $D$ 
+                                    ou un successeur notï¿½ $Su\pa{n} = s\pa{n}$
+            \end{enumerate}
+        
+        Le seul n\oe ud sans successeur est appelï¿½ \emph{racine}.\indexfr{racine} et notï¿½ $r$. 
+        Soit $m$ un ï¿½lï¿½ment et $x$
+        le n\oe ud associï¿½, alors $P\pa{x} = \acc{m}$, $C\pa{x} = m$, $R\pa{x} = 0$, et $x$ n'a 
+        pour le moment aucun succeseur
+        et aucun prï¿½dï¿½cesseur. $N$ dï¿½finit un ensemble de n\oe ud, le n\oe ud $x$ est insï¿½rï¿½ dans l'arbre $A$ 
+        selon les rï¿½gles suivantes~:
+        
+        \begin{xalgostep}{intialisation}
+            $N \longleftarrow \acc{r}$
+        \end{xalgostep}
+        
+        %\possiblecut
+        
+        \begin{xalgostep}{insertion}
+            \begin{xwhile}{non fin}
+        
+                \begin{xif}{$
+                            \begin{array}{l} d\pa{m,C\pa{n}} > R\pa{n}
+                            \hspace{10cm}
+                            \refstepcounter{equation}(\theequation)
+                            \label{amelioration_insertion_1}
+                            \end{array}
+                            $}
+        
+                    \begin{enumerate}
+                    \item soit $ n\in \arg \min \acc{ d\pa{m,C\pa{n'}} \;|\; n' \in N}$, le n\oe ud $y$ est crï¿½ï¿½
+                    \item le successeur de $y$ devient : $s\pa{y} \longleftarrow s\pa{n}$
+                    \item le prï¿½dï¿½cesseur de $y$ devient : $p_1\pa{y} \longleftarrow x$ 
+                                                        and $p_2\pa{y} \longleftarrow n$
+                    \item si le successeur de $n$ existe alors :
+                        $$
+                        \exists i \in \acc{1,2} \text{ tel que } p_i\pa{s\pa{n}} = n \text{ et } 
+                                            p_i\pa{s\pa{n}} \longleftarrow  p_i\pa{s\pa{n}} = y
+                        $$
+                    \item le successeur de $n$ devient : $s\pa{n} \longleftarrow y$
+                    \item le successeur de $x$ devient : $s\pa{x} \longleftarrow y$
+                    \item si $r = n$, alors $r \longleftarrow y$
+                    \item le centre et le rayon sont reestimï¿½s pour toutes les parties dï¿½finies par
+                            les ï¿½lï¿½ments $\pa{n_1,...}$ de la suite the serie :
+                                    $$
+                                    n_0 = n \textnormal{ et pour } k \supegal 0, \;
+                                                        n_{k+1} = \left\{
+                                                                    \begin{array}{l}
+                                                                    s\pa{n_k} \textnormal{ si } r \neq n_k \\
+                                                                    r \textnormal{ sinon }
+                                                                    \end{array}
+                                                                    \right.
+                                    $$
+                    \item fin
+                    \end{enumerate}
+        
+                \xelse
+                    $$
+                    \begin{array}{lr}
+                    \exists n \in N \text{ tel que } d\pa{m,C\pa{n}} \infegal R\pa{n} &
+                                                \hspace{6.5cm}\refstepcounter{equation}(\theequation)
+                                                 \label{amelioration_insertion_2} \\
+                    \text{et } N \longleftarrow \acc{N - \acc{n} } \cup \acc{p_1\pa{n},p_2\pa{n}} &
+                    \end{array}
+                    $$
+                \end{xif}
+            \end{xwhile}
+        \end{xalgostep}
+        \end{xalgorithm}
 
 
-\begin{xremark}{hiérarchie}
-Il n'est pas démontré que l'arbre obtenu après une ou plusieurs applications de l'algorithme~\ref{algorithm_insertion} vérifie le corollaire~\ref{corollary_AHC}. \indexfr{hiérarchie}
+\begin{xremark}{hiï¿½rarchie}
+Il n'est pas dï¿½montrï¿½ que l'arbre obtenu aprï¿½s une ou plusieurs applications de l'algorithme~\ref{algorithm_insertion} vï¿½rifie le corollaire~\ref{corollary_AHC}. \indexfr{hiï¿½rarchie}
 \end{xremark}
 
 
 
-		\begin{figure}[ht]
+        \begin{figure}[ht]
     \[
     \begin{tabular}{|c|c|}
         \hline
@@ -527,13 +527,13 @@ Il n'est pas démontré que l'arbre obtenu après une ou plusieurs applications de 
         \hline
     \end{tabular}
     \]
-    \caption{Graphe d'inclusion pour deux ordres différents d'inclusion, le second est bien sûr meilleur.}
+    \caption{Graphe d'inclusion pour deux ordres diffï¿½rents d'inclusion, le second est bien sï¿½r meilleur.}
     \label{partition_inclusion_graphe_ordre_insertion}
-		\end{figure}
+        \end{figure}
 
 \begin{xremark}{ordre d'insertion}
-L'arbre final dépend de l'ordre d'insertion des éléments comme le montre la \indexfrr{ordre}{insertion}
-figure~\ref{partition_inclusion_graphe_ordre_insertion}. L'algorithme~\ref{algorithm_insertion} peut être amélioré et devenir l'algorithme~$\ref{algorithm_insertion}^*$ en remplaçant les lignes (\ref{amelioration_insertion_1}) et (\ref{amelioration_insertion_2}) par les suivantes, respectivement (\ref{amelioration_insertion_1_p}) et (\ref{amelioration_insertion_2_p})~:
+L'arbre final dï¿½pend de l'ordre d'insertion des ï¿½lï¿½ments comme le montre la \indexfrr{ordre}{insertion}
+figure~\ref{partition_inclusion_graphe_ordre_insertion}. L'algorithme~\ref{algorithm_insertion} peut ï¿½tre amï¿½liorï¿½ et devenir l'algorithme~$\ref{algorithm_insertion}^*$ en remplaï¿½ant les lignes (\ref{amelioration_insertion_1}) et (\ref{amelioration_insertion_2}) par les suivantes, respectivement (\ref{amelioration_insertion_1_p}) et (\ref{amelioration_insertion_2_p})~:
 
     \begin{eqnarray}
     \text{si }      && \forall n \in N, \; d\pa{m,ArgC\pa{n}} > R\pa{n} \label{amelioration_insertion_1_p} \\
@@ -541,15 +541,15 @@ figure~\ref{partition_inclusion_graphe_ordre_insertion}. L'algorithme~\ref{algor
     \label{amelioration_insertion_2_p}
     \end{eqnarray}
 
-où~:
+oï¿½~:
 
     \begin{eqnarray*}
     ArgC\pa{n}            &=&     \underset{x \in P\pa{n}} {\arg \min} 
-    															\cro{  \underset{y \in P\pa{n}} {\max} \; d\pa{x,y}} \text{ et }
+                                                                \cro{  \underset{y \in P\pa{n}} {\max} \; d\pa{x,y}} \text{ et }
     d\pa{m,ArgC\pa{n}}    =     \underset{y \in ArgC\pa{n}} {\min } d\pa{m,y}
     \end{eqnarray*}
 
-On ne considère pas seulement un centre mais l'ensemble des centres possibles, à égale distance de l'élément à insérer. Comme la distance de Levenstein\indexfr{Levenstein} est à valeurs entières, cet ensemble est rarement réduit à un singleton comme le montrera le paragraphe~\ref{section_test}. Cette version de l'algorithme~\ref{algorithm_insertion} est notée~$\ref{algorithm_insertion}^*$. La construction de l'arbre de partitionnement est effectuée par la répétition de l'algorithme~\ref{algorithm_insertion} ou~$\ref{algorithm_insertion}^*$ tant qu'il reste des éléments à classer.
+On ne considï¿½re pas seulement un centre mais l'ensemble des centres possibles, ï¿½ ï¿½gale distance de l'ï¿½lï¿½ment ï¿½ insï¿½rer. Comme la distance de Levenstein\indexfr{Levenstein} est ï¿½ valeurs entiï¿½res, cet ensemble est rarement rï¿½duit ï¿½ un singleton comme le montrera le paragraphe~\ref{section_test}. Cette version de l'algorithme~\ref{algorithm_insertion} est notï¿½e~$\ref{algorithm_insertion}^*$. La construction de l'arbre de partitionnement est effectuï¿½e par la rï¿½pï¿½tition de l'algorithme~\ref{algorithm_insertion} ou~$\ref{algorithm_insertion}^*$ tant qu'il reste des ï¿½lï¿½ments ï¿½ classer.
 
 
 \end{xremark}
@@ -569,66 +569,66 @@ On ne considère pas seulement un centre mais l'ensemble des centres possibles, à
 \subsection{Optimisation de la recherche des plus proches voisins}
 \label{section_optimisation_distance}
 
-Cette optimisation de la recherche utilise un des arbres construits par l'algorithme~\ref{algorithm_AHC} ou la répétition de l'algorithme~\ref{algorithm_insertion} ou~\ref{algorithm_insertion}$^*$. Chaque n\oe ud définit une partie décrite par un centre et un rayon. Le problème à résoudre consiste ici à trouver pour un élément $m$ la liste $B\pa{s}$ des voisins inclus dans le sous-ensemble $D\vecteur{y_1}{y_N}$ vérifiant~:
+Cette optimisation de la recherche utilise un des arbres construits par l'algorithme~\ref{algorithm_AHC} ou la rï¿½pï¿½tition de l'algorithme~\ref{algorithm_insertion} ou~\ref{algorithm_insertion}$^*$. Chaque n\oe ud dï¿½finit une partie dï¿½crite par un centre et un rayon. Le problï¿½me ï¿½ rï¿½soudre consiste ici ï¿½ trouver pour un ï¿½lï¿½ment $m$ la liste $B\pa{s}$ des voisins inclus dans le sous-ensemble $D\vecteur{y_1}{y_N}$ vï¿½rifiant~:
 
             $$
             B\pa{s} = \acc{ x \in D \sachant d\pa{x,m} \infegal s }
             $$
 
-Soit $P \subset E$ une partie dont le centre est $C\pa{P}$ et le rayon $R\pa{P}$, l'optimisation est basée sur les deux remarques suivantes~:
+Soit $P \subset E$ une partie dont le centre est $C\pa{P}$ et le rayon $R\pa{P}$, l'optimisation est basï¿½e sur les deux remarques suivantes~:
 
     \begin{eqnarray}
-    d\pa{m,C\pa{P}} > s + R\pa{P} 				&\Longrightarrow& 
-    																			\forall w \in P, \; d\pa{m,w} > s 
-    												\Longrightarrow	B\pa{s} \cap P = \emptyset					\label{equation_un} 	\\
-    d\pa{m,C\pa{P}} + R\pa{P} \infegal s 	&\Longrightarrow& 
-    																			\forall w \in P, \; d\pa{m,w} \infegal s 
-    																		\Longrightarrow	B\pa{s} \subset  P \label{equation_deux} 
+    d\pa{m,C\pa{P}} > s + R\pa{P}                 &\Longrightarrow& 
+                                                                                \forall w \in P, \; d\pa{m,w} > s 
+                                                    \Longrightarrow    B\pa{s} \cap P = \emptyset                    \label{equation_un}     \\
+    d\pa{m,C\pa{P}} + R\pa{P} \infegal s     &\Longrightarrow& 
+                                                                                \forall w \in P, \; d\pa{m,w} \infegal s 
+                                                                            \Longrightarrow    B\pa{s} \subset  P \label{equation_deux} 
     \end{eqnarray}
 
 
 
 
-		\begin{xalgorithm}{recherche rapide}\label{algorithm_optimisation}%
-		Soit $r$ la racine de l'arbre $A$ obtenu par un des algorithmes~\ref{algorithm_AHC},
-		\ref{algorithm_insertion_all},
-		$\ref{algorithm_insertion}^*$. $N$ est un ensemble de n\oe uds. Soit $s \in \R_+$, $B\pa{s}$ est 
-		l'ensemble cherché, il est défini par $B\pa{s} = \acc{ x \in D \sachant d\pa{x,m} \infegal s }$.
-		
-		\begin{xalgostep}{initialisation}
-		    $N \longleftarrow r$ \\
-		    $B\pa{s} \longleftarrow \emptyset$
-		\end{xalgostep}
-		
-		\begin{xalgostep}{suite}\label{space_algo_step_B}
-		    \begin{xwhile}{$N \neq \emptyset$}
-		        Soit $n \in N$ et $p$ la partie définie par $n$, $n$ est retiré de $N$ : 
-		        							$N \longleftarrow N \backslash n$
-		        et~: \\
-		        \begin{xif}{$d\pa{m, C\pa{p}} + R\pa{p}\infegal s $}
-		            $B\pa{s} \longleftarrow B\pa{s} \bigcup p$
-		            
-						\xelseif{$ d\pa{m, C\pa{p}} > s + R\pa{p} $}
-								ne rien faire
-		        \xelse
-		            \begin{xif}{$p = \acc{ w \in D}$}
-				            \begin{xif}{$d\pa{m, w} \infegal s$}
-				                $B\pa{s} \longleftarrow B\pa{s} \bigcup \acc{w}$
-				            \end{xif}
-		            \xelse
-		                $N \longleftarrow N \bigcup \acc{p_1\pa{n},p_2\pa{n}}$\\
-		                où $\acc{p_1\pa{n},p_1\pa{n}}$ sont les deux prédécesseurs de $n$
-		            \end{xif}
-		        \end{xif}
-		    \end{xwhile}
-		\end{xalgostep} 
-		
-		La liste $B\pa{s}$ contient tous les voisins de $m$ sans aucune approximation.
-		\end{xalgorithm}
+        \begin{xalgorithm}{recherche rapide}\label{algorithm_optimisation}%
+        Soit $r$ la racine de l'arbre $A$ obtenu par un des algorithmes~\ref{algorithm_AHC},
+        \ref{algorithm_insertion_all},
+        $\ref{algorithm_insertion}^*$. $N$ est un ensemble de n\oe uds. Soit $s \in \R_+$, $B\pa{s}$ est 
+        l'ensemble cherchï¿½, il est dï¿½fini par $B\pa{s} = \acc{ x \in D \sachant d\pa{x,m} \infegal s }$.
+        
+        \begin{xalgostep}{initialisation}
+            $N \longleftarrow r$ \\
+            $B\pa{s} \longleftarrow \emptyset$
+        \end{xalgostep}
+        
+        \begin{xalgostep}{suite}\label{space_algo_step_B}
+            \begin{xwhile}{$N \neq \emptyset$}
+                Soit $n \in N$ et $p$ la partie dï¿½finie par $n$, $n$ est retirï¿½ de $N$ : 
+                                            $N \longleftarrow N \backslash n$
+                et~: \\
+                \begin{xif}{$d\pa{m, C\pa{p}} + R\pa{p}\infegal s $}
+                    $B\pa{s} \longleftarrow B\pa{s} \bigcup p$
+                    
+                        \xelseif{$ d\pa{m, C\pa{p}} > s + R\pa{p} $}
+                                ne rien faire
+                \xelse
+                    \begin{xif}{$p = \acc{ w \in D}$}
+                            \begin{xif}{$d\pa{m, w} \infegal s$}
+                                $B\pa{s} \longleftarrow B\pa{s} \bigcup \acc{w}$
+                            \end{xif}
+                    \xelse
+                        $N \longleftarrow N \bigcup \acc{p_1\pa{n},p_2\pa{n}}$\\
+                        oï¿½ $\acc{p_1\pa{n},p_1\pa{n}}$ sont les deux prï¿½dï¿½cesseurs de $n$
+                    \end{xif}
+                \end{xif}
+            \end{xwhile}
+        \end{xalgostep} 
+        
+        La liste $B\pa{s}$ contient tous les voisins de $m$ sans aucune approximation.
+        \end{xalgorithm}
 
 
-\begin{xremark}{mémorisation des distances}
-Durant l'étape~\ref{space_algo_step_B} de l'algorithme~\ref{algorithm_optimisation}, il est nécessaire de calculer les distance entre l'élément $m$ et le centre de certaines parties. Ces centres appartiennent au sous-ensemble $D$ et plusieurs parties peuvent avoir le même centre si elles sont incluses les unes dans les autres. Si le calcul de la distance $d$ est coûteux, il est intéressant de conserver en mémoire les résultats du calcul des distances de $m$ aux centres visités. Cette mémorisation\indexfr{mémorisation} implique qu'il ne peut y avoir plus de $N$ calculs de distance si $N$ est le nombre d'éléments de $D$.
+\begin{xremark}{mï¿½morisation des distances}
+Durant l'ï¿½tape~\ref{space_algo_step_B} de l'algorithme~\ref{algorithm_optimisation}, il est nï¿½cessaire de calculer les distance entre l'ï¿½lï¿½ment $m$ et le centre de certaines parties. Ces centres appartiennent au sous-ensemble $D$ et plusieurs parties peuvent avoir le mï¿½me centre si elles sont incluses les unes dans les autres. Si le calcul de la distance $d$ est coï¿½teux, il est intï¿½ressant de conserver en mï¿½moire les rï¿½sultats du calcul des distances de $m$ aux centres visitï¿½s. Cette mï¿½morisation\indexfr{mï¿½morisation} implique qu'il ne peut y avoir plus de $N$ calculs de distance si $N$ est le nombre d'ï¿½lï¿½ments de $D$.
 \end{xremark}
 
 
@@ -636,24 +636,24 @@ Durant l'étape~\ref{space_algo_step_B} de l'algorithme~\ref{algorithm_optimisati
 
 
 
-\subsection{Critère d'efficacité}
+\subsection{Critï¿½re d'efficacitï¿½}
 \label{section_criterion}
 
-Quelque soit la méthode choisie pour construire l'arbre de partitionnement, l'algorithme~\ref{algorithm_optimisation} mène à la solution exacte. D'un autre côté, on peut se demander s'il existe des arbres meilleurs que d'autres lors de la recherche des plus proches voisins et s'il existe un arbre optimal. La première idée est de considérer que plus les parties définies par l'arbre sont petites, plus la recherche sera rapide. Selon cette idée, le critère (\ref{critere_optimalite}) essaye d'évaluer la pertinence\indexfr{pertinence}\indexfr{efficacité} d'un arbre $A$ construit à partir du sous-ensemble fini $D$~:
+Quelque soit la mï¿½thode choisie pour construire l'arbre de partitionnement, l'algorithme~\ref{algorithm_optimisation} mï¿½ne ï¿½ la solution exacte. D'un autre cï¿½tï¿½, on peut se demander s'il existe des arbres meilleurs que d'autres lors de la recherche des plus proches voisins et s'il existe un arbre optimal. La premiï¿½re idï¿½e est de considï¿½rer que plus les parties dï¿½finies par l'arbre sont petites, plus la recherche sera rapide. Selon cette idï¿½e, le critï¿½re (\ref{critere_optimalite}) essaye d'ï¿½valuer la pertinence\indexfr{pertinence}\indexfr{efficacitï¿½} d'un arbre $A$ construit ï¿½ partir du sous-ensemble fini $D$~:
 
     \begin{eqnarray}
     Cr_1\pa{A}                            &=&  \left\{   \begin{array}{l}
                                                 0 \text{ si } R\pa{D} = 0 \text{ ou } 
-                                                				card\pa{D} \infegal 1 \\ \\  \textnormal{sinon }
+                                                                card\pa{D} \infegal 1 \\ \\  \textnormal{sinon }
                                                 \dfrac{\summyone{n \in A} R\pa{n}}{\pa{card\pa{D}-1} * R\pa{D}}
                                                 \end{array}%
                                                 \right.
                                                 \label{critere_optimalite} \\
-        \text{où }&& \nonumber\\
-        card\pa{D}                      &&      \text{est le nombre d'éléments de } D           \nonumber   \\
+        \text{oï¿½ }&& \nonumber\\
+        card\pa{D}                      &&      \text{est le nombre d'ï¿½lï¿½ments de } D           \nonumber   \\
         R\pa{D}                         &&      \text{est le rayon de } D                       \nonumber   \\
         n                               &&      \text{est un n\oe ud de } A                     \nonumber   \\
-        R\pa{n}                         &&      \text{est le centre de la partie définie par } n    \nonumber
+        R\pa{n}                         &&      \text{est le centre de la partie dï¿½finie par } n    \nonumber
     \end{eqnarray}
 
 
@@ -663,68 +663,68 @@ Si l'arbre $A$ choisi est construit par l'algorithme~\ref{algorithm_AHC}, le cor
     card  \acc{n \in A \; | \; R \pa{n} > 0} \infegal card\pa{D}-1
     $$
 
-Par conséquent, l'arbre $A$ construit par l'algorithme~\ref{algorithm_AHC} satisfait~:
+Par consï¿½quent, l'arbre $A$ construit par l'algorithme~\ref{algorithm_AHC} satisfait~:
 
     \begin{eqnarray}
     R\pa{D} \infegal    \summyone{n \in A} R\pa{n} \infegal \pa{card\pa{D}-1} * R\pa{D}
-    				 \label{inegalite_critere}
+                     \label{inegalite_critere}
     \end{eqnarray}
 
-L'inégalité (\ref{inegalite_critere}) explique l'expression du critère (\ref{critere_optimalite}) puisque~:
+L'inï¿½galitï¿½ (\ref{inegalite_critere}) explique l'expression du critï¿½re (\ref{critere_optimalite}) puisque~:
     \begin{eqnarray}
     R\pa{D} > 0 \Longrightarrow \dfrac{1}{card\pa{D}-1} \infegal    Cr_1\pa{A} \infegal 1  &&
              \label{inegalite_critere2}
     \end{eqnarray}
 
 \begin{xremark}{limites}
-Les deux limites de l'inégalité (\ref{inegalite_critere2}) sont atteintes pour un sous-ensemble $D$ ne contenant que deux éléments distincts. Pour un ensemble contenant plus de trois éléments, la propriété suivante répond partiellement à la question.
+Les deux limites de l'inï¿½galitï¿½ (\ref{inegalite_critere2}) sont atteintes pour un sous-ensemble $D$ ne contenant que deux ï¿½lï¿½ments distincts. Pour un ensemble contenant plus de trois ï¿½lï¿½ments, la propriï¿½tï¿½ suivante rï¿½pond partiellement ï¿½ la question.
 \end{xremark}
 
 
 
 
 
-		\begin{xproperty}{limites} \label{property_bornes_atteintes}%
-		Soit $\pa{E,d}$ un espace métrique quelconque,\indexfrr{espace}{métrique} soit $D \neq
-		\emptyset$ un sous-ensemble fini de $E$, soit $A_D$ l'arbre construit par
-		l'algorithme~\ref{algorithm_AHC}, alors les trois 		propositions suivantes sont vraies~:
-		
-		\begin{description}
-		\item[(1) ] $\forall n > 1,$ il existe $D_1 \subset E$ tel que~:
-		    $$
-		    \left\{
-		    \begin{array}{rcl}
-		    card\pa{D_1} &=& n \\
-		    Cr_1\pa{A_{D_1}} &=& \dfrac{1}{n-1}
-		    \end{array}
-		    \right.
-		    $$
-		\item[(2) ] $\forall n > 1,$ il existe $D_2 \subset E$ tel que~:
-		    $$
-		    \left\{
-		    \begin{array}{l}
-		    card\pa{D_2} = n \\ %\\
-		    \forall \pa{x,y} \in D_2^2, \; x \neq y \Longrightarrow d\pa{x,y} = R\pa{D_2}
-		    \end{array}
-		    \right.
-		    $$
-		    alors $Cr_1\pa{A_{D_2}} = 1$. \newline
-		\item[(3) ] si $E$ est un espace vectoriel de dimension infinie, alors, $\forall n > 1,$ 
-									il existe $D_3 \subset E$ tel que~:
-		    $$
-		    \left\{
-		    \begin{array}{rcl}
-		    card\pa{D_3} &=& n \\
-		    Cr_1\pa{A_{D_3}} &=& 1
-		    \end{array}
-		    \right.
-		    $$
-		\end{description}
-		\end{xproperty}
+        \begin{xproperty}{limites} \label{property_bornes_atteintes}%
+        Soit $\pa{E,d}$ un espace mï¿½trique quelconque,\indexfrr{espace}{mï¿½trique} soit $D \neq
+        \emptyset$ un sous-ensemble fini de $E$, soit $A_D$ l'arbre construit par
+        l'algorithme~\ref{algorithm_AHC}, alors les trois         propositions suivantes sont vraies~:
+        
+        \begin{description}
+        \item[(1) ] $\forall n > 1,$ il existe $D_1 \subset E$ tel que~:
+            $$
+            \left\{
+            \begin{array}{rcl}
+            card\pa{D_1} &=& n \\
+            Cr_1\pa{A_{D_1}} &=& \dfrac{1}{n-1}
+            \end{array}
+            \right.
+            $$
+        \item[(2) ] $\forall n > 1,$ il existe $D_2 \subset E$ tel que~:
+            $$
+            \left\{
+            \begin{array}{l}
+            card\pa{D_2} = n \\ %\\
+            \forall \pa{x,y} \in D_2^2, \; x \neq y \Longrightarrow d\pa{x,y} = R\pa{D_2}
+            \end{array}
+            \right.
+            $$
+            alors $Cr_1\pa{A_{D_2}} = 1$. \newline
+        \item[(3) ] si $E$ est un espace vectoriel de dimension infinie, alors, $\forall n > 1,$ 
+                                    il existe $D_3 \subset E$ tel que~:
+            $$
+            \left\{
+            \begin{array}{rcl}
+            card\pa{D_3} &=& n \\
+            Cr_1\pa{A_{D_3}} &=& 1
+            \end{array}
+            \right.
+            $$
+        \end{description}
+        \end{xproperty}
 
-\begin{xdemo}{propriété}{\ref{property_bornes_atteintes}}
+\begin{xdemo}{propriï¿½tï¿½}{\ref{property_bornes_atteintes}}
 
-Pour prouver \textbf{(1)}, il faut considérer l'ensemble $D_1 = \vecteur{x_1}{x_n}$ défini par~:
+Pour prouver \textbf{(1)}, il faut considï¿½rer l'ensemble $D_1 = \vecteur{x_1}{x_n}$ dï¿½fini par~:
 
     $$
     \left\{
@@ -735,11 +735,11 @@ Pour prouver \textbf{(1)}, il faut considérer l'ensemble $D_1 = \vecteur{x_1}{x_
     \right.
     $$
     
-De manière évidente~: $Cr_1\pa{A_{D_1}} = \frac{1}{n-1}$.
+De maniï¿½re ï¿½vidente~: $Cr_1\pa{A_{D_1}} = \frac{1}{n-1}$.
 
-Prouver \textbf{(2)} est aussi évident parce que si un tel ensemble $D_2$ existe, pour une partie $P$ quelconque de $D$, $R\pa{P} = R\pa{D_2} = Cr_1\pa{A}$.
+Prouver \textbf{(2)} est aussi ï¿½vident parce que si un tel ensemble $D_2$ existe, pour une partie $P$ quelconque de $D$, $R\pa{P} = R\pa{D_2} = Cr_1\pa{A}$.
 
-Pour prouver \textbf{(3)}, on n'utilise \textbf{(2)} puisqu'un tel ensemble $D_2$ existe dans un espace vectoriel de dimension infinie. C'est précisément le cas de l'espace des mots.
+Pour prouver \textbf{(3)}, on n'utilise \textbf{(2)} puisqu'un tel ensemble $D_2$ existe dans un espace vectoriel de dimension infinie. C'est prï¿½cisï¿½ment le cas de l'espace des mots.
 
 \end{xdemo}
 
@@ -750,28 +750,28 @@ Pour prouver \textbf{(3)}, on n'utilise \textbf{(2)} puisqu'un tel ensemble $D_2
 \comment{ 
 
 
-Pour prendre en compte la pertinence de la réunion de deux parties, un second critère est défini~:
+Pour prendre en compte la pertinence de la rï¿½union de deux parties, un second critï¿½re est dï¿½fini~:
 
-			\begin{eqnarray}
-			Cr_2\pa{A}      &=&     \left\{\begin{array}{l}
-      				                0 \text{ si } R\pa{D} = 0 \text{ ou } card\pa{D} \infegal 1 \\
+            \begin{eqnarray}
+            Cr_2\pa{A}      &=&     \left\{\begin{array}{l}
+                                      0 \text{ si } R\pa{D} = 0 \text{ ou } card\pa{D} \infegal 1 \\
                               \dfrac{ \summyone{n \in A} \biggcro{ 2 R\pa{n} - d\pa{n} }} 
-                              			{\pa{card\pa{D}-1} * R\pa{D}} \text{ sinon}
-															\end{array}%
+                                          {\pa{card\pa{D}-1} * R\pa{D}} \text{ sinon}
+                                                            \end{array}%
                               \right.
                               \label{critere_optimalite_2} \\
-    		\text{où }&& \nonumber\\
-    		p_i\pa{n}            &&      \text{est un des deux prédécesseurs du n\oe ud } n \\
-    		\text{et }d\pa{n}    &=&     d\pa{C\pa{p_1\pa{n}}, C\pa{p_2\pa{n}}}  \nonumber\\
-				\end{eqnarray}
+            \text{oï¿½ }&& \nonumber\\
+            p_i\pa{n}            &&      \text{est un des deux prï¿½dï¿½cesseurs du n\oe ud } n \\
+            \text{et }d\pa{n}    &=&     d\pa{C\pa{p_1\pa{n}}, C\pa{p_2\pa{n}}}  \nonumber\\
+                \end{eqnarray}
 
-De manière évidente, ce critère vérifie (\ref{inegalite_critere3})~:
+De maniï¿½re ï¿½vidente, ce critï¿½re vï¿½rifie (\ref{inegalite_critere3})~:
 
     \begin{eqnarray}
     R\pa{D} > 0 \Longrightarrow 0 \infegal    Cr_2\pa{A} \infegal 2  && \label{inegalite_critere3}
     \end{eqnarray}
 
-Ce second critère ne sera pas évoqué par la suite car il corrobore les déductions obtenus avec le premier critère.
+Ce second critï¿½re ne sera pas ï¿½voquï¿½ par la suite car il corrobore les dï¿½ductions obtenus avec le premier critï¿½re.
 
 }
 %-------------------------------------------------------------------------------------------------------------------
@@ -785,154 +785,154 @@ Ce second critère ne sera pas évoqué par la suite car il corrobore les déduction
 
 
 
-\subsection{Résultats expérimentaux}
+\subsection{Rï¿½sultats expï¿½rimentaux}
 \label{section_test}
 
 
-La première expérience consiste à chercher les voisins dans un ensemble de points tirés aléatoirement dans le carré $\cro{0,1} \times \cro{0,1}$ (figure~\ref{space_metric_rnd_01_01}). L'expérience consiste d'abord à tirer $N$ points aléatoires dans ce carré. Pour différentes valeurs de seuil~$s$, $N$~points sont de nouveau tirés aléatoirement pour lesquels le voisinage $V_s\pa{x}=\acc{y \sac d\pa{x,y} \infegal s}$ est calculé selon les deux algorithmes~\ref{algorithm_AHC} et~$\ref{algorithm_insertion}^*$. Si $X$ est une variable aléatoire de l'espace métrique~$E$ -~les éléments de $E$ sont équiprobables~-, l'objectif est d'estimer le nombre moyen de calculs de distance $r_s\pa{N}$ effectués pour déterminer les voisins d'un élément~:
+La premiï¿½re expï¿½rience consiste ï¿½ chercher les voisins dans un ensemble de points tirï¿½s alï¿½atoirement dans le carrï¿½ $\cro{0,1} \times \cro{0,1}$ (figure~\ref{space_metric_rnd_01_01}). L'expï¿½rience consiste d'abord ï¿½ tirer $N$ points alï¿½atoires dans ce carrï¿½. Pour diffï¿½rentes valeurs de seuil~$s$, $N$~points sont de nouveau tirï¿½s alï¿½atoirement pour lesquels le voisinage $V_s\pa{x}=\acc{y \sac d\pa{x,y} \infegal s}$ est calculï¿½ selon les deux algorithmes~\ref{algorithm_AHC} et~$\ref{algorithm_insertion}^*$. Si $X$ est une variable alï¿½atoire de l'espace mï¿½trique~$E$ -~les ï¿½lï¿½ments de $E$ sont ï¿½quiprobables~-, l'objectif est d'estimer le nombre moyen de calculs de distance $r_s\pa{N}$ effectuï¿½s pour dï¿½terminer les voisins d'un ï¿½lï¿½ment~:
 
-		    \begin{eqnarray}
-		    r_s\pa{N} = \dfrac{1}{N} \; \esp{ \text{nombre de distances calculées pour $V_s\pa{X}$}}
-		    \label{gain_mot}
-		    \end{eqnarray}
+            \begin{eqnarray}
+            r_s\pa{N} = \dfrac{1}{N} \; \esp{ \text{nombre de distances calculï¿½es pour $V_s\pa{X}$}}
+            \label{gain_mot}
+            \end{eqnarray}
 
-				\begin{figure}[ht]
-				$$
-				\begin{array}{|c|}\hline
-    		\includegraphics[height=3cm, width=3cm]{\filext{../space_metric/image/rnd}} \\ \hline
-    		\end{array}
-    		$$
-    		\caption{Tirage aléatoire de points dans le carré $\cro{0,1} \times \cro{0,1}$.}
-    		\label{space_metric_rnd_01_01}
-    		\end{figure}
-    		
-L'algorithme~\ref{algorithm_AHC} est de loin le meilleur et ce quelle que soit la valeur du seuil $s$ choisi. Cette supériorité est également traduite par la valeur de $Cr_1$ obtenu pour chacun des arbres (voir table~\ref{space_metric_rnd_gain}).
+                \begin{figure}[ht]
+                $$
+                \begin{array}{|c|}\hline
+            \includegraphics[height=3cm, width=3cm]{\filext{../space_metric/image/rnd}} \\ \hline
+            \end{array}
+            $$
+            \caption{Tirage alï¿½atoire de points dans le carrï¿½ $\cro{0,1} \times \cro{0,1}$.}
+            \label{space_metric_rnd_01_01}
+            \end{figure}
+            
+L'algorithme~\ref{algorithm_AHC} est de loin le meilleur et ce quelle que soit la valeur du seuil $s$ choisi. Cette supï¿½rioritï¿½ est ï¿½galement traduite par la valeur de $Cr_1$ obtenu pour chacun des arbres (voir table~\ref{space_metric_rnd_gain}).
 
-	
-				\begin{table}[ht]
-				\[
-				\begin{tabular}{|c|c|c|c|c|c|} \hline
-				seuil &   $\frac{\esp{\card{V_s\pa{X}}}}{N}$ & 
-								$\begin{subarray}{c} r_s\pa{N=2000} \\ 
-								algorithme~\ref{algorithm_insertion}^* \end{subarray}$ 	&
-								$\begin{subarray}{c} r_s\pa{N=2000} \\ 
-								algorithme~\ref{algorithm_AHC} \end{subarray}$ 							&
-								$\begin{subarray}{c} r_s\pa{N=5000} \\ 
-								algorithme~\ref{algorithm_AHC} \end{subarray}$ 							&
-								$\begin{subarray}{c} r_s\pa{N=10000} \\ 
-								algorithme~\ref{algorithm_AHC} \end{subarray}$ 		\\ \hline
-				0,001		&		0 \,\%   &  	6,4 \,\%   &  	1,2 \,\%  & 0,6  \,\% &  0,3 \,\% \\ %\hline
-				0,01		&		0 \,\%   &  	6,8 \,\%   &  	1,4 \,\%  & 0,7  \,\% &  0,4 \,\% \\ %\hline
-				0,1			&		2 \,\%   &  	11,8 \,\%  &  	4,1 \,\%  & 2,7  \,\% &  1,9 \,\% \\ %\hline
-				0,2			&		10 \,\%  &  	17,2 \,\%  &  	6,8 \,\%  & 4,5  \,\% &  3,2 \,\% \\ %\hline
-				0,3			&		21 \,\%  &  	21,7 \,\%  &  	8,7 \,\%  & 5,7  \,\% &  4,0 \,\% \\ %\hline
-				0,4			&		34 \,\%  &  	25,1 \,\%  &  	9,6 \,\%  & 6,3  \,\% &  4,5 \,\% \\ %\hline
-				0,5			&		48 \,\%  &  	26,9 \,\%  &  	10,0 \,\% & 6,5  \,\% &  4,6 \,\% \\ %\hline
-				0,6			&		62 \,\%  &  	27,9 \,\%  &  	9,4 \,\%  & 6,1  \,\% &  4,4 \,\% \\ %\hline
-				0,7			&		74 \,\%  &  	27,0 \,\%  &  	8,3 \,\%  & 5,4  \,\% &  3,9 \,\% \\ %\hline
-				0,8			&		85 \,\%  &  	24,0 \,\%  &  	6,7 \,\%  & 4,3  \,\% &  3,1 \,\% \\ %\hline
-				0,9			&		92 \,\%  &  	19,2 \,\%  &  	4,6 \,\%  & 3,0  \,\% &  2,1 \,\% \\ %\hline
-				1				&		98 \,\%  &  	10,9 \,\%  &  	2,3 \,\%  & 1,4  \,\% &  1,0 \,\% \\ %\hline
-				2				&		100 \,\% &  	0,1 \,\%   &  	0,1 \,\%  & 0,0  \,\% &  0,0 \,\% \\ \hline
-				$Cr_1$	&   -     	 &   0,135			 &   0,039	 		& 0,023  		&  0,017   \\ \hline
-						\begin{minipage}[c]{3cm} 
-						temps de calcul (arbre) 
-						\end{minipage} 
-								&  - &   $\sim$ 2 sec 					 & $\sim $30 sec& $\sim $2 min  &  $\sim $10 min   \\ \hline
-				\end{tabular}
-				\]
-				\caption{	Gain apporté lors de la recherche du voisinage pour différentes valeurs de seuil.
-									Le premier test utilise un nuage de 2000 points tirés
-									aléatoirement dans l'ensemble $\cro{0,1}^2$, le second en utilise 5000,
-									le dernier 10000. A seuil fixe, 
-									la part du voisinage observé décroît lorsque $N$ diminue. Dans les trois cas, 
-									lorsque le seuil est fixé, les rapports tailles de 
-									voisinages sur nombre d'éléments sont sensiblement égales quel que soit $N$.
-									On s'aperçoit que le critère $Cr_1$ décroît également lorsque $N$ augmente. 
-									Les temps de calcul sont estimées avec un processeur Intel Pentium~III à 1~GHz et 
-									désignent le temps nécessaire à la construction de l'arbre.}
-				\indexfr{Intel}
-				\indexfr{Pentium}
-				\indexfr{temps de calcul}
-				\label{space_metric_rnd_gain}
-				\end{table}
+    
+                \begin{table}[ht]
+                \[
+                \begin{tabular}{|c|c|c|c|c|c|} \hline
+                seuil &   $\frac{\esp{\card{V_s\pa{X}}}}{N}$ & 
+                                $\begin{subarray}{c} r_s\pa{N=2000} \\ 
+                                algorithme~\ref{algorithm_insertion}^* \end{subarray}$     &
+                                $\begin{subarray}{c} r_s\pa{N=2000} \\ 
+                                algorithme~\ref{algorithm_AHC} \end{subarray}$                             &
+                                $\begin{subarray}{c} r_s\pa{N=5000} \\ 
+                                algorithme~\ref{algorithm_AHC} \end{subarray}$                             &
+                                $\begin{subarray}{c} r_s\pa{N=10000} \\ 
+                                algorithme~\ref{algorithm_AHC} \end{subarray}$         \\ \hline
+                0,001        &        0 \,\%   &      6,4 \,\%   &      1,2 \,\%  & 0,6  \,\% &  0,3 \,\% \\ %\hline
+                0,01        &        0 \,\%   &      6,8 \,\%   &      1,4 \,\%  & 0,7  \,\% &  0,4 \,\% \\ %\hline
+                0,1            &        2 \,\%   &      11,8 \,\%  &      4,1 \,\%  & 2,7  \,\% &  1,9 \,\% \\ %\hline
+                0,2            &        10 \,\%  &      17,2 \,\%  &      6,8 \,\%  & 4,5  \,\% &  3,2 \,\% \\ %\hline
+                0,3            &        21 \,\%  &      21,7 \,\%  &      8,7 \,\%  & 5,7  \,\% &  4,0 \,\% \\ %\hline
+                0,4            &        34 \,\%  &      25,1 \,\%  &      9,6 \,\%  & 6,3  \,\% &  4,5 \,\% \\ %\hline
+                0,5            &        48 \,\%  &      26,9 \,\%  &      10,0 \,\% & 6,5  \,\% &  4,6 \,\% \\ %\hline
+                0,6            &        62 \,\%  &      27,9 \,\%  &      9,4 \,\%  & 6,1  \,\% &  4,4 \,\% \\ %\hline
+                0,7            &        74 \,\%  &      27,0 \,\%  &      8,3 \,\%  & 5,4  \,\% &  3,9 \,\% \\ %\hline
+                0,8            &        85 \,\%  &      24,0 \,\%  &      6,7 \,\%  & 4,3  \,\% &  3,1 \,\% \\ %\hline
+                0,9            &        92 \,\%  &      19,2 \,\%  &      4,6 \,\%  & 3,0  \,\% &  2,1 \,\% \\ %\hline
+                1                &        98 \,\%  &      10,9 \,\%  &      2,3 \,\%  & 1,4  \,\% &  1,0 \,\% \\ %\hline
+                2                &        100 \,\% &      0,1 \,\%   &      0,1 \,\%  & 0,0  \,\% &  0,0 \,\% \\ \hline
+                $Cr_1$    &   -          &   0,135             &   0,039             & 0,023          &  0,017   \\ \hline
+                        \begin{minipage}[c]{3cm} 
+                        temps de calcul (arbre) 
+                        \end{minipage} 
+                                &  - &   $\sim$ 2 sec                      & $\sim $30 sec& $\sim $2 min  &  $\sim $10 min   \\ \hline
+                \end{tabular}
+                \]
+                \caption{    Gain apportï¿½ lors de la recherche du voisinage pour diffï¿½rentes valeurs de seuil.
+                                    Le premier test utilise un nuage de 2000 points tirï¿½s
+                                    alï¿½atoirement dans l'ensemble $\cro{0,1}^2$, le second en utilise 5000,
+                                    le dernier 10000. A seuil fixe, 
+                                    la part du voisinage observï¿½ dï¿½croï¿½t lorsque $N$ diminue. Dans les trois cas, 
+                                    lorsque le seuil est fixï¿½, les rapports tailles de 
+                                    voisinages sur nombre d'ï¿½lï¿½ments sont sensiblement ï¿½gales quel que soit $N$.
+                                    On s'aperï¿½oit que le critï¿½re $Cr_1$ dï¿½croï¿½t ï¿½galement lorsque $N$ augmente. 
+                                    Les temps de calcul sont estimï¿½es avec un processeur Intel Pentium~III ï¿½ 1~GHz et 
+                                    dï¿½signent le temps nï¿½cessaire ï¿½ la construction de l'arbre.}
+                \indexfr{Intel}
+                \indexfr{Pentium}
+                \indexfr{temps de calcul}
+                \label{space_metric_rnd_gain}
+                \end{table}
 
 
 
-Une expérience similaire est effectuée dans un espace de mots et pour mesurer l'amélioration obtenu par l'optimisation décrite au paragraphe~\ref{section_optimisation_distance}, le test suivant est réalisé~:
+Une expï¿½rience similaire est effectuï¿½e dans un espace de mots et pour mesurer l'amï¿½lioration obtenu par l'optimisation dï¿½crite au paragraphe~\ref{section_optimisation_distance}, le test suivant est rï¿½alisï¿½~:
 
-		\begin{itemize}
-    \item Un dictionnaire $D$ de 2178 prénoms\indexfr{prénom} est utilisé, son rayon est 10.
+        \begin{itemize}
+    \item Un dictionnaire $D$ de 2178 prï¿½noms\indexfr{prï¿½nom} est utilisï¿½, son rayon est 10.
     \item Le test consiste en l'obtention du voisinage $V_s\pa{m}$ de n'importe quel mot $m$ du dictionnaire.
-    \item La distance utilisée est cette de Levenstein (\citeindex{Levenstein1966}, 
-        	\citeindex{Wagner1974}).\indexfr{Levenstein}
-		\end{itemize}
+    \item La distance utilisï¿½e est cette de Levenstein (\citeindex{Levenstein1966}, 
+            \citeindex{Wagner1974}).\indexfr{Levenstein}
+        \end{itemize}
 
-Sans optimisation, pour un mot donné $m$, toutes les distances de $m$ avec les autres mots doivent être calculées. En utilisant l'optimisation proposée, il n'est pas nécessaire de les calculer toutes. Les résultats sont illustrés par le tableau~\ref{metric_test_optimisation}.
+Sans optimisation, pour un mot donnï¿½ $m$, toutes les distances de $m$ avec les autres mots doivent ï¿½tre calculï¿½es. En utilisant l'optimisation proposï¿½e, il n'est pas nï¿½cessaire de les calculer toutes. Les rï¿½sultats sont illustrï¿½s par le tableau~\ref{metric_test_optimisation}.
 
-		\begin{table}[ht]
+        \begin{table}[ht]
     %\newline
     $$
     \begin{tabular}{|c|c|cc|} \hline
     \textnormal{seuil} &    $\frac{\esp{\card{V_s\pa{X}}}}{N}$ &
-    						$\begin{subarray}{c} r_s\pa{N=2178} \\ algorithme~\ref{algorithm_AHC} \end{subarray}$ &
+                            $\begin{subarray}{c} r_s\pa{N=2178} \\ algorithme~\ref{algorithm_AHC} \end{subarray}$ &
                 $\begin{subarray}{c} r_s\pa{N=2178} \\ 
                 algorithme~\ref{algorithm_insertion}^* \end{subarray}$ 
                 \\ \hline
-								1				&	0,1 \,\%		&	17,3 \,\%	& 34,1	 \,\% \\
-								2				&	0,3 \,\%		&	30,2 \,\%	& 46,9	 \,\% \\
-								3				&	1,5 \,\%		&	45,7 \,\%	& 60,4	 \,\% \\
-								4				&	7,0 \,\%		&	63,1 \,\%	& 73,3	 \,\% \\
-								5				&	21,8 \,\%		&	76,3 \,\%	& 83,0	 \,\% \\
-								6				&	45,2 \,\%		&	79,8 \,\%	& 86,0	 \,\% \\
-								7				&	68,2 \,\%		&	74,0 \,\%	& 81,2	 \,\% \\
-								8				&	82,8 \,\%		&	59,6 \,\%	& 71,1	 \,\% \\
-								9				&	90,9 \,\%		&	45,2 \,\%	& 58,0	 \,\% \\
-								10			&	95,5 \,\%		&	30,7 \,\%	& 43,5	 \,\% \\
-								11			&	96,7 \,\%		&	21,0 \,\%	& 28,8	 \,\% \\
-								12			&	98,5 \,\%		&	12,5 \,\%	& 18,3	 \,\% \\
-								13			&	99,3 \,\%		&	7,7 \,\%	& 11,0	 \,\% \\
-								14			&	99,4 \,\%		&	4,9 \,\%	& 7,3	 \,\% \\
-								15			&	99,5 \,\%		&	3,0 \,\%	& 4,2	 \,\% \\
-								16			&	99,5 \,\%		&	2,2 \,\%	& 2,7	 \,\% \\
-								17			&	99,6 \,\%		&	1,5 \,\%	& 2,0	 \,\% \\
-								18			&	99,8 \,\%		&	0,9 \,\%	& 1,5	 \,\% \\
-								19			&	99,7 \,\%		&	0,9 \,\%	& 1,3	 \,\% \\
-								20			&	99,9 \,\%		&	0,6 \,\%	& 1,2	 \,\% \\ \hline
-                $Cr_1$ 	&  -					& 0,153  	&  0,221 \\ \hline
-                		\begin{minipage}[c]{3cm} 
-                		temps de calcul (arbre) 
-                		\end{minipage} 
-                				& - 	& $\sim$5 min &  $\sim$1 h\\ \hline
+                                1                &    0,1 \,\%        &    17,3 \,\%    & 34,1     \,\% \\
+                                2                &    0,3 \,\%        &    30,2 \,\%    & 46,9     \,\% \\
+                                3                &    1,5 \,\%        &    45,7 \,\%    & 60,4     \,\% \\
+                                4                &    7,0 \,\%        &    63,1 \,\%    & 73,3     \,\% \\
+                                5                &    21,8 \,\%        &    76,3 \,\%    & 83,0     \,\% \\
+                                6                &    45,2 \,\%        &    79,8 \,\%    & 86,0     \,\% \\
+                                7                &    68,2 \,\%        &    74,0 \,\%    & 81,2     \,\% \\
+                                8                &    82,8 \,\%        &    59,6 \,\%    & 71,1     \,\% \\
+                                9                &    90,9 \,\%        &    45,2 \,\%    & 58,0     \,\% \\
+                                10            &    95,5 \,\%        &    30,7 \,\%    & 43,5     \,\% \\
+                                11            &    96,7 \,\%        &    21,0 \,\%    & 28,8     \,\% \\
+                                12            &    98,5 \,\%        &    12,5 \,\%    & 18,3     \,\% \\
+                                13            &    99,3 \,\%        &    7,7 \,\%    & 11,0     \,\% \\
+                                14            &    99,4 \,\%        &    4,9 \,\%    & 7,3     \,\% \\
+                                15            &    99,5 \,\%        &    3,0 \,\%    & 4,2     \,\% \\
+                                16            &    99,5 \,\%        &    2,2 \,\%    & 2,7     \,\% \\
+                                17            &    99,6 \,\%        &    1,5 \,\%    & 2,0     \,\% \\
+                                18            &    99,8 \,\%        &    0,9 \,\%    & 1,5     \,\% \\
+                                19            &    99,7 \,\%        &    0,9 \,\%    & 1,3     \,\% \\
+                                20            &    99,9 \,\%        &    0,6 \,\%    & 1,2     \,\% \\ \hline
+                $Cr_1$     &  -                    & 0,153      &  0,221 \\ \hline
+                        \begin{minipage}[c]{3cm} 
+                        temps de calcul (arbre) 
+                        \end{minipage} 
+                                & -     & $\sim$5 min &  $\sim$1 h\\ \hline
     \end{tabular}
     $$
-    \caption{	Amélioration moyenne mesurée par (\ref{gain_mot}), comparaison des
-    					 algorithmes~\ref{algorithm_AHC},
-    	 				$\ref{algorithm_insertion}^*$. Le centre du dictionnaire est 
-            	MARIE-LOUISE et son rayon est 17. Dans le pire des cas, $s=6$, 
-            	20\% des calculs de distances sont évités.
-            	Les temps de calcul correspondand à la construction de l'arbre
-            	sont estimés avec un processeur Intel Pentium 1~GHz.}
-				\indexfr{Intel}
-				\indexfr{Pentium}
-				\indexfr{temps de calcul}
+    \caption{    Amï¿½lioration moyenne mesurï¿½e par (\ref{gain_mot}), comparaison des
+                         algorithmes~\ref{algorithm_AHC},
+                         $\ref{algorithm_insertion}^*$. Le centre du dictionnaire est 
+                MARIE-LOUISE et son rayon est 17. Dans le pire des cas, $s=6$, 
+                20\% des calculs de distances sont ï¿½vitï¿½s.
+                Les temps de calcul correspondand ï¿½ la construction de l'arbre
+                sont estimï¿½s avec un processeur Intel Pentium 1~GHz.}
+                \indexfr{Intel}
+                \indexfr{Pentium}
+                \indexfr{temps de calcul}
     \label{metric_test_optimisation}
-		\end{table}
+        \end{table}
 
 
 \begin{xremark}{ordre d'insertion}
-L'ordre d'insertion des mots dans l'arbre affecte les résultats. En ce qui concerne les \indexfrr{ordre}{insertion}
-algorithmes~\ref{algorithm_insertion} et~$\ref{algorithm_insertion}^*$, les mots ont été insérés par ordres croissant et décroissant de taille, les différences sont rendues par le tableau~\ref{test_optimisation_taille_2}.
+L'ordre d'insertion des mots dans l'arbre affecte les rï¿½sultats. En ce qui concerne les \indexfrr{ordre}{insertion}
+algorithmes~\ref{algorithm_insertion} et~$\ref{algorithm_insertion}^*$, les mots ont ï¿½tï¿½ insï¿½rï¿½s par ordres croissant et dï¿½croissant de taille, les diffï¿½rences sont rendues par le tableau~\ref{test_optimisation_taille_2}.
 \end{xremark}
 
 
-		\begin{table}[ht]
-   	%\newline
+        \begin{table}[ht]
+       %\newline
     $$
     \fbox{$
     \begin{array}{ccccc}
     \text{seuil} &  \begin{subarray}{c} r \textnormal{ moyen} \\ algorithme~\ref{algorithm_insertion}^* \\
-                    \textnormal{longueurs décroissantes} \end{subarray} &
+                    \textnormal{longueurs dï¿½croissantes} \end{subarray} &
                     \begin{subarray}{c} r \textnormal{ moyen} \\ algorithme~\ref{algorithm_insertion}^* \\
                     \textnormal{longueurs croissantes} \end{subarray}
                     \\
@@ -944,51 +944,51 @@ algorithmes~\ref{algorithm_insertion} et~$\ref{algorithm_insertion}^*$, les mots
     \end{array}
     $}
     $$
-    \caption{Amélioration moyenne mesurée par (\ref{gain_mot}), comparaison des ordres d'insertion}
+    \caption{Amï¿½lioration moyenne mesurï¿½e par (\ref{gain_mot}), comparaison des ordres d'insertion}
     \label{test_optimisation_taille_2}
-		\end{table}
+        \end{table}
 
 
 
 
 
-		\begin{table}[ht]
+        \begin{table}[ht]
     %\newline
     $$
     \begin{tabular}{|c|cc|} \hline
     \textnormal{seuil} &    $\frac{\esp{\card{V_s\pa{X}}}}{N}$ &
-    						$\begin{subarray}{c} r_s\pa{N=4987} \\ algorithme~\ref{algorithm_AHC} \end{subarray}$
+                            $\begin{subarray}{c} r_s\pa{N=4987} \\ algorithme~\ref{algorithm_AHC} \end{subarray}$
                 \\ \hline
-								1		&	0,0	 		\,\%	&	5,7	 	\,\%	 \\
-								2		&	0,0	 		\,\%	&	10,4	\,\%	 \\
-								3		&	0,0	 		\,\%	&	17,1	\,\%	 \\
-								4		&	0,1	 		\,\%	&	26,4	\,\%	 \\
-								5		&	0,4	 		\,\%	&	42,2	\,\%	 \\
-								6		&	2,0	 		\,\%	&	61,6	\,\%	 \\
-								7		&	9,0	 		\,\%	&	82,1	\,\%	 \\
-								8		&	34,1	 	\,\%	&	94,7	\,\%	 \\
-								9		&	77,4	 	\,\%	&	91,3	\,\%	 \\
-								10	&	97,7	 	\,\%	&	73,1	\,\%	 \\
-								11	&	99,4	 	\,\%	&	48,4	\,\%	 \\
-								12	&	99,9	 	\,\%	&	31,0	\,\%	 \\
-								13	&	100,0	 	\,\%	&	20,1	\,\%	 \\
-								14	&	100,0	 	\,\%	&	11,1	\,\%	 \\
-								15	&	100,0	 	\,\%	&	6,0	 	\,\%	 \\
-								16	&	100,0	 	\,\%	&	3,0	 	\,\%	 \\
-								17	&	100,0	 	\,\%	&	1,3	 	\,\%	 \\
-								18	&	100,0	 	\,\%	&	0,0	 	\,\%	 \\ \hline
-                $Cr_1$ 	&  -					& 0,210  			  \\ \hline
-                temps de calcul & - 	& $\sim$3 h   \\ \hline
+                                1        &    0,0             \,\%    &    5,7         \,\%     \\
+                                2        &    0,0             \,\%    &    10,4    \,\%     \\
+                                3        &    0,0             \,\%    &    17,1    \,\%     \\
+                                4        &    0,1             \,\%    &    26,4    \,\%     \\
+                                5        &    0,4             \,\%    &    42,2    \,\%     \\
+                                6        &    2,0             \,\%    &    61,6    \,\%     \\
+                                7        &    9,0             \,\%    &    82,1    \,\%     \\
+                                8        &    34,1         \,\%    &    94,7    \,\%     \\
+                                9        &    77,4         \,\%    &    91,3    \,\%     \\
+                                10    &    97,7         \,\%    &    73,1    \,\%     \\
+                                11    &    99,4         \,\%    &    48,4    \,\%     \\
+                                12    &    99,9         \,\%    &    31,0    \,\%     \\
+                                13    &    100,0         \,\%    &    20,1    \,\%     \\
+                                14    &    100,0         \,\%    &    11,1    \,\%     \\
+                                15    &    100,0         \,\%    &    6,0         \,\%     \\
+                                16    &    100,0         \,\%    &    3,0         \,\%     \\
+                                17    &    100,0         \,\%    &    1,3         \,\%     \\
+                                18    &    100,0         \,\%    &    0,0         \,\%     \\ \hline
+                $Cr_1$     &  -                    & 0,210                \\ \hline
+                temps de calcul & -     & $\sim$3 h   \\ \hline
                 \end{tabular}
     $$
-    \caption{	Amélioration moyenne mesurée par (\ref{gain_mot}), le test est effectué
-    					sur un dictionnaire de 4987 mots anglais de centre "POSITIVELY" de rayon 13. 
-    					L'optimisation est plus pertinente dans ce cas où le dictionnaire
-    					contient plus du double de mots que celui utilisé
-    					pour le test~\ref{metric_test_optimisation}.
-    					}
+    \caption{    Amï¿½lioration moyenne mesurï¿½e par (\ref{gain_mot}), le test est effectuï¿½
+                        sur un dictionnaire de 4987 mots anglais de centre "POSITIVELY" de rayon 13. 
+                        L'optimisation est plus pertinente dans ce cas oï¿½ le dictionnaire
+                        contient plus du double de mots que celui utilisï¿½
+                        pour le test~\ref{metric_test_optimisation}.
+                        }
     \label{metric_test_optimisation_dicos}
-		\end{table}
+        \end{table}
 
 
 
@@ -1003,7 +1003,7 @@ algorithmes~\ref{algorithm_insertion} et~$\ref{algorithm_insertion}^*$, les mots
 %-------------------------------------------------------------------------------------------------------------------
 
 
-Lorsque l'espace métrique est aussi vectoriel, la recherche des plus proches voisins est facilité car il est possible d'utiliser les coordonnées des éléments comme dans l'algorithme \emph{Branch and Bound}. Ces coordonnées permettent également d'obtenir des résultats théorique plus avancés en ce qui concerne le coût de cette recherche (voir \citeindex{Arya1994}.
+Lorsque l'espace mï¿½trique est aussi vectoriel, la recherche des plus proches voisins est facilitï¿½ car il est possible d'utiliser les coordonnï¿½es des ï¿½lï¿½ments comme dans l'algorithme \emph{Branch and Bound}. Ces coordonnï¿½es permettent ï¿½galement d'obtenir des rï¿½sultats thï¿½orique plus avancï¿½s en ce qui concerne le coï¿½t de cette recherche (voir \citeindex{Arya1994}.
 
 
 
@@ -1012,32 +1012,32 @@ Lorsque l'espace métrique est aussi vectoriel, la recherche des plus proches voi
 \subsection{B+ tree}
 \indexfr{B+ tree}
 
-Ce premier algorithme s'applique dans le cas réel afin d'ordonner des nombres dans un arbre de sorte que chaque n\oe ud ait un père et pas plus de $n$ fils (voir figure~\ref{space_metric_btree}). 
+Ce premier algorithme s'applique dans le cas rï¿½el afin d'ordonner des nombres dans un arbre de sorte que chaque n\oe ud ait un pï¿½re et pas plus de $n$ fils (voir figure~\ref{space_metric_btree}). 
 
 
-				\begin{figure}[ht]
-				$$\begin{array}{|c|}\hline
-    		\includegraphics[height=5cm, width=7cm]{\filext{../space_metric/image/btree}} \\ \hline
-    		\end{array}$$
-    		\caption{Illustration d'un B+ tree.}
-    		\label{space_metric_btree}
-    		\end{figure}
+                \begin{figure}[ht]
+                $$\begin{array}{|c|}\hline
+            \includegraphics[height=5cm, width=7cm]{\filext{../space_metric/image/btree}} \\ \hline
+            \end{array}$$
+            \caption{Illustration d'un B+ tree.}
+            \label{space_metric_btree}
+            \end{figure}
 
-		\begin{xdefinition}{B+ tree}
-		Soit $B_n$ un B+ tree, soit $N$ un n\oe ud de $B_n$, il contient un vecteur $V\pa{N} = \vecteur{x_1}{x_t}$ 
-		avec $0 \infegal t \infegal n$ et $x_1 < ... < x_t$. Ce n\oe ud contient aussi exactement $t-1$ n\oe uds fils 
-		notés $\vecteur{N_1}{N_{t-1}}$. On désigne par $D\pa{N_t}$ l'ensemble des descendants du n\oe ud $N_t$ et 
-		$G\pa{N_t} = \acc{ V\pa{M} \sac M \in D\pa{N_t}}$. Le n\oe ud $N$ vérifie~:
-					\begin{eqnarray*}
-					&& \forall x \in G\pa{N_t}, \; x_{t} \infegal x < x_{t+1} \\
-					&& \text{avec par convention } x_0 = -\infty \text{ et } x_{t+1} = + \infty
-					\end{eqnarray*}
-		\end{xdefinition}
-		
+        \begin{xdefinition}{B+ tree}
+        Soit $B_n$ un B+ tree, soit $N$ un n\oe ud de $B_n$, il contient un vecteur $V\pa{N} = \vecteur{x_1}{x_t}$ 
+        avec $0 \infegal t \infegal n$ et $x_1 < ... < x_t$. Ce n\oe ud contient aussi exactement $t-1$ n\oe uds fils 
+        notï¿½s $\vecteur{N_1}{N_{t-1}}$. On dï¿½signe par $D\pa{N_t}$ l'ensemble des descendants du n\oe ud $N_t$ et 
+        $G\pa{N_t} = \acc{ V\pa{M} \sac M \in D\pa{N_t}}$. Le n\oe ud $N$ vï¿½rifie~:
+                    \begin{eqnarray*}
+                    && \forall x \in G\pa{N_t}, \; x_{t} \infegal x < x_{t+1} \\
+                    && \text{avec par convention } x_0 = -\infty \text{ et } x_{t+1} = + \infty
+                    \end{eqnarray*}
+        \end{xdefinition}
+        
 \indexfr{quicksort}
 \indexfrr{tri}{quicksort}
-		
-Cet arbre permet de trier une liste de nombres, c'est une généralisation du tri "quicksort" pour lequel $n=2$. Comme pour le tri quicksort, l'arbre est construit à partir d'une série d'insertions et de cet ordre dépend la rapidité du tri. L'espérance du coût (moyenne sur tous les permutations possibles de $k$ éléments), le coût de l'algorithme est en $O\pa{k \log_n k}$. 
+        
+Cet arbre permet de trier une liste de nombres, c'est une gï¿½nï¿½ralisation du tri "quicksort" pour lequel $n=2$. Comme pour le tri quicksort, l'arbre est construit ï¿½ partir d'une sï¿½rie d'insertions et de cet ordre dï¿½pend la rapiditï¿½ du tri. L'espï¿½rance du coï¿½t (moyenne sur tous les permutations possibles de $k$ ï¿½lï¿½ments), le coï¿½t de l'algorithme est en $O\pa{k \log_n k}$. 
 
 
 
@@ -1049,116 +1049,116 @@ Cet arbre permet de trier une liste de nombres, c'est une généralisation du tri 
 \subsection{R-tree ou Rectangular Tree}
 \indexfr{R-tree}
 
-L'arbre R-tree est l'adaptation du mécanisme du B+ tree au cas multidimensionnel (voir \citeindex{Guttman1984}). La construction de cet arbre peut se faire de manière globale -~construction de l'arbre sachant l'ensemble de points à classer~- ou de manière progressive -~insertion des points dans l'arbre les uns à la suite des autres~-. Ces arbres sont comparables à l'arbre de partitionnement construit par l'algorithme~\ref{algorithm_AHC} à ceci près que la forme des ensembles est constituée de rectangles et non plus de cercles. L'appartenance d'un point à un rectangle dépend dorénavant des comparaisons entre coordonnées tandis que l'appartenance d'un point à un cercle nécessite le calcul d'une distance, ce qui est plus lent. Toutefois, ces méthodes sont resteintes à des espaces vectoriels.
+L'arbre R-tree est l'adaptation du mï¿½canisme du B+ tree au cas multidimensionnel (voir \citeindex{Guttman1984}). La construction de cet arbre peut se faire de maniï¿½re globale -~construction de l'arbre sachant l'ensemble de points ï¿½ classer~- ou de maniï¿½re progressive -~insertion des points dans l'arbre les uns ï¿½ la suite des autres~-. Ces arbres sont comparables ï¿½ l'arbre de partitionnement construit par l'algorithme~\ref{algorithm_AHC} ï¿½ ceci prï¿½s que la forme des ensembles est constituï¿½e de rectangles et non plus de cercles. L'appartenance d'un point ï¿½ un rectangle dï¿½pend dorï¿½navant des comparaisons entre coordonnï¿½es tandis que l'appartenance d'un point ï¿½ un cercle nï¿½cessite le calcul d'une distance, ce qui est plus lent. Toutefois, ces mï¿½thodes sont resteintes ï¿½ des espaces vectoriels.
 
-				\begin{figure}[ht]
-				$$\begin{array}{|c|c|}\hline
-    		\includegraphics[height=6cm, width=6cm]{\filext{../space_metric/image/rtree1}} &
-    		\includegraphics[height=5cm, width=11cm]{\filext{../space_metric/image/rtree2}} \\ \hline
-    		\end{array}$$
-    		\caption{	Illustration d'un R-tree en deux dimensions, 
-    							figure extraite de \citeindexfig{Sellis1987}, la première image montre des rectangles
-    							pointillés englobant d'autres rectangles en trait plein. Chaque style de trait correspond
-    							à un niveau dans le graphe de la seconde image.
-    							}
-    		\label{space_metric_rtree}
-    		\end{figure}
-    		
-\indexfrr{boîte}{englobante}
-\indexfrr{boîte}{objet}
-\indexfrr{boîte}{fenêtre}
+                \begin{figure}[ht]
+                $$\begin{array}{|c|c|}\hline
+            \includegraphics[height=6cm, width=6cm]{\filext{../space_metric/image/rtree1}} &
+            \includegraphics[height=5cm, width=11cm]{\filext{../space_metric/image/rtree2}} \\ \hline
+            \end{array}$$
+            \caption{    Illustration d'un R-tree en deux dimensions, 
+                                figure extraite de \citeindexfig{Sellis1987}, la premiï¿½re image montre des rectangles
+                                pointillï¿½s englobant d'autres rectangles en trait plein. Chaque style de trait correspond
+                                ï¿½ un niveau dans le graphe de la seconde image.
+                                }
+            \label{space_metric_rtree}
+            \end{figure}
+            
+\indexfrr{boï¿½te}{englobante}
+\indexfrr{boï¿½te}{objet}
+\indexfrr{boï¿½te}{fenï¿½tre}
 
-Il n'existe pas une seule manière de construire un R-tree, les n\oe uds de ces arbres suivent toujours la contrainte des B+~Tree qui est d'avoir un père et au plus $n$ fils. Les R-Tree ont la même structure que les B+~Tree ôtée de leurs contraintes d'ordonnancement des fils. De plus, ces arbres organisent spatialement des rectangles ou boîtes en plusieurs dimensions comme le suggère la figure~\ref{space_metric_rtree}. Les boîtes à organiser seront nommés les objets, ces objets sont ensuite regroupés dans des boîtes englobantes. Un n\oe ud $n$ d'un R-tree est donc soit une feuille, auquel cas la boîte qu'il désigne est un objet, dans ce cas, il n'a aucun fils, soit le n\oe ud désigne une boîte englobante $B\pa{n}$. On désigne par $\mathcal{B}$ l'ensemble des boîtes d'un espace vectoriel quelconque et $v\pa{b}$ désigne son volume. Pour un n\oe ud $n$ non feuille, $A\pa{n}$ désigne l'ensemble des descendants de ce n\oe ud. $B\pa{n}$ est défini par~:
+Il n'existe pas une seule maniï¿½re de construire un R-tree, les n\oe uds de ces arbres suivent toujours la contrainte des B+~Tree qui est d'avoir un pï¿½re et au plus $n$ fils. Les R-Tree ont la mï¿½me structure que les B+~Tree ï¿½tï¿½e de leurs contraintes d'ordonnancement des fils. De plus, ces arbres organisent spatialement des rectangles ou boï¿½tes en plusieurs dimensions comme le suggï¿½re la figure~\ref{space_metric_rtree}. Les boï¿½tes ï¿½ organiser seront nommï¿½s les objets, ces objets sont ensuite regroupï¿½s dans des boï¿½tes englobantes. Un n\oe ud $n$ d'un R-tree est donc soit une feuille, auquel cas la boï¿½te qu'il dï¿½signe est un objet, dans ce cas, il n'a aucun fils, soit le n\oe ud dï¿½signe une boï¿½te englobante $B\pa{n}$. On dï¿½signe par $\mathcal{B}$ l'ensemble des boï¿½tes d'un espace vectoriel quelconque et $v\pa{b}$ dï¿½signe son volume. Pour un n\oe ud $n$ non feuille, $A\pa{n}$ dï¿½signe l'ensemble des descendants de ce n\oe ud. $B\pa{n}$ est dï¿½fini par~:
 
-			$$
-			B\pa{n} = \arg \min \acc{ v\pa{b} \sac b \in \mathcal{B} \text{ et } 
-										\forall n' \in A\pa{n'}, \; B\pa{n'} \subset B\pa{n} }
-			$$
-
-
-
-La recherche dans un R-tree consiste à trouver toutes les objets ayant une intersection avec une autre boîte ou fenêtre $W$, soit l'ensemble $L$~:
-
-		$$
-		L = \acc{ B\pa{n} \sac B\pa{n} \text{ est un objet et } B\pa{n} \cap W \neq \emptyset }
-		$$ 
+            $$
+            B\pa{n} = \arg \min \acc{ v\pa{b} \sac b \in \mathcal{B} \text{ et } 
+                                        \forall n' \in A\pa{n'}, \; B\pa{n'} \subset B\pa{n} }
+            $$
 
 
-Cet ensemble est construit grâce à l'algorithme suivant~:
+
+La recherche dans un R-tree consiste ï¿½ trouver toutes les objets ayant une intersection avec une autre boï¿½te ou fenï¿½tre $W$, soit l'ensemble $L$~:
+
+        $$
+        L = \acc{ B\pa{n} \sac B\pa{n} \text{ est un objet et } B\pa{n} \cap W \neq \emptyset }
+        $$ 
 
 
-		\begin{xalgorithm}{recherche dans un R-tree}  \label{space_metric_algo_r_tree_search}
-		Les notations sont celles utilisées dans ce paragraphe. On désigne par $r$ le n\oe ud racine d'un R-tree. 
-		Soit $n$ un n\oe ud, on désigne par $F\pa{n}$ l'ensemble des fils de ce n\oe ud.
-		
-		\begin{xalgostep}{initialisation}
-		$L \longleftarrow 0$ \\
-		$N \longleftarrow \acc{r}$
-		\end{xalgostep}
-		
-		\begin{xalgostep}{itération}
-		\begin{xwhile}{$N \neq \emptyset$}
-			\begin{xforeach}{n}{N}
-				\begin{xif}{$W \cap B\pa{n} \neq \emptyset$} 
-				  $N \longleftarrow N \cup F\pa{n}$ \\
-					\begin{xif}{$B\pa{n}$ est un objet}
-							$L \longleftarrow B\pa{n}$ 
-					\end{xif}
-				\end{xif}
-			\end{xforeach}
-		\end{xwhile}
-		\end{xalgostep}
-	
-		$L$ est l'ensemble cherché.
-		
-		\end{xalgorithm}
+Cet ensemble est construit grï¿½ce ï¿½ l'algorithme suivant~:
 
 
-Il reste à construire le R-tree, opération effectuée par la répétition successive de l'algorithme~\ref{space_metric_algo_r_tree_insert} permettant d'insérer un objet dans un R-tree.
-
-		\begin{xalgorithm}{insertion d'un objet dans un R-tree} \label{space_metric_algo_r_tree_insert}
-		Les notations utilisées sont les mêmes que celles de l'algorithme~\ref{space_metric_algo_r_tree_search}.
-		On cherche à insérer l'object $E$ désigné par son n\oe ud feuille $e$. On suppose que l'arbre contient au
-		moins un n\oe ud, sa racine $r$. On désigne également par $p\pa{n}$ le père du n\oe ud $n$. Chaque n\oe ud 
-		ne peut contenir plus de $s$ fils. On désigne par  
-		$v^*\pa{G} = \min \acc{ P \sac P \in \mathcal{B} \text{ et } 
-				\unionone{g \in G} B\pa{g}  \subset P }$.
-		
-		\begin{xalgostep}{sélection du n\oe ud d'insertion}
-		$n^* \longleftarrow r$ \\
-		\begin{xwhile}{$n^*$ n'est pas un n\oe ud feuille}
-		    On choisit le fils $f$ de $n^*$ qui minimise l'accroissement $v_f - v\pa{B\pa{f}}$ 
-		    du volume avec $v_f$ défini par~: 
-				\begin{eqnarray}
-				v_f = \min \acc{ v\pa{P} \sac P \in \mathcal{B} \text{ et } B\pa{f} \cup B\pa{e}  \subset P }  
-				\label{space_metric_r_tree_b_n_update}
-				\end{eqnarray}
-				$n^* \longleftarrow f$
-		\end{xwhile}
-		\end{xalgostep}
-		
-		\begin{xalgostep}{ajout du n\oe ud}
-		Si $p\pa{n^*}$ a moins de $s$ fils, alors le n\oe ud $e$ devient le fils de $p\pa{n^*}$ et $B\pa{p\pa{n^*}}$ est 
-		mis à jour d'après l'expression (\ref{space_metric_r_tree_b_n_update}). L'insertion est terminée.
-		Dans le cas contraire, on sépare découpe le n\oe ud $p\pa{n^*}$ en deux grâce à l'étape suivante.
-		\end{xalgostep}
-		
-		%\possiblecut 
-
-		\begin{xalgostep}{découpage des n\oe uds} \label{space_metric_insertion_decoupage_r_tree}
-		L'objectif est de diviser le groupe $G$ composé de $s+1$ n\oe uds en deux groupes $G_1$ et $G_1$. 
-		Tout d'abord, on cherche 
-		le couple $\pa{n_1,n_2}$ qui minimise le critère $$ d = v^*\pa{\acc{n_1,n_2}} - v\pa{B\pa{n_1}} - v\pa{B\pa{n_2}}$$ Alors~:
-		$G_1 \longleftarrow n_1$, $G_2 \longleftarrow n_2$ et $G \longleftarrow G - G_1 \cup G_2$ \\
-		\begin{xwhile}{$G \neq \emptyset$}
-				On choisit un n\oe ud $n \in G$, on détermine $i^*$ tel que $v\pa{\acc{n} \cup G_i} - v\pa{G_i}$ soit minimal. \\
-				$G \longleftarrow G - \acc{n}$ \\
-				$G_{i^*} \longleftarrow G_{i^*} \cup \acc{n}$
-		\end{xwhile}
-		\end{xalgostep}
+        \begin{xalgorithm}{recherche dans un R-tree}  \label{space_metric_algo_r_tree_search}
+        Les notations sont celles utilisï¿½es dans ce paragraphe. On dï¿½signe par $r$ le n\oe ud racine d'un R-tree. 
+        Soit $n$ un n\oe ud, on dï¿½signe par $F\pa{n}$ l'ensemble des fils de ce n\oe ud.
+        
+        \begin{xalgostep}{initialisation}
+        $L \longleftarrow 0$ \\
+        $N \longleftarrow \acc{r}$
+        \end{xalgostep}
+        
+        \begin{xalgostep}{itï¿½ration}
+        \begin{xwhile}{$N \neq \emptyset$}
+            \begin{xforeach}{n}{N}
+                \begin{xif}{$W \cap B\pa{n} \neq \emptyset$} 
+                  $N \longleftarrow N \cup F\pa{n}$ \\
+                    \begin{xif}{$B\pa{n}$ est un objet}
+                            $L \longleftarrow B\pa{n}$ 
+                    \end{xif}
+                \end{xif}
+            \end{xforeach}
+        \end{xwhile}
+        \end{xalgostep}
+    
+        $L$ est l'ensemble cherchï¿½.
+        
+        \end{xalgorithm}
 
 
-		\end{xalgorithm}
+Il reste ï¿½ construire le R-tree, opï¿½ration effectuï¿½e par la rï¿½pï¿½tition successive de l'algorithme~\ref{space_metric_algo_r_tree_insert} permettant d'insï¿½rer un objet dans un R-tree.
+
+        \begin{xalgorithm}{insertion d'un objet dans un R-tree} \label{space_metric_algo_r_tree_insert}
+        Les notations utilisï¿½es sont les mï¿½mes que celles de l'algorithme~\ref{space_metric_algo_r_tree_search}.
+        On cherche ï¿½ insï¿½rer l'object $E$ dï¿½signï¿½ par son n\oe ud feuille $e$. On suppose que l'arbre contient au
+        moins un n\oe ud, sa racine $r$. On dï¿½signe ï¿½galement par $p\pa{n}$ le pï¿½re du n\oe ud $n$. Chaque n\oe ud 
+        ne peut contenir plus de $s$ fils. On dï¿½signe par  
+        $v^*\pa{G} = \min \acc{ P \sac P \in \mathcal{B} \text{ et } 
+                \unionone{g \in G} B\pa{g}  \subset P }$.
+        
+        \begin{xalgostep}{sï¿½lection du n\oe ud d'insertion}
+        $n^* \longleftarrow r$ \\
+        \begin{xwhile}{$n^*$ n'est pas un n\oe ud feuille}
+            On choisit le fils $f$ de $n^*$ qui minimise l'accroissement $v_f - v\pa{B\pa{f}}$ 
+            du volume avec $v_f$ dï¿½fini par~: 
+                \begin{eqnarray}
+                v_f = \min \acc{ v\pa{P} \sac P \in \mathcal{B} \text{ et } B\pa{f} \cup B\pa{e}  \subset P }  
+                \label{space_metric_r_tree_b_n_update}
+                \end{eqnarray}
+                $n^* \longleftarrow f$
+        \end{xwhile}
+        \end{xalgostep}
+        
+        \begin{xalgostep}{ajout du n\oe ud}
+        Si $p\pa{n^*}$ a moins de $s$ fils, alors le n\oe ud $e$ devient le fils de $p\pa{n^*}$ et $B\pa{p\pa{n^*}}$ est 
+        mis ï¿½ jour d'aprï¿½s l'expression (\ref{space_metric_r_tree_b_n_update}). L'insertion est terminï¿½e.
+        Dans le cas contraire, on sï¿½pare dï¿½coupe le n\oe ud $p\pa{n^*}$ en deux grï¿½ce ï¿½ l'ï¿½tape suivante.
+        \end{xalgostep}
+        
+        %\possiblecut 
+
+        \begin{xalgostep}{dï¿½coupage des n\oe uds} \label{space_metric_insertion_decoupage_r_tree}
+        L'objectif est de diviser le groupe $G$ composï¿½ de $s+1$ n\oe uds en deux groupes $G_1$ et $G_1$. 
+        Tout d'abord, on cherche 
+        le couple $\pa{n_1,n_2}$ qui minimise le critï¿½re $$ d = v^*\pa{\acc{n_1,n_2}} - v\pa{B\pa{n_1}} - v\pa{B\pa{n_2}}$$ Alors~:
+        $G_1 \longleftarrow n_1$, $G_2 \longleftarrow n_2$ et $G \longleftarrow G - G_1 \cup G_2$ \\
+        \begin{xwhile}{$G \neq \emptyset$}
+                On choisit un n\oe ud $n \in G$, on dï¿½termine $i^*$ tel que $v\pa{\acc{n} \cup G_i} - v\pa{G_i}$ soit minimal. \\
+                $G \longleftarrow G - \acc{n}$ \\
+                $G_{i^*} \longleftarrow G_{i^*} \cup \acc{n}$
+        \end{xwhile}
+        \end{xalgostep}
+
+
+        \end{xalgorithm}
 
 
 
@@ -1170,7 +1170,7 @@ Il reste à construire le R-tree, opération effectuée par la répétition successiv
 \indexfr{R$^*$ tree}
 \indexfr{R$^*$ tree}
 \indexfr{R+ Tree}
-Si la recherche est identique quel que soit l'arbre construit, chaque variante de la construction de l'arbre tente de minimiser les intersections des boîtes et leur couverture. Plus précisément, l'étape~\ref{space_metric_insertion_decoupage_r_tree} qui permet de découper les n\oe uds est conçue de manière à obtenir des boîtes englobantes de volume minimale et/ou d'intersection minimale avec d'autres boîtes englobantes. L'algorithme R+~Tree (voir \citeindex{Sellis1987}) essaye de minimiser les intersections entre boîtes et les objets à organiser sont supposés n'avoir aucune intersection commune. La variante R$^*$~Tree (voir \citeindex{Beckmann1990}) effectue un compromis entre l'intersection et la couverture des boîtes englobantes. L'algorithme X-Tree (voir \citeindex{Berchtold1996}) conserve l'historique de la construction de l'arbre ce qui lui permet de mieux éviter les intersections communes entre boîtes.
+Si la recherche est identique quel que soit l'arbre construit, chaque variante de la construction de l'arbre tente de minimiser les intersections des boï¿½tes et leur couverture. Plus prï¿½cisï¿½ment, l'ï¿½tape~\ref{space_metric_insertion_decoupage_r_tree} qui permet de dï¿½couper les n\oe uds est conï¿½ue de maniï¿½re ï¿½ obtenir des boï¿½tes englobantes de volume minimale et/ou d'intersection minimale avec d'autres boï¿½tes englobantes. L'algorithme R+~Tree (voir \citeindex{Sellis1987}) essaye de minimiser les intersections entre boï¿½tes et les objets ï¿½ organiser sont supposï¿½s n'avoir aucune intersection commune. La variante R$^*$~Tree (voir \citeindex{Beckmann1990}) effectue un compromis entre l'intersection et la couverture des boï¿½tes englobantes. L'algorithme X-Tree (voir \citeindex{Berchtold1996}) conserve l'historique de la construction de l'arbre ce qui lui permet de mieux ï¿½viter les intersections communes entre boï¿½tes.
 
 
 
@@ -1182,33 +1182,33 @@ Si la recherche est identique quel que soit l'arbre construit, chaque variante d
 
 \subsection{Branch and Bound}
 \indexfr{Branch and Bound}
-\indexfr{hiérarchie}
-\indexfrr{décomposition}{hiérarchique}
+\indexfr{hiï¿½rarchie}
+\indexfrr{dï¿½composition}{hiï¿½rarchique}
 \indexfr{espace vectoriel}
 
-Les algorithmes regroupés sous cette terminaison \emph{Branch and Bound} englobe la plupart des méthodes présentées dans ce document, elles désignent tout algorithme de recherche nécessitant une première étape permettant de construire une décomposition hiérarchique de l'ensemble des exemples ou exemples d'apprentissage, cet ensemble étant inclus dans un espace vectoriel. La première version de cette famille algorithme a été développée dans \citeindex{Fukunaga1975}.
+Les algorithmes regroupï¿½s sous cette terminaison \emph{Branch and Bound} englobe la plupart des mï¿½thodes prï¿½sentï¿½es dans ce document, elles dï¿½signent tout algorithme de recherche nï¿½cessitant une premiï¿½re ï¿½tape permettant de construire une dï¿½composition hiï¿½rarchique de l'ensemble des exemples ou exemples d'apprentissage, cet ensemble ï¿½tant inclus dans un espace vectoriel. La premiï¿½re version de cette famille algorithme a ï¿½tï¿½ dï¿½veloppï¿½e dans \citeindex{Fukunaga1975}.
 
 \indexfrr{loi}{normale}
 
-La méthode présentée dans \citeindex{D'Haes2003} utilise une analyse en composantes principales afin de construire une hiérarchique adaptée à un nuage de points obéissant à une loi normale multidimensionnelle (voir figure~\ref{space_metric_dheas_1}).
+La mï¿½thode prï¿½sentï¿½e dans \citeindex{D'Haes2003} utilise une analyse en composantes principales afin de construire une hiï¿½rarchique adaptï¿½e ï¿½ un nuage de points obï¿½issant ï¿½ une loi normale multidimensionnelle (voir figure~\ref{space_metric_dheas_1}).
 
 
 
-				\begin{figure}[ht]
-				$$\begin{array}{|c|}\hline
-    		\includegraphics[height=6cm, width=12cm]{\filext{../space_metric/image/dhaes}} \\ \hline
-    		\end{array}$$
-    		\caption{ Figure extraite de \citeindexfig{D'Haes2003} représentant l'arbre de décomposition
-    							de deux nuages de points obéissant à des loi normales, uniforme dans le premier cas, 
-    							avec deux variables corrélées dans le second cas.}
-    		\label{space_metric_dheas_1}
-    		\end{figure}
+                \begin{figure}[ht]
+                $$\begin{array}{|c|}\hline
+            \includegraphics[height=6cm, width=12cm]{\filext{../space_metric/image/dhaes}} \\ \hline
+            \end{array}$$
+            \caption{ Figure extraite de \citeindexfig{D'Haes2003} reprï¿½sentant l'arbre de dï¿½composition
+                                de deux nuages de points obï¿½issant ï¿½ des loi normales, uniforme dans le premier cas, 
+                                avec deux variables corrï¿½lï¿½es dans le second cas.}
+            \label{space_metric_dheas_1}
+            \end{figure}
 
 \indexfr{ACP}
-\indexfr{médiane}
+\indexfr{mï¿½diane}
 \indexfr{analyse en composantes principales}
 
-La méthode proposée dans cet article effectue une analyse en composantes principales afin de repérer l'axe principal du nuage qui correspond au vecteur propre $\vec{V}$ associé à la plus grande des valeurs propres de la matrice $X'X$ où chaque ligne de la matrice $X$ est un élément du nuage de points $\vecteur{\vec{x_1}}{\vec{x_n}}$. On détermine la médiane $m$ de l'ensemble $\acc{ < \vec{V}, \vec{x_i}  >  \sac 1 \infegal i \infegal n}$. Le nuage de points est alors divisée en deux sous-nuages de cardinaux égaux selon que le produit scalaire $< \vec{V}, \vec{x_i} >$ est inférieur ou supérieur à $m$. Chaque sous-nuage est à nouveau divisé selon le même processus incluant une analyse en composantes principales et la recherche de la médiane. L'algorithme s'arrête lorsque les sous-ensembles sont réduits à un seul élément. 
+La mï¿½thode proposï¿½e dans cet article effectue une analyse en composantes principales afin de repï¿½rer l'axe principal du nuage qui correspond au vecteur propre $\vec{V}$ associï¿½ ï¿½ la plus grande des valeurs propres de la matrice $X'X$ oï¿½ chaque ligne de la matrice $X$ est un ï¿½lï¿½ment du nuage de points $\vecteur{\vec{x_1}}{\vec{x_n}}$. On dï¿½termine la mï¿½diane $m$ de l'ensemble $\acc{ < \vec{V}, \vec{x_i}  >  \sac 1 \infegal i \infegal n}$. Le nuage de points est alors divisï¿½e en deux sous-nuages de cardinaux ï¿½gaux selon que le produit scalaire $< \vec{V}, \vec{x_i} >$ est infï¿½rieur ou supï¿½rieur ï¿½ $m$. Chaque sous-nuage est ï¿½ nouveau divisï¿½ selon le mï¿½me processus incluant une analyse en composantes principales et la recherche de la mï¿½diane. L'algorithme s'arrï¿½te lorsque les sous-ensembles sont rï¿½duits ï¿½ un seul ï¿½lï¿½ment. 
 
 
 
@@ -1216,10 +1216,10 @@ La méthode proposée dans cet article effectue une analyse en composantes princip
 
 
 
-\subsection{Méthodes approchées}
-\indexfrr{kPPV}{méthode approchée}
+\subsection{Mï¿½thodes approchï¿½es}
+\indexfrr{kPPV}{mï¿½thode approchï¿½e}
 
-Toutes les méthodes proposées jusqu'à présent permettent de déterminer le voisinage exact d'un élément inclus dans un ensemble d'exemples, les différences concernant l'organisation de cet ensemble afin d'optimiser la recherche. L'autre direction de recherche concerne la recherche du voisinage notamment par des méthodes approchées, plus rapide, mais ne retournant pas le voisinage exact. Ces méthodes ne seront pas plus développées ici, l'article \citeindex{Arya1994} propose une étude théorique de ce problème. L'article \citeindex{Ramasubramanian2000} compare plusieurs méthodes de recherche du voisinage.
+Toutes les mï¿½thodes proposï¿½es jusqu'ï¿½ prï¿½sent permettent de dï¿½terminer le voisinage exact d'un ï¿½lï¿½ment inclus dans un ensemble d'exemples, les diffï¿½rences concernant l'organisation de cet ensemble afin d'optimiser la recherche. L'autre direction de recherche concerne la recherche du voisinage notamment par des mï¿½thodes approchï¿½es, plus rapide, mais ne retournant pas le voisinage exact. Ces mï¿½thodes ne seront pas plus dï¿½veloppï¿½es ici, l'article \citeindex{Arya1994} propose une ï¿½tude thï¿½orique de ce problï¿½me. L'article \citeindex{Ramasubramanian2000} compare plusieurs mï¿½thodes de recherche du voisinage.
 
 
 
@@ -1245,7 +1245,7 @@ Toutes les méthodes proposées jusqu'à présent permettent de déterminer le voisin
 \section{Autres alternatives}
 %-------------------------------------------------------------------------------------------------------------
 
-Il existe de nombreuses alternatives en ce qui concerne la recherche des plus proches voisins dans un espace métrique quelconque, passées en revue dans les articles \citeindex{Bustos2001}, \citeindex{Chavez1999}, \citeindex{Navarro2001}, certaines utilisant plus particulièrement les arbres comme \citeindex{Ulhmann1991} ou \citeindex{Yianilos1993}. Lorsque cette recherche s'applique aux mots ou aux séquences, l'optimisation de la distance est envisagée (voir \citeindex{Apostolico1985} ou \citeindex{Madhvanath2001}). L'algorithme qui suit est une de ces alternatives préférée aux autres en raison de sa simplicité. Il ne nécessite pas la construction d'un arbre et son coût est aisément calculable.
+Il existe de nombreuses alternatives en ce qui concerne la recherche des plus proches voisins dans un espace mï¿½trique quelconque, passï¿½es en revue dans les articles \citeindex{Bustos2001}, \citeindex{Chavez1999}, \citeindex{Navarro2001}, certaines utilisant plus particuliï¿½rement les arbres comme \citeindex{Ulhmann1991} ou \citeindex{Yianilos1993}. Lorsque cette recherche s'applique aux mots ou aux sï¿½quences, l'optimisation de la distance est envisagï¿½e (voir \citeindex{Apostolico1985} ou \citeindex{Madhvanath2001}). L'algorithme qui suit est une de ces alternatives prï¿½fï¿½rï¿½e aux autres en raison de sa simplicitï¿½. Il ne nï¿½cessite pas la construction d'un arbre et son coï¿½t est aisï¿½ment calculable.
 
 
 \subsection{LAESA}
@@ -1253,263 +1253,263 @@ Il existe de nombreuses alternatives en ce qui concerne la recherche des plus pr
 \label{space_metric_laesa_laesa}
 \indexfr{LAESA}\indexfr{pivot}
 
-Cet algorithme permet de chercher les plus proches voisins dans un ensemble inclus dans un espace métrique quelconque. Il s'appuie encore sur l'inégalité triangulaire appliquée de manière semblable à (\ref{equation_un}). Le voisinage d'un point $x$ doit être cherché dans un ensemble $E$. L'algorithme LAESA (Linear Approximating Eliminating Search Algorithm, voir \citeindex{Rico-Juan2003}) consiste à éviter un trop grand nombre de calculs de distances en se servant de distances déjà calculées entre les éléments de $E$ et un sous-ensemble $B$ inclus dans $E$ contenant des "pivots". 
+Cet algorithme permet de chercher les plus proches voisins dans un ensemble inclus dans un espace mï¿½trique quelconque. Il s'appuie encore sur l'inï¿½galitï¿½ triangulaire appliquï¿½e de maniï¿½re semblable ï¿½ (\ref{equation_un}). Le voisinage d'un point $x$ doit ï¿½tre cherchï¿½ dans un ensemble $E$. L'algorithme LAESA (Linear Approximating Eliminating Search Algorithm, voir \citeindex{Rico-Juan2003}) consiste ï¿½ ï¿½viter un trop grand nombre de calculs de distances en se servant de distances dï¿½jï¿½ calculï¿½es entre les ï¿½lï¿½ments de $E$ et un sous-ensemble $B$ inclus dans $E$ contenant des "pivots". 
 
-La sélection des pivots demeure un problème ouvert. Ceux-ci pourrait être les n\oe uds d'un coupe de l'arbre construit par l'algorithme~\ref{algorithm_AHC}. Il existe d'autres possibilités comme l'algorithme~\ref{space_metric_algo_laesa_prime} plus simple et nettement moins coûteux -~les deux algorithmes n'ont pas été comparés en terme de performances en classification. 
-
-
-
-
-			\begin{xalgorithm}{LAESA}
-			\label{space_metric_algo_laesa}
-			
-			Soit $E = \ensemble{y_1}{y_N}$ un ensemble de points, $B = \ensemble{p_1}{p_P} \subset E$ 
-			un ensemble de pivots inclus dans $E$. On cherche à déterminer le voisinage $V\pa{x}$ de $x$ 
-			inclus dans $E$ vérifiant~:
-			
-						$$
-						\forall y \in V\pa{x}, \; d\pa{x,y} \infegal \rho
-						$$
-						
-			On suppose que la matrice $M = \pa{m_{ij}}_ { \begin{subarray} 1 \infegal i \infegal P \\ 
-			1 \infegal j \infegal N \end{subarray} }$ a été calculée préalablement comme suit~:
-			
-						$$
-						\forall \pa{i,j}, m_{ij} = d\pa{p_i, y_j}
-						$$
-						
-			\begin{xalgostep}{initialisation}
-				$\begin{array}{ll}
-				\forall y \in E, & g\pa{y} \longleftarrow 0 \\
-				\forall y \in E, & h\pa{y} \longleftarrow 1
-				\end{array}$
-			\end{xalgostep}		
-			
-			\begin{xalgostep}{choix d'un pivot et mise à jour de la fonction $g$} \label{classif_laesa_step_b}
-				$B' \longleftarrow B \cap \acc{ y \in E \sac h\pa{y} = 0}$ \\
-				\begin{xif}{$B' \neq \emptyset$}
-					Soit $i$ tel que $p_i$ soit un élément de $B'$ tiré au hasard tel que~: \\ 
-									$$p_i \in \arg \min \acc{ g\pa{y} \sac y \in B'}$$
-					$\begin{array}{lll}
-					\alpha 		&\longleftarrow& d\pa{p_i,x} \\
-					h\pa{p_i} &\longleftarrow& 1 
-					\end{array}$ \\
-					$\begin{array}{rl}
-					\forall y_j \in E \text{ tel que } h\pa{y_j} = 0, \; g\pa{y_j} \longleftarrow &
-											\max \acc {	g\pa{y_j} , \abs{ \alpha - m_{ij} }  } \\ = &
-											\max \acc {	g\pa{y_j} , \abs{ d\pa{x,p_i} - d\pa{p_i, y_j} }  } 
-					\end{array}$
-				\xelse		
-					Choisir un élément $s$ de $E$ tel que $h\pa{s} = 0$. \\
-					$\begin{array}{lll}
-					\alpha 		&\longleftarrow& d\pa{s,x} \\
-					h\pa{s}   &\longleftarrow& 1 
-					\end{array}$ \\
-					$\begin{array}{rl}
-					\forall y   \in E \text{ tel que } h\pa{y} = 0, \; g\pa{y} \longleftarrow & d\pa{x,y}
-					\end{array}$
-				
-				\end{xif}
-					
-					
-					
-			\end{xalgostep}
-			
-			\possiblecut
-			
-			
-			\begin{xalgostep}{élimination}
-				$\begin{array}{rl}
-				\forall y_j \in E \text{ tel que } h\pa{y_j} = 0, \text{ si } g\pa{y_j} > \rho \text{ alors }
-				h\pa{y_j} = 1
-				\end{array}$
-			\end{xalgostep}
-			
-			\begin{xalgostep}{terminaison}
-				$A \longleftarrow \acc{ y \in E \sac h\pa{y} = 0 }$ \\
-				\begin{xif}{$A \neq \emptyset$}
-				Retour à l'étape~\ref{classif_laesa_step_b}.
-				\xelse
-				Fin, l'ensemble cherché correspond à $\acc{y \in E \sac g\pa{y}} \infegal \rho$.
-				\end{xif}
-			\end{xalgostep}
-			
-			\end{xalgorithm}
+La sï¿½lection des pivots demeure un problï¿½me ouvert. Ceux-ci pourrait ï¿½tre les n\oe uds d'un coupe de l'arbre construit par l'algorithme~\ref{algorithm_AHC}. Il existe d'autres possibilitï¿½s comme l'algorithme~\ref{space_metric_algo_laesa_prime} plus simple et nettement moins coï¿½teux -~les deux algorithmes n'ont pas ï¿½tï¿½ comparï¿½s en terme de performances en classification. 
 
 
 
 
-La sélection des pivots est assurée par un autre algorithme décrit dans l'article~\citeindex{Moreno2003}.
+            \begin{xalgorithm}{LAESA}
+            \label{space_metric_algo_laesa}
+            
+            Soit $E = \ensemble{y_1}{y_N}$ un ensemble de points, $B = \ensemble{p_1}{p_P} \subset E$ 
+            un ensemble de pivots inclus dans $E$. On cherche ï¿½ dï¿½terminer le voisinage $V\pa{x}$ de $x$ 
+            inclus dans $E$ vï¿½rifiant~:
+            
+                        $$
+                        \forall y \in V\pa{x}, \; d\pa{x,y} \infegal \rho
+                        $$
+                        
+            On suppose que la matrice $M = \pa{m_{ij}}_ { \begin{subarray} 1 \infegal i \infegal P \\ 
+            1 \infegal j \infegal N \end{subarray} }$ a ï¿½tï¿½ calculï¿½e prï¿½alablement comme suit~:
+            
+                        $$
+                        \forall \pa{i,j}, m_{ij} = d\pa{p_i, y_j}
+                        $$
+                        
+            \begin{xalgostep}{initialisation}
+                $\begin{array}{ll}
+                \forall y \in E, & g\pa{y} \longleftarrow 0 \\
+                \forall y \in E, & h\pa{y} \longleftarrow 1
+                \end{array}$
+            \end{xalgostep}        
+            
+            \begin{xalgostep}{choix d'un pivot et mise ï¿½ jour de la fonction $g$} \label{classif_laesa_step_b}
+                $B' \longleftarrow B \cap \acc{ y \in E \sac h\pa{y} = 0}$ \\
+                \begin{xif}{$B' \neq \emptyset$}
+                    Soit $i$ tel que $p_i$ soit un ï¿½lï¿½ment de $B'$ tirï¿½ au hasard tel que~: \\ 
+                                    $$p_i \in \arg \min \acc{ g\pa{y} \sac y \in B'}$$
+                    $\begin{array}{lll}
+                    \alpha         &\longleftarrow& d\pa{p_i,x} \\
+                    h\pa{p_i} &\longleftarrow& 1 
+                    \end{array}$ \\
+                    $\begin{array}{rl}
+                    \forall y_j \in E \text{ tel que } h\pa{y_j} = 0, \; g\pa{y_j} \longleftarrow &
+                                            \max \acc {    g\pa{y_j} , \abs{ \alpha - m_{ij} }  } \\ = &
+                                            \max \acc {    g\pa{y_j} , \abs{ d\pa{x,p_i} - d\pa{p_i, y_j} }  } 
+                    \end{array}$
+                \xelse        
+                    Choisir un ï¿½lï¿½ment $s$ de $E$ tel que $h\pa{s} = 0$. \\
+                    $\begin{array}{lll}
+                    \alpha         &\longleftarrow& d\pa{s,x} \\
+                    h\pa{s}   &\longleftarrow& 1 
+                    \end{array}$ \\
+                    $\begin{array}{rl}
+                    \forall y   \in E \text{ tel que } h\pa{y} = 0, \; g\pa{y} \longleftarrow & d\pa{x,y}
+                    \end{array}$
+                
+                \end{xif}
+                    
+                    
+                    
+            \end{xalgostep}
+            
+            \possiblecut
+            
+            
+            \begin{xalgostep}{ï¿½limination}
+                $\begin{array}{rl}
+                \forall y_j \in E \text{ tel que } h\pa{y_j} = 0, \text{ si } g\pa{y_j} > \rho \text{ alors }
+                h\pa{y_j} = 1
+                \end{array}$
+            \end{xalgostep}
+            
+            \begin{xalgostep}{terminaison}
+                $A \longleftarrow \acc{ y \in E \sac h\pa{y} = 0 }$ \\
+                \begin{xif}{$A \neq \emptyset$}
+                Retour ï¿½ l'ï¿½tape~\ref{classif_laesa_step_b}.
+                \xelse
+                Fin, l'ensemble cherchï¿½ correspond ï¿½ $\acc{y \in E \sac g\pa{y}} \infegal \rho$.
+                \end{xif}
+            \end{xalgostep}
+            
+            \end{xalgorithm}
 
 
-			\begin{xalgorithm}{LAESA : sélection des pivots}
-			\label{space_metric_algo_laesa_pivtos_sel}
-			\indexfrr{pivot}{sélection}
-			
-			Soit $E = \ensemble{y_1}{y_N}$ un ensemble de points, on cherche à déterminer 
-			l'ensemble $B = \ensemble{p_1}{p_P} \subset E$ utilisé par l'algorithme~\ref{space_metric_algo_laesa}.
-			
-			\begin{xalgostep}{initialisation}
-				$B \longleftarrow y \in E$ choisi arbitrairement.
-			\end{xalgostep}
-			
-			\begin{xalgostep}{calcul de la fonction $g$} \label{space_metric_laesa_pivots_sel_b}
-					\begin{xforeach}{y}{E - B}
-						$g\pa{y} \longleftarrow 0$ \\
-						\begin{xforeach}{p}{B}
-						$g\pa{y} \longleftarrow g\pa{y} + d\pa{y,p}$
-						\end{xforeach}
-					\end{xforeach}
-			\end{xalgostep}
-			
-			\begin{xalgostep}{mise à jour de $B$}
-					Trouver $p^* \in \arg \max \acc { g\pa{p} \sac p \in E - B}$\\
-					$B \longleftarrow B \cup \acc{ p^*}$ \\
-					Si $\card{B} < P$, retour à l'étape~\ref{space_metric_laesa_pivots_sel_b} sinon fin.
-			\end{xalgostep}
-			
-			\end{xalgorithm}
+
+
+La sï¿½lection des pivots est assurï¿½e par un autre algorithme dï¿½crit dans l'article~\citeindex{Moreno2003}.
+
+
+            \begin{xalgorithm}{LAESA : sï¿½lection des pivots}
+            \label{space_metric_algo_laesa_pivtos_sel}
+            \indexfrr{pivot}{sï¿½lection}
+            
+            Soit $E = \ensemble{y_1}{y_N}$ un ensemble de points, on cherche ï¿½ dï¿½terminer 
+            l'ensemble $B = \ensemble{p_1}{p_P} \subset E$ utilisï¿½ par l'algorithme~\ref{space_metric_algo_laesa}.
+            
+            \begin{xalgostep}{initialisation}
+                $B \longleftarrow y \in E$ choisi arbitrairement.
+            \end{xalgostep}
+            
+            \begin{xalgostep}{calcul de la fonction $g$} \label{space_metric_laesa_pivots_sel_b}
+                    \begin{xforeach}{y}{E - B}
+                        $g\pa{y} \longleftarrow 0$ \\
+                        \begin{xforeach}{p}{B}
+                        $g\pa{y} \longleftarrow g\pa{y} + d\pa{y,p}$
+                        \end{xforeach}
+                    \end{xforeach}
+            \end{xalgostep}
+            
+            \begin{xalgostep}{mise ï¿½ jour de $B$}
+                    Trouver $p^* \in \arg \max \acc { g\pa{p} \sac p \in E - B}$\\
+                    $B \longleftarrow B \cup \acc{ p^*}$ \\
+                    Si $\card{B} < P$, retour ï¿½ l'ï¿½tape~\ref{space_metric_laesa_pivots_sel_b} sinon fin.
+            \end{xalgostep}
+            
+            \end{xalgorithm}
 
 
 
 
-Cet article~\citeindex{Moreno2003} améliore également l'algorithme~\ref{space_metric_algo_laesa} par le suivant~:
+Cet article~\citeindex{Moreno2003} amï¿½liore ï¿½galement l'algorithme~\ref{space_metric_algo_laesa} par le suivant~:
 
 
 
-			\begin{xalgorithm}{LAESA'}
-			\label{space_metric_algo_laesa_prime}
-			\indexfr{LAESA'}
-			
-			Soit $E = \ensemble{y_1}{y_N}$ un ensemble de points, $B = \ensemble{p_1}{p_P} \subset E$ 
-			un ensemble de pivots inclus dans $E$. On cherche à déterminer le voisinage $V\pa{x}$ de $x$ 
-			inclus dans $E$ vérifiant~:
-			
-						$$
-						\forall y \in V\pa{x}, \; d\pa{x,y} \infegal \rho
-						$$
-						
-			On suppose que la matrice $M = \pa{m_{ij}}_ { \begin{subarray} 1 \infegal i \infegal P \\ 
-			1 \infegal j \infegal N \end{subarray} }$ a été calculée préalablement comme suit~:
-			
-						$$
-						\forall \pa{i,j}, \; m_{ij} = d\pa{p_i, y_j}
-						$$
-						
-			\begin{xalgostep}{initialisation}
-				$\forall i \in \ensemble{1}{P}, \; d_i \longleftarrow d\pa{x,p_i}$
-			\end{xalgostep}		
-			
-			\begin{xalgostep}{fonction $g$} \label{classif_laesa_prime_step_b}
-				$\forall j \in \ensemble{1}{N}, \;  g\pa{y_j} \longleftarrow \underset{  i \in \ensemble{1}{P} }{\min}  \abs{ m_{ij} - d_i} $
-			\end{xalgostep}
-			
-			\begin{xalgostep}{tri}
-				Tri l'ensemble $g\pa{y_i}$ par ordre croissant $\longrightarrow g\pa{y_{\sigma\pa{j}}}$. \\
-				\begin{xfor}{j}{1}{N}
-				   \begin{xif}{$g\pa{y_{\sigma\pa{j}}} \infegal \rho$}
-				   $g\pa{y_{\sigma\pa{j}}} = d\pa{x,y_{\sigma\pa{j}}}$
-				   \end{xif}
-				\end{xfor} 
-				
-				Fin, l'ensemble cherché correspond à $\acc{y \in E \sac g\pa{y}} \infegal \rho$.
-			\end{xalgostep}
+            \begin{xalgorithm}{LAESA'}
+            \label{space_metric_algo_laesa_prime}
+            \indexfr{LAESA'}
+            
+            Soit $E = \ensemble{y_1}{y_N}$ un ensemble de points, $B = \ensemble{p_1}{p_P} \subset E$ 
+            un ensemble de pivots inclus dans $E$. On cherche ï¿½ dï¿½terminer le voisinage $V\pa{x}$ de $x$ 
+            inclus dans $E$ vï¿½rifiant~:
+            
+                        $$
+                        \forall y \in V\pa{x}, \; d\pa{x,y} \infegal \rho
+                        $$
+                        
+            On suppose que la matrice $M = \pa{m_{ij}}_ { \begin{subarray} 1 \infegal i \infegal P \\ 
+            1 \infegal j \infegal N \end{subarray} }$ a ï¿½tï¿½ calculï¿½e prï¿½alablement comme suit~:
+            
+                        $$
+                        \forall \pa{i,j}, \; m_{ij} = d\pa{p_i, y_j}
+                        $$
+                        
+            \begin{xalgostep}{initialisation}
+                $\forall i \in \ensemble{1}{P}, \; d_i \longleftarrow d\pa{x,p_i}$
+            \end{xalgostep}        
+            
+            \begin{xalgostep}{fonction $g$} \label{classif_laesa_prime_step_b}
+                $\forall j \in \ensemble{1}{N}, \;  g\pa{y_j} \longleftarrow \underset{  i \in \ensemble{1}{P} }{\min}  \abs{ m_{ij} - d_i} $
+            \end{xalgostep}
+            
+            \begin{xalgostep}{tri}
+                Tri l'ensemble $g\pa{y_i}$ par ordre croissant $\longrightarrow g\pa{y_{\sigma\pa{j}}}$. \\
+                \begin{xfor}{j}{1}{N}
+                   \begin{xif}{$g\pa{y_{\sigma\pa{j}}} \infegal \rho$}
+                   $g\pa{y_{\sigma\pa{j}}} = d\pa{x,y_{\sigma\pa{j}}}$
+                   \end{xif}
+                \end{xfor} 
+                
+                Fin, l'ensemble cherchï¿½ correspond ï¿½ $\acc{y \in E \sac g\pa{y}} \infegal \rho$.
+            \end{xalgostep}
 
 \end{xalgorithm}
 
 
 \indexfr{TLAESA}
 
-Il existe d'autres versions de l'algorithme LAESA comme TLAESA (Tree - LAESA) (voir \citeindex{Mic\'o1996}). Cet algorithme associe un arbre à l'algorithme LAESA et fait le lien entre les algorithmes~\ref{algorithm_AHC} et~\ref{space_metric_algo_laesa}.
+Il existe d'autres versions de l'algorithme LAESA comme TLAESA (Tree - LAESA) (voir \citeindex{Mic\'o1996}). Cet algorithme associe un arbre ï¿½ l'algorithme LAESA et fait le lien entre les algorithmes~\ref{algorithm_AHC} et~\ref{space_metric_algo_laesa}.
 
 
 
 
-\subsection{Résultats théoriques}
+\subsection{Rï¿½sultats thï¿½oriques}
 
-\indexfr{mesure}\indexfr{densité}
-L'article~\citeindex{Farag\'o1993} démontre également qu'il existe une majoration du nombre moyen de calcul de distances pour peu que la mesure de l'espace contenant l'ensemble $E$ et l'élément $x$ soit connue et que l'ensemble $B = \ensemble{p_1}{p_P}$ des pivots vérifie~:
+\indexfr{mesure}\indexfr{densitï¿½}
+L'article~\citeindex{Farag\'o1993} dï¿½montre ï¿½galement qu'il existe une majoration du nombre moyen de calcul de distances pour peu que la mesure de l'espace contenant l'ensemble $E$ et l'ï¿½lï¿½ment $x$ soit connue et que l'ensemble $B = \ensemble{p_1}{p_P}$ des pivots vï¿½rifie~:
 
-			\begin{eqnarray}
-			\exists \pa{\alpha,\beta} \in \R^+_* \text{ tels que } && \nonumber\\
-			\forall \pa{x,y} \in E^2, \; \forall i\, && \alpha \, d\pa{x,y} \supegal 
-							\abs{d\pa{x,p_i} - d\pa{p_i,y}} \label{space_metric_cond_1} \\
-			\forall \pa{x,y} \in E^2, && \underset{i}{\max} \; \abs{d\pa{x,p_i} - d\pa{p_i,y}} \supegal 
-							\beta \, d\pa{x,y} \label{space_metric_cond_1}
-			\end{eqnarray}
-
-
-L'algorithme développé dans~\citeindex{Farag\'o1993} permet de trouver le point de plus proche d'un élément $x$ dans un ensemble $E = \ensemble{x_1}{x_N}$ selon l'algorithme suivant~:
+            \begin{eqnarray}
+            \exists \pa{\alpha,\beta} \in \R^+_* \text{ tels que } && \nonumber\\
+            \forall \pa{x,y} \in E^2, \; \forall i\, && \alpha \, d\pa{x,y} \supegal 
+                            \abs{d\pa{x,p_i} - d\pa{p_i,y}} \label{space_metric_cond_1} \\
+            \forall \pa{x,y} \in E^2, && \underset{i}{\max} \; \abs{d\pa{x,p_i} - d\pa{p_i,y}} \supegal 
+                            \beta \, d\pa{x,y} \label{space_metric_cond_1}
+            \end{eqnarray}
 
 
-			\begin{xalgorithm}{plus proche voisin d'après [Farag\'o1993]}\label{space_metric_algo_farago}
-			Soit $E = \ensemble{x_1}{x_N}$ et $B = \ensemble{p_1}{p_P} \subset E \subset X$. Soit $x \in X$ 
-			un élément quelconque. 
-			On suppose que les valeurs $m_{ij} = d\pa{x_i, p_j}$ ont été préalablement calculées.
-			
-			\begin{xalgostep}{initialisation}
-			On calcule préalablement les coefficients $\gamma\pa{x_i}$~:
-			  				$$
-								\forall i \in \ensemble{1}{N}, \; \gamma\pa{x_i} \longleftarrow \underset{j 
-														\in \ensemble{1}{P} } {\max} \;
-											\abs{ m_{ij} - d\pa{x,p_j} }
-								$$
-			\end{xalgostep}		
-			
-			\begin{xalgostep}{élaguage}
-			On définit $t_0 \longleftarrow \underset{i} {\min} \; \gamma\pa{x_i}$. \\
-			Puis on construit l'ensemble $F\pa{x} = \acc{ x_i \in E \sac \gamma\pa{x_i} }\infegal
-						 \frac{\alpha}{\beta} \, t_0$.
-			\end{xalgostep}		
-			
-			\begin{xalgostep}{plus proche voisin}
-			Le plus proche $x^*$ voisin est défini par~: $x^* \in \arg \min \acc{ d\pa{x,y} \sac y \in F\pa{x}}$.
-			\end{xalgostep}		
-			
-			\end{xalgorithm}
+L'algorithme dï¿½veloppï¿½ dans~\citeindex{Farag\'o1993} permet de trouver le point de plus proche d'un ï¿½lï¿½ment $x$ dans un ensemble $E = \ensemble{x_1}{x_N}$ selon l'algorithme suivant~:
 
 
-
-			\begin{xtheorem}{[Farag\'o1993]$^1$}
-																\label{space_metric_farago_1}
-			Les notations sont celles de l'algorithme~\ref{space_metric_algo_farago}.		
-			L'algorithme~\ref{space_metric_algo_farago} retourne le plus proche voisin $x^*$ de $x$ inclus dans $E$. 
-			Autrement dit, $\forall x \in X, \; x^* \in F\pa{x}$.
-			\end{xtheorem}
+            \begin{xalgorithm}{plus proche voisin d'aprï¿½s [Farag\'o1993]}\label{space_metric_algo_farago}
+            Soit $E = \ensemble{x_1}{x_N}$ et $B = \ensemble{p_1}{p_P} \subset E \subset X$. Soit $x \in X$ 
+            un ï¿½lï¿½ment quelconque. 
+            On suppose que les valeurs $m_{ij} = d\pa{x_i, p_j}$ ont ï¿½tï¿½ prï¿½alablement calculï¿½es.
+            
+            \begin{xalgostep}{initialisation}
+            On calcule prï¿½alablement les coefficients $\gamma\pa{x_i}$~:
+                              $$
+                                \forall i \in \ensemble{1}{N}, \; \gamma\pa{x_i} \longleftarrow \underset{j 
+                                                        \in \ensemble{1}{P} } {\max} \;
+                                            \abs{ m_{ij} - d\pa{x,p_j} }
+                                $$
+            \end{xalgostep}        
+            
+            \begin{xalgostep}{ï¿½laguage}
+            On dï¿½finit $t_0 \longleftarrow \underset{i} {\min} \; \gamma\pa{x_i}$. \\
+            Puis on construit l'ensemble $F\pa{x} = \acc{ x_i \in E \sac \gamma\pa{x_i} }\infegal
+                         \frac{\alpha}{\beta} \, t_0$.
+            \end{xalgostep}        
+            
+            \begin{xalgostep}{plus proche voisin}
+            Le plus proche $x^*$ voisin est dï¿½fini par~: $x^* \in \arg \min \acc{ d\pa{x,y} \sac y \in F\pa{x}}$.
+            \end{xalgostep}        
+            
+            \end{xalgorithm}
 
 
 
-\begin{xremark}{mesure de dissimilarité}
-L'algorithme~\ref{space_metric_algo_farago} est en fait valable pour une distance mais aussi pour une mesure de dissimilarité. Contrairement à une distance, une mesure de dissimalité ne vérifie pas l'inégalité triangulaire.
-\indexfrr{mesure}{dissimilarité}\indexfr{dissimilarité}
-\indexfr{inégalité triangulaire}
+            \begin{xtheorem}{[Farag\'o1993]$^1$}
+                                                                \label{space_metric_farago_1}
+            Les notations sont celles de l'algorithme~\ref{space_metric_algo_farago}.        
+            L'algorithme~\ref{space_metric_algo_farago} retourne le plus proche voisin $x^*$ de $x$ inclus dans $E$. 
+            Autrement dit, $\forall x \in X, \; x^* \in F\pa{x}$.
+            \end{xtheorem}
+
+
+
+\begin{xremark}{mesure de dissimilaritï¿½}
+L'algorithme~\ref{space_metric_algo_farago} est en fait valable pour une distance mais aussi pour une mesure de dissimilaritï¿½. Contrairement ï¿½ une distance, une mesure de dissimalitï¿½ ne vï¿½rifie pas l'inï¿½galitï¿½ triangulaire.
+\indexfrr{mesure}{dissimilaritï¿½}\indexfr{dissimilaritï¿½}
+\indexfr{inï¿½galitï¿½ triangulaire}
 \end{xremark}
 
 
-			\begin{xtheorem}{[Farag\'o1993]$^2$}
-																\label{space_metric_farago_2}
-			Les notations sont celles de l'algorithme~\ref{space_metric_algo_farago}. On définit une mesure 
-			sur l'ensemble $X$, $B\pa{x,r}$ désigne la boule de centre $x$ et de rayon $r$, $Z \in X$ une variable 
-			aléatoire, de plus~:
-						$$
-						p\pa{x,r} = P_X \pa{B\pa{x,r}} = \pr{  Z \in B\pa{x,r}}
-						$$
-						
-			On suppose qu'il existe $d > 0$ et une fonction $f : X \longrightarrow \R$ tels que~:
-						$$
-						\underset { r \rightarrow 0 } { \lim } \; \frac{ p\pa{x,r} } { r^d } = f\pa{x} > 0
-						$$
-		  La convergence doit être uniforme et presque sûre.
-		  On note également $F_N$ le nombre de calculs de dissimilarité effectués par 
-		  l'algorithme~\ref{space_metric_algo_farago} où $N$ est le nombre d'élément de $E$, 
-		  $P$ désigne toujours le nombre de pivots, alors~:
-		  
-		  			$$
-		  			\underset{ n \rightarrow \infty } { \lim \sup } \;
-		  							\esp{F_N} \infegal k + \pa{\frac{\alpha}{\beta}}^{2d}
-		  			$$
-																			
-			\end{xtheorem}
+            \begin{xtheorem}{[Farag\'o1993]$^2$}
+                                                                \label{space_metric_farago_2}
+            Les notations sont celles de l'algorithme~\ref{space_metric_algo_farago}. On dï¿½finit une mesure 
+            sur l'ensemble $X$, $B\pa{x,r}$ dï¿½signe la boule de centre $x$ et de rayon $r$, $Z \in X$ une variable 
+            alï¿½atoire, de plus~:
+                        $$
+                        p\pa{x,r} = P_X \pa{B\pa{x,r}} = \pr{  Z \in B\pa{x,r}}
+                        $$
+                        
+            On suppose qu'il existe $d > 0$ et une fonction $f : X \longrightarrow \R$ tels que~:
+                        $$
+                        \underset { r \rightarrow 0 } { \lim } \; \frac{ p\pa{x,r} } { r^d } = f\pa{x} > 0
+                        $$
+          La convergence doit ï¿½tre uniforme et presque sï¿½re.
+          On note ï¿½galement $F_N$ le nombre de calculs de dissimilaritï¿½ effectuï¿½s par 
+          l'algorithme~\ref{space_metric_algo_farago} oï¿½ $N$ est le nombre d'ï¿½lï¿½ment de $E$, 
+          $P$ dï¿½signe toujours le nombre de pivots, alors~:
+          
+                      $$
+                      \underset{ n \rightarrow \infty } { \lim \sup } \;
+                                      \esp{F_N} \infegal k + \pa{\frac{\alpha}{\beta}}^{2d}
+                      $$
+                                                                            
+            \end{xtheorem}
 
 
 
@@ -1524,65 +1524,65 @@ L'algorithme~\ref{space_metric_algo_farago} est en fait valable pour une distanc
 \indexfr{voisins inutiles}
 \indexfr{plus proches voisins}
 \indexfr{classification}
-\indexfr{capacité d'attraction}
+\indexfr{capacitï¿½ d'attraction}
 
-L'article \citeindex{Wu2002} propose une idée intéressante qui consiste à supprimer les voisins inutiles. Cette méthode s'applique dans le cas d'une classification à l'aide de plus proches voisins. A un élément à classer, cette méthode attribue la classe du point le plus proche, il faut donc a priori calculer les distances du point en question à tous ceux déjà classés. Certains points de cet ensemble ont une forte "capacité d'attraction"~: ils sont le centre d'une région dans laquelle seuls des points de la même classe figurent. Plus concrètement, soient un point $y$ à classer et une base de points classés noté $\vecteur{x_1}{x_N}$ de classe $\vecteur{c\pa{x_1}}{c\pa{x_N}}$, on suppose que $x_i$ et $x_j$ sont deux points, enfin, on définit~:
+L'article \citeindex{Wu2002} propose une idï¿½e intï¿½ressante qui consiste ï¿½ supprimer les voisins inutiles. Cette mï¿½thode s'applique dans le cas d'une classification ï¿½ l'aide de plus proches voisins. A un ï¿½lï¿½ment ï¿½ classer, cette mï¿½thode attribue la classe du point le plus proche, il faut donc a priori calculer les distances du point en question ï¿½ tous ceux dï¿½jï¿½ classï¿½s. Certains points de cet ensemble ont une forte "capacitï¿½ d'attraction"~: ils sont le centre d'une rï¿½gion dans laquelle seuls des points de la mï¿½me classe figurent. Plus concrï¿½tement, soient un point $y$ ï¿½ classer et une base de points classï¿½s notï¿½ $\vecteur{x_1}{x_N}$ de classe $\vecteur{c\pa{x_1}}{c\pa{x_N}}$, on suppose que $x_i$ et $x_j$ sont deux points, enfin, on dï¿½finit~:
 
-		\begin{eqnarray}
-		y^*					 = \arg \min \acc{ d\pa{x_k, y} \sac 1 \infegal k \infegal n }
-		\end{eqnarray}
+        \begin{eqnarray}
+        y^*                     = \arg \min \acc{ d\pa{x_k, y} \sac 1 \infegal k \infegal n }
+        \end{eqnarray}
 
-On suppose également que $x_i$ est un point de forte capacité et que~:
+On suppose ï¿½galement que $x_i$ est un point de forte capacitï¿½ et que~:
 
-		\begin{eqnarray}
-		\forall y, \; y^* = x_i \Longrightarrow \exists l \text{ tel que } 
-										x_l = \arg \min \acc{ d\pa{x_k, y} \sac k \neq i } \text{ et } c\pa{x_l} = c\pa{x_i}
-		\end{eqnarray}
+        \begin{eqnarray}
+        \forall y, \; y^* = x_i \Longrightarrow \exists l \text{ tel que } 
+                                        x_l = \arg \min \acc{ d\pa{x_k, y} \sac k \neq i } \text{ et } c\pa{x_l} = c\pa{x_i}
+        \end{eqnarray}
 
-Autrement dit, $x_i$ est un point attracteur si quel que soit le point $y$ proche de $x_i$, il sera toujours possible de trouver un voisin de $x_i$ proche et $y$ et appartenant à la même classe. Dans ce cas, il ne sert à rien de calculer la distance de $x_i$ à $y$, le point $x_i$ peut alors être éliminé de la base des points classés. Il reste maintenant à traiter la base de points classés de manière à en garder le moins possible. De cette façon, l'ensemble des points classés ne gardera que des points situés près des frontières entre classes.
+Autrement dit, $x_i$ est un point attracteur si quel que soit le point $y$ proche de $x_i$, il sera toujours possible de trouver un voisin de $x_i$ proche et $y$ et appartenant ï¿½ la mï¿½me classe. Dans ce cas, il ne sert ï¿½ rien de calculer la distance de $x_i$ ï¿½ $y$, le point $x_i$ peut alors ï¿½tre ï¿½liminï¿½ de la base des points classï¿½s. Il reste maintenant ï¿½ traiter la base de points classï¿½s de maniï¿½re ï¿½ en garder le moins possible. De cette faï¿½on, l'ensemble des points classï¿½s ne gardera que des points situï¿½s prï¿½s des frontiï¿½res entre classes.
 
-L'article \citeindex{Wu2002} définit le rayon d'un point~:
+L'article \citeindex{Wu2002} dï¿½finit le rayon d'un point~:
 
-		\begin{eqnarray}
-		r\pa{x}  = \max\acc { 0, \max \acc{ d\pa{x, y} \sac c\pa{x} = c\pa{y} } }
-		\end{eqnarray}
-		
+        \begin{eqnarray}
+        r\pa{x}  = \max\acc { 0, \max \acc{ d\pa{x, y} \sac c\pa{x} = c\pa{y} } }
+        \end{eqnarray}
+        
 L'algorithme de suppression des points attracteurs est le suivant~:
 
-			\begin{xalgorithm}{suppression des points attracteurs}
-			Soit $\Gamma$ un seuil positif, les notations sont celles utilisées dans les paragraphes qui précèdent, 
-			on note également $\Omega$ l'ensemble des points classés.
-			
-			\begin{xalgostep}{calcul des rayons}\label{space_metric_attracteur_step_a}
-			Pour chaque $x \in \Omega$, on calcule $r\pa{x}$, et on désigne par $x^*$ le point qui vérifie~:
-			$r\pa{x^*} = \underset{x \in \Omega} {\max} \; { r\pa{x} }$
-			\end{xalgostep}
-			
-			\begin{xalgostep}{suppression}
-			Si $r\pa{x^*} \supegal \Gamma$, alors le point $x^*$ est supprimé de l'ensemble $\Omega$, et retour 
-			à l'étape~\ref{space_metric_attracteur_step_a}. Dans le cas contraire, l'algorithme s'arrête.
-			\end{xalgostep}
-			
-			\end{xalgorithm}
-			
+            \begin{xalgorithm}{suppression des points attracteurs}
+            Soit $\Gamma$ un seuil positif, les notations sont celles utilisï¿½es dans les paragraphes qui prï¿½cï¿½dent, 
+            on note ï¿½galement $\Omega$ l'ensemble des points classï¿½s.
+            
+            \begin{xalgostep}{calcul des rayons}\label{space_metric_attracteur_step_a}
+            Pour chaque $x \in \Omega$, on calcule $r\pa{x}$, et on dï¿½signe par $x^*$ le point qui vï¿½rifie~:
+            $r\pa{x^*} = \underset{x \in \Omega} {\max} \; { r\pa{x} }$
+            \end{xalgostep}
+            
+            \begin{xalgostep}{suppression}
+            Si $r\pa{x^*} \supegal \Gamma$, alors le point $x^*$ est supprimï¿½ de l'ensemble $\Omega$, et retour 
+            ï¿½ l'ï¿½tape~\ref{space_metric_attracteur_step_a}. Dans le cas contraire, l'algorithme s'arrï¿½te.
+            \end{xalgostep}
+            
+            \end{xalgorithm}
+            
 
 
-\begin{xremark}{méthode approchée}
-Le fait de supprimer les points dont le rayon attracteur est supérieur à un certain seuil peut entraîner une modification de la classification si ce seuil est trop petit.
+\begin{xremark}{mï¿½thode approchï¿½e}
+Le fait de supprimer les points dont le rayon attracteur est supï¿½rieur ï¿½ un certain seuil peut entraï¿½ner une modification de la classification si ce seuil est trop petit.
 \end{xremark}
 
 \indexfr{LVQ}\indexfrr{prototype}{LVQ}
-Cette méthode poursuit le même objectif que celui des méthodes LVQ\seeannex{clas_super_principe_lvq}{LVQ} ou Learning Vector Quantization qui permettent de réduire un ensemble de points utilisés dans une classification de plus proches voisins à un ensemble de prototypes.
+Cette mï¿½thode poursuit le mï¿½me objectif que celui des mï¿½thodes LVQ\seeannex{clas_super_principe_lvq}{LVQ} ou Learning Vector Quantization qui permettent de rï¿½duire un ensemble de points utilisï¿½s dans une classification de plus proches voisins ï¿½ un ensemble de prototypes.
 
 
 
-	
+    
 \subsection{Lien vers la classification}
 
 
-Déterminer le voisinage d'un point est un passage obligé lorsqu'on applique une classification à l'aide de plus proches voisins puisque chaque élément est classé à partir des classes de ses voisins\seeannex{clas_super_kppv_simple}{classification k-PPV}. Toutefois, les résultats obtenus par cette méthode dépendent fortement de la distance utilisée. Sans a priori sur celle-ci, c'est souvent une distance euclidienne qui est choisie. 
+Dï¿½terminer le voisinage d'un point est un passage obligï¿½ lorsqu'on applique une classification ï¿½ l'aide de plus proches voisins puisque chaque ï¿½lï¿½ment est classï¿½ ï¿½ partir des classes de ses voisins\seeannex{clas_super_kppv_simple}{classification k-PPV}. Toutefois, les rï¿½sultats obtenus par cette mï¿½thode dï¿½pendent fortement de la distance utilisï¿½e. Sans a priori sur celle-ci, c'est souvent une distance euclidienne qui est choisie. 
 
-Dans le cas des espaces vectoriels, il est possible d'utiliser une distance pondérant différemment chaque dimension et d'estimer cette pondération à partir d'un échantillon représentatif du problème de classification à résoudre. Deux méthodes sont présentées aux chapitre~\ref{classification_graphem_carac_dist} et~\ref{classification_distance_voisinage}.
+Dans le cas des espaces vectoriels, il est possible d'utiliser une distance pondï¿½rant diffï¿½remment chaque dimension et d'estimer cette pondï¿½ration ï¿½ partir d'un ï¿½chantillon reprï¿½sentatif du problï¿½me de classification ï¿½ rï¿½soudre. Deux mï¿½thodes sont prï¿½sentï¿½es aux chapitre~\ref{classification_graphem_carac_dist} et~\ref{classification_distance_voisinage}.
 
 
 
@@ -1604,9 +1604,9 @@ Dans le cas des espaces vectoriels, il est possible d'utiliser une distance pond
 
 
 \firstpassagedo{
-	\begin{thebibliography}{99}
-	\input{space_metric_biblio.tex}
-	\end{thebibliography}
+    \begin{thebibliography}{99}
+    \input{space_metric_biblio.tex}
+    \end{thebibliography}
 }
 
 \input{../../common/livre_table_end.tex}%

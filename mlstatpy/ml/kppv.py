@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-@file
-@brief Implements classic k-nn.
-"""
+# coding: utf-8
+
 import numpy
 import numpy.linalg
 from scipy.spatial.distance import euclidean

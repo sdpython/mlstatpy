@@ -45,7 +45,7 @@ Dans ce cas, on cherchera les matrices qui minimise :
 Quelques cas simples
 ====================
 
-Le notebook :ref:`valeurs_manquantes_mf.ipynb` montre la décroissante de l'erreur
+Le notebook :ref:`/notebooks/ml/valeurs_manquantes_mf.ipynb` montre la décroissante de l'erreur
 en fonction du rang et l'impact de la corrélation sur cette même erreur.
 Le dernier paragraphe montre qu'il n'existe pas de solution unique à un problème donné.
 L'exemple suivant s'intéresse à une matrice 3x3.

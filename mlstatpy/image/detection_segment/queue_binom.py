@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Ce module construit les probabilités d'une loi binomiale :math:`B(n,p)`.
-"""
 
 
 def tabule_queue_binom(n, p):

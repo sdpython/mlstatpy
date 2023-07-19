@@ -148,7 +148,7 @@ des lois de Poisson de paramètres différents dont il faudra estimer
 les paramètres.
 
 Cette modification implique l'écriture d'une fonction
-:func:`proba_poisson_melange <mlstatpy.poulet.proba_poisson_melange>`
+:func:`proba_poisson_melange <mlstatpy.garden.poulet.proba_poisson_melange>`
 au lieu de :func:`proba_poisson <mlstatpy.garden.poulet.proba_poisson>`.
 La demande n'est plus une loi connue mais un mélange de lois connues
 dont la densité n'a pas d'expression connue : il faut la tabuler.
@@ -268,7 +268,7 @@ Or d'après le théorème :ref:`somme de loi exponentielle iid <theoreme_convolu
 
 Il suffit d'utiliser ce théorème pour simuler une loi de Poisson de
 paramètre :math:`\lambda`, ce que fait la fonction
-:func:`poisson <mlstaty.garden.poulet.poisson>` suivante :
+:func:`poisson <mlstatpy.garden.poulet.poisson>` suivante :
 
 .. runpython::
     :showcode:

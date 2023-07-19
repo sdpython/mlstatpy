@@ -1,32 +1,34 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
+from sphinx_runpython.github_link import make_linkcode_resolve
 from mlstatpy import __version__
 
+
 extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.intersphinx",
-    "sphinx.ext.todo",
-    "sphinx.ext.coverage",
     "nbsphinx",
-    "sphinx.ext.mathjax",
-    "sphinx.ext.ifconfig",
-    "sphinx.ext.viewcode",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.coverage",
     "sphinx.ext.githubpages",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.linkcode",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
+    "sphinx.ext.todo",
     "sphinx_gallery.gen_gallery",
+    "sphinx_issues",
+    "sphinx_runpython.blocdefs.sphinx_exref_extension",
+    "sphinx_runpython.blocdefs.sphinx_mathdef_extension",
+    "sphinx_runpython.epkg",
+    "sphinx_runpython.gdot",
+    "sphinx_runpython.runpython",
     "matplotlib.sphinxext.plot_directive",
-    "pyquickhelper.sphinxext.sphinx_epkg_extension",
-    "pyquickhelper.sphinxext.sphinx_runpython_extension",
-    #
-    "pyquickhelper.sphinxext.sphinx_gdot_extension",
-    #
-    "pyquickhelper.sphinxext.sphinx_exref_extension",
-    "pyquickhelper.sphinxext.sphinx_mathdef_extension",
 ]
 
 templates_path = ["_templates"]
-html_logo = "_static/logo.png"
+html_logo = "_static/project_ico.png"
 source_suffix = ".rst"
 master_doc = "index"
 project = "mlstatpy"
@@ -35,22 +37,31 @@ author = "Xavier Dupré"
 version = __version__
 release = __version__
 language = "fr"
-exclude_patterns = []
+exclude_patterns = ["auto_examples/*.ipynb"]
 pygments_style = "sphinx"
 todo_include_todos = True
 
 html_theme = "pydata_sphinx_theme"
 html_theme_path = ["_static"]
 html_theme_options = {}
+html_sourcelink_suffix = ""
 html_static_path = ["_static"]
+
+# The following is used by sphinx.ext.linkcode to provide links to github
+linkcode_resolve = make_linkcode_resolve(
+    "mlstatpy",
+    (
+        "https://github.com/sdpython/mlstatpy/"
+        "blob/{revision}/{package}/"
+        "{path}#L{lineno}"
+    ),
+)
 
 latex_elements = {
     "papersize": "a4",
     "pointsize": "10pt",
-    "docclass": "book",
     "title": project,
 }
-
 
 intersphinx_mapping = {
     "onnx": ("https://onnx.ai/onnx/", None),
@@ -59,9 +70,20 @@ intersphinx_mapping = {
     "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
     "python": (f"https://docs.python.org/{sys.version_info.major}", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
+    "sklearn": ("https://scikit-learn.org/stable/", None),
     "sklearn-onnx": ("https://onnx.ai/sklearn-onnx/", None),
     "torch": ("https://pytorch.org/docs/stable/", None),
 }
+
+# Check intersphinx reference targets exist
+nitpicky = True
+# See also scikit-learn/scikit-learn#26761
+nitpick_ignore = [
+    ("py:class", "False"),
+    ("py:class", "True"),
+    ("py:class", "pipeline.Pipeline"),
+    ("py:class", "default=sklearn.utils.metadata_routing.UNCHANGED"),
+]
 
 sphinx_gallery_conf = {
     # path to your examples scripts
@@ -144,19 +166,24 @@ epkg_dictionary = {
     "B+ tree": "https://en.wikipedia.org/wiki/B%2B_tree",
     "BLAS": "https://www.netlib.org/blas/",
     "Branch and Bound": "https://en.wikipedia.org/wiki/Branch_and_bound",
+    "C++": "https://fr.wikipedia.org/wiki/C%2B%2B",
     "Custom Criterion for DecisionTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
     "cython": "https://cython.org/",
     "DecisionTreeClassifier": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html",
     "DecisionTreeRegressor optimized for Linear Regression": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression_criterion.html",
     "dot": "https://fr.wikipedia.org/wiki/DOT_(langage)",
-    "Holm–Bonferroni method": "https://en.wikipedia.org/wiki/Holm%E2%80%93Bonferroni_method>",
+    "Holm-Bonferroni method": "https://en.wikipedia.org/wiki/Holm%E2%80%93Bonferroni_method",
     "ICML 2016": "https://icml.cc/2016/index.html",
     "KMeans": "https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html",
     "LAESA": "https://tavianator.com/aesa/",
     "LAPACK": "http://www.netlib.org/lapack/",
     "mlinsights": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/index.html",
     "mlstatpy": "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html",
-    "numpy": "https://numpy.org/",
+    "numpy": (
+        "https://www.numpy.org/",
+        ("https://docs.scipy.org/doc/numpy/reference/generated/numpy.{0}.html", 1),
+        ("https://docs.scipy.org/doc/numpy/reference/generated/numpy.{0}.{1}.html", 2),
+    ),
     "PiecewiseTreeRegressor": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/"
     "piecewise_tree_regression.html#mlinsights.mlmodel.piecewise_tree_regression.PiecewiseTreeRegressor",
     "Pillow": "https://pillow.readthedocs.io/en/stable/",
@@ -172,8 +199,10 @@ epkg_dictionary = {
     "sklearn-onnx": "https://onnx.ai/sklearn-onnx/",
     "statsmodels": "http://www.statsmodels.org/stable/index.html",
     "SVD": "https://fr.wikipedia.org/wiki/D%C3%A9composition_en_valeurs_singuli%C3%A8res",
+    "tqdm": "https://tqdm.github.io/",
     "Visualize a scikit-learn pipeline": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/visualize_pipeline.html",
     "X-tree": "https://en.wikipedia.org/wiki/X-tree",
+    "wikipedia dumps": "https://dumps.wikimedia.org/frwiki/latest/",
 }
 
 nblinks = {

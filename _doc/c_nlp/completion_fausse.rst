@@ -107,7 +107,7 @@ Et si le poids de chaque complétion est uniforme
 On suppose que les complétions ont toutes le même poids :math:`w_i=1`.
 Dans quel ordre faut-il ranger les complétions pour économiser le
 plus de caractères. On aurait tendance à dire la plus longue d'abord
-ce qu'on peut vérifier dans le notebook :ref:`completion_trie.ipynb`.
+ce qu'on peut vérifier dans le notebook :ref:`/notebooks/nlp/completion_trie.ipynb`.
 
 ====== ========= ============== ================
 q      fréquence ordre          :math:`M(q, S)`

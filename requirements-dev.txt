@@ -35,7 +35,6 @@ pyensae>=1.2.788
 pyinstrument
 pylint>=2.14.0
 pyquickhelper>=1.12
-pyquicksetup>=0.2.4
 pytest
 seaborn
 setuptools
@@ -43,7 +42,9 @@ snakeviz
 scikit-learn>=1.1
 git+https://github.com/onnx/sklearn-onnx.git
 sphinx
-sphinx_gallery 
+sphinx-gallery
+sphinx-issues
+git+https://github.com/sdpython/sphinx-runpython.git
 sphinxcontrib.imagesvg
 stack_data
 statsmodels

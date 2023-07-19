@@ -1,10 +1,3 @@
-"""
-@file
-@brief Implements simple stochastic gradient optimisation.
-It is inspired from `_stochastic_optimizers.py
-<https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/
-neural_network/_stochastic_optimizers.py>`_.
-"""
 import numpy
 from numpy.core._exceptions import UFuncTypeError
 

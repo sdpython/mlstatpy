@@ -95,7 +95,7 @@ la plus représentée parmi ses :math:`k` plus proches voisins.
 
         f(i) = \sum_{y \in S^*_k} \, \omega\pa{x,y} \, \indicatrice{c(y) = i}
 
-    On assigne alors à :math:`x` la classe :math:`c(x)$ choisie dans l'ensemble :
+    On assigne alors à :math:`x` la classe :math:`c(x)` choisie dans l'ensemble :
 
     .. math::
 
@@ -111,11 +111,11 @@ La table suivante donne quelques exemples de contributions possibles.
     :header-rows: 0
     :widths: 5 10
 
-    * - fonction constante 	
+    * - fonction constante     
       - :math:`\omega\pa{x,y} = 1`
     * - distance inverse
       - :math:`\omega\pa{x,y} = \frac{1}{1 + d\pa{x,y}}`
-    * - noyau								
+    * - noyau                                
       - :math:`\omega\pa{x,y} = \exp\pa{ - d^2 \pa{x,y}}`
 
 Exemple de contribution :math:`w\pa{x,y}` pour
@@ -164,9 +164,9 @@ père et pas plus de :math:`n` fils.
         && \forall x \in G\pa{N_t}, \; x_{t} \infegal x < x_{t+1} \\
         && \text{avec par convention } x_0 = -\infty \text{ et } x_{t+1} = + \infty
         \end{eqnarray*}
-		
+        
 .. index:: quicksort
-		
+        
 Cet arbre permet de trier une liste de nombres, c'est une
 généralisation du tri `quicksort <https://fr.wikipedia.org/wiki/Tri_rapide>`_
 pour lequel :math:`n=2`. Comme pour le tri *quicksort*, l'arbre est construit
@@ -196,7 +196,7 @@ Illustration d'un :epkg:`R-tree` en deux dimensions,
 figure extraite de [Sellis1987]_, la première image montre des rectangles
 pointillés englobant d'autres rectangles en trait plein. Chaque style de trait correspond
 à un niveau dans le graphe de la seconde image.
-    		
+            
 Il n'existe pas une seule manière de construire un :epkg:`R-tree`,
 les noeuds de ces arbres suivent toujours la contrainte des
 :epkg:`B+ tree` qui est d'avoir un père et au plus :math:`n` fils.
@@ -235,22 +235,22 @@ Cet ensemble est construit grâce à l'algorithme suivant :
     On désigne par :math:`r` le noeud racine d'un :epkg:`R-tree`.
     Soit :math:`n` un noeud, on désigne par :math:`F\pa{n}`
     l'ensemble des fils de ce noeud.
-		
-	*initialisation*
+
+    *initialisation*
 
     | :math:`L \longleftarrow 0`
-	| :math:`N \longleftarrow \acc{r}`
+    | :math:`N \longleftarrow \acc{r}`
 
-	*itération*
-		
-	| while :math:`N \neq \emptyset`
+    *itération*
+
+    | while :math:`N \neq \emptyset`
     |     for n in :math:`1..N`
     |         if :math:`W \cap B\pa{n} \neq \emptyset`
     |             :math:`N \longleftarrow N \cup F\pa{n}`
     |             if :math:`B\pa{n}` est un objet
     |                 :math:`L \longleftarrow B\pa{n}`
-	
-	:math:`L` est l'ensemble cherché.
+
+    :math:`L` est l'ensemble cherché.
 
 Il reste à construire le :epkg:`R-tree`, opération effectuée
 par la répétition successive de l'algorithme suivant
@@ -299,7 +299,7 @@ permettant d'insérer un objet dans un :epkg:`R-tree`.
 
     | tant que :math:`G \neq \emptyset`
     |     On choisit un noeud :math:`n \in G`, on détermine :math:`i^*`
-    |     tel que :math:`v\pa{\acc{n} \cup G_i} - v\pa{G_i}$ soit minimal.
+    |     tel que :math:`v\pa{\acc{n} \cup G_i} - v\pa{G_i}` soit minimal.
     |     :math:`G \longleftarrow G - \acc{n}`
     |     :math:`G_{i^*} \longleftarrow G_{i^*} \cup \acc{n}`
 
@@ -519,7 +519,7 @@ Implémentation
 La classe :class:`NuagePoints <mlstatpy.ml.kppv.NuagePoints>` implémente
 les nuages de points sans optimisation. Il utilise la même interface que
 :class:`sklearn.neighbors.NearestNeighbors`. La second classe
-:class:`NuagePointsLeasa <mlstatpy.ml.kppv_laesa.NuagePointsLeasa>`.
+:class:`NuagePointsLaesa <mlstatpy.ml.kppv_laesa.NuagePointsLaesa>`.
 
 .. runpython::
     :showcode:

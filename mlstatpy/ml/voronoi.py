@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief About Voronoi Diagram
-"""
+
 import warnings
 import numpy
 from sklearn.linear_model import LinearRegression

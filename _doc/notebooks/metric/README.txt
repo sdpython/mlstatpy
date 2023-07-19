@@ -1,9 +1,0 @@
-
-Métriques
----------
-
-.. contents::
-    :local:
-    
-
-

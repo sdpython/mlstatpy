@@ -5,14 +5,11 @@
 import os
 import unittest
 import itertools
-from pyquickhelper.loghelper import fLOG
 from mlstatpy.nlp.completion_simple import CompletionSystem, CompletionElement
 
 
 class TestCompletionSimple(unittest.TestCase):
     def test_build_trie_simple(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         queries = [(1, "a"), (2, "ab"), (3, "abc"), (4, "abcd"), (5, "bc")]
         trie = CompletionSystem(queries)
         res = list(trie.items())
@@ -24,13 +21,13 @@ class TestCompletionSimple(unittest.TestCase):
         node = trie.find("ab")
         assert node is not None
         self.assertEqual(node.value, "ab")
-        trie.compute_metrics(fLOG=fLOG)
+        trie.compute_metrics()
         for el in trie:
             self.assertEqual(el.mks0, el.mks1)
             self.assertEqual(el.mks0, el.mks2)
             s = el.str_mks()
             assert s is not None
-        diffs = trie.compare_with_trie(fLOG=fLOG)
+        diffs = trie.compare_with_trie()
         if diffs:
             res = [_[-1] for _ in diffs]
             raise AssertionError("\n".join(res))
@@ -44,21 +41,19 @@ class TestCompletionSimple(unittest.TestCase):
             if k != "" and len(v) > 2:
                 raise AssertionError(v)
             assert v
-            fLOG(k, v)
-            for _ in v:
-                fLOG("    ", _.value, ":", _.str_mks())
+            # print(k, v)
+            # for _ in v:
+            # print("    ", _.value, ":", _.str_mks())
         assert "MKS=3 *=3 |'=3 *=3 |\"=3 *=3" in s
         assert trie.to_dict()
 
     def test_permutations(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         queries = ["actuellement", "actualité", "actu"]
         weights = [1, 1, 0]
         for per in itertools.permutations(zip(queries, weights)):
             trie = CompletionSystem([(None, w) for w, p in per])
             trie.compute_metrics()
-            # fLOG("----", per)
+            # # print("----", per)
             for n in trie:
                 assert n.mks1 <= n.mks0
             diffs = trie.compare_with_trie()
@@ -67,8 +62,6 @@ class TestCompletionSimple(unittest.TestCase):
                 raise AssertionError("\n".join(res))
 
     def test_mks_consistency(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         titles = [
             (None, '"contra el gang del chicharron"', '"Contra el gang del chicharron')
         ]
@@ -86,8 +79,6 @@ class TestCompletionSimple(unittest.TestCase):
             raise AssertionError("\n".join(res))
 
     def test_mks_consistency_port(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         titles = [
             "por",
             "por rouge",
@@ -119,15 +110,13 @@ class TestCompletionSimple(unittest.TestCase):
             raise AssertionError("\n".join(res))
 
     def test_completions(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         this = os.path.abspath(os.path.dirname(__file__))
         data = os.path.join(this, "data", "sample300.txt")
         with open(data, "r", encoding="utf-8") as f:
             lines = [_.strip(" \n\r\t") for _ in f.readlines()]
 
         trie = CompletionSystem([(None, q) for q in lines])
-        diffs = trie.compare_with_trie(fLOG=fLOG)
+        diffs = trie.compare_with_trie()
         if diffs:
             res = [_[-1] for _ in diffs]
             if len(res) > 3:
@@ -136,8 +125,6 @@ class TestCompletionSimple(unittest.TestCase):
         assert len(trie) > 0
 
     def test_exception(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         try:
             e = CompletionElement(4, 5)
         except TypeError as e:
@@ -149,10 +136,8 @@ class TestCompletionSimple(unittest.TestCase):
         self.assertEqual(r, "-")
 
     def test_mks_consistency_bigger(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         def cmks(trie):
-            diffs = trie.compare_with_trie(fLOG=fLOG)
+            diffs = trie.compare_with_trie()
             if diffs:
                 if len(diffs) > 3:
                     diffs = diffs[:3]
@@ -201,27 +186,25 @@ class TestCompletionSimple(unittest.TestCase):
         )
         with open(this, "r", encoding="utf-8") as f:
             titles = [_.strip(" \n\r\t") for _ in f.readlines()]
-        fLOG(titles[:5])
+        # print(titles[:5])
         trie = CompletionSystem([(None, q) for q in titles])
-        trie.compute_metrics(fLOG=fLOG, details=True)
+        trie.compute_metrics(details=True)
         nb, gmks, gmksd, gmksd2, size = cmks(trie)
         gain, gain_dyn, gain_dyn2, ave_length = gain_dynamique_moyen_par_mot(
             titles, [1.0] * len(titles)
         )
-        fLOG("***", 1, nb, size, "*", gmks / size, gmksd / size, gmksd2 / size)
-        fLOG("***", gain, gain_dyn, gain_dyn2, ave_length)
+        # print("***", 1, nb, size, "*", gmks / size, gmksd / size, gmksd2 / size)
+        # print("***", gain, gain_dyn, gain_dyn2, ave_length)
         self.assertEqual(nb, 494)
 
     def test_completions_bug(self):
-        fLOG(__file__, self._testMethodName, OutputPrint=__name__ == "__main__")
-
         couleur = ["blanc", "vert", "orange", "rouge", "noir", "noire", "blanche"]
         key = "portes"
         mots = ["porch", "porch rouge", "porch vert", "porch orange", "pore", "pour"]
         mots.append(key)
         mots += [key + " " + c for c in couleur]
         ens = CompletionSystem(mots)
-        diffs = ens.compare_with_trie(fLOG=fLOG)
+        diffs = ens.compare_with_trie()
         if diffs:
             res = [_[-1] for _ in diffs]
             if len(res) > 3:

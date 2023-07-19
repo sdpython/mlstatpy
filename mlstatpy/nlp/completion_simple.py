@@ -1,10 +1,4 @@
-"""
-@file
-@brief About completion, simple algorithm
-"""
-import time
 from typing import Tuple, List, Iterator, Dict
-from pyquickhelper.loghelper import noLOG
 from .completion import CompletionTrieNode
 
 
@@ -26,6 +20,10 @@ class CompletionElement:
 
     * *mks2*: value of modified dynamic minimum keystroke
     * *mks2_*: length of the prefix to obtain *mks2*
+
+    :param value: value (a character)
+    :param weight: ordering (the lower, the first)
+    :param disp: original string, use this to identify the node
     """
 
     __slots__ = (
@@ -43,13 +41,6 @@ class CompletionElement:
     )
 
     def __init__(self, value: str, weight=1.0, disp=None):
-        """
-        constructor
-
-        @param      value       value (a character)
-        @param      weight      ordering (the lower, the first)
-        @param      disp        original string, use this to identify the node
-        """
         if not isinstance(value, str):
             raise TypeError(f"value must be str not '{value}' - type={type(value)}")
         self.value = value
@@ -115,12 +106,12 @@ class CompletionElement:
         builds a string with all completions for all
         prefixes along the paths, this is only available
         if parameter *completions* was used when calling
-        method @see me update_metrics.
+        method :meth`update_metrics`.
 
-        @param      maxn            maximum number of completions to show
-        @param      use_precompute  use intermediate results built
-                                    by @see me precompute_stat
-        @return                     str
+        :param maxn: maximum number of completions to show
+        :param use_precompute: use intermediate results built
+            by @see me precompute_stat
+        :return: str
         """
         rows = [f"{self.weight} -- {self.value} -- {self.str_mks()}"]
         if self._info is not None:
@@ -151,13 +142,13 @@ class CompletionElement:
         self, position: int, completions: List["CompletionElement"] = None
     ):
         """
-        initiate the metrics
+        Initializes the metrics.
 
-        @param      position    position in the completion system when prefix is null,
-                                *position starting from 0*
-        @param      completions displayed completions, if not None, the method will
-                                store them in member *_completions*
-        @return                 boolean which indicates there was an update
+        :param position: position in the completion system when prefix is null,
+            *position starting from 0*
+        :param completions: displayed completions, if not None, the method will
+            store them in member *_completions*
+        :return: boolean which indicates there was an update
         """
         if completions is not None:
             log_imp = True
@@ -213,18 +204,17 @@ class CompletionElement:
         """
         Updates the metrics.
 
-        @param      prefix      prefix
-        @param      position    position in the completion system
-                                when prefix has length k,
-                                *position starting from 0*
-        @param      improved    if one metrics is < to the completion length, it means
-                                it can be used to improve others queries
-        @param      delta       delta in the dynamic modified mks
-        @param      completions displayed completions, if not None, the method will
-                                store them in member *_completions*
-        @param      iteration   for debugging purpose, indicates
-                                when this improvment was detected
-        @return                 boolean which indicates there was an update
+        :param prefix: prefix
+        :param position: position in the completion system
+            when prefix has length k, *position starting from 0*
+        :param improved: if one metrics is < to the completion length, it means
+            it can be used to improve others queries
+        :param delta: delta in the dynamic modified mks
+        :param completions: displayed completions, if not None, the method will
+            store them in member *_completions*
+        :param iteration: for debugging purpose, indicates
+            when this improvment was detected
+        :return: boolean which indicates there was an update
         """
         if self.prefix is not None and len(prefix) < len(self.prefix.value):
             # no need to look into it
@@ -360,14 +350,10 @@ class CompletionElement:
 
 class CompletionSystem:
     """
-    define a completion system
+    Defines a completion system.
     """
 
     def __init__(self, elements: List[CompletionElement]):
-        """
-        fill the completion system
-        """
-
         def create_element(i, e):
             if isinstance(e, CompletionElement):
                 return e
@@ -387,10 +373,10 @@ class CompletionSystem:
         """
         Not very efficient, finds an item in a the list.
 
-        @param      value       string to find
-        @param      is_sorted   the function will assume the elements are sorted by
-                                alphabetical order
-        @return                 element or None
+        :param value: string to find
+        :param is_sorted: the function will assume the elements are sorted by
+            alphabetical order
+        :return: element or None
         """
         if is_sorted:
             raise NotImplementedError(  # pragma: no cover
@@ -444,12 +430,11 @@ class CompletionSystem:
             _[-1] for _ in sorted((e.weight, e.value, e) for e in self)
         )
 
-    def compare_with_trie(self, delta=0.8, fLOG=noLOG):
+    def compare_with_trie(self, delta=0.8):
         """
         Compares the results with the other implementation.
 
         @param      delta       parameter *delta* in the dynamic modified mks
-        @param      fLOG        logging function
         @return                 None or differences
         """
 
@@ -469,7 +454,7 @@ class CompletionSystem:
             return s
 
         trie = CompletionTrieNode.build(self.tuples())
-        self.compute_metrics(delta=delta, fLOG=fLOG, details=True)
+        self.compute_metrics(delta=delta, details=True)
         trie.precompute_stat()
         trie.update_stat_dynamic(delta=delta)
         diffs = []
@@ -493,16 +478,13 @@ class CompletionSystem:
         """
         return {el.value: el for el in self}
 
-    def compute_metrics(
-        self, ffilter=None, delta=0.8, details=False, fLOG=noLOG
-    ) -> int:
+    def compute_metrics(self, ffilter=None, delta=0.8, details=False) -> int:
         """
         Computes the metric for the completion itself.
 
         @param      ffilter     filter function
         @param      delta       parameter *delta* in the dynamic modified mks
         @param      details     log more details about displayed completions
-        @param      fLOG        logging function
         @return                 number of iterations
 
         The function ends by sorting the set of completion by alphabetical order.
@@ -516,8 +498,8 @@ class CompletionSystem:
             store_completions = {"": []}
 
         improved = {}
-        to = time.perf_counter()
-        fLOG("init_metrics:", len(self))
+        # to = time.perf_counter()
+        # print("init_metrics:", len(self))
         for i, el in enumerate(self._elements):
             if details:
                 store_completions[""].append(el)
@@ -526,8 +508,8 @@ class CompletionSystem:
                 r = el.init_metrics(i)
             if r and el.value not in improved:
                 improved[el.value] = el
-        t = time.perf_counter()
-        fLOG(f"interation 0: #={len(self)} dt={t - to} - log details={details}")
+        # t = time.perf_counter()
+        # print(f"interation 0: #={len(self)} dt={t - to} - log details={details}")
 
         updates = 1
         it = 1
@@ -557,8 +539,8 @@ class CompletionSystem:
                         if el.value not in improved:
                             improved[el.value] = el
                         updates += 1
-            t = time.perf_counter()
-            fLOG(f"interation {it}: updates={updates} dt={t - to}")
+            # t = time.perf_counter()
+            # print(f"interation {it}: updates={updates} dt={t - to}")
             it += 1
 
         self.sort_values()
@@ -573,11 +555,10 @@ class CompletionSystem:
         with the three metrics :math:`M`, :math:`M'`, :math:`M"`
         for these particular queries.
 
-        @param      qset        list of tuple(str, float) = (query, weight)
-        @return                 list of tuple of @see cl CompletionElement,
-                                the first one is the query,
-                                the second one is the None or
-                                the matching completion
+        :param qset: list of tuple(str, float) = (query, weight)
+        :return: list of tuple of @see cl CompletionElement,
+            the first one is the query, the second one is the None or
+            the matching completion
 
         The method @see me compute_metric needs to be called first.
         """

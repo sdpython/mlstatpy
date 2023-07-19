@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief First approach for a edit distance between two graphs.
 
-See :ref:`l-graph_distance`.
-"""
 import copy
 import re
 
@@ -358,17 +353,15 @@ class GraphDistance:
         self, function_mach_vertices, function_match_edges, cost=False
     ):
         """
-        returns default matching functions between two vertices and two edges
-        @param      function_mach_vertices  if not None, this function
-                                            is returned, othewise, it returns
-                                            a new fonction.
-                                            See below.
-        @param      function_match_edges    if not None, this function is returned,
-                                            othewise, it returns a new fonction.
-                                            See below.
-        @param      cost                    if True, the returned function should
-                                            return a float, otherwise a boolean
-        @return                             a pair of functions
+        Returns default matching functions between two vertices and two edges.
+
+        :param function_mach_vertices: if not None, this function
+            is returned, othewise, it returns a new fonction. See below.
+        :param function_match_edges: if not None, this function is returned,
+            othewise, it returns a new fonction. See below.
+        :param cost: if True, the returned function should
+            return a float, otherwise a boolean
+        :return: a pair of functions
 
         Example for * if cost is False:
 
@@ -650,31 +643,28 @@ class GraphDistance:
         """
         Tries to align two paths from two graphs.
 
-        @param      p1                      path 1 (from g1)
-        @param      p2                      path 2 (from g2)
-        @param      g1                      graph 1
-        @param      g2                      graph 2
-        @param      function_mach_vertices  function which gives a
-                                            distance bewteen two vertices,
-                                            if None, it take the output of
-                                            @see me get_matching_functions
-        @param      function_match_edges    function which gives a distance bewteen
-                                            two edges,
-                                            if None, it take the output of
-                                            @see me get_matching_functions
-        @param      use_min                 the returned is based on a edit distance,
-                                            if this parameter is True,
-                                            the returned value will be:
+        :param p1: path 1 (from g1)
+        :param p2: path 2 (from g2)
+        :param g1: graph 1
+        :param g2: graph 2
+        :param function_mach_vertices: function which gives a
+            distance bewteen two vertices, if None, it take the output of
+            :meth:`get_matching_functions`
+        :param function_match_edges: function which gives a distance bewteen
+            two edges, if None, it take the output of
+            :meth:`get_matching_functions`
+        :param use_min: the returned is based on a edit distance,
+            if this parameter is True, the returned value will be:
 
-                                            ::
+            ::
 
-                                                if use_min :
-                                                    n = min (len(p1), len(p2))
-                                                    d = d*1.0 / n if n > 0 else 0
+                if use_min :
+                    n = min (len(p1), len(p2))
+                    d = d*1.0 / n if n > 0 else 0
 
-        @param      debug                   unused
-        @param      cache                   to cache the costs
-        @return                             2-uple: distance, aligned path
+        :param debug: unused
+        :param cache: to cache the costs
+        :return: 2-uple: distance, aligned path
         """
 
         def edge_vertex_match(x, y, g1, g2, w1, w2):
@@ -813,32 +803,28 @@ class GraphDistance:
         weight_vertex=1.0,
         weight_edge=1.0,
         verbose=0,
-        fLOG=print,
     ):
         """
         Computes an alignment between two graphs.
 
-        @param      graph2                  the other graph
-        @param      function_mach_vertices  function which gives a distance
-                                            bewteen two vertices,
-                                            if None, it take the output of
-                                            @see me get_matching_functions
-        @param      function_match_edges    function which gives a distance
-                                            bewteen two edges,
-                                            if None, it take the output of
-                                            @see me get_matching_functions
-        @param      noClean                 if True, clean unmatched vertices and edges
-        @param      store                   if None, does nothing, if it is a
-                                            dictionary, the function will store
-                                            here various information about how
-                                            the matching was operated
-        @param      use_min                 @see me edit_distance_path
-        @param      weight_vertex           a weight for every vertex
-        @param      weight_edge             a weight for every edge
-        @param      verbose                 display some progress with :epkg:`tqdm`
-        @param      fLOG                    logging functino
-        @return                             2 tuple (a distance, a graph containing
-                                            the aligned paths between the two graphs)
+        :param graph2: the other graph
+        :param function_mach_vertices: function which gives a distance
+            between two vertices, if None, it take the output of
+            :meth:`get_matching_functions`
+        :param function_match_edges: function which gives a distance
+            bewteen two edges, if None, it take the output of
+            :meth:`get_matching_functions`
+        :param noClean: if True, clean unmatched vertices and edges
+        :param store: if None, does nothing, if it is a
+            dictionary, the function will store
+            here various information about how
+            the matching was operated
+        :param use_min: @see me edit_distance_path
+        :param weight_vertex: a weight for every vertex
+        :param weight_edge: a weight for every edge
+        :param verbose: display some progress with :epkg:`tqdm`
+        :return: 2 tuple (a distance, a graph containing
+            the aligned paths between the two graphs)
 
         See :ref:`l-graph_distance`.
         """
@@ -855,20 +841,20 @@ class GraphDistance:
             store["nbpath2"] = len(paths2)
 
         matrix_distance = {}
-        if verbose > 0 and fLOG is not None:
-            fLOG("[distance_matching_graphs_paths] builds matrix_distance")
+        if verbose > 0:
+            print("[distance_matching_graphs_paths] builds matrix_distance")
             from tqdm import tqdm
 
             loop1 = tqdm(list(enumerate(paths1)))
         else:
             loop1 = enumerate(paths1)
         loop2 = list(enumerate(paths2))
-        if verbose > 0 and fLOG is not None:
-            fLOG(
+        if verbose > 0:
+            print(
                 "[distance_matching_graphs_paths] len(loop1)=%d"
                 % len(list(enumerate(paths1)))
             )
-            fLOG(f"[distance_matching_graphs_paths] len(loop2)={len(loop2)}")
+            print(f"[distance_matching_graphs_paths] len(loop2)={len(loop2)}")
         cache = {}
         for i1, p1 in loop1:
             for i2, p2 in loop2:
@@ -882,22 +868,22 @@ class GraphDistance:
                     use_min=use_min,
                     cache=cache,
                 )
-        if verbose > 0 and fLOG is not None:
-            fLOG(f"[distance_matching_graphs_paths] len(cache)={len(cache)}")
+        if verbose > 0:
+            print(f"[distance_matching_graphs_paths] len(cache)={len(cache)}")
 
         if store is not None:
             store["matrix_distance"] = matrix_distance
         reduction = [(v[0], k) for k, v in matrix_distance.items()]
         if store is not None:
             store["path_mat1"] = copy.deepcopy(reduction)
-        if verbose > 0 and fLOG is not None:
-            fLOG("[distance_matching_graphs_paths] private_kruskal_matrix")
+        if verbose > 0:
+            print("[distance_matching_graphs_paths] private_kruskal_matrix")
         self.private_kruskal_matrix(reduction, False)
         if store is not None:
             store["path_mat2"] = copy.deepcopy(reduction)
 
-        if verbose > 0 and fLOG is not None:
-            fLOG("[distance_matching_graphs_paths] pair_count_vertex")
+        if verbose > 0:
+            print("[distance_matching_graphs_paths] pair_count_vertex")
         pair_count_edge = {}
         pair_count_vertex = {}
         for k, v in reduction:
@@ -930,8 +916,8 @@ class GraphDistance:
         if store is not None:
             store["vertex_mat2"] = copy.copy(reduction_vertex)
 
-        if verbose > 0 and fLOG is not None:
-            fLOG("[distance_matching_graphs_paths] private_count_left_right")
+        if verbose > 0:
+            print("[distance_matching_graphs_paths] private_count_left_right")
         count_edge_left, count_edge_right = self.private_count_left_right(
             reduction_edge
         )
@@ -943,8 +929,8 @@ class GraphDistance:
         doneVertex = {}
         done_edge = {}
 
-        if verbose > 0 and fLOG is not None:
-            fLOG("[distance_matching_graphs_paths] builds merged graph")
+        if verbose > 0:
+            print("[distance_matching_graphs_paths] builds merged graph")
         for k, v in self.vertices.items():
             newv = Vertex(v.nb, v.label, weight_vertex)
             res_graph.vertices[k] = newv
@@ -995,8 +981,8 @@ class GraphDistance:
             res_graph.edges[newe.nb] = newe  # pylint: disable=E1101
             newe.pair = (None, e)
 
-        if verbose > 0 and fLOG is not None:
-            fLOG(
+        if verbose > 0:
+            print(
                 "[distance_matching_graphs_paths] "
                 "compute_predecessor, compute_successor"
             )

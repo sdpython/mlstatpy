@@ -177,7 +177,7 @@ L'analyse en composantes principales ou ACP est définie de la manière suivante
     projeté sur le sous-espace vectoriel défini par les
     vecteurs colonnes de la matrice :math:`W`.
 
-		
+        
 
 Résolution d'une ACP avec un réseau de neurones diabolo
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -197,14 +197,14 @@ afin de passer d'une optimisation sous contrainte à une optimisation sans contr
     .. math::
         :nowrap:
         :label: rn_acp_contrainte
-		
+        
         \begin{eqnarray*}
         S =
         \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \arg \max } \;
                             \cro { \sum_{i=1}^{N} \norm{W'X_i}^2 } &=&
         \underset{ W \in M_{p,d}\pa{\R} } { \arg \min } \;  \cro { \sum_{i=1}^{N} \norm{WW'X_i - X_i}^2 }
         \end{eqnarray*}
-		
+        
     De plus :math:`S` est l'espace vectoriel engendré par les :math:`d`
     vecteurs propres de la matrice
     :math:`XX' = \sum_{i=1}^{N} X_i X_i'` associées aux
@@ -271,7 +271,7 @@ Donc :
     \begin{eqnarray*}
     \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \max }\; E\pa{W} =
             \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \max }\;
-            	\trace{ D_X P'WW'P }
+                \trace{ D_X P'WW'P }
     = \underset{ \begin{subarray}{c} Y \in M_{p,d}\pa{\R} \\ Y'Y = I_d \end{subarray} } { \max }\; \trace{ D_X YY'
                 }
     = \sum_{i=1}{d} \lambda_i
@@ -332,7 +332,7 @@ Et :
     \begin{eqnarray*}
     \trace{ XX' YY'} &=& \sum_{i=1}^{d} \sum_{k=1}^{p} \lambda_k \pa{y_i^k}^2 \\
     \trace{ XX' YY'} &=& \sum_{k=1}^{p} \lambda_k \pa {\sum_{i=1}^{d} \pa{y_i^k}^2} =
-    				\sum_{k=1}^{p} \; \lambda_k
+                    \sum_{k=1}^{p} \; \lambda_k
     \end{eqnarray*}
 
 Ceci permet d'affirmer que :
@@ -374,9 +374,9 @@ D'où :
 
     \begin{eqnarray*}
     \underset{ \begin{subarray} \, W \in M_{p,d} \pa{\R} \\
-    						W'W=I_d \end{subarray}} { \; \max \; } \;  \pa {  \sum_{i=1}^{N} \norm{ W'X_i}^2 }  =
+                            W'W=I_d \end{subarray}} { \; \max \; } \;  \pa {  \sum_{i=1}^{N} \norm{ W'X_i}^2 }  =
     \underset{ \begin{subarray} \, W \in M_{p,d} \pa{\R} \\
-    						W'W=I_d \end{subarray}} { \; \min \; } \;  \pa {  \sum_{i=1}^{N} \norm{ WW'X_i - X_i}^2 }
+                            W'W=I_d \end{subarray}} { \; \min \; } \;  \pa {  \sum_{i=1}^{N} \norm{ WW'X_i - X_i}^2 }
     \end{eqnarray*}
 
 *Partie 4*
@@ -582,8 +582,8 @@ On suppose que le nuage de points est centré, alors :
 
 .. math::
 
-		\forall d \in \intervalle{1}{p}, \; I_d = \sum_{k=1}^{N}
-		\pa{P_d' X_k}^2 = tr \pa{X' P_d P_d' X} = tr \pa{XX' P_d P_d'} = \lambda_d
+        \forall d \in \intervalle{1}{p}, \; I_d = \sum_{k=1}^{N}
+        \pa{P_d' X_k}^2 = tr \pa{X' P_d P_d' X} = tr \pa{XX' P_d P_d'} = \lambda_d
 
 Comme :math:`\pa{P_1,\dots,P_p}` est une base orthonormée de :math:`\R^p`,
 on en déduit que :

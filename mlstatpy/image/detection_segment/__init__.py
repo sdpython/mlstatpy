@@ -1,8 +1,3 @@
-"""
-@file
-@brief shortcut to image
-"""
-
 from .detection_segment import (
     detect_segments,
     plot_segments,

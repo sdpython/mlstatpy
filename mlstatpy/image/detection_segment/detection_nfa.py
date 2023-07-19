@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-@file
-@brief Ce module determine si un segment est significatif, c'est à dire
-si le nombre de fausses alarmes n'est pas trop élevé.
-"""
+
 from .geometrie import Segment
 
 

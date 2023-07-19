@@ -4,7 +4,7 @@
 \firstpassagedo{\input{clas_super_chapter.tex}}
 
 
-Cette annexe recense différents moyens d'effectuer une classification supervisée. Cette tâche consiste à étiqueter un élément $x$ sachant qu'on connaît déjà cet étiquetage pour un certain nombre d'éléments $\vecteur{x_1}{x_N}$ dont les labels sont $\vecteur{c\pa{x_1}}{c\pa{x_N}}$.
+Cette annexe recense diffï¿½rents moyens d'effectuer une classification supervisï¿½e. Cette tï¿½che consiste ï¿½ ï¿½tiqueter un ï¿½lï¿½ment $x$ sachant qu'on connaï¿½t dï¿½jï¿½ cet ï¿½tiquetage pour un certain nombre d'ï¿½lï¿½ments $\vecteur{x_1}{x_N}$ dont les labels sont $\vecteur{c\pa{x_1}}{c\pa{x_N}}$.
 
 \label{classification_supervisee}
 
@@ -22,68 +22,68 @@ Cette annexe recense différents moyens d'effectuer une classification supervisée
 \indexfr{plus proches voisins}
 \label{clas_super_ppv_par}
 
-Cette méthode est la plus simple puisqu'elle consiste à associer à $x$, l'élément à classer, le label $c\pa{x_{i^*}}$ de l'élément le plus proche $x_{i^*}$ dans l'ensemble $\vecteur{x_1}{x_N}$. Ceci mène à l'algorithme de classification suivant~:
+Cette mï¿½thode est la plus simple puisqu'elle consiste ï¿½ associer ï¿½ $x$, l'ï¿½lï¿½ment ï¿½ classer, le label $c\pa{x_{i^*}}$ de l'ï¿½lï¿½ment le plus proche $x_{i^*}$ dans l'ensemble $\vecteur{x_1}{x_N}$. Ceci mï¿½ne ï¿½ l'algorithme de classification suivant~:
 
 
-		\begin{xalgorithm}{1-PPV ou plus proche voisin}
-		\label{clas_super_1ppv_algo}
-		Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'éléments d'un espace métrique quelconque, 
-		soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associées à chacun des éléments de $X$. On note 
-		$d$ la distance définie sur l'espace métrique $E$. Soit $x$
-		un élément à classer, on cherche à déterminer la classe $\hat{c}(x)$ associée à $x$. On définit $x_{i^*}$ 
-		comme étant~:
-						\begin{eqnarray*}
-						x_{i^*} &=& \underset{i \in \intervalle{1}{N}}{\arg \min} \; d\pa{x_i,x}
-						\end{eqnarray*}
-		Alors~: $\hat{c}(x) = c\pa{x_i^*}$
-		\end{xalgorithm}
+        \begin{xalgorithm}{1-PPV ou plus proche voisin}
+        \label{clas_super_1ppv_algo}
+        Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'ï¿½lï¿½ments d'un espace mï¿½trique quelconque, 
+        soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associï¿½es ï¿½ chacun des ï¿½lï¿½ments de $X$. On note 
+        $d$ la distance dï¿½finie sur l'espace mï¿½trique $E$. Soit $x$
+        un ï¿½lï¿½ment ï¿½ classer, on cherche ï¿½ dï¿½terminer la classe $\hat{c}(x)$ associï¿½e ï¿½ $x$. On dï¿½finit $x_{i^*}$ 
+        comme ï¿½tant~:
+                        \begin{eqnarray*}
+                        x_{i^*} &=& \underset{i \in \intervalle{1}{N}}{\arg \min} \; d\pa{x_i,x}
+                        \end{eqnarray*}
+        Alors~: $\hat{c}(x) = c\pa{x_i^*}$
+        \end{xalgorithm}
 
 \indexfrr{PPV}{1-PPV}
 \indexfrr{PPV}{k-PPV}
 \indexfr{nearest neighbors}
 
-Cet algorithme est souvent appelé \emph{1-PPV} (ou \emph{1-NN} pour Nearest Neighbors). Il existe une version améliorée \emph{k-PPV} qui consiste à attribuer à $x$ la classe la plus représentée parmi ses $k$ plus proches voisins.
+Cet algorithme est souvent appelï¿½ \emph{1-PPV} (ou \emph{1-NN} pour Nearest Neighbors). Il existe une version amï¿½liorï¿½e \emph{k-PPV} qui consiste ï¿½ attribuer ï¿½ $x$ la classe la plus reprï¿½sentï¿½e parmi ses $k$ plus proches voisins.
 
 
 
-		\begin{xalgorithm}{k-PPV ou k plus proches voisins}
-		\label{clas_super_kppv_simple}
-		Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'éléments d'un espace métrique quelconque, 
-		soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associées à chacun des éléments de $X$. On note 
-		$d$ la distance définie sur l'espace métrique $E$. Soit $x$
-		un élément à classer, on cherche à déterminer la classe $c(x)$ associée à $x$. On définit l'ensemble $S^*_k$
-		incluant les $k$-plus proches voisins de $x$, cet ensemble vérifie~:
-						\begin{eqnarray*}
-						\card{S^*_k} = 0 \text{ et } 
-																		 \underset{y \in S^*_k}{\max} \; d\pa{y,x} \infegal
-																		 \underset{y \in X - S^*_k}{\min} \; d\pa{y,x} 
-						\end{eqnarray*}
-		On calcule les occurrences $f(i)$ de chaque classe $i$ dans l'ensemble $S^*_k$~: 
-						\begin{eqnarray}
-						f(i) = \summyone{y \in S^*_k} \, \omega\pa{x,y} \, \indicatrice{c(y) = i} 
-						\label{class_super_kppv_contribution_eq}
-						\end{eqnarray}
-		On assigne alors à $x$ la classe $c(x)$ choisie dans l'ensemble~:
-						\begin{eqnarray*}
-						\hat{c}(x) \in \underset{i \in \N}{\arg \max} \; f(i)
-						\end{eqnarray*}
-		\end{xalgorithm}
+        \begin{xalgorithm}{k-PPV ou k plus proches voisins}
+        \label{clas_super_kppv_simple}
+        Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'ï¿½lï¿½ments d'un espace mï¿½trique quelconque, 
+        soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associï¿½es ï¿½ chacun des ï¿½lï¿½ments de $X$. On note 
+        $d$ la distance dï¿½finie sur l'espace mï¿½trique $E$. Soit $x$
+        un ï¿½lï¿½ment ï¿½ classer, on cherche ï¿½ dï¿½terminer la classe $c(x)$ associï¿½e ï¿½ $x$. On dï¿½finit l'ensemble $S^*_k$
+        incluant les $k$-plus proches voisins de $x$, cet ensemble vï¿½rifie~:
+                        \begin{eqnarray*}
+                        \card{S^*_k} = 0 \text{ et } 
+                                                                         \underset{y \in S^*_k}{\max} \; d\pa{y,x} \infegal
+                                                                         \underset{y \in X - S^*_k}{\min} \; d\pa{y,x} 
+                        \end{eqnarray*}
+        On calcule les occurrences $f(i)$ de chaque classe $i$ dans l'ensemble $S^*_k$~: 
+                        \begin{eqnarray}
+                        f(i) = \summyone{y \in S^*_k} \, \omega\pa{x,y} \, \indicatrice{c(y) = i} 
+                        \label{class_super_kppv_contribution_eq}
+                        \end{eqnarray}
+        On assigne alors ï¿½ $x$ la classe $c(x)$ choisie dans l'ensemble~:
+                        \begin{eqnarray*}
+                        \hat{c}(x) \in \underset{i \in \N}{\arg \max} \; f(i)
+                        \end{eqnarray*}
+        \end{xalgorithm}
 
-Dans sa version la plus simple, la fonction $\omega\pa{x,y}$ utilisée lors du calcul de la contribution $f$ (\ref{class_super_kppv_contribution_eq}) est constante. Mais il est possible de lui affecter une valeur tenant compte de la proximité entre $x$ et $y$. La table~\ref{clas_super_omega_contribution} donne quelques exemples de contributions possibles.
+Dans sa version la plus simple, la fonction $\omega\pa{x,y}$ utilisï¿½e lors du calcul de la contribution $f$ (\ref{class_super_kppv_contribution_eq}) est constante. Mais il est possible de lui affecter une valeur tenant compte de la proximitï¿½ entre $x$ et $y$. La table~\ref{clas_super_omega_contribution} donne quelques exemples de contributions possibles.
 
 
-		\begin{table}[ht]
-		$$\begin{tabular}{|ll|} \hline 
-		fonction constante 	& $\omega\pa{x,y} = 1$   \\ \hline
-		distance inverse		&	$\omega\pa{x,y} = \frac{1}{1 + d\pa{x,y}}$ \\  \hline
-		noyau								& $\omega\pa{x,y} = \exp\pa{ - d^2 \pa{x,y}}$ \\ \hline
-		\end{tabular}$$
-		\caption{Exemple de contribution $w\pa{x,y}$ pour l'algorithme~\ref{clas_super_kppv_simple} des k-PPV. 
-							Ces fonctions sont toutes décroissantes (strictement ou non) par rapport à la distance $d$.}
-		\label{clas_super_omega_contribution}
-		\end{table}
+        \begin{table}[ht]
+        $$\begin{tabular}{|ll|} \hline 
+        fonction constante     & $\omega\pa{x,y} = 1$   \\ \hline
+        distance inverse        &    $\omega\pa{x,y} = \frac{1}{1 + d\pa{x,y}}$ \\  \hline
+        noyau                                & $\omega\pa{x,y} = \exp\pa{ - d^2 \pa{x,y}}$ \\ \hline
+        \end{tabular}$$
+        \caption{Exemple de contribution $w\pa{x,y}$ pour l'algorithme~\ref{clas_super_kppv_simple} des k-PPV. 
+                            Ces fonctions sont toutes dï¿½croissantes (strictement ou non) par rapport ï¿½ la distance $d$.}
+        \label{clas_super_omega_contribution}
+        \end{table}
 
-L'inconvénient majeur de la méthode des plus proches voisins est sa longueur puisqu'elle implique le calcul des distances entre $x$ et chacun des éléments de l'ensemble $\vecteur{x_1}{x_N}$. C'est pourquoi de nombreuses méthodes d'optimisation ont été développées afin d'accélérer ce processus. Il est possible d'optimiser le calcul de la distance ou bien d'éviter un trop nombre de calculs en utilisant des éléments pivots\seeannex{space_metric_introduction}{recherche dans un espace métrique}. L'optimisation de la vitesse est souvent préconisée lorsque l'espace métrique $E$ n'est pas vectoriel, comme un espace de suites finies. En revanche, l'utilisation de pivots de manière à éviter l'exploration de la totalité de l'ensemble $X$ est valable pour tout espace métrique. Ces méthodes sont l'objet de l'annexe~\ref{space_metric_introduction}.
+L'inconvï¿½nient majeur de la mï¿½thode des plus proches voisins est sa longueur puisqu'elle implique le calcul des distances entre $x$ et chacun des ï¿½lï¿½ments de l'ensemble $\vecteur{x_1}{x_N}$. C'est pourquoi de nombreuses mï¿½thodes d'optimisation ont ï¿½tï¿½ dï¿½veloppï¿½es afin d'accï¿½lï¿½rer ce processus. Il est possible d'optimiser le calcul de la distance ou bien d'ï¿½viter un trop nombre de calculs en utilisant des ï¿½lï¿½ments pivots\seeannex{space_metric_introduction}{recherche dans un espace mï¿½trique}. L'optimisation de la vitesse est souvent prï¿½conisï¿½e lorsque l'espace mï¿½trique $E$ n'est pas vectoriel, comme un espace de suites finies. En revanche, l'utilisation de pivots de maniï¿½re ï¿½ ï¿½viter l'exploration de la totalitï¿½ de l'ensemble $X$ est valable pour tout espace mï¿½trique. Ces mï¿½thodes sont l'objet de l'annexe~\ref{space_metric_introduction}.
 
 
 
@@ -96,18 +96,18 @@ L'inconvénient majeur de la méthode des plus proches voisins est sa longueur pui
 \indexfrr{hyperplan}{SVM}
 \label{clas_super_svm_par}
 
-L'algorithme~\ref{clas_super_kppv_simple} utilise une contribution notée $\omega$ lors du calcul de $f$ (\ref{class_super_kppv_contribution_eq}). Si celle-ci est définie de manière explicite, on reste dans le cadre des plus proches voisins. En revanche, si celle-ci est estimée à partir d'un échantillon supposé représentatif du problème de classification à résoudre, on se place dans le cadre des \emph{Support Vector Machines}. Ce formalisme introduit par Vapnik (\citeindex{Vapnik1998}) n'est pas simplement un prolongement de la méthode des plus proches voisins mais peut aussi être interprêté comme la recherche du meilleur hyperplan de séparation entre deux classes. Cette méthode est présentée plus en détail par l'annexe~\ref{annexe_svm}\seeannex{annexe_svm}{SVM}.
+L'algorithme~\ref{clas_super_kppv_simple} utilise une contribution notï¿½e $\omega$ lors du calcul de $f$ (\ref{class_super_kppv_contribution_eq}). Si celle-ci est dï¿½finie de maniï¿½re explicite, on reste dans le cadre des plus proches voisins. En revanche, si celle-ci est estimï¿½e ï¿½ partir d'un ï¿½chantillon supposï¿½ reprï¿½sentatif du problï¿½me de classification ï¿½ rï¿½soudre, on se place dans le cadre des \emph{Support Vector Machines}. Ce formalisme introduit par Vapnik (\citeindex{Vapnik1998}) n'est pas simplement un prolongement de la mï¿½thode des plus proches voisins mais peut aussi ï¿½tre interprï¿½tï¿½ comme la recherche du meilleur hyperplan de sï¿½paration entre deux classes. Cette mï¿½thode est prï¿½sentï¿½e plus en dï¿½tail par l'annexe~\ref{annexe_svm}\seeannex{annexe_svm}{SVM}.
 
 
 
 
 %--------------------------------------------------------------------------------------------------------------------
-\section{Réseaux de neurones}
+\section{Rï¿½seaux de neurones}
 %--------------------------------------------------------------------------------------------------------------------
-\indexfrr{réseau de neurones}{classification}
+\indexfrr{rï¿½seau de neurones}{classification}
 \label{clas_super_nn_par}
 
-Cette méthode est présentée plus en détail aux paragraphes~\ref{subsection_classifieur} (page~\pageref{subsection_classifieur}) et~\ref{classification} (page~\pageref{classification})\seeannex{annexe_reseau_neurone}{réseau de neurones}. Elle permet de construire une fonction $f\pa{x} = y = \vecteur{y_1}{y_C} \in \R^C$ où $C$ est le nombre de classes, $y_i \in \cro{0,1}$ et $\sum^C_1 y_i = 1$. Chaque sortie $y_i$ du réseau de neurones correspond à la probabilité que le vecteur $x$ appartient à la classe~$i$. Contrairement aux deux méthodes précédentes, les réseaux de neurones permettent de construire une fonction $f$ indépendante du nombre d'exemples permettant de l'estimer. Néanmoins, les paramètres de cette fonction ne sont plus aussi interprétables que les contributions évoquées aux paragraphes~\ref{clas_super_ppv_par} et~\ref{clas_super_svm_par}. Ceci explique que le fort intérêt de ces modèles depuis les années 1980 au milieu des années 1990 ait décru au profit d'autres solutions comme les SVM.
+Cette mï¿½thode est prï¿½sentï¿½e plus en dï¿½tail aux paragraphes~\ref{subsection_classifieur} (page~\pageref{subsection_classifieur}) et~\ref{classification} (page~\pageref{classification})\seeannex{annexe_reseau_neurone}{rï¿½seau de neurones}. Elle permet de construire une fonction $f\pa{x} = y = \vecteur{y_1}{y_C} \in \R^C$ oï¿½ $C$ est le nombre de classes, $y_i \in \cro{0,1}$ et $\sum^C_1 y_i = 1$. Chaque sortie $y_i$ du rï¿½seau de neurones correspond ï¿½ la probabilitï¿½ que le vecteur $x$ appartient ï¿½ la classe~$i$. Contrairement aux deux mï¿½thodes prï¿½cï¿½dentes, les rï¿½seaux de neurones permettent de construire une fonction $f$ indï¿½pendante du nombre d'exemples permettant de l'estimer. Nï¿½anmoins, les paramï¿½tres de cette fonction ne sont plus aussi interprï¿½tables que les contributions ï¿½voquï¿½es aux paragraphes~\ref{clas_super_ppv_par} et~\ref{clas_super_svm_par}. Ceci explique que le fort intï¿½rï¿½t de ces modï¿½les depuis les annï¿½es 1980 au milieu des annï¿½es 1990 ait dï¿½cru au profit d'autres solutions comme les SVM.
 
 
 
@@ -123,46 +123,46 @@ Cette méthode est présentée plus en détail aux paragraphes~\ref{subsection_class
 \indexfr{plus proches voisins}
 \indexfrr{prototype}{LVQ}
 
-Cette méthode est souvent associé à des méthodes de classification par plus proches voisins évoquées dans l'annexe~\ref{space_metric_introduction}. Lors de la classification d'un élément, on recherche dans un ensemble le plus proche élément et on attribue à l'élément à classer la classe de l'élément trouvé. Alors que l'annexe~\ref{space_metric_introduction} cherche à accélérer la recherche de l'élément le plus proche, la méthode LVQ essaye de résumer l'information au travers de prototypes. Plus simplement, les méthodes abordées ici permettent tente réduire au minimum l'ensemble dans lequel seront cherchés les voisins sans changer ou sans trop changer le résultat de la classification. 
+Cette mï¿½thode est souvent associï¿½ ï¿½ des mï¿½thodes de classification par plus proches voisins ï¿½voquï¿½es dans l'annexe~\ref{space_metric_introduction}. Lors de la classification d'un ï¿½lï¿½ment, on recherche dans un ensemble le plus proche ï¿½lï¿½ment et on attribue ï¿½ l'ï¿½lï¿½ment ï¿½ classer la classe de l'ï¿½lï¿½ment trouvï¿½. Alors que l'annexe~\ref{space_metric_introduction} cherche ï¿½ accï¿½lï¿½rer la recherche de l'ï¿½lï¿½ment le plus proche, la mï¿½thode LVQ essaye de rï¿½sumer l'information au travers de prototypes. Plus simplement, les mï¿½thodes abordï¿½es ici permettent tente rï¿½duire au minimum l'ensemble dans lequel seront cherchï¿½s les voisins sans changer ou sans trop changer le rï¿½sultat de la classification. 
 
-En ce qui concerne les nuées dynamiques, les prototypes sont les centres des classes déterminées par l'algorithme des centres mobiles. Pour les différentes versions LVQ qui suivent, les prototypes doivent représenter au mieux une classification imposée. L'article~\citeindex{Bezdek2001} propose une revue récente de ces méthodes que reprend en partie seulement un article~\citeindex{Kim2003} sur lequel s'appuie les paragraphes qui suivent.
+En ce qui concerne les nuï¿½es dynamiques, les prototypes sont les centres des classes dï¿½terminï¿½es par l'algorithme des centres mobiles. Pour les diffï¿½rentes versions LVQ qui suivent, les prototypes doivent reprï¿½senter au mieux une classification imposï¿½e. L'article~\citeindex{Bezdek2001} propose une revue rï¿½cente de ces mï¿½thodes que reprend en partie seulement un article~\citeindex{Kim2003} sur lequel s'appuie les paragraphes qui suivent.
 
 
 
 \subsection{Principe}
 \label{clas_super_principe_lvq}
 
-Lors de l'algorithme~\ref{clas_super_1ppv_algo} qui permet de classer un élément $x$ en l'associant à la même classe que son plus proche voisin, il faut calculer toutes les distances de $x$ aux voisins possibles $X$. Les méthodes LVQ ont pour objectif de réduire l'ensemble $X$ à une taille raisonnable en utilisant l'information de la classe. Après réduction, l'algorithme de classification doit retourner les mêmes réponses. Par conséquent, l'algorithme suivant~\ref{clas_super_1ppv_lvq_algo} doit retourner les mêmes réponses que la méthode 1-ppv~\ref{clas_super_1ppv_algo}.
+Lors de l'algorithme~\ref{clas_super_1ppv_algo} qui permet de classer un ï¿½lï¿½ment $x$ en l'associant ï¿½ la mï¿½me classe que son plus proche voisin, il faut calculer toutes les distances de $x$ aux voisins possibles $X$. Les mï¿½thodes LVQ ont pour objectif de rï¿½duire l'ensemble $X$ ï¿½ une taille raisonnable en utilisant l'information de la classe. Aprï¿½s rï¿½duction, l'algorithme de classification doit retourner les mï¿½mes rï¿½ponses. Par consï¿½quent, l'algorithme suivant~\ref{clas_super_1ppv_lvq_algo} doit retourner les mï¿½mes rï¿½ponses que la mï¿½thode 1-ppv~\ref{clas_super_1ppv_algo}.
 
 
 
-		\begin{xalgorithm}{1-PPV avec LVQ}
-		\label{clas_super_1ppv_lvq_algo}
-		Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'éléments d'un espace métrique quelconque, 
-		soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associées à chacun des éléments de $X$. On note 
-		$d$ la distance définie sur l'espace métrique $E$. Soit $x$
-		un élément à classer, on cherche à déterminer la classe $c(x)$ associée à $x$.
-		
-		\begin{xalgostep}{LVQ}\label{clas_super_lvq_step_identity}
-		On réduit l'ensemble $X$ à un ensemble de prototypes $X'$ qui n'est pas forcément
-		inclus dans $X$. On note $X' = \vecteur{x'_1}{x'_n}$ avec de préférence $n << N$.
-		La classe de l'élément $x_i'$ est toujours notée $c\pa{x'_i}$. Les algorithmes effectuant 
-		cette réduction sont présentées dans les paragraphes qui suivent comme~\ref{clas_super_lvq_cnn}
-		ou~\ref{clas_super_lvq_pnn}.
-		\end{xalgostep}
-		
-		\begin{xalgostep}{classification}\label{clas_super_lvq_step_clas_b}
-		On définit $x'_{i^*}$ comme étant~:
-						\begin{eqnarray*}
-						x'_{i^*} &=& \underset{i \in \intervalle{1}{n}}{\arg \min} \; d\pa{x'_i,x}
-						\end{eqnarray*}
-		Alors~: $\hat{c}(x) = c\pa{x'_{i^*}}$
-		\end{xalgostep}
-		\end{xalgorithm}
+        \begin{xalgorithm}{1-PPV avec LVQ}
+        \label{clas_super_1ppv_lvq_algo}
+        Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'ï¿½lï¿½ments d'un espace mï¿½trique quelconque, 
+        soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associï¿½es ï¿½ chacun des ï¿½lï¿½ments de $X$. On note 
+        $d$ la distance dï¿½finie sur l'espace mï¿½trique $E$. Soit $x$
+        un ï¿½lï¿½ment ï¿½ classer, on cherche ï¿½ dï¿½terminer la classe $c(x)$ associï¿½e ï¿½ $x$.
+        
+        \begin{xalgostep}{LVQ}\label{clas_super_lvq_step_identity}
+        On rï¿½duit l'ensemble $X$ ï¿½ un ensemble de prototypes $X'$ qui n'est pas forcï¿½ment
+        inclus dans $X$. On note $X' = \vecteur{x'_1}{x'_n}$ avec de prï¿½fï¿½rence $n << N$.
+        La classe de l'ï¿½lï¿½ment $x_i'$ est toujours notï¿½e $c\pa{x'_i}$. Les algorithmes effectuant 
+        cette rï¿½duction sont prï¿½sentï¿½es dans les paragraphes qui suivent comme~\ref{clas_super_lvq_cnn}
+        ou~\ref{clas_super_lvq_pnn}.
+        \end{xalgostep}
+        
+        \begin{xalgostep}{classification}\label{clas_super_lvq_step_clas_b}
+        On dï¿½finit $x'_{i^*}$ comme ï¿½tant~:
+                        \begin{eqnarray*}
+                        x'_{i^*} &=& \underset{i \in \intervalle{1}{n}}{\arg \min} \; d\pa{x'_i,x}
+                        \end{eqnarray*}
+        Alors~: $\hat{c}(x) = c\pa{x'_{i^*}}$
+        \end{xalgostep}
+        \end{xalgorithm}
 
 \indexfrr{prototype}{LVQ}
 
-Les paragraphes qui suivent présentent des algorithmes permettant de calculer un ensemble $X'$ satisfaisant à l'étape~\ref{clas_super_lvq_step_identity} et le plus réduit possible. Cette étape~\ref{clas_super_lvq_step_identity} est un fait un prétraitement, elle n'est effectuée qu'une seule fois tandis que l'étape~\ref{clas_super_lvq_step_clas_b} intervient pour chaque nouvel élément à classer. L'ensemble $X'$ est appelé l'ensemble des \emph{prototypes}. Les chapitres qui suivent concernent essentiellement les espaces vectoriels excepté pour le paragraphe~\ref{clas_super_lvq_cnn}. Pour des espaces métriques non vectoriels, l'annexe~\ref{space_metric_introduction} présente d'autres méthodes de sélection de prototypes\seeannex{space_metric_suppression_voisins_inutile}{suppression des voisins inutiles}.
+Les paragraphes qui suivent prï¿½sentent des algorithmes permettant de calculer un ensemble $X'$ satisfaisant ï¿½ l'ï¿½tape~\ref{clas_super_lvq_step_identity} et le plus rï¿½duit possible. Cette ï¿½tape~\ref{clas_super_lvq_step_identity} est un fait un prï¿½traitement, elle n'est effectuï¿½e qu'une seule fois tandis que l'ï¿½tape~\ref{clas_super_lvq_step_clas_b} intervient pour chaque nouvel ï¿½lï¿½ment ï¿½ classer. L'ensemble $X'$ est appelï¿½ l'ensemble des \emph{prototypes}. Les chapitres qui suivent concernent essentiellement les espaces vectoriels exceptï¿½ pour le paragraphe~\ref{clas_super_lvq_cnn}. Pour des espaces mï¿½triques non vectoriels, l'annexe~\ref{space_metric_introduction} prï¿½sente d'autres mï¿½thodes de sï¿½lection de prototypes\seeannex{space_metric_suppression_voisins_inutile}{suppression des voisins inutiles}.
 
 
 
@@ -175,34 +175,34 @@ Les paragraphes qui suivent présentent des algorithmes permettant de calculer un
 \indexfr{CNN}
 \indexsee{Condensed nearest neighbors}{CNN}
 
-Cette méthode est développée dans \citeindex{Hart1968}. Elle consiste à construire un ensemble $X'$ à partir des éléments de $X$. Un premier élément est choisi aléatoirement puis placé dans $X'$. On parcourt ensuite l'ensemble $X$, pour chaque élément $x$, on applique l'algorithme~\ref{clas_super_1ppv_lvq_algo}. Si le résultat ne correspond pas à la classe $c(x)$, cet élément est ajouté à l'ensemble $X'$. Ceci mène à l'algorithme suivant~:
+Cette mï¿½thode est dï¿½veloppï¿½e dans \citeindex{Hart1968}. Elle consiste ï¿½ construire un ensemble $X'$ ï¿½ partir des ï¿½lï¿½ments de $X$. Un premier ï¿½lï¿½ment est choisi alï¿½atoirement puis placï¿½ dans $X'$. On parcourt ensuite l'ensemble $X$, pour chaque ï¿½lï¿½ment $x$, on applique l'algorithme~\ref{clas_super_1ppv_lvq_algo}. Si le rï¿½sultat ne correspond pas ï¿½ la classe $c(x)$, cet ï¿½lï¿½ment est ajoutï¿½ ï¿½ l'ensemble $X'$. Ceci mï¿½ne ï¿½ l'algorithme suivant~:
 
-		
-		\begin{xalgorithm}{CNN}\label{clas_super_algorithme_cnn_choice}
-		Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'éléments d'un espace métrique quelconque, 
-		soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associées à chacun des éléments de $X$. On note 
-		$d$ la distance définie sur l'espace métrique $E$. 
-		
-		\begin{xalgostep}{initialisation}
-		Soit $x$ un élément de $X$, 	$X' \longleftarrow \acc{ x}$ et $Y \longleftarrow \acc{x}$.
-		\end{xalgostep}
-		
-		\begin{xalgostep}{construction de $X'$}\label{clas_super_cnn_step_b}
-		\begin{xwhile}{$Y \neq X$}
-		Soit $x \in X - Y$, on applique l'étape~\ref{clas_super_lvq_step_clas_b} de 
-		l'algorithme~\ref{clas_super_1ppv_lvq_algo} à l'élément $x$.\\
-			\begin{xif}{$\hat{c}(x) \neq c(x)$}
-			$X' \longleftarrow X' \cup \acc{x}$
-			\end{xif}\\
-			$Y \longleftarrow Y \cup \acc{x}$
-		\end{xwhile}
-		\end{xalgostep}
-		
-		\end{xalgorithm}
+        
+        \begin{xalgorithm}{CNN}\label{clas_super_algorithme_cnn_choice}
+        Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'ï¿½lï¿½ments d'un espace mï¿½trique quelconque, 
+        soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associï¿½es ï¿½ chacun des ï¿½lï¿½ments de $X$. On note 
+        $d$ la distance dï¿½finie sur l'espace mï¿½trique $E$. 
+        
+        \begin{xalgostep}{initialisation}
+        Soit $x$ un ï¿½lï¿½ment de $X$,     $X' \longleftarrow \acc{ x}$ et $Y \longleftarrow \acc{x}$.
+        \end{xalgostep}
+        
+        \begin{xalgostep}{construction de $X'$}\label{clas_super_cnn_step_b}
+        \begin{xwhile}{$Y \neq X$}
+        Soit $x \in X - Y$, on applique l'ï¿½tape~\ref{clas_super_lvq_step_clas_b} de 
+        l'algorithme~\ref{clas_super_1ppv_lvq_algo} ï¿½ l'ï¿½lï¿½ment $x$.\\
+            \begin{xif}{$\hat{c}(x) \neq c(x)$}
+            $X' \longleftarrow X' \cup \acc{x}$
+            \end{xif}\\
+            $Y \longleftarrow Y \cup \acc{x}$
+        \end{xwhile}
+        \end{xalgostep}
+        
+        \end{xalgorithm}
 
 \indexfrr{ordre d'insertion}{LVQ}
 
-Cet algorithme n'impose pas un nombre précis de prototypes. De plus, puisque $X' \subset X$, cette méthode est applicable à tout espace métrique, il ne nécessite pas qu'il soit vectoriel. Toutefois, l'algorithme est sensible à l'ordre dans lequel sont traités les éléments de $X$.
+Cet algorithme n'impose pas un nombre prï¿½cis de prototypes. De plus, puisque $X' \subset X$, cette mï¿½thode est applicable ï¿½ tout espace mï¿½trique, il ne nï¿½cessite pas qu'il soit vectoriel. Toutefois, l'algorithme est sensible ï¿½ l'ordre dans lequel sont traitï¿½s les ï¿½lï¿½ments de $X$.
 
 
 
@@ -211,54 +211,54 @@ Cet algorithme n'impose pas un nombre précis de prototypes. De plus, puisque $X'
 \indexsee{Prototype nearest neighbors}{PNN}
 \label{clas_super_lvq_pnn}
 
-Cette méthode est développée dans \citeindex{Chang1974}. Contrairement à l'algorithme précédent~\ref{clas_super_algorithme_cnn_choice}, l'ensemble $X'$ n'est plus inclus dans $X$ et est construit de manière à obtenir autant que faire ce peu des barycentres des classes. Il ne s'applique donc qu'à des espaces vectoriels. Au départ, tous les éléments de $X$ sont considérés comme des prototypes. Puis les plus proches d'entre eux appartenant à la même classe vont être agrégés si aucune erreur de classification n'est constatée.
+Cette mï¿½thode est dï¿½veloppï¿½e dans \citeindex{Chang1974}. Contrairement ï¿½ l'algorithme prï¿½cï¿½dent~\ref{clas_super_algorithme_cnn_choice}, l'ensemble $X'$ n'est plus inclus dans $X$ et est construit de maniï¿½re ï¿½ obtenir autant que faire ce peu des barycentres des classes. Il ne s'applique donc qu'ï¿½ des espaces vectoriels. Au dï¿½part, tous les ï¿½lï¿½ments de $X$ sont considï¿½rï¿½s comme des prototypes. Puis les plus proches d'entre eux appartenant ï¿½ la mï¿½me classe vont ï¿½tre agrï¿½gï¿½s si aucune erreur de classification n'est constatï¿½e.
 
 
 
-		\begin{xalgorithm}{PNN}\label{clas_super_algorithme_pnn_choice}
-		Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'éléments d'un espace métrique quelconque, 
-		soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associées à chacun des éléments de $X$. On note 
-		$d$ la distance définie sur l'espace métrique $E$. 
-		
-		\begin{xalgostep}{initialisation}
-		On définit les ensembles $A \longleftarrow \emptyset$ et $B \longleftarrow X$ ainsi que la suite
-		$\vecteur{p\pa{x_1}}{p\pa{x_N}}$ telle que $\forall i, \; p\pa{x_i} = 1$. 
-		$t\longleftarrow 0$ et $\epsilon_0 \longleftarrow \infty$.
-		\end{xalgostep}
-		
-		\begin{xalgostep}{construction de $B$}\label{clas_super_pnn_step_b}
-		\begin{xwhile}{$B \neq \emptyset$}
-			$m \longleftarrow 0$.	On définit $x_A \in A$ et $x_B \in B$ tels que~: 
-						$$d\pa{x_A,x_B} = \min \acc{d\pa{x,y} \sac x \in A, y \in B}$$
-			\begin{xif}{$c\pa{x_A} \neq c\pa{x_B}$}
-					$B \longleftarrow B - \acc{x_B}$ et $A \longleftarrow A \cup \acc{x_B}$
-			\xelse
-					$x \longleftarrow \dfrac{ p\pa{x_A} \,x_A + p\pa{x_B} \,x_B }{ p\pa{x_A} + p\pa{x_B}}$ \\
-					$p\pa{x} \longleftarrow p\pa{x_A} + p\pa{x_B}$ \\
-					On note $\epsilon_t$ le taux de classification obtenu avec l'ensemble de prototypes
-					$X' = A \cup \acc{ x }$. \\
-					\begin{xif}{$\epsilon_t > \epsilon_{t-1}$}
-						$B \longleftarrow B - \acc{x_B}$ et $A \longleftarrow A \cup \acc{x_B}$
-					\xelse
-						$B \longleftarrow B - \acc{x_B}$ et $A \longleftarrow \cro{ A - \acc{x_A}} \cup \acc{ x }$ 	\\
-						$m \longleftarrow m + 1$
-					\end{xif}
-			\end{xif}
-		\end{xwhile}
-		\end{xalgostep}
-		
-		\begin{xalgostep}{terminaison}
-		\begin{xif}{$ m > 0 $}
-			$B \longleftarrow A$ et $A  \longleftarrow \emptyset$. \\
-			On retourne à l'étape~\ref{clas_super_pnn_step_b}.
-		\xelse
-			L'algorithme s'arrête et l'ensemble cherché $X' \longleftarrow A$.
-		\end{xif}
-		\end{xalgostep}
+        \begin{xalgorithm}{PNN}\label{clas_super_algorithme_pnn_choice}
+        Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'ï¿½lï¿½ments d'un espace mï¿½trique quelconque, 
+        soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associï¿½es ï¿½ chacun des ï¿½lï¿½ments de $X$. On note 
+        $d$ la distance dï¿½finie sur l'espace mï¿½trique $E$. 
+        
+        \begin{xalgostep}{initialisation}
+        On dï¿½finit les ensembles $A \longleftarrow \emptyset$ et $B \longleftarrow X$ ainsi que la suite
+        $\vecteur{p\pa{x_1}}{p\pa{x_N}}$ telle que $\forall i, \; p\pa{x_i} = 1$. 
+        $t\longleftarrow 0$ et $\epsilon_0 \longleftarrow \infty$.
+        \end{xalgostep}
+        
+        \begin{xalgostep}{construction de $B$}\label{clas_super_pnn_step_b}
+        \begin{xwhile}{$B \neq \emptyset$}
+            $m \longleftarrow 0$.    On dï¿½finit $x_A \in A$ et $x_B \in B$ tels que~: 
+                        $$d\pa{x_A,x_B} = \min \acc{d\pa{x,y} \sac x \in A, y \in B}$$
+            \begin{xif}{$c\pa{x_A} \neq c\pa{x_B}$}
+                    $B \longleftarrow B - \acc{x_B}$ et $A \longleftarrow A \cup \acc{x_B}$
+            \xelse
+                    $x \longleftarrow \dfrac{ p\pa{x_A} \,x_A + p\pa{x_B} \,x_B }{ p\pa{x_A} + p\pa{x_B}}$ \\
+                    $p\pa{x} \longleftarrow p\pa{x_A} + p\pa{x_B}$ \\
+                    On note $\epsilon_t$ le taux de classification obtenu avec l'ensemble de prototypes
+                    $X' = A \cup \acc{ x }$. \\
+                    \begin{xif}{$\epsilon_t > \epsilon_{t-1}$}
+                        $B \longleftarrow B - \acc{x_B}$ et $A \longleftarrow A \cup \acc{x_B}$
+                    \xelse
+                        $B \longleftarrow B - \acc{x_B}$ et $A \longleftarrow \cro{ A - \acc{x_A}} \cup \acc{ x }$     \\
+                        $m \longleftarrow m + 1$
+                    \end{xif}
+            \end{xif}
+        \end{xwhile}
+        \end{xalgostep}
+        
+        \begin{xalgostep}{terminaison}
+        \begin{xif}{$ m > 0 $}
+            $B \longleftarrow A$ et $A  \longleftarrow \emptyset$. \\
+            On retourne ï¿½ l'ï¿½tape~\ref{clas_super_pnn_step_b}.
+        \xelse
+            L'algorithme s'arrï¿½te et l'ensemble cherchï¿½ $X' \longleftarrow A$.
+        \end{xif}
+        \end{xalgostep}
 
-		\end{xalgorithm}
+        \end{xalgorithm}
 
-L'article \citeindex{Bezdek2001} suggère de ne considérer lors de l'étape~\ref{clas_super_pnn_step_b} que des paires $\pa{x_A,x_B}$ appartenant à une même classe de manière à ce que le résultat obtenu soit plus consistent. Ce second algorithme est plus lent que l'algorithme~\ref{clas_super_algorithme_cnn_choice} mais la remarque à propos l'ordre d'insertion ne le concerne plus.
+L'article \citeindex{Bezdek2001} suggï¿½re de ne considï¿½rer lors de l'ï¿½tape~\ref{clas_super_pnn_step_b} que des paires $\pa{x_A,x_B}$ appartenant ï¿½ une mï¿½me classe de maniï¿½re ï¿½ ce que le rï¿½sultat obtenu soit plus consistent. Ce second algorithme est plus lent que l'algorithme~\ref{clas_super_algorithme_cnn_choice} mais la remarque ï¿½ propos l'ordre d'insertion ne le concerne plus.
 
 
 
@@ -266,146 +266,146 @@ L'article \citeindex{Bezdek2001} suggère de ne considérer lors de l'étape~\ref{c
 
 \subsection{LVQ1, ..., LVQ4}
 
-Les LVQ ont été introduits dans \citeindex{Linde1980}, adaptés par la suite par Kohonen à la reconnaissance des formes (\citeindex{Kohonen1982}, \citeindex{Kohonen1995}). Historiquement, le premier algorithme LVQ1 est dû à Kohonen et permet de déterminer un nombre fixé de prototypes, contrairement aux deux algorithmes~\ref{clas_super_algorithme_cnn_choice} et~\ref{clas_super_algorithme_pnn_choice} des paragraphes précédents ne nécessitant aucun a priori sur leur nombre.
+Les LVQ ont ï¿½tï¿½ introduits dans \citeindex{Linde1980}, adaptï¿½s par la suite par Kohonen ï¿½ la reconnaissance des formes (\citeindex{Kohonen1982}, \citeindex{Kohonen1995}). Historiquement, le premier algorithme LVQ1 est dï¿½ ï¿½ Kohonen et permet de dï¿½terminer un nombre fixï¿½ de prototypes, contrairement aux deux algorithmes~\ref{clas_super_algorithme_cnn_choice} et~\ref{clas_super_algorithme_pnn_choice} des paragraphes prï¿½cï¿½dents ne nï¿½cessitant aucun a priori sur leur nombre.
 
 \indexfrr{LVQ}{LVQ1}
 
 
-		\begin{xalgorithm}{LVQ1}\label{clas_super_lvq1_algo}
-		Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'éléments d'un espace métrique quelconque, 
-		soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associées à chacun des éléments de $X$. On note 
-		$d$ la distance définie sur l'espace métrique $E$.
-		Soit $P = \vecteur{p_1}{p_k}$ $k$ prototypes tirés aléatoirement.	
-		On associe une classe $\overline{c}\pa{p_k}$ à chaque 
-		prototype. La suite $\pa{\alpha_t}$ est une suite positive vérifiant~: 
-		$\sum_t \alpha_t = \infty$ et $\sum_t \alpha_t^2 < \infty$. Enfin, $t \longleftarrow 0$.
+        \begin{xalgorithm}{LVQ1}\label{clas_super_lvq1_algo}
+        Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'ï¿½lï¿½ments d'un espace mï¿½trique quelconque, 
+        soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associï¿½es ï¿½ chacun des ï¿½lï¿½ments de $X$. On note 
+        $d$ la distance dï¿½finie sur l'espace mï¿½trique $E$.
+        Soit $P = \vecteur{p_1}{p_k}$ $k$ prototypes tirï¿½s alï¿½atoirement.    
+        On associe une classe $\overline{c}\pa{p_k}$ ï¿½ chaque 
+        prototype. La suite $\pa{\alpha_t}$ est une suite positive vï¿½rifiant~: 
+        $\sum_t \alpha_t = \infty$ et $\sum_t \alpha_t^2 < \infty$. Enfin, $t \longleftarrow 0$.
 
-		\begin{xalgostep}{meilleur prototype}\label{clas_super_lvq1_step1}
-		$t \longleftarrow t +1$ \\
-		On choisit aléatoirement un élément $x \in X$.
-		On détermine $p^* = \underset{p \in P}{\arg \min} \, d\pa{x,p}$.
-		\end{xalgostep}
+        \begin{xalgostep}{meilleur prototype}\label{clas_super_lvq1_step1}
+        $t \longleftarrow t +1$ \\
+        On choisit alï¿½atoirement un ï¿½lï¿½ment $x \in X$.
+        On dï¿½termine $p^* = \underset{p \in P}{\arg \min} \, d\pa{x,p}$.
+        \end{xalgostep}
 
-		\begin{xalgostep}{mise à jour}
-		$p^*  \longleftarrow p^*  + \left\{ \begin{array}{rl}
-									\alpha_t \pa{ x - p^*} 		& \text{si } \overline{c}\pa{p^*} = c\pa{x}\\
-									- \alpha_t \pa{ x - p^*} 	& \text{si } \overline{c}\pa{p^*} \neq c\pa{x}
-									\end{array} \right.$ \\
-		On retourne à l'étape~\ref{clas_super_lvq1_step1} tant que les prototypes continuent d'évoluer.
-		\end{xalgostep}
-		\end{xalgorithm}
-		
-Le nombre de prototypes est fixé au départ ainsi que la classe qui est associée à chacun d'eux. Cet algorithme est souvent utilisé avec autant de prototypes qu'il y a de classes. La suite $\pa{\alpha_t}$ est en principe une suite décroissante mais qui peut être choisie de telle manière que~:
+        \begin{xalgostep}{mise ï¿½ jour}
+        $p^*  \longleftarrow p^*  + \left\{ \begin{array}{rl}
+                                    \alpha_t \pa{ x - p^*}         & \text{si } \overline{c}\pa{p^*} = c\pa{x}\\
+                                    - \alpha_t \pa{ x - p^*}     & \text{si } \overline{c}\pa{p^*} \neq c\pa{x}
+                                    \end{array} \right.$ \\
+        On retourne ï¿½ l'ï¿½tape~\ref{clas_super_lvq1_step1} tant que les prototypes continuent d'ï¿½voluer.
+        \end{xalgostep}
+        \end{xalgorithm}
+        
+Le nombre de prototypes est fixï¿½ au dï¿½part ainsi que la classe qui est associï¿½e ï¿½ chacun d'eux. Cet algorithme est souvent utilisï¿½ avec autant de prototypes qu'il y a de classes. La suite $\pa{\alpha_t}$ est en principe une suite dï¿½croissante mais qui peut ï¿½tre choisie de telle maniï¿½re que~:
 
-		\begin{eqnarray}
-		\alpha_{t+1} = \left\{ \begin{array}{ll}
-												\frac{\alpha_t}{1 + \alpha_t} & \text{si } \overline{c}\pa{p^*} = c\pa{x}\\
-												\frac{\alpha_t}{1 - \alpha_t} & \text{si } \overline{c}\pa{p^*} \neq c\pa{x}
-												\end{array} \right.
-		\end{eqnarray}
-		
-\indexfrr{Algorithme}{OLVQ1}		
-		
-Le pas d'apprentissage $\alpha_t$ croît si le prototype le plus proche est d'une classe différente de celle de l'élément $x$. Cette version de l'algorithme LVQ1 est appelé \emph{Optimized LVQ1}. Cette optimisation est valable pour tous les algorithmes de la famille LVQ qui suivent. La seconde version de cet algorithme propose la mise à jour simultanée de deux prototypes qui permet d'améliorer les frontières de décision. 
+        \begin{eqnarray}
+        \alpha_{t+1} = \left\{ \begin{array}{ll}
+                                                \frac{\alpha_t}{1 + \alpha_t} & \text{si } \overline{c}\pa{p^*} = c\pa{x}\\
+                                                \frac{\alpha_t}{1 - \alpha_t} & \text{si } \overline{c}\pa{p^*} \neq c\pa{x}
+                                                \end{array} \right.
+        \end{eqnarray}
+        
+\indexfrr{Algorithme}{OLVQ1}        
+        
+Le pas d'apprentissage $\alpha_t$ croï¿½t si le prototype le plus proche est d'une classe diffï¿½rente de celle de l'ï¿½lï¿½ment $x$. Cette version de l'algorithme LVQ1 est appelï¿½ \emph{Optimized LVQ1}. Cette optimisation est valable pour tous les algorithmes de la famille LVQ qui suivent. La seconde version de cet algorithme propose la mise ï¿½ jour simultanï¿½e de deux prototypes qui permet d'amï¿½liorer les frontiï¿½res de dï¿½cision. 
 
 \indexfrr{LVQ}{LVQ2}
 
-		\begin{xalgorithm}{LVQ2}
-		Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'éléments d'un espace métrique quelconque, 
-		soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associées à chacun des éléments de $X$. On note 
-		$d$ la distance définie sur l'espace métrique $E$.
-		Soit $P = \vecteur{p_1}{p_k}$ $k$ prototypes tirés aléatoirement.	
-		On associe une classe $\overline{c}\pa{p_k}$ à chaque 
-		prototype. La suite $\pa{\alpha_t}$ est une suite positive vérifiant~: 
-		$\sum_t \alpha_t = \infty$ et $\sum_t \alpha_t^2 < \infty$. On pose également $t \longleftarrow 0$. 
-		Soit $w \in \left]0,1\right[$.
+        \begin{xalgorithm}{LVQ2}
+        Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'ï¿½lï¿½ments d'un espace mï¿½trique quelconque, 
+        soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associï¿½es ï¿½ chacun des ï¿½lï¿½ments de $X$. On note 
+        $d$ la distance dï¿½finie sur l'espace mï¿½trique $E$.
+        Soit $P = \vecteur{p_1}{p_k}$ $k$ prototypes tirï¿½s alï¿½atoirement.    
+        On associe une classe $\overline{c}\pa{p_k}$ ï¿½ chaque 
+        prototype. La suite $\pa{\alpha_t}$ est une suite positive vï¿½rifiant~: 
+        $\sum_t \alpha_t = \infty$ et $\sum_t \alpha_t^2 < \infty$. On pose ï¿½galement $t \longleftarrow 0$. 
+        Soit $w \in \left]0,1\right[$.
 
-		\begin{xalgostep}{meilleur prototype}\label{clas_super_lvq2_step1}
-		$t \longleftarrow t +1$ \\
-		On choisit aléatoirement un élément $x \in X$. On détermine~: \\
-		$p^*_1 = \arg \min \acc{ d\pa{x,p} \sac p \in P, \, \overline{p}\pa{p} = c\pa{x} }$ et \\
-		$p^*_2 = \arg \min \acc{ d\pa{x,p} \sac p \in P, \, \overline{p}\pa{p} \neq c\pa{x} }$. 
-		\end{xalgostep}
+        \begin{xalgostep}{meilleur prototype}\label{clas_super_lvq2_step1}
+        $t \longleftarrow t +1$ \\
+        On choisit alï¿½atoirement un ï¿½lï¿½ment $x \in X$. On dï¿½termine~: \\
+        $p^*_1 = \arg \min \acc{ d\pa{x,p} \sac p \in P, \, \overline{p}\pa{p} = c\pa{x} }$ et \\
+        $p^*_2 = \arg \min \acc{ d\pa{x,p} \sac p \in P, \, \overline{p}\pa{p} \neq c\pa{x} }$. 
+        \end{xalgostep}
 
-		\begin{xalgostep}{mise à jour}
-		\begin{xif}{$\frac{1-w}{1+w} < \frac{d\pa{x,p^*_1}}{d\pa{x,p^*_2}} < \frac{1+w}{1-w}$}
-			$p^*_1  \longleftarrow p^*_1  + \alpha_t \pa{ x - p^*_1}$ \\
-			$p^*_2 	\longleftarrow p^*_2  - \alpha_t \pa{ x - p^*_2}$ 
-		\end{xif} \\
-		On retourne à l'étape~\ref{clas_super_lvq2_step1} tant que les prototypes continuent d'évoluer.
-		\end{xalgostep}
-		\end{xalgorithm}
-		
-		
-\indexfrr{LVQ}{LVQ3}		
+        \begin{xalgostep}{mise ï¿½ jour}
+        \begin{xif}{$\frac{1-w}{1+w} < \frac{d\pa{x,p^*_1}}{d\pa{x,p^*_2}} < \frac{1+w}{1-w}$}
+            $p^*_1  \longleftarrow p^*_1  + \alpha_t \pa{ x - p^*_1}$ \\
+            $p^*_2     \longleftarrow p^*_2  - \alpha_t \pa{ x - p^*_2}$ 
+        \end{xif} \\
+        On retourne ï¿½ l'ï¿½tape~\ref{clas_super_lvq2_step1} tant que les prototypes continuent d'ï¿½voluer.
+        \end{xalgostep}
+        \end{xalgorithm}
+        
+        
+\indexfrr{LVQ}{LVQ3}        
 
-Le livre \citeindex{Kohonen1995} suggère de choisir $w \in \cro{0,2 \,;\, 0,3 }$. L'algorithme LVQ3 qui suit propose une extension de l'algorithme LVQ2 pour des prototypes $p^*_1$ et $p^*_2$ appartenant à la même classe.
+Le livre \citeindex{Kohonen1995} suggï¿½re de choisir $w \in \cro{0,2 \,;\, 0,3 }$. L'algorithme LVQ3 qui suit propose une extension de l'algorithme LVQ2 pour des prototypes $p^*_1$ et $p^*_2$ appartenant ï¿½ la mï¿½me classe.
 
-		\begin{xalgorithm}{LVQ3}
-		Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'éléments d'un espace métrique quelconque, 
-		soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associées à chacun des éléments de $X$. On note 
-		$d$ la distance définie sur l'espace métrique $E$.
-		Soit $P = \vecteur{p_1}{p_k}$ $k$ prototypes tirés aléatoirement.	
-		On associe une classe $\overline{c}\pa{p_k}$ à chaque 
-		prototype. La suite $\pa{\alpha_t}$ est une suite positive vérifiant~: 
-		$\sum_t \alpha_t = \infty$ et $\sum_t \alpha_t^2 < \infty$. On pose également $t \longleftarrow 0$. 
-		Soit $w \in \left]0,1\right[$ et $\epsilon \in \cro{0,1 \,;\, 0,5}$.
+        \begin{xalgorithm}{LVQ3}
+        Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'ï¿½lï¿½ments d'un espace mï¿½trique quelconque, 
+        soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associï¿½es ï¿½ chacun des ï¿½lï¿½ments de $X$. On note 
+        $d$ la distance dï¿½finie sur l'espace mï¿½trique $E$.
+        Soit $P = \vecteur{p_1}{p_k}$ $k$ prototypes tirï¿½s alï¿½atoirement.    
+        On associe une classe $\overline{c}\pa{p_k}$ ï¿½ chaque 
+        prototype. La suite $\pa{\alpha_t}$ est une suite positive vï¿½rifiant~: 
+        $\sum_t \alpha_t = \infty$ et $\sum_t \alpha_t^2 < \infty$. On pose ï¿½galement $t \longleftarrow 0$. 
+        Soit $w \in \left]0,1\right[$ et $\epsilon \in \cro{0,1 \,;\, 0,5}$.
 
-		\begin{xalgostep}{meilleur prototype}\label{clas_super_lvq2_step1}
-		$t \longleftarrow t +1$ \\
-		On choisit aléatoirement un élément $x \in X$. On détermine~: \\
-		$p^*_1 = \arg \min \acc{ d\pa{x,p} \sac p \in P, \, \overline{p}\pa{p} = c\pa{x} }$ et \\
-		$p^*_2 = \arg \min \acc{ d\pa{x,p} \sac p \in P, \, p^*_2 \neq p^*_1}$. 
-		\end{xalgostep}
+        \begin{xalgostep}{meilleur prototype}\label{clas_super_lvq2_step1}
+        $t \longleftarrow t +1$ \\
+        On choisit alï¿½atoirement un ï¿½lï¿½ment $x \in X$. On dï¿½termine~: \\
+        $p^*_1 = \arg \min \acc{ d\pa{x,p} \sac p \in P, \, \overline{p}\pa{p} = c\pa{x} }$ et \\
+        $p^*_2 = \arg \min \acc{ d\pa{x,p} \sac p \in P, \, p^*_2 \neq p^*_1}$. 
+        \end{xalgostep}
 
-		\begin{xalgostep}{mise à jour}
-		\begin{xif}{$\overline{c}\pa{p^*_1} \neq \overline{c}\pa{p^*_2}$}
-			\begin{xif}{$\frac{1-w}{1+w} < \frac{d\pa{x,p^*_1}}{d\pa{x,p^*_2}} < \frac{1+w}{1-w}$}
-				$p^*_1  \longleftarrow p^*_1  + \alpha_t \pa{ x - p^*_1}$ \\
-				$p^*_2 	\longleftarrow p^*_2  - \alpha_t \pa{ x - p^*_2}$ 
-			\end{xif} 
-		\xelse
-			$p^*_1  \longleftarrow p^*_1  + \epsilon \alpha_t \pa{ x - p^*_1}$ \\
-			$p^*_2 	\longleftarrow p^*_2  + \epsilon \alpha_t \pa{ x - p^*_2}$ 
-		\end{xif}			
-		On retourne à l'étape~\ref{clas_super_lvq2_step1} tant que les prototypes continuent d'évoluer.
-		\end{xalgostep}
-		\end{xalgorithm}
+        \begin{xalgostep}{mise ï¿½ jour}
+        \begin{xif}{$\overline{c}\pa{p^*_1} \neq \overline{c}\pa{p^*_2}$}
+            \begin{xif}{$\frac{1-w}{1+w} < \frac{d\pa{x,p^*_1}}{d\pa{x,p^*_2}} < \frac{1+w}{1-w}$}
+                $p^*_1  \longleftarrow p^*_1  + \alpha_t \pa{ x - p^*_1}$ \\
+                $p^*_2     \longleftarrow p^*_2  - \alpha_t \pa{ x - p^*_2}$ 
+            \end{xif} 
+        \xelse
+            $p^*_1  \longleftarrow p^*_1  + \epsilon \alpha_t \pa{ x - p^*_1}$ \\
+            $p^*_2     \longleftarrow p^*_2  + \epsilon \alpha_t \pa{ x - p^*_2}$ 
+        \end{xif}            
+        On retourne ï¿½ l'ï¿½tape~\ref{clas_super_lvq2_step1} tant que les prototypes continuent d'ï¿½voluer.
+        \end{xalgostep}
+        \end{xalgorithm}
 
-L'algorithme LVQ4 est la version la plus récente. Il s'inspire de l'algorithme LVQ1 mais modifie le poids de l'apprentissage $\alpha_t$ de manière plus pertinente.
+L'algorithme LVQ4 est la version la plus rï¿½cente. Il s'inspire de l'algorithme LVQ1 mais modifie le poids de l'apprentissage $\alpha_t$ de maniï¿½re plus pertinente.
 
 
-		\begin{xalgorithm}{LVQ4}
-		Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'éléments d'un espace métrique quelconque, 
-		soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associées à chacun des éléments de $X$. On note 
-		$d$ la distance définie sur l'espace métrique $E$.
-		Soit $P_t = \vecteur{p_{t,1}}{p_{t,k}}$ $k$ prototypes tirés aléatoirement.	
-		On associe une classe $\overline{c}\pa{p_{t,k}}$ à chaque 
-		prototype. La suite $\pa{\alpha_t}$ est une suite positive vérifiant~: 
-		$\sum_t \alpha_t = \infty$ et $\sum_t \alpha_t^2 < \infty$. On pose également $t \longleftarrow 0$. 
-		On suppose que $\forall t, \, \alpha_t \in ]0,1[$. Soit $\lambda > 1$.
+        \begin{xalgorithm}{LVQ4}
+        Soit $X = \vecteur{x_1}{x_N} \subset E$ un ensemble d'ï¿½lï¿½ments d'un espace mï¿½trique quelconque, 
+        soit $\vecteur{c\pa{x_1}}{c\pa{x_N}}$ les classes associï¿½es ï¿½ chacun des ï¿½lï¿½ments de $X$. On note 
+        $d$ la distance dï¿½finie sur l'espace mï¿½trique $E$.
+        Soit $P_t = \vecteur{p_{t,1}}{p_{t,k}}$ $k$ prototypes tirï¿½s alï¿½atoirement.    
+        On associe une classe $\overline{c}\pa{p_{t,k}}$ ï¿½ chaque 
+        prototype. La suite $\pa{\alpha_t}$ est une suite positive vï¿½rifiant~: 
+        $\sum_t \alpha_t = \infty$ et $\sum_t \alpha_t^2 < \infty$. On pose ï¿½galement $t \longleftarrow 0$. 
+        On suppose que $\forall t, \, \alpha_t \in ]0,1[$. Soit $\lambda > 1$.
 
-		\begin{xalgostep}{meilleur prototype}\label{clas_super_lvq4_step1}
-		$t \longleftarrow t +1$ \\
-		On choisit aléatoirement un élément $x \in X$.
-		On détermine $p^*_t = \underset{p \in P_t}{\arg \min} \, d\pa{x,p}$.
-		\end{xalgostep}
+        \begin{xalgostep}{meilleur prototype}\label{clas_super_lvq4_step1}
+        $t \longleftarrow t +1$ \\
+        On choisit alï¿½atoirement un ï¿½lï¿½ment $x \in X$.
+        On dï¿½termine $p^*_t = \underset{p \in P_t}{\arg \min} \, d\pa{x,p}$.
+        \end{xalgostep}
 
-		\begin{xalgostep}{mise à jour}
-		$p^*_t  \longleftarrow p^*_t  + s\pa{p^*_t} \, \alpha_t \pa{ x - p^*_t}$ où
-		$$ s\pa{p^*_t} = \left\{ \begin{array}{ll}
-				 \lambda												 	& \text{si } \overline{c}\pa{p^*_t} = c\pa{x} \text{ et } M\pa{p^*_t} = 0\\
-				 \frac{B\pa{p^*_t}}{M\pa{p^*_t}} 	& \text{si } \overline{c}\pa{p^*_t} = c\pa{x} \text{ et } M\pa{p^*_t} > 0\\
-				 -1 															& \text{si } \overline{c}\pa{p^*_t} \neq c\pa{x}
-				 \end{array} \right.$$
-		
-		$B\pa{p^*_t}$ représente le nombre d'exemples bien classés avec le prototype $p^*_t$ 
-		tandis que $M\pa{p^*_t}$ est le nombre d'exemples mal classés. 
-		On retourne à l'étape~\ref{clas_super_lvq4_step1} tant que les prototypes continuent d'évoluer.
-		\end{xalgostep}
-		\end{xalgorithm}
+        \begin{xalgostep}{mise ï¿½ jour}
+        $p^*_t  \longleftarrow p^*_t  + s\pa{p^*_t} \, \alpha_t \pa{ x - p^*_t}$ oï¿½
+        $$ s\pa{p^*_t} = \left\{ \begin{array}{ll}
+                 \lambda                                                     & \text{si } \overline{c}\pa{p^*_t} = c\pa{x} \text{ et } M\pa{p^*_t} = 0\\
+                 \frac{B\pa{p^*_t}}{M\pa{p^*_t}}     & \text{si } \overline{c}\pa{p^*_t} = c\pa{x} \text{ et } M\pa{p^*_t} > 0\\
+                 -1                                                             & \text{si } \overline{c}\pa{p^*_t} \neq c\pa{x}
+                 \end{array} \right.$$
+        
+        $B\pa{p^*_t}$ reprï¿½sente le nombre d'exemples bien classï¿½s avec le prototype $p^*_t$ 
+        tandis que $M\pa{p^*_t}$ est le nombre d'exemples mal classï¿½s. 
+        On retourne ï¿½ l'ï¿½tape~\ref{clas_super_lvq4_step1} tant que les prototypes continuent d'ï¿½voluer.
+        \end{xalgostep}
+        \end{xalgorithm}
 
-L'inconvénient de cet algorithme est le calcul coûteux de $B\pa{p^*_t}$ et $M\pa{p^*_t}$. L'évaluation des nombres $B\pa{p}$ et $M\pa{t}$ pour $p \in P_t$ devrait être effectuée à chaque itération $t$, c'est-à-dire à chaque fois qu'un prototype est actualisé. Afin d'accélérer l'algorithme, cette évaluation n'est pas effectuée à chaque itération mais toutes les $T$ itérations où $T$ serait la période de mise à jour. Durant une période, ces nombres peuvent être considérés comme constants où évoluer en tenant de compte leur passé. Différentes variantes de l'algorithme $LVQ4$ sont proposées et discutées dans l'article \citeindex{Vakil2003}.
+L'inconvï¿½nient de cet algorithme est le calcul coï¿½teux de $B\pa{p^*_t}$ et $M\pa{p^*_t}$. L'ï¿½valuation des nombres $B\pa{p}$ et $M\pa{t}$ pour $p \in P_t$ devrait ï¿½tre effectuï¿½e ï¿½ chaque itï¿½ration $t$, c'est-ï¿½-dire ï¿½ chaque fois qu'un prototype est actualisï¿½. Afin d'accï¿½lï¿½rer l'algorithme, cette ï¿½valuation n'est pas effectuï¿½e ï¿½ chaque itï¿½ration mais toutes les $T$ itï¿½rations oï¿½ $T$ serait la pï¿½riode de mise ï¿½ jour. Durant une pï¿½riode, ces nombres peuvent ï¿½tre considï¿½rï¿½s comme constants oï¿½ ï¿½voluer en tenant de compte leur passï¿½. Diffï¿½rentes variantes de l'algorithme $LVQ4$ sont proposï¿½es et discutï¿½es dans l'article \citeindex{Vakil2003}.
 
 
 
@@ -415,34 +415,34 @@ L'inconvénient de cet algorithme est le calcul coûteux de $B\pa{p^*_t}$ et $M\pa
 \section{Prolongations}
 %--------------------------------------------------------------------------------------------------------------------
 
-\subsection{Liens entre LVQ et la rétropropagation}
+\subsection{Liens entre LVQ et la rï¿½tropropagation}
 
-\indexfrr{LVQ}{rétropropagation}
-\indexfrr{rétropropagation}{LVQ}
+\indexfrr{LVQ}{rï¿½tropropagation}
+\indexfrr{rï¿½tropropagation}{LVQ}
 \indexfr{RBF}
 \indexsee{Radial basis function}{RBF}
-\indexsee{fonction à base radiale}{RBF}
+\indexsee{fonction ï¿½ base radiale}{RBF}
 
-L'article \citeindex{Frasconi1997} met en rapport l'algorithme LVQ1~(\ref{clas_super_lvq1_algo}) et l'algorithme de rétropropagation~\ref{algo_retropropagation_class} dans un réseau de neurones sont les fonctions de transfert sont des fonctions à base radiale ou RBF\seeannex{rnn_fonction_base_radiale_rbf}{fonction à base radiale}. Ce réseau de neurones contient autant de neurones sur la couche cachée qu'il y a de prototypes dans l'algorithme LVQ1. La sortie des neurones cachés est donnée par~:
+L'article \citeindex{Frasconi1997} met en rapport l'algorithme LVQ1~(\ref{clas_super_lvq1_algo}) et l'algorithme de rï¿½tropropagation~\ref{algo_retropropagation_class} dans un rï¿½seau de neurones sont les fonctions de transfert sont des fonctions ï¿½ base radiale ou RBF\seeannex{rnn_fonction_base_radiale_rbf}{fonction ï¿½ base radiale}. Ce rï¿½seau de neurones contient autant de neurones sur la couche cachï¿½e qu'il y a de prototypes dans l'algorithme LVQ1. La sortie des neurones cachï¿½s est donnï¿½e par~:
 
-					$$
-					z_i = \exp\cro{ - \frac{\norme{p - x}^2}{\sigma^2}}
-					$$
+                    $$
+                    z_i = \exp\cro{ - \frac{\norme{p - x}^2}{\sigma^2}}
+                    $$
 
-$p$ est un prototype, $x$ est un élément, l'élément pour lequel on évalue les sorties du réseau de neurones. L'article~\citeindex{Frasconi1997} que lorsque $\sigma \longrightarrow 0$, on construit ensuite le nombre~:
+$p$ est un prototype, $x$ est un ï¿½lï¿½ment, l'ï¿½lï¿½ment pour lequel on ï¿½value les sorties du rï¿½seau de neurones. L'article~\citeindex{Frasconi1997} que lorsque $\sigma \longrightarrow 0$, on construit ensuite le nombre~:
 
-					$$
-					z'_i = \frac{z_i}{\summyone{i}z_i}
-					$$
+                    $$
+                    z'_i = \frac{z_i}{\summyone{i}z_i}
+                    $$
 
-Lorsque $\sigma\longrightarrow 0$, le vecteur $\vecteur{z'_1}{z'_k}$ converge vers un vecteur presque nul sauf pour le prototype $i$ le plus proche. De même, lorsque $\sigma\longrightarrow 0$, une itération d'un apprentissage par rétropropagation d'un tel réseau de neurones est équivalente à une itération de l'algorithme LVQ1.
+Lorsque $\sigma\longrightarrow 0$, le vecteur $\vecteur{z'_1}{z'_k}$ converge vers un vecteur presque nul sauf pour le prototype $i$ le plus proche. De mï¿½me, lorsque $\sigma\longrightarrow 0$, une itï¿½ration d'un apprentissage par rï¿½tropropagation d'un tel rï¿½seau de neurones est ï¿½quivalente ï¿½ une itï¿½ration de l'algorithme LVQ1.
 
 
 
 \firstpassagedo{
-	\begin{thebibliography}{99}
-	\input{clas_super_biblio.tex}
-	\end{thebibliography}
+    \begin{thebibliography}{99}
+    \input{clas_super_biblio.tex}
+    \end{thebibliography}
 }
 
 
