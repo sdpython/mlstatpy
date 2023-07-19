@@ -43,7 +43,6 @@ scikit-learn>=1.1
 git+https://github.com/onnx/sklearn-onnx.git
 sphinx
 sphinx-gallery
-sphinx-last-updated-by-git
 sphinx-issues
 git+https://github.com/sdpython/sphinx-runpython.git
 sphinxcontrib.imagesvg
