@@ -29,6 +29,6 @@ jobs:
         print_all: false
         timeout: 2
         retry_count# : 2
-        # exclude_urls: https://github, ...
+        exclude_urls: https://www.data.gouv.fr/fr/datasets/r/e3d83ab3-dc52-4c99-abaf-8a38050cc68c
         # exclude_patterns: https://github.com/...
         # force_pass : true
