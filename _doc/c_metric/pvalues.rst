@@ -1,12 +1,12 @@
 
+.. index:: p-value, intervalle de confiance
+    
 ===============================
 Confidence Interval and p-Value
 ===============================
 
 .. contents::
     :local:
-
-.. index:: p-value, intervalle de confiance
 
 This document explains the relationship between p-value and confidence intervals.
 It goes on with the specific case of a binamial law. Assuming we want to determine
@@ -419,7 +419,8 @@ We then update the parameters:
     \widehat{q} 	&=&  \frac{  \sum_{i = 1}^n (1-w_i) X_i }{  \sum_{i = 1}^n (1-w_i)}
     \end{eqnarray*}
 
-See also `Applying the EM Algorithm: Binomial Mixtures <http://statisticalrecipes.blogspot.fr/2012/04/applying-em-algorithm-binomial-mixtures.html>`_.
+See also `Applying the EM Algorithm: Binomial Mixtures
+<https://statisticalrecipes.blogspot.fr/2012/04/applying-em-algorithm-binomial-mixtures.html>`_.
 
 Notebooks
 =========
@@ -433,6 +434,8 @@ The following notebook produces the figures displayed in this document.
 Bibliographie
 =============
 
-* `p-Value and Statistical Practice <http://www.stat.columbia.edu/~gelman/research/published/pvalues3.pdf>`_
-* `An investigation of the false discovery rate and the misinterpretation of p-values <http://rsos.royalsocietypublishing.org/content/royopensci/1/3/140216.full.pdf>`_
+* `p-Value and Statistical Practice
+  <https://www.stat.columbia.edu/~gelman/research/published/pvalues3.pdf>`_
+* `An investigation of the false discovery rate and the misinterpretation of p-values
+  <https://rsos.royalsocietypublishing.org/content/royopensci/1/3/140216.full.pdf>`_
 * :epkg:`Holm–Bonferroni method`

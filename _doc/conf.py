@@ -38,7 +38,7 @@ author = "Xavier Dupré"
 version = __version__
 release = __version__
 language = "fr"
-exclude_patterns = []
+exclude_patterns = ["auto_examples/*.ipynb"]
 pygments_style = "sphinx"
 todo_include_todos = True
 

@@ -5,7 +5,7 @@
 Régression linéaire par morceaux
 ================================
 
-Le paragraphe :ref:`/notebooks/ml/regression_lineaire.ipynb`
+Le paragraphe :ref:`/notebooks/dsgarden/regression_lineaire.ipynb`
 étudie le lien entre le coefficient :math:`R^2`
 et la corrélation pour finalement illustrer
 une façon de réaliser une régression linéaire par
