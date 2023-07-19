@@ -81,6 +81,7 @@ nitpicky = True
 nitpick_ignore = [
     ("py:class", "False"),
     ("py:class", "True"),
+    ("py:class", "pipeline.Pipeline"),
     ("py:class", "default=sklearn.utils.metadata_routing.UNCHANGED"),
 ]
 
