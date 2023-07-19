@@ -45,7 +45,6 @@ qui définissent la quantization au travers de deux fonctions. On note
 dans l'intervalle *[0, 255]*, 0 à gauche, 255 à droite.
 
 .. math::
-    :align: left
 
     \begin{array}{rcl}
     q_1(z, \lambda, x) &=& c_{0}^{255}\pa{\intf{\frac{x}{\lambda}}_{i8} + z} \text{ quantization}\\
@@ -59,7 +58,6 @@ La fonction :math:`\intf{x}_{i8,z}` est la partie entière asociée à la foncti
 :math:`c_{0}^{255}(i)`.
 
 .. math::
-    :align: left
 
     \norm{B - q(z,\lambda,B)}^2 = \sum_{ij} \pa{b_{ij} - \lambda\intf{\frac{x}{\lambda}}_{i8,z}}^2
 
@@ -98,7 +96,6 @@ plus à l'entier inférieur (ou le plus proche) mais au float 8
 inférieur (ou le plus proche).
 
 .. math::
-    :align: left
 
     \norm{B - q(z,\lambda,B)}^2 = \sum_{ij} \pa{b_{ij} - \lambda\intf{\frac{x}{\lambda}}_{f8,z} }^2
 
@@ -110,7 +107,6 @@ quel qu'il soit, des entiers ou des réels codés sur 8 bits. On note cet
 ensemble :math:`(d_1, ..., d_n)`. On réécrit le problème d'optimisation :
 
 .. math::
-    :align: left
 
     \begin{array}{rcl}
     \norm{B - q(z,\lambda,B)}^2 &=& \sum_{ij} \pa{b_{ij} - \lambda\intf{\frac{x}{\lambda}}_{f8,z} }^2 \\
@@ -123,7 +119,6 @@ ensemble :math:`(d_1, ..., d_n)`. On réécrit le problème d'optimisation :
 On note :math:`K(u)=\frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}u^2}` le noyau gaussien.
 
 .. math::
-    :align: left
 
     \begin{array}{rcl}
     \norm{B - q(z,\lambda,B)}^2 &=& \lim_{h\to 0} \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k }^2
@@ -133,7 +128,6 @@ On note :math:`K(u)=\frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}u^2}` le noyau gaussien.
 Cette notation ne tient pas compte du décalage *z* qu'on peut ajouter comme suit :
 
 .. math::
-    :align: left
 
     \begin{array}{rcl}
     \norm{B - q(z,\lambda,B)}^2 &=& \lim_{h\to 0} \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k - z }^2
@@ -146,7 +140,6 @@ pour :math:`\lambda` et *z* en faisant tendre *h* vers 0.
 On commence par le plus simple, le cas float 8 pour lequel on impose :math:`z=0`.
 
 .. math::
-    :align: left
     :label: eq-qua-1
 
     f(B,\lambda,h) = \frac{1}{h} \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k - z }^2
@@ -156,7 +149,6 @@ Si on suppose que les coefficients de *B* suivent une certaine loi de probabilit
 ce calcul devient une somme d'espérence.
 
 .. math::
-    :align: left
 
     f(X,\lambda,h) = \frac{1}{h} \sum_{k=1}^{n} \esp\pa{X - \lambda d_k - z }^2
     K\pa{\frac{X - \lambda d_k - z}{h}}
@@ -169,7 +161,6 @@ If :math:`K(u)=\frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}u^2}` then
 Let's denote :math:`g(b,x) = (b-xd)^2 K\pa{\frac{b-xd}{h}}`. Then:
 
 .. math::
-    :align: left
 
     \begin{array}{rcl}
     g(b,x) &=& \frac{1}{h} (b-xd)^2 K\pa{\frac{b-xd}{h}} \\
@@ -181,7 +172,6 @@ Let's denote :math:`g(b,x) = (b-xd)^2 K\pa{\frac{b-xd}{h}}`. Then:
 Applied to :eq:`eq-qua-1`:
 
 .. math::
-    :align: left
 
     \begin{array}{rcl}
     f(B,\lambda,h) &=& \frac{1}{h} \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k}^2
@@ -192,7 +182,6 @@ Applied to :eq:`eq-qua-1`:
 Then:
 
 .. math::
-    :align: left
 
     \begin{array}{rcl}
     \frac{\partial f}{\partial \lambda} &=& \sum_{k=1}^{n} \sum_{ij}

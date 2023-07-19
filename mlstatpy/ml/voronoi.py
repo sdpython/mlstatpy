@@ -42,7 +42,6 @@ def voronoi_estimation_from_lr(
     The function solves the linear system:
 
     .. math::
-        :align: left
 
         \\begin{array}{rcl}
         & \\Longrightarrow & \\left\\{\\begin{array}{l}

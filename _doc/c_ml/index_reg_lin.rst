@@ -23,7 +23,6 @@ qui minimise la vraisemblance du modèle, ce qui revient à résoudre
 le problème d'optimisation :
 
 .. math::
-    :align: left
 
     \min_\beta \sum_i (y_i - X_i \beta)^2
 
@@ -33,7 +32,6 @@ est une observation :math:`X_i` et :math:`y = (y_1, ..., y_i, ...)`.
 :math:`X'` est la transposée de *X*. Alors :
 
 .. math::
-    :align: left
 
     \beta_* = (X'X)^{-1}X'y
 
