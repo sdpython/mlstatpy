@@ -41,4 +41,4 @@ algorithm, a graph edit distance, some helpers on Wikipedia data,
 an algorithm to convert decision trees into neural network.
 
 * `GitHub/mlstatpy <https://github.com/sdpython/mlstatpy/>`_
-* `documentation <http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html>`_
+* `documentation <https://sdpython.github.io/doc/mlstatpy/>`_

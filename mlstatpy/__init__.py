@@ -3,7 +3,7 @@
 __version__ = "0.4.0"
 __author__ = "Xavier Dupré"
 __github__ = "https://github.com/sdpython/mlstatpy"
-__url__ = "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html"
+__url__ = "https://sdpython.github.io/doc/mlstatpy/index.html"
 __license__ = "MIT License"
 
 

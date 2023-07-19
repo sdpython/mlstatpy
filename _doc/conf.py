@@ -16,6 +16,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
+    "sphinx.ext.pngmath",
     "sphinx.ext.todo",
     "sphinx_gallery.gen_gallery",
     "sphinx_issues",
@@ -46,6 +47,8 @@ html_theme_path = ["_static"]
 html_theme_options = {}
 html_sourcelink_suffix = ""
 html_static_path = ["_static"]
+
+issues_github_path = "sdpython/mlstatpy"
 
 # The following is used by sphinx.ext.linkcode to provide links to github
 linkcode_resolve = make_linkcode_resolve(
@@ -152,10 +155,10 @@ custom_preamble = """\n
 \\newcommand{\\variance}[1]{\\mathbb{V}\\pa{#1}}
 \\newcommand{\\intf}[1]{\\left\\lfloor #1 \\right\\rfloor}
 """
-# \\usepackage{eepic}
 
 imgmath_latex_preamble = preamble + custom_preamble
-latex_elements["preamble"] = preamble + custom_preamble
+pngmath_latex_preamble = imgmath_latex_preamble
+latex_elements["preamble"] = imgmath_latex_preamble
 mathdef_link_only = True
 
 epkg_dictionary = {
@@ -178,7 +181,7 @@ epkg_dictionary = {
     "LAESA": "https://tavianator.com/aesa/",
     "LAPACK": "http://www.netlib.org/lapack/",
     "mlinsights": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/index.html",
-    "mlstatpy": "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html",
+    "mlstatpy": "https://sdpython.github.io/doc/mlstatpy/",
     "numpy": (
         "https://www.numpy.org/",
         ("https://docs.scipy.org/doc/numpy/reference/generated/numpy.{0}.html", 1),
@@ -206,8 +209,8 @@ epkg_dictionary = {
 }
 
 nblinks = {
-    "l-reglin-piecewise-streaming": "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/c_ml/piecewise.html#streaming-linear-regression",
-    "cl-NeuralTreeNet": "http://www.xavierdupre.fr/app/mlstatpy/helpsphinx//mlstatpy/ml/"
+    "l-reglin-piecewise-streaming": "https://sdpython.github.io/doc/mlstatpy/c_ml/piecewise.html#streaming-linear-regression",
+    "cl-NeuralTreeNet": "https://sdpython.github.io/doc/mlstatpy/ml/"
     "neural_tree.html#mlstatpy.ml.neural_tree.NeuralTreeNet",
 }
 
