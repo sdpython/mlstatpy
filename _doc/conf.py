@@ -11,12 +11,12 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.githubpages",
     "sphinx.ext.ifconfig",
+    "sphinx.ext.imgmath",
     "sphinx.ext.intersphinx",
     "sphinx.ext.linkcode",
     "sphinx.ext.viewcode",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
-    "sphinx.ext.pngmath",
     "sphinx.ext.todo",
     "sphinx_gallery.gen_gallery",
     "sphinx_issues",
@@ -157,7 +157,6 @@ custom_preamble = """\n
 """
 
 imgmath_latex_preamble = preamble + custom_preamble
-pngmath_latex_preamble = imgmath_latex_preamble
 latex_elements["preamble"] = imgmath_latex_preamble
 mathdef_link_only = True
 
