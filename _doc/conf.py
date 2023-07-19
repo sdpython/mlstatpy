@@ -2,6 +2,7 @@
 import sys
 import os
 from sphinx_runpython.github_link import make_linkcode_resolve
+from sphinx_runpython.conf_helper import has_dvipng, has_dvisvgm
 from mlstatpy import __version__
 
 
@@ -11,11 +12,9 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.githubpages",
     "sphinx.ext.ifconfig",
-    "sphinx.ext.imgmath",
     "sphinx.ext.intersphinx",
     "sphinx.ext.linkcode",
     "sphinx.ext.viewcode",
-    "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
     "sphinx.ext.todo",
     "sphinx_gallery.gen_gallery",
@@ -27,6 +26,15 @@ extensions = [
     "sphinx_runpython.runpython",
     "matplotlib.sphinxext.plot_directive",
 ]
+
+if has_dvisvgm():
+    extensions.append("sphinx.ext.imgmath")
+    imgmath_image_format = "svg"
+elif has_dvipng():
+    extensions.append("sphinx.ext.pngmath")
+    imgmath_image_format = "png"
+else:
+    extensions.append("sphinx.ext.mathjax")
 
 templates_path = ["_templates"]
 html_logo = "_static/project_ico.png"
@@ -41,6 +49,7 @@ language = "fr"
 exclude_patterns = ["auto_examples/*.ipynb"]
 pygments_style = "sphinx"
 todo_include_todos = True
+nbsphinx_execute = "never"
 
 html_theme = "pydata_sphinx_theme"
 html_theme_path = ["_static"]
@@ -120,9 +129,7 @@ preamble = """
 \\newcommand{\\R}{\\mathbb{R}}
 \\newcommand{\\HRule}{\\rule{\\linewidth}{0.5mm}}
 %\\titleformat{\\chapter}[hang]{\\Huge\\bfseries\\sffamily}{\\thechapter\\hsp}{0pt}{\\Huge\\bfseries\\sffamily}
-"""
 
-custom_preamble = """\n
 \\usepackage[all]{xy}
 \\newcommand{\\vecteur}[2]{\\pa{#1,\\dots,#2}}
 \\newcommand{\\N}[0]{\\mathbb{N}}
@@ -155,10 +162,6 @@ custom_preamble = """\n
 \\newcommand{\\variance}[1]{\\mathbb{V}\\pa{#1}}
 \\newcommand{\\intf}[1]{\\left\\lfloor #1 \\right\\rfloor}
 """
-
-imgmath_latex_preamble = preamble + custom_preamble
-latex_elements["preamble"] = imgmath_latex_preamble
-mathdef_link_only = True
 
 epkg_dictionary = {
     "ACP": "https://fr.wikipedia.org/wiki/Analyse_en_composantes_principales",
@@ -207,12 +210,5 @@ epkg_dictionary = {
     "wikipedia dumps": "https://dumps.wikimedia.org/frwiki/latest/",
 }
 
-nblinks = {
-    "l-reglin-piecewise-streaming": "https://sdpython.github.io/doc/mlstatpy/c_ml/piecewise.html#streaming-linear-regression",
-    "cl-NeuralTreeNet": "https://sdpython.github.io/doc/mlstatpy/ml/"
-    "neural_tree.html#mlstatpy.ml.neural_tree.NeuralTreeNet",
-}
-
-nbsphinx_execute = "never"
-
-imgmath_image_format = "png"
+imgmath_latex_preamble = preamble
+latex_elements["preamble"] = imgmath_latex_preamble

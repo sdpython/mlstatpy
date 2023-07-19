@@ -95,7 +95,7 @@ class NeuralTreeNode(_TrainingAPI):
 
         .. math::
 
-            \\begin{array}{l}
+            \\begin{array}{rcl}
             f(x) &=& \\frac{1}{1 + e^{-x}} \\\\
             f'(x) &=& \\frac{e^{-x}}{(1 + e^{-x})^2} = f(x)(1-f(x))
             \\end{array}

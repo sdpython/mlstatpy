@@ -18,7 +18,7 @@ def convert_array2PIL(img, mode=None):
 
     :param img: epkg:`numpy:array`
     :param mode: voir `modes
-        <https://pillow.readthedocs.io/en/3.1.x/handbook/concepts.html#modes>`_,
+        <https://pillow.readthedocs.io/en/stable/handbook/concepts.html>`_,
         si None, essaye de deviner.
     :return: *PIL*
 
@@ -50,7 +50,7 @@ def _load_image(img, format="PIL", mode=None):
 
     @param      img     image (*array*, *PIL*, filename)
     @param      format  *array* ou *PIL*
-    @param      mode    voir `modes <https://pillow.readthedocs.io/en/3.1.x/handbook/concepts.html#modes>`_,
+    @param      mode    voir `modes <https://pillow.readthedocs.io/en/stable/handbook/concepts.html>`_,
                         si None, essaye de deviner.
     @return             *PIL*
     """

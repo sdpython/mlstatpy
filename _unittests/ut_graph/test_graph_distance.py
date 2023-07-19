@@ -5,8 +5,7 @@
 import os
 import unittest
 import copy
-import warnings
-from pyquickhelper.pycode import get_temp_folder, is_travis_or_appveyor, ExtTestCase
+from pyquickhelper.pycode import get_temp_folder, ExtTestCase
 from mlstatpy.graph.graph_distance import GraphDistance
 from mlstatpy.graph.graphviz_helper import draw_graph_graphviz
 

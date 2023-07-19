@@ -17,8 +17,8 @@ jobs:
         print_all: false
         timeout: 2
         retry_count# : 2
-        # exclude_urls: https://github, ...
-        # exclude_patterns: https://github.com/...
+        # exclude_urls: https://dumps.wikimedia.org/other/pageviews/%Y/%Y-%m/pageviews-%Y%m%d-%H0000.gz,https://dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz
+        exclude_patterns: https://dumps.wikimedia.org/
         # force_pass : true
 
     - name: urls-checker-docs
