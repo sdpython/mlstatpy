@@ -124,7 +124,7 @@ Mais ce n'est pas toujours le cas, le documentaire
 revient sur les effets du `bisphénol A <https://fr.wikipedia.org/wiki/Bisph%C3%A9nol_A>`_
 qui serait déjà pertubateur à très petite dose. Il ne prend pas en compte
 les effets croisés non plus (voir `Les perturbateurs endocriniens Comprendre où en est la recherche
-<https://hal-anses.archives-ouvertes.fr/anses-02289024/document>`_).
+<https://documentation.ehesp.fr/?lvl=notice_display&id=327632>`_).
 
 La fonction :math:`\lambda_0(t)` est en quelque sorte le taux de défaillance
 moyen. On peut le calculer à partir des formules introduites au
