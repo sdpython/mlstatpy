@@ -26,6 +26,9 @@ jobs:
       - name: Install requirements
         run: python -m pip install -r requirements.txt
 
+      - name: Install requirements dev
+        run: python -m pip install -r requirements-dev.txt
+
       - name: Generate coverage report
         run: |
           pip install pytest
@@ -41,9 +44,6 @@ jobs:
 
       - name: Install
         run: python setup.py install
-
-      - name: Install requirements dev
-        run: python -m pip install -r requirements-dev.txt
 
       - name: Copy license
         run: cp LICENSE* ./_doc
