@@ -187,3 +187,11 @@ Then:
     \frac{\partial f}{\partial \lambda} &=& \sum_{k=1}^{n} \sum_{ij}
     \frac{\partial g}{\partial \lambda}(b_{ij}, \lambda) 
     \end{array}
+
+Notebooks
+=========
+
+.. toctree::
+    :maxdepth: 1
+
+    ../notebooks/dsgarden/quantization_f8

@@ -12,6 +12,7 @@ build/*
 onnxruntime_profile*
 prof
 temp_*
+.ipynb_checkpoints
 _doc/CHANGELOGS.rst
 _doc/LICENSE.txt
 _doc/auto_examples/*
@@ -27,3 +28,5 @@ _unittests/ut__main/*.png
 _unittests/ut__main/_cache/*
 _unittests/ut__main/*.html
 _unittests/.hypothesis/*
+_doc/notebooks/ml/*.onnx
+_doc/notebooks/dsgarden/*.onnx
