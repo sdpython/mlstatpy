@@ -1,4 +1,4 @@
-name: Workflow for Codecov
+name: Codecov Workflow
 on: [push]
 jobs:
   run:
@@ -21,6 +21,7 @@ jobs:
       run: |
         pip install pytest
         pip install pytest-cov
+        export PYTHONPATH=.
         pytest --cov=./_unittests/ --cov-report=xml --ignore-glob=**LONG*.py --ignore-glob=**notebook*.py
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
