@@ -353,17 +353,15 @@ class GraphDistance:
         self, function_mach_vertices, function_match_edges, cost=False
     ):
         """
-        returns default matching functions between two vertices and two edges
-        @param      function_mach_vertices  if not None, this function
-                                            is returned, othewise, it returns
-                                            a new fonction.
-                                            See below.
-        @param      function_match_edges    if not None, this function is returned,
-                                            othewise, it returns a new fonction.
-                                            See below.
-        @param      cost                    if True, the returned function should
-                                            return a float, otherwise a boolean
-        @return                             a pair of functions
+        Returns default matching functions between two vertices and two edges.
+
+        :param function_mach_vertices: if not None, this function
+            is returned, othewise, it returns a new fonction. See below.
+        :param function_match_edges: if not None, this function is returned,
+            othewise, it returns a new fonction. See below.
+        :param cost: if True, the returned function should
+            return a float, otherwise a boolean
+        :return: a pair of functions
 
         Example for * if cost is False:
 
@@ -812,10 +810,10 @@ class GraphDistance:
         :param graph2: the other graph
         :param function_mach_vertices: function which gives a distance
             between two vertices, if None, it take the output of
-            @see me get_matching_functions
+            :meth:`get_matching_functions`
         :param function_match_edges: function which gives a distance
             bewteen two edges, if None, it take the output of
-            @see me get_matching_functions
+            :meth:`get_matching_functions`
         :param noClean: if True, clean unmatched vertices and edges
         :param store: if None, does nothing, if it is a
             dictionary, the function will store

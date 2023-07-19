@@ -27,10 +27,11 @@ La plus connue en Python est `whoosh <https://whoosh.readthedocs.io/en/latest/>`
 
 Quelques éléments de codes sont disponibles dans le module
 :mod:`completion <mlstatpy.nlp.completion>` et le notebook
-:ref:`completion_trie.ipynb`. Vous pouvez également lire
+:ref:`/notebooks/nlp/completion_trie.ipynb`. Vous pouvez également lire
 `How to Write a Spelling Corrector <http://norvig.com/spell-correct.html>`_
 de `Peter Norvig <http://norvig.com/>`_ et découvrir le sujet
-avec `On User Interactions with Query Auto-Completion <https://www.semanticscholar.org/paper/On-user-interactions-with-query-auto-completion-Mitra-Shokouhi/71e953caa2542a61b52e684649b3569c00251021/pdf>`_
+avec `On User Interactions with Query Auto-Completion
+<https://www.semanticscholar.org/paper/On-user-interactions-with-query-auto-completion-Mitra-Shokouhi/71e953caa2542a61b52e684649b3569c00251021/pdf>`_
 de Bhaskar Mitra, Milad Shokouhi, Filip Radlinski, Katja Hofmann.
 
 .. toctree::

@@ -5,7 +5,7 @@
 Régression linéaire par morceaux
 ================================
 
-Le paragraphe :ref:`regression_lineaire.ipynb`
+Le paragraphe :ref:`/notebooks/ml/regression_lineaire.ipynb`
 étudie le lien entre le coefficient :math:`R^2`
 et la corrélation pour finalement illustrer
 une façon de réaliser une régression linéaire par
@@ -483,7 +483,7 @@ de Gram-Schmidt qui est implémentée dans la fonction
 
 L'avantage est que cette formulation s'exprime
 uniquement à partir de produits scalaires.
-Voir le notebook svuiant :ref:`regression_no_inversion.ipynb`.
+Voir le notebook svuiant :ref:`/notebooks/ml/regression_no_inversion.ipynb`.
 
 .. _l-reglin-acp-svd:
 

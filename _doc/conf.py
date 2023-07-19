@@ -1,27 +1,31 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
+from sphinx_runpython.github_link import make_linkcode_resolve
 from mlstatpy import __version__
 
+
 extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.intersphinx",
-    "sphinx.ext.todo",
-    "sphinx.ext.coverage",
     "nbsphinx",
-    "sphinx.ext.mathjax",
-    "sphinx.ext.ifconfig",
-    "sphinx.ext.viewcode",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.coverage",
     "sphinx.ext.githubpages",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.linkcode",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
+    "sphinx.ext.todo",
     "sphinx_gallery.gen_gallery",
     "sphinx_issues",
-    "matplotlib.sphinxext.plot_directive",
+    "sphinx_last_updated_by_git",
+    "sphinx_runpython.blocdefs.sphinx_exref_extension",
+    "sphinx_runpython.blocdefs.sphinx_mathdef_extension",
     "sphinx_runpython.epkg",
     "sphinx_runpython.gdot",
     "sphinx_runpython.runpython",
-    "sphinx_runpython.blocdefs.sphinx_exref_extension",
-    "sphinx_runpython.blocdefs.sphinx_mathdef_extension",
+    "matplotlib.sphinxext.plot_directive",
 ]
 
 templates_path = ["_templates"]
@@ -41,14 +45,24 @@ todo_include_todos = True
 html_theme = "pydata_sphinx_theme"
 html_theme_path = ["_static"]
 html_theme_options = {}
+html_sourcelink_suffix = ""
 html_static_path = ["_static"]
+
+# The following is used by sphinx.ext.linkcode to provide links to github
+linkcode_resolve = make_linkcode_resolve(
+    "mlstatpy",
+    (
+        "https://github.com/sdpython/mlstatpy/"
+        "blob/{revision}/{package}/"
+        "{path}#L{lineno}"
+    ),
+)
 
 latex_elements = {
     "papersize": "a4",
     "pointsize": "10pt",
     "title": project,
 }
-
 
 intersphinx_mapping = {
     "onnx": ("https://onnx.ai/onnx/", None),

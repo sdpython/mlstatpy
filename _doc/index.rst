@@ -27,6 +27,7 @@ Le site est aussi disponible (format brut de fonderie) sur
     i_ex
     defthe_index
     auto_examples/index
+    notebooks/index
     glossary
     CHANGELOGS
     license

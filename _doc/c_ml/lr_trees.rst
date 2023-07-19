@@ -348,7 +348,7 @@ sans doute pas porteuse d'une innovation majeure. Et ce n'est
 pas la première fois que quelqu'un se lance dans la conversion
 d'un arbre en réseaux de neurones.
 
-J'ai quand même essayé avec le notebook :ref:`notebooks/ml/neural_tree.ipynb`
+J'ai quand même essayé avec le notebook :ref:`/notebooks/ml/neural_tree.ipynb`
 et les classes :class:`NeuralTreeNode <mlstatpy.ml._neural_tree_node.NeuralTreeNode>`,
 :class:`NeuralTreeNet <mlstatpy.ml.neural_tree.NeuralTreeNet>`.
 Si l'idée de départ est séduisante, elle requiert une contrainte

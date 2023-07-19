@@ -236,7 +236,7 @@ class NeuralTreeNet(_TrainingAPI):
           the threshold, the second one computes the leaves
           output, a final node merges all outputs into one
 
-        See notebook :ref:`neural_tree.ipynb` for examples.
+        See notebook :ref:`/notebooks/ml/neural_tree.ipynb` for examples.
         """
         if arch == "one":
             return NeuralTreeNet._create_from_tree_one(tree, k)

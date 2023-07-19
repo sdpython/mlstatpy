@@ -447,7 +447,9 @@ régression grâce à l'algorithme suivant.
 	*Validation*
 
 	Si :math:`\norm{f-g} \approx 0`,
-    l'algorithme de :ref:`sélection <rn_algorithme_selection_connexion_1>` est validé.
+    l'algorithme de
+    :ref:`sélection <rn_algorithme_selection_connexion_1>`
+    est validé.
 
 La réduction des réseaux de neurones ne se posent plus en ce sens.
 Les réseaux de neurones sont aujourd'hui des réseaux de neurones

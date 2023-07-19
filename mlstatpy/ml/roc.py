@@ -448,9 +448,9 @@ class ROC:
         """
         Computes the area under the curve (:epkg:`AUC`).
 
-        @param      cloud       data or None to use ``self.data``, the function
-                                assumes the data is sorted.
-        @return                 AUC
+        :param cloud: data or None to use ``self.data``, the function
+            assumes the data is sorted.
+        :return: AUC
 
         The first column is the label, the second one is the score,
         the third one is the weight.
