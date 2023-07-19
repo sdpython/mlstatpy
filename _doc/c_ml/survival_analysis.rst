@@ -120,7 +120,7 @@ L'hypothèse des risques proportionnel est en quelque sorte intuitive.
 Plus on ingère un poison, plus on a de chances d'en subir les conséquences.
 Mais ce n'est pas toujours le cas, le documentaire
 `La fabrique de l'ignorance
-<https://www.arte.tv/fr/videos/091148-000-A/la-fabrique-de-l-ignorance/>`_
+<https://boutique.arte.tv/detail/la-fabrique-de-lignorance>`_
 revient sur les effets du `bisphénol A <https://fr.wikipedia.org/wiki/Bisph%C3%A9nol_A>`_
 qui serait déjà pertubateur à très petite dose. Il ne prend pas en compte
 les effets croisés non plus (voir `Les perturbateurs endocriniens Comprendre où en est la recherche

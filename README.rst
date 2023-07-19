@@ -20,6 +20,9 @@
     :alt: GitHub Issues
     :target: https://github.com/sdpython/mlstatpy/issues
 
+.. image:: https://codecov.io/gh/sdpython/mlstatpy/branch/master/graph/badge.svg?token=2gKZsIVL3e 
+    :target: https://codecov.io/gh/sdpython/mlstatpy
+
 .. _l-README:
 
 mlstatpy: détours mathématiques autour du machine learning

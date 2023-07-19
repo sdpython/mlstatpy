@@ -43,7 +43,7 @@ jobs:
           pip install pytest
           pip install pytest-cov
           export PYTHONPATH=.
-          pytest --cov=./_unittests/ --cov-report=xml --durations=10 --ignore-glob=**LONG*.py --ignore-glob=**notebook*.py
+          pytest --cov=./mlstatpy/ --cov-report=xml --durations=10 --ignore-glob=**LONG*.py --ignore-glob=**notebook*.py
           export PYTHONPATH=
 
       - name: Upload coverage reports to Codecov

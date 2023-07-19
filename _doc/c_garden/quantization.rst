@@ -103,7 +103,7 @@ Optimisation
 ============
 
 L'idée est de traiter la discrétisation sur un ensemble fini de valeurs,
-quel qu'il soit, des entiers ou des réels codés sur 8 bits. On note Cette
+quel qu'il soit, des entiers ou des réels codés sur 8 bits. On note cet
 ensemble :math:`(d_1, ..., d_n)`. On réécrit le problème d'optimisation :
 
 .. math::
@@ -111,6 +111,46 @@ ensemble :math:`(d_1, ..., d_n)`. On réécrit le problème d'optimisation :
     \begin{array}{rcl}
     \norm{B - q(z,\lambda,B)}^2 &=& \sum_{ij} \pa{b_{ij} - \lambda\intf{\frac{x}{\lambda}}_{f8,z} }^2 \\
     &=& \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda\intf{\frac{x}{\lambda}}_{f8} }^2
-    \indicatrice{\intf{\frac{x}{\lambda}}_{f8} = d_k}
+    \indicatrice{\intf{\frac{x}{\lambda}}_{f8} = d_k} \\
+    &=& \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k }^2
+    \indicatrice{\intf{\frac{x}{\lambda}}_{f8} = d_k} \\
     \end{array}
 
+On note :math:`K(u)=\frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}u^2}` le noyau gaussien.
+
+.. math::
+
+    \begin{array}{rcl}
+    \norm{B - q(z,\lambda,B)}^2 &=& \lim_{h\to 0} \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k }^2
+    \frac{1}{h} K\pa{\frac{b_{ij} - \lambda d_k}{h}}\indicatrice{\intf{\frac{x}{\lambda}}_{f8} = d_k}
+    \end{array}
+
+Cette notation ne tient pas compte du décalage *z* qu'on peut ajouter comme suit :
+
+.. math::
+
+    \begin{array}{rcl}
+    \norm{B - q(z,\lambda,B)}^2 &=& \lim_{h\to 0} \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k - z }^2
+    \frac{1}{h} K\pa{\frac{b_{ij} - \lambda d_k - z}{h}}\indicatrice{\intf{\frac{x}{\lambda}}_{?,z} = d_k}
+    \end{array}
+
+Le problème est beaucoup plus simple à résoudre si on enlève l'indicatrice
+et la fonction devient dérivable. L'idée est de regarder l'évolution des valeurs trouvées
+pour :math:`\lambda` et *z* en faisant tendre *h* vers 0.
+On commence par le plus simple, le cas float 8 pour lequel on impose :math:`z=0`.
+
+.. math::
+
+    f(B,\lambda,h) = \frac{1}{h} \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k - z }^2
+    K\pa{\frac{b_{ij} - \lambda d_k - z}{h}}
+
+Si on suppose que les coefficients de *B* suivent une certaine loi de probabilité,
+ce calcul devient une somme d'espérence.
+
+.. math::
+
+    f(X,\lambda,h) = \frac{1}{h} \sum_{k=1}^{n} \esp{X - \lambda d_k - z }^2
+    K\pa{\frac{X - \lambda d_k - z}{h}}
+
+Résolution
+==========
