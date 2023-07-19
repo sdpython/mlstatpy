@@ -140,6 +140,7 @@ pour :math:`\lambda` et *z* en faisant tendre *h* vers 0.
 On commence par le plus simple, le cas float 8 pour lequel on impose :math:`z=0`.
 
 .. math::
+    :label: eq-qua-1
 
     f(B,\lambda,h) = \frac{1}{h} \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k - z }^2
     K\pa{\frac{b_{ij} - \lambda d_k - z}{h}}
@@ -154,3 +155,35 @@ ce calcul devient une somme d'espérence.
 
 Résolution
 ==========
+
+If :math:`K(u)=\frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}u^2}` then
+:math:`K'(u) = -u \frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}u^2} = -u K(x)`.
+Let's denote :math:`g(b,x) = (b-xd)^2 K\pa{\frac{b-xd}{h}}`. Then:
+
+.. math::
+
+    \begin{array}{rcl}
+    g(b,x) &=& \frac{1}{h} (b-xd)^2 K\pa{\frac{b-xd}{h}} \\
+    \frac{\partial g}{\partial x}(b,x) &=&
+    \frac{1}{h}\cro{ -2d(b-xd)K\pa{\frac{b-xd}{h}} -\frac{d}{h} (b-xd)^2 K'\pa{\frac{b-xd}{h}} } \\
+    &=& -\frac{d(b-xd)}{h}\cro{2 K\pa{\frac{b-xd}{h}} + \frac{b-xd}{h} K'\pa{\frac{b-xd}{h}} }
+    \end{array}
+
+Applied to :eq:`eq-qua-1`:
+
+.. math::
+
+    \begin{array}{rcl}
+    f(B,\lambda,h) &=& \frac{1}{h} \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k}^2
+    K\pa{\frac{b_{ij} - \lambda d_k}{h}} \\
+    &=& \sum_{k=1}^{n} \sum_{ij} g(b_{ij}, \lambda)
+    \end{array}
+
+Then:
+
+.. math::
+
+    \begin{array}{rcl}
+    \frac{\partial f}{\partial \lambda} &=& \sum_{k=1}^{n} \sum_{ij}
+    \frac{\partial g}{\partial \lambda}(b_{ij}, \lambda) 
+    \end{array}
