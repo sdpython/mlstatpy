@@ -291,8 +291,7 @@ revient à déterminer les coordonnées de la projection d'un nouveau point :mat
 dans le plan défini par les vecteurs de la matrice :math:`H`.
 Pour de nouvelles observations :math:`M_2=X_{q+1}`,
 la fonction `transform
-<https://scikit-learn.org/stable/modules/generated/sklearn.decomposition
-.NMF.html#sklearn.decomposition.NMF.transform>`_
+<https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.NMF.html#sklearn.decomposition.NMF.transform>`_
 de la classe :class:`sklearn.decomposition.NMF` réestime une matrice
 :math:`W_2` qui projette les vecteurs lignes de :math:`M_2` sur
 les vecteurs de *H* en conservant des coefficients de projection positifs.
@@ -349,7 +348,8 @@ avec une factorisation de matrices. On peut également se server de la méthode
 pour calculer une ACP avec des valeurs manquantes.
 
 * `Imputation de données manquantes <https://www.math.univ-toulouse.fr/~besse/Wikistat/pdf/st-m-app-idm.pdf>`_
-* `Principal component analysis with missing values: a comparative survey of methods <http://pbil.univ-lyon1.fr/members/dray/files/articles/dray2015a.pdf>`_
+* `Principal component analysis with missing values: a comparative survey of methods
+  <https://www.researchgate.net/publication/273901434_Principal_component_analysis_with_missing_values_a_comparative_survey_of_methods>`_
 
 Interprétation
 ++++++++++++++

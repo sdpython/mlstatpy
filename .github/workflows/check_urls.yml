@@ -19,7 +19,7 @@ jobs:
         retry_count# : 2
         # exclude_urls: https://github, ...
         # exclude_patterns: https://github.com/...
-        force_pass : true
+        # force_pass : true
 
     - name: urls-checker-docs
       uses: urlstechie/urlchecker-action@master
@@ -31,4 +31,4 @@ jobs:
         retry_count# : 2
         # exclude_urls: https://github, ...
         # exclude_patterns: https://github.com/...
-        force_pass : true
+        # force_pass : true

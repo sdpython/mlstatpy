@@ -133,7 +133,7 @@ splines. On peut aussi le calculer avec l'estimateur
 de Breslow (voir `Analyse de survie : Méthodes non paramétriques
 <http://helios.mi.parisdescartes.fr/~obouaziz/KMSurv.pdf>`_,
 `Introduction à l'analyse des durées de survie
-<http://www.lsta.upmc.fr/psp/Cours_Survie_1.pdf>`_).
+<https://perso.math.univ-toulouse.fr/psaintpi/files/2021/04/Cours_Survie_1.pdf>`_).
 qui repose aussi la courbe de Kaplan-Meier.
 
 On sait que si :math:`g(t) = \log S'(t)` alors

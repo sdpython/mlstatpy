@@ -435,7 +435,7 @@ Bibliographie
 =============
 
 * `p-Value and Statistical Practice
-  <https://www.stat.columbia.edu/~gelman/research/published/pvalues3.pdf>`_
+  <http://www.stat.columbia.edu/~gelman/research/published/pvalues3.pdf>`_
 * `An investigation of the false discovery rate and the misinterpretation of p-values
   <https://rsos.royalsocietypublishing.org/content/royopensci/1/3/140216.full.pdf>`_
 * :epkg:`Holm-Bonferroni method`
