@@ -1,8 +1,4 @@
 
-.. image:: https://travis-ci.com/sdpython/mlstatpy.svg?branch=main
-    :target: https://app.travis-ci.com/github/sdpython/mlstatpy
-    :alt: Build status
-
 .. image:: https://ci.appveyor.com/api/projects/status/5env33qptorgshaq?svg=true
     :target: https://ci.appveyor.com/project/sdpython/mlstatpy
     :alt: Build Status Windows

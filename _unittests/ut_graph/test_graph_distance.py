@@ -74,10 +74,6 @@ class TestGraphDistance(ExtTestCase):
         outfile2 = os.path.join(temp, "unittest_GraphDistance4_sub2.png")
         outfilef = os.path.join(temp, "unittest_GraphDistance4_subf.png")
 
-        if is_travis_or_appveyor() == "travis":
-            warnings.warn("graphviz is not available")
-            return
-
         vertices, edges = graph1.draw_vertices_edges()
         self.assertNotEmpty(vertices)
         self.assertNotEmpty(edges)

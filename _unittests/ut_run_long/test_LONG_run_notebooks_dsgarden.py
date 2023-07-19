@@ -41,10 +41,6 @@ class TestRunNotebooksDsGarden(unittest.TestCase):
                 return False
             if '<div style="position:absolute' in cell:
                 return False
-            if "run_dot" in cell and is_travis_or_appveyor() == "travis":
-                return False
-            if "completion.dot" in cell and is_travis_or_appveyor() == "travis":
-                return False
             return True
 
         # additionnal path to add
