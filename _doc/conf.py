@@ -77,11 +77,11 @@ intersphinx_mapping = {
 
 # Check intersphinx reference targets exist
 nitpicky = True
-# Temporary solution to nilearn/nilearn#3800
 # See also scikit-learn/scikit-learn#26761
 nitpick_ignore = [
-    ("py:class", "pipeline.Pipeline"),
-    ("py:class", "utils.metadata_routing.MetadataRequest"),
+    ("py:class", "False"),
+    ("py:class", "True"),
+    ("py:class", "default=sklearn.utils.metadata_routing.UNCHANGED"),
 ]
 
 sphinx_gallery_conf = {
