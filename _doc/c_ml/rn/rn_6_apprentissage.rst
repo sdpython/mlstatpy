@@ -67,7 +67,7 @@ la section :ref:`optimisation_newton` :
     :tag: Algorithme
 
     *Initialiation*
-		
+        
     Le premier jeu de coefficients :math:`W_0` du réseau
     de neurones est choisi aléatoirement.
 
@@ -144,7 +144,7 @@ et le minimum est atteint pour la valeur :
 
     \begin{eqnarray}
     W_{\min}= W_0 + \frac{1}{2}\left[  \dfrac{\partial^{2}h\left(  W_{0}\right) }
-    		{\partial W^{2}}\right]  ^{-1}\left[  \frac{\partial h\left(  W_{0}\right)
+            {\partial W^{2}}\right]  ^{-1}\left[  \frac{\partial h\left(  W_{0}\right)
     }{\partial W}\right] \nonumber
     \end{eqnarray}
 
@@ -308,17 +308,17 @@ par celle-ci :
 
     Voir :ref:`BFGS <rn_algo_bfgs>`.
 
-		
+        
 L'algorithme DFP est aussi un algorithme de gradient conjugué
 qui propose une approximation différente de l'inverse de la dérivée seconde.
-		
+        
 .. mathdef::
     :title: DFP
     :lid: rn_algo_dfp
     :tag: Algorithme
 
     Le nombre de paramètre de la fonction :math:`f` est :math:`M`.
-		
+        
     *Initialisation*
 
     Le premier jeu de coefficients :math:`W_0`
@@ -429,11 +429,11 @@ l'utilisation de quasi-martingales et est une convergence presque sûre [Bottou1
     | :math:`t \longleftarrow t+1`
 
     *Terminaison*
-		
+        
     Si :math:`\frac{E_t}{E_{t-1}} \approx 1`
     alors l'apprentissage a convergé sinon retour au
     calcul du gradient.
-		
+        
 
 En pratique, il est utile de converser le meilleur jeu de
 coefficients : :math:`W^* = \underset{u \supegal 0}{\arg \min} \; E_{u}`

@@ -195,7 +195,7 @@ celle de la variable :math:`Y`. On peut alors définir la probabilité
     \begin{eqnarray*}
     P \pa{Y>X} &=& \int_x \int_y f_X(x) \; f_Y(y) \; \indicatrice{y > x} dx dy
     \end{eqnarray*}
-	
+    
 On note :math:`F_X` la fonction de répartition de
 :math:`X` soit :math:`F_X(x) = \int_{-\infty}^x f_X(u)du`.
 On pose comme changement de variable : :math:`u = F_X(x)`.
@@ -213,11 +213,11 @@ est uniforme et comprise dans :math:`\cro{0,1}`.
 
 Or si :math:`u = F_X(s) = E(s)`, alors :math:`F_X^{-1}(u) = s`
 et :math:`\pr{Y > F_X^{-1}(u)} = R'(s)`. Par conséquent :
-	
+    
 .. math::
 
     P \pa{Y>X} = \int_u du \; \pr{Y > F_X^{-1}(u)} = \int_u du \; R'(F_X^{-1}(u))
-		
+        
 .. index:: U-statistique, Mann-Whitney
 
 Cette dernière expression est l'aire recherchée.
@@ -297,22 +297,22 @@ et on utilise le fait que :math:`\var{\hat{A}} = \esp\pa{\hat{A}^2} - \hat{A}^2`
     && + \frac{1}{n^2  m^2} \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{l \neq j} \indicatrice{ X_i < Y_j}  \indicatrice{ X_i < Y_l}  \\
     && +\frac{1}{n^2  m^2} \sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k \neq i}\sum_{l \neq j} \indicatrice{ X_i < Y_j}  \indicatrice{ X_k < Y_l}
     \end{array}
-		
+        
 On en déduit que :
 
 .. math::
     :nowrap:
 
     \begin{eqnarray*}
-    \esp{\hat{A}^2} &=&	\frac{\hat{A}}{nm} + \frac{n-1 }{nm} \; \pr{ \max\acc{X_i,X_k} < Y_j}  + \nonumber \\ &&
+    \esp{\hat{A}^2} &=&    \frac{\hat{A}}{nm} + \frac{n-1 }{nm} \; \pr{ \max\acc{X_i,X_k} < Y_j}  + \nonumber \\ &&
     \frac{m-1 }{nm} \;  \pr{ X_i < \min\acc{Y_j,Y_l}} +  \frac{nm-n-m-1 }{n m} \;  \hat{A}^2 \\
-    \var{\hat{A}^2} &=&	\frac{1}{nm} \cro{ \hat{A} + (n-1) P_Y + (m-1) P_X - (n+m+1) \hat{A}^2 } \nonumber \\
-    &=&	\frac{1}{nm} \cro{ \hat{A} + (n-1) \pa{P_Y - \hat{A}^2}+ (m-1) \pa{P_X - \hat{A}^2} + \hat{A}^2 }
+    \var{\hat{A}^2} &=&    \frac{1}{nm} \cro{ \hat{A} + (n-1) P_Y + (m-1) P_X - (n+m+1) \hat{A}^2 } \nonumber \\
+    &=&    \frac{1}{nm} \cro{ \hat{A} + (n-1) \pa{P_Y - \hat{A}^2}+ (m-1) \pa{P_X - \hat{A}^2} + \hat{A}^2 }
     \end{eqnarray*}
 
-On retrouve l'expression cherchée.		
-		
-		
+On retrouve l'expression cherchée.        
+        
+        
 
 .. _roc_confiance_inter:
 
@@ -356,7 +356,7 @@ est construite une courbe ROC (voir :ref:`Courbe ROC <def_roc_2>`).
         \end{eqnarray*}
 
     La courbe ROC est composée de l'ensemble :math:`R_{OC} = \acc{ \pa{E_j,R_j} | 1 \infegal j \infegal k}`.
-		
+        
 Les deux suites :math:`(R_j)_j` et :math:`(E_j)_j` sont toutes les deux décroissantes
 d'après leur définition. La courbe peut être rendue continue par interpolation.
 
@@ -384,7 +384,7 @@ d'après leur définition. La courbe peut être rendue continue par interpolatio
     .. math::
 
         \rho =  \frac{e^* - x_{j^*}} { x_{j^*+1} - x_{j^*} } \; \cro{ r_{j^*+1} - r_{j^*} } + r_{j^*}
-		
+        
 
 Il ne reste plus qu'à détailler la méthode *bootstrap*.
 
@@ -514,7 +514,7 @@ Les courbes ne sont pas monotones et montre qu'il existe parfois plusieurs taux 
 lecture pour un même taux de substitution. Comme le calcul des intervalles de confiance
 fait intervenir une interpolation linéaire, lorsque les courbes sont trop cahotiques,
 le calcul retourne des valeurs fausses.
-    		
+            
 On peut démontrer que la courbe taux de lecture / taux de substitution
 n'est pas une courbe ni monotone ni inversible. Pour cela on dispose d'une
 suite de couple :math:`\pa{X_i, \theta_i}` croissante selon les
@@ -539,10 +539,10 @@ On écrit différemment ces expressions en supposant que :math:`X_{i(s_1)-1} < s
     R'(s_1) &=& \frac{n-i(s_1)}{n} \\
     E'(s_1) &=& \frac{1}{n - i(s_1)} \sum_{i=i(s_1)}^{n} \pa{1 - \theta_i}
     \end{eqnarray*}
-		
+        
 On suppose maintenant que :math:`X_{i(s_2)-1} < s_2 \infegal X_{i(s_2)} :math:`
 et :math:`i(s_1) +1 = i(s_2)` :
-		
+        
 .. math::
     :nowrap:
 
@@ -565,7 +565,7 @@ autrement dit, l'expérience :math:`s_1` a réussi, on en déduit que :
     \begin{eqnarray*}
     E'(s_2) &=& E'(s_1) \frac{ n - i(s_1) } {n - i(s_2) } = E'(s_1) \frac{ n - i(s_2) + 1 } {n - i(s_2) } > E'(s_1)
     \end{eqnarray*}
-		
+        
 En revanche si :math:`\theta_i = 0` :
 
 .. math::

@@ -367,7 +367,7 @@ That's allways the case when two version of the sam websire are compared
 in a test `A/B <https://fr.wikipedia.org/wiki/Test_A/B>`_.
 The metrics are correlated but it is unlikely that all metrics
 differences will be significant or not.
-The :epkg:`Holm–Bonferroni method`
+The :epkg:`Holm-Bonferroni method`
 proposes a way to define an hypthesis on the top of the existing ones.
 
 Algorithm Expectation-Maximization
@@ -414,9 +414,9 @@ We then update the parameters:
     :nowrap:
 
     \begin{eqnarray*}
-    \widehat{\pi} &=&  \frac{1}{n} \sum_{i = 1}^n w_i \\
-    \widehat{p} 	&=&  \frac{  \sum_{i = 1}^n w_i X_i }{  \sum_{i = 1}^n w_i} \\
-    \widehat{q} 	&=&  \frac{  \sum_{i = 1}^n (1-w_i) X_i }{  \sum_{i = 1}^n (1-w_i)}
+    \widehat{\pi}   &=&  \frac{1}{n} \sum_{i = 1}^n w_i \\
+    \widehat{p}     &=&  \frac{  \sum_{i = 1}^n w_i X_i }{  \sum_{i = 1}^n w_i} \\
+    \widehat{q}     &=&  \frac{  \sum_{i = 1}^n (1-w_i) X_i }{  \sum_{i = 1}^n (1-w_i)}
     \end{eqnarray*}
 
 See also `Applying the EM Algorithm: Binomial Mixtures
@@ -438,4 +438,4 @@ Bibliographie
   <https://www.stat.columbia.edu/~gelman/research/published/pvalues3.pdf>`_
 * `An investigation of the false discovery rate and the misinterpretation of p-values
   <https://rsos.royalsocietypublishing.org/content/royopensci/1/3/140216.full.pdf>`_
-* :epkg:`Holm–Bonferroni method`
+* :epkg:`Holm-Bonferroni method`

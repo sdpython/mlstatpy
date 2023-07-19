@@ -29,7 +29,7 @@ suivant une `loi multinomiale <https://fr.wikipedia.org/wiki/Loi_multinomiale>`_
     avec :math:`n \in \N`,  :math:`h` est une fonction de paramètre
     :math:`\theta` à valeur dans :math:`\cro{0,1}` et vérifiant la
     contrainte : :math:`\sum_{c=1}^C h(\theta,X,c) = 1`.
-		
+        
 
 Le premier exemple
 est une classification en deux classes, elle consiste à découvrir le lien qui

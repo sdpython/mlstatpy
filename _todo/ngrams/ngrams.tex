@@ -4,12 +4,12 @@
 \firstpassagedo{\input{ngrams_chapter.tex}}
 
 
-Les \emph{n-grammes}\indexfr{n-grammes} sont une modélisation statistique du langage, l'idée est d'observer la
-fréquence des enchaînements de lettres à l'intérieur des mots, ou la fréquence des enchaînements de mots à l'intérieur
-d'une phrase. Plus généralement, les n-grammes modélisent sous forme de chaînes de Markov toute séquence de symboles appartenant à un ensemble fini.
+Les \emph{n-grammes}\indexfr{n-grammes} sont une modï¿½lisation statistique du langage, l'idï¿½e est d'observer la
+frï¿½quence des enchaï¿½nements de lettres ï¿½ l'intï¿½rieur des mots, ou la frï¿½quence des enchaï¿½nements de mots ï¿½ l'intï¿½rieur
+d'une phrase. Plus gï¿½nï¿½ralement, les n-grammes modï¿½lisent sous forme de chaï¿½nes de Markov toute sï¿½quence de symboles appartenant ï¿½ un ensemble fini.
 
-\indexfrr{séquence}{symbols}
-\indexfrr{chaîne}{Markov}
+\indexfrr{sï¿½quence}{symbols}
+\indexfrr{chaï¿½ne}{Markov}
 \indexfr{Markov}
 
 \label{annexe_ngrams}
@@ -23,70 +23,70 @@ d'une phrase. Plus généralement, les n-grammes modélisent sous forme de chaînes 
 
 
 %---------------------------------------------------------------------------------------------------------------------
-\section{Définition}
+\section{Dï¿½finition}
 %---------------------------------------------------------------------------------------------------------------------
 
-Les définitions qui vont suivre s'adaptent à toutes séquences d'éléments appartement à $E$, un ensemble fini.
+Les dï¿½finitions qui vont suivre s'adaptent ï¿½ toutes sï¿½quences d'ï¿½lï¿½ments appartement ï¿½ $E$, un ensemble fini.
 
-		\begin{xdefinition}{n-grammes}\label{n_grammes_definition}
+        \begin{xdefinition}{n-grammes}\label{n_grammes_definition}
     \indexfr{suite}
-		Soit $A = \pa{e,f,\vecteurno{a_1}{a_N}}$ un ensemble fini nommé \emph{alphabet}, les symboles $e$ et $f$ débutent 
-		et terminent toute séquence de symboles appartenant à $A$. Cette convention permet de traiter les probabilités
-		d'entrée et de sortie d'une séquence comme des probabilités de transitions.	Soit $M_A \subset A^{\N}$ 
-		l'ensemble des suites $u=\pa{u_i}_{i \supegal 0}$ de $A$ définies comme suit~:
-		    $$
-		    u \in M_A \Longleftrightarrow  \left\{
-		    \begin{array}{l}
-		    u_1 = e \\
-		    \exists N > 2 \text{ tel que } \forall i \supegal N, \; u_i = f \text{ et } \forall i < N, \; u_i \neq f
-		    \end{array}
-		    \right.
-		    $$
-		Par la suite, $M_A$ sera appelé l'ensemble des mots de $A$. \newline \indexfr{mot}%
-		
-		Soit $n \supegal 2$, $M_A$ est muni d'une distribution de probabilité vérifiant les hypothèses, si $u \in M_A$ :
-		    \begin{eqnarray_xd}
-		    \pr{u_1 = e} &=& 1  &\numequation\\
-		    \forall t > 1, \; \pr{u_t = f \; | \; u_{t-1} = f} &=& 1 &\numequation \\
-		    \forall t > 1, \; \pr{u_t = e } &=& 0  &\numequation \\
-		    \forall t \supegal n, \; \pr{u_t \; | \; \vecteurno{u_{t-1}}{u_1} } &=& P\pa{u_t \; | \;
-		    		\vecteurno{u_{t-1}}{u_{t-n+1}} }  &\numequation
-		    \end{eqnarray_xd}
-		\end{xdefinition}
+        Soit $A = \pa{e,f,\vecteurno{a_1}{a_N}}$ un ensemble fini nommï¿½ \emph{alphabet}, les symboles $e$ et $f$ dï¿½butent 
+        et terminent toute sï¿½quence de symboles appartenant ï¿½ $A$. Cette convention permet de traiter les probabilitï¿½s
+        d'entrï¿½e et de sortie d'une sï¿½quence comme des probabilitï¿½s de transitions.    Soit $M_A \subset A^{\N}$ 
+        l'ensemble des suites $u=\pa{u_i}_{i \supegal 0}$ de $A$ dï¿½finies comme suit~:
+            $$
+            u \in M_A \Longleftrightarrow  \left\{
+            \begin{array}{l}
+            u_1 = e \\
+            \exists N > 2 \text{ tel que } \forall i \supegal N, \; u_i = f \text{ et } \forall i < N, \; u_i \neq f
+            \end{array}
+            \right.
+            $$
+        Par la suite, $M_A$ sera appelï¿½ l'ensemble des mots de $A$. \newline \indexfr{mot}%
+        
+        Soit $n \supegal 2$, $M_A$ est muni d'une distribution de probabilitï¿½ vï¿½rifiant les hypothï¿½ses, si $u \in M_A$ :
+            \begin{eqnarray_xd}
+            \pr{u_1 = e} &=& 1  &\numequation\\
+            \forall t > 1, \; \pr{u_t = f \; | \; u_{t-1} = f} &=& 1 &\numequation \\
+            \forall t > 1, \; \pr{u_t = e } &=& 0  &\numequation \\
+            \forall t \supegal n, \; \pr{u_t \; | \; \vecteurno{u_{t-1}}{u_1} } &=& P\pa{u_t \; | \;
+                    \vecteurno{u_{t-1}}{u_{t-n+1}} }  &\numequation
+            \end{eqnarray_xd}
+        \end{xdefinition}
 
-Si les n-grammes sont connus, ces hypothèses simplificatrices permettent d'exprimer la probabilité d'un mot de manière
-différente~:
-
-
-
-
-
-		\begin{xproperty}{expression de la probabilité}\label{n_grammes_propriete_001}%
-		Avec les notations de la définition~\ref{n_grammes_definition}, soit $u \in M_C$, on définit $l\pa{u}$ :
-		    $$
-		    l\pa{u} = \min \acc {i \in \N \; | \; u_i = f }
-		    $$
-		Par définition de $u$, $l\pa{u}$ existe et la probabilité de $u$ peut s'exprimer différemment :
-		    $$
-		    \pr{u} =
-		        \left\{
-		        \begin{array}{ll}
-		        \pr{u} & \text{ si } l\pa{u} < n \\
-		        \pr{ \vecteurno{u_1}{u_{n-1}} } \; \prody{t=n}{l\pa{u}} \pr{u_t \; | \; \vecteurno{u_{t-1}}{u_{t-n+1}}}  &
-		        \text{ si } l\pa{u} \supegal n
-		        \end{array}
-		        \right.
-		    $$
-		\end{xproperty}
+Si les n-grammes sont connus, ces hypothï¿½ses simplificatrices permettent d'exprimer la probabilitï¿½ d'un mot de maniï¿½re
+diffï¿½rente~:
 
 
 
 
 
+        \begin{xproperty}{expression de la probabilitï¿½}\label{n_grammes_propriete_001}%
+        Avec les notations de la dï¿½finition~\ref{n_grammes_definition}, soit $u \in M_C$, on dï¿½finit $l\pa{u}$ :
+            $$
+            l\pa{u} = \min \acc {i \in \N \; | \; u_i = f }
+            $$
+        Par dï¿½finition de $u$, $l\pa{u}$ existe et la probabilitï¿½ de $u$ peut s'exprimer diffï¿½remment :
+            $$
+            \pr{u} =
+                \left\{
+                \begin{array}{ll}
+                \pr{u} & \text{ si } l\pa{u} < n \\
+                \pr{ \vecteurno{u_1}{u_{n-1}} } \; \prody{t=n}{l\pa{u}} \pr{u_t \; | \; \vecteurno{u_{t-1}}{u_{t-n+1}}}  &
+                \text{ si } l\pa{u} \supegal n
+                \end{array}
+                \right.
+            $$
+        \end{xproperty}
 
-\begin{xdemo}{propriété}{\ref{n_grammes_propriete_001}}
-La définition~\ref{n_grammes_definition} s'inspire de celle d'une chaîne de Markov d'ordre $n$ (voir
-paragraphe~\ref{definition_mmc_ordre_n}, page~\pageref{definition_mmc_ordre_n}), la démonstration aussi.
+
+
+
+
+
+\begin{xdemo}{propriï¿½tï¿½}{\ref{n_grammes_propriete_001}}
+La dï¿½finition~\ref{n_grammes_definition} s'inspire de celle d'une chaï¿½ne de Markov d'ordre $n$ (voir
+paragraphe~\ref{definition_mmc_ordre_n}, page~\pageref{definition_mmc_ordre_n}), la dï¿½monstration aussi.
 \end{xdemo}
 
 
@@ -107,33 +107,33 @@ paragraphe~\ref{definition_mmc_ordre_n}, page~\pageref{definition_mmc_ordre_n}),
 
 \indexfrr{n-grammes}{estimation}%
 
-L'estimation des n-grammes s'effectue pour un sous-ensemble $C \subset M_A$ donné, on définit deux types de
-probabilités~:
+L'estimation des n-grammes s'effectue pour un sous-ensemble $C \subset M_A$ donnï¿½, on dï¿½finit deux types de
+probabilitï¿½s~:
 \begin{enumerate}
-\indexfrr{n-grammes}{probabilité de commencer}%
-\indexfrr{n-grammes}{probabilité de transiter}%
-\item La probabilité de commencer un mot par la séquence $x$~:
+\indexfrr{n-grammes}{probabilitï¿½ de commencer}%
+\indexfrr{n-grammes}{probabilitï¿½ de transiter}%
+\item La probabilitï¿½ de commencer un mot par la sï¿½quence $x$~:
     $$
     \forall x \in A^n, \; p_e\pa{x,C} = \widehat{P}\pa{u_1^{n-1} = x}
     $$
-\item La probabilité de transiter à l'intérieur d'un mot de la séquence $x$ à l'élément $y$~:
+\item La probabilitï¿½ de transiter ï¿½ l'intï¿½rieur d'un mot de la sï¿½quence $x$ ï¿½ l'ï¿½lï¿½ment $y$~:
     $$
     \forall x \in A^n, \; \forall y \in A, \; \forall t > n, \; p_t\pa{x,y,C} = \widehat{P}\pa{u_t = y \; | \;
     u_{t-n+1}^{t-1} = x }
     $$
 \end{enumerate}
 
-Ces deux probabilités peuvent être estimées à l'aide de l'ensemble $C$ comme suit :
+Ces deux probabilitï¿½s peuvent ï¿½tre estimï¿½es ï¿½ l'aide de l'ensemble $C$ comme suit :
     \begin{eqnarray*}
     p_e\pa{x,C}     &=&     \dfrac  {  card \acc {u \in C \sachant u_1^{n-1} = x }}   { \card{C}} \\ \\
     p_t\pa{x,y,C}   &=&     \left\{\begin{array}{l}
                             0 \text{ si } card \acc { \; \pa{u,t} \sachant u \in C, \; 
-                            				n \infegal t \infegal l\pa{u}, \; u_{t-n+1}^{n-1} = x} = 0 \\ \\
+                                            n \infegal t \infegal l\pa{u}, \; u_{t-n+1}^{n-1} = x} = 0 \\ \\
                             \text{sinon }
                             \dfrac  {  card \acc { \; \pa{u,t} \sachant u \in C, \; 
-                            				n \infegal t \infegal l\pa{u}, \; u_{t-n+1}^{n-1} = x, \; u_t = y}}
+                                            n \infegal t \infegal l\pa{u}, \; u_{t-n+1}^{n-1} = x, \; u_t = y}}
                                     {  card \acc { \; \pa{u,t} \sachant u \in C, \; n \infegal t \infegal 
-                                    		l\pa{u}, \; u_{t-n+1}^{n-1} = x}}
+                                            l\pa{u}, \; u_{t-n+1}^{n-1} = x}}
                             \end{array}
                             \right.
     \end{eqnarray*}
@@ -160,33 +160,33 @@ Ces deux probabilités peuvent être estimées à l'aide de l'ensemble $C$ comme sui
 
 
 
-\subsection{Densité d'un dictionnaire}
-\indexfrr{dictionnaire}{densité}
-\indexfrr{densité}{dictionnaire}
+\subsection{Densitï¿½ d'un dictionnaire}
+\indexfrr{dictionnaire}{densitï¿½}
+\indexfrr{densitï¿½}{dictionnaire}
 
 
-L'idée d'associer une densité à un dictionnaire est tirée de l'article~\citeindex{Govindaraju2002}. Effectuée sur une même base d'images de mots cursifs, la reconnaissance de l'écriture voit ses performances décroître au fur et à mesure que la taille du dictionnaire augmente. Le choix est plus vaste, par conséquent, la possibilité de se tromper est plus grande. Toutefois, la taille n'est pas le seul paramètre à prendre en compte, un dictionnaire dans les mots sont très proches les uns des autres propose de nombreux choix similaires. Soit $D$ un dictionnaire, la densité de $D=\vecteur{m_1}{m_N}$ notée $\rho\pa{D}$ est définie par~:
+L'idï¿½e d'associer une densitï¿½ ï¿½ un dictionnaire est tirï¿½e de l'article~\citeindex{Govindaraju2002}. Effectuï¿½e sur une mï¿½me base d'images de mots cursifs, la reconnaissance de l'ï¿½criture voit ses performances dï¿½croï¿½tre au fur et ï¿½ mesure que la taille du dictionnaire augmente. Le choix est plus vaste, par consï¿½quent, la possibilitï¿½ de se tromper est plus grande. Toutefois, la taille n'est pas le seul paramï¿½tre ï¿½ prendre en compte, un dictionnaire dans les mots sont trï¿½s proches les uns des autres propose de nombreux choix similaires. Soit $D$ un dictionnaire, la densitï¿½ de $D=\vecteur{m_1}{m_N}$ notï¿½e $\rho\pa{D}$ est dï¿½finie par~:
 
-		\begin{eqnarray}
-		\rho\pa{D} 		&=&	\underset{ v_R\pa{D} } 
-												{\underbrace{\frac{N\pa{N-1}} { \summyone { i \neq j} \, d_R \pa{m_i,m_j} } } }
-											 \; f_R\pa{N} 
-		\end{eqnarray}
-		
-
-
-$f_R\pa{N}$ est une fonction croissante de $N$ telle que $f_R\pa{N} = \pa{\ln N}^p + \delta_R$ ou $f_R\pa{N} = N^p + \delta_R$ avec $p > 0$. $d_R\pa{m_i,m_j}$ est une distance qui mesure la confusion entre ces deux mots via un système de reconnaissance $R$, elle sera définie plus loin. L'article~\citeindex{Govindaraju2002} montre de manière pratique que les performances $p_R\pa{D}$ du système de reconnaissance $R$ évoluent linéairement par rapport à la densité\footnote{Pour une base donnée, $p_R\pa{D}$ correspond au nombre de mots reconnus correctement sur le nombre de documents dans la base.}~:
+        \begin{eqnarray}
+        \rho\pa{D}         &=&    \underset{ v_R\pa{D} } 
+                                                {\underbrace{\frac{N\pa{N-1}} { \summyone { i \neq j} \, d_R \pa{m_i,m_j} } } }
+                                             \; f_R\pa{N} 
+        \end{eqnarray}
+        
 
 
-		\begin{eqnarray}
-		p_R\pa{D} \sim a \rho\pa{D} + b
-		\end{eqnarray}
+$f_R\pa{N}$ est une fonction croissante de $N$ telle que $f_R\pa{N} = \pa{\ln N}^p + \delta_R$ ou $f_R\pa{N} = N^p + \delta_R$ avec $p > 0$. $d_R\pa{m_i,m_j}$ est une distance qui mesure la confusion entre ces deux mots via un systï¿½me de reconnaissance $R$, elle sera dï¿½finie plus loin. L'article~\citeindex{Govindaraju2002} montre de maniï¿½re pratique que les performances $p_R\pa{D}$ du systï¿½me de reconnaissance $R$ ï¿½voluent linï¿½airement par rapport ï¿½ la densitï¿½\footnote{Pour une base donnï¿½e, $p_R\pa{D}$ correspond au nombre de mots reconnus correctement sur le nombre de documents dans la base.}~:
 
 
-\indexfrr{probabilité}{émission}
+        \begin{eqnarray}
+        p_R\pa{D} \sim a \rho\pa{D} + b
+        \end{eqnarray}
+
+
+\indexfrr{probabilitï¿½}{ï¿½mission}
 \indexfr{Kullback-Leiber}
 
-La distance $d_R\pa{w_i,w_j}$ est égale à la distance entre les deux modèles de reconnaissance associés aux mots $w_i$ et $w_j$. Soient deux états $e_i^k$ et $e_j^l$ des modèles de reconnaissances associés aux mots $w_i$ et $w_j$, ils différent par leurs probabilités d'émission que l'on peut comparer grâce à une distance de Kullback-Leiber. Il est ensuite possible de construire une distance entre graphes de sorte qu'elle soit la somme des distances d'éditions entre tous les chemins du premier graphe et tous ceux du second.
+La distance $d_R\pa{w_i,w_j}$ est ï¿½gale ï¿½ la distance entre les deux modï¿½les de reconnaissance associï¿½s aux mots $w_i$ et $w_j$. Soient deux ï¿½tats $e_i^k$ et $e_j^l$ des modï¿½les de reconnaissances associï¿½s aux mots $w_i$ et $w_j$, ils diffï¿½rent par leurs probabilitï¿½s d'ï¿½mission que l'on peut comparer grï¿½ce ï¿½ une distance de Kullback-Leiber. Il est ensuite possible de construire une distance entre graphes de sorte qu'elle soit la somme des distances d'ï¿½ditions entre tous les chemins du premier graphe et tous ceux du second.
 
 
 
@@ -199,182 +199,182 @@ La distance $d_R\pa{w_i,w_j}$ est égale à la distance entre les deux modèles de 
 
 \subsection{Classes de symboles}
 \indexfrr{n-grammes}{classes de symboles}
-\indexfr{chaîne de Markov}
+\indexfr{chaï¿½ne de Markov}
 \indexfr{HMM}\indexfr{MMC}
 
-Plutôt que de modéliser l'ensemble des n-grammes, il peut paraître judicieux de regrouper certains symboles en classes puis de ne s'intéresser qu'aux transitions entre classes de symboles, ce que proposent les articles \citeindex{Yamamoto2003} et~\citeindex{Perraud2003}. Jusqu'ici, les n-grammes représentés sont assimilables à des chaînes de Markov, mais les classes de symboles pourraient être les états de la chaîne de Markov cachée. Les mots peuvent par exemple être classés par rapport à leur fonction grammaticale dans la phrase, cette classe serait dans le cas présent l'observation cachée. On peut donc imaginer que les états de la chaîne de Markov représentent des classes de mots et émettent des mots. Le modèle ainsi formé est une modélisation du langage. Soit $D = \vecteur{m_1}{m_d}$ une liste de symboles ou plus concrètement de mots, on désire modéliser les séquences de mots. Les n-grammes des paragraphes précédents modélisent la probabilité d'un séquence $S=\vecteur{s_1}{s_T}$ par~:
+Plutï¿½t que de modï¿½liser l'ensemble des n-grammes, il peut paraï¿½tre judicieux de regrouper certains symboles en classes puis de ne s'intï¿½resser qu'aux transitions entre classes de symboles, ce que proposent les articles \citeindex{Yamamoto2003} et~\citeindex{Perraud2003}. Jusqu'ici, les n-grammes reprï¿½sentï¿½s sont assimilables ï¿½ des chaï¿½nes de Markov, mais les classes de symboles pourraient ï¿½tre les ï¿½tats de la chaï¿½ne de Markov cachï¿½e. Les mots peuvent par exemple ï¿½tre classï¿½s par rapport ï¿½ leur fonction grammaticale dans la phrase, cette classe serait dans le cas prï¿½sent l'observation cachï¿½e. On peut donc imaginer que les ï¿½tats de la chaï¿½ne de Markov reprï¿½sentent des classes de mots et ï¿½mettent des mots. Le modï¿½le ainsi formï¿½ est une modï¿½lisation du langage. Soit $D = \vecteur{m_1}{m_d}$ une liste de symboles ou plus concrï¿½tement de mots, on dï¿½sire modï¿½liser les sï¿½quences de mots. Les n-grammes des paragraphes prï¿½cï¿½dents modï¿½lisent la probabilitï¿½ d'un sï¿½quence $S=\vecteur{s_1}{s_T}$ par~:
 
-				$$
-				\pr{S} = \pr{ \vecteurno{s_1}{s_d} } \; \prody {i = d+1} {T} \, 
-									\pr{ 	s_i \sac \vecteurno{s_{i-1}}{s_{i-d}} }
-				$$
+                $$
+                \pr{S} = \pr{ \vecteurno{s_1}{s_d} } \; \prody {i = d+1} {T} \, 
+                                    \pr{     s_i \sac \vecteurno{s_{i-1}}{s_{i-d}} }
+                $$
 
-En classant les mots dans une liste de classes $\vecteur{C_1}{C_X}$ considérée comme les états d'une chaîne de Markov cachée, soit $c = \vecteur{c_1}{c_T}$ une séquence de classes, la probabilité de la séquence $S$ s'écrit maintenant~:
+En classant les mots dans une liste de classes $\vecteur{C_1}{C_X}$ considï¿½rï¿½e comme les ï¿½tats d'une chaï¿½ne de Markov cachï¿½e, soit $c = \vecteur{c_1}{c_T}$ une sï¿½quence de classes, la probabilitï¿½ de la sï¿½quence $S$ s'ï¿½crit maintenant~:
 
-				$$
-				\begin{array}{l}
-				\pr {S} = \summyone{c} \; \cro { \prody{i=1}{T} \pr { s_i \sac c_i }  }
-																\pr{ \vecteurno{c_1}{c_d} } \;
-																\cro{ \prody {i = d+1} {T}
-																\pr{ 	c_i \sac \vecteurno{c_{i-1}}{c_{i-d}} }
-																} \\
-				\text{Cette expression est calculable grâce à l'algorithme~\ref{hmm_algo_forward} (page~\pageref{hmm_algo_forward}). }
-				\end{array}
-				$$
-				
-\indexfr{perplexité}
+                $$
+                \begin{array}{l}
+                \pr {S} = \summyone{c} \; \cro { \prody{i=1}{T} \pr { s_i \sac c_i }  }
+                                                                \pr{ \vecteurno{c_1}{c_d} } \;
+                                                                \cro{ \prody {i = d+1} {T}
+                                                                \pr{     c_i \sac \vecteurno{c_{i-1}}{c_{i-d}} }
+                                                                } \\
+                \text{Cette expression est calculable grï¿½ce ï¿½ l'algorithme~\ref{hmm_algo_forward} (page~\pageref{hmm_algo_forward}). }
+                \end{array}
+                $$
+                
+\indexfr{perplexitï¿½}
 \indexfr{entropie}
-				
-Alors que l'article \citeindex{Perraud2003} élabore les classes de manière sémantique (les mots sont classés selon leur fonction grammaticale), l'article~\citeindex{Yamamoto2003} propose une méthode permettant de déterminer le nombre de classes ainsi qu'un critère d'évaluation nommé \emph{perplexité} et défini comme suit pour une liste de séquence de symboles ${\vecteur{s_1^k}{s_{T_s}^k}}_{ 1 \infegal k \infegal K}$~:
+                
+Alors que l'article \citeindex{Perraud2003} ï¿½labore les classes de maniï¿½re sï¿½mantique (les mots sont classï¿½s selon leur fonction grammaticale), l'article~\citeindex{Yamamoto2003} propose une mï¿½thode permettant de dï¿½terminer le nombre de classes ainsi qu'un critï¿½re d'ï¿½valuation nommï¿½ \emph{perplexitï¿½} et dï¿½fini comme suit pour une liste de sï¿½quence de symboles ${\vecteur{s_1^k}{s_{T_s}^k}}_{ 1 \infegal k \infegal K}$~:
 
-				\begin{eqnarray}
-				H &=&  - \frac{1}{K} \; \summy{k=1}{K} \ln \pr{ \vecteurno {s_1^k}{s_{T_s}^k}  } \nonumber\\
-				P &=&  2^H  \label{ngram_perplexite}
-				\end{eqnarray}
+                \begin{eqnarray}
+                H &=&  - \frac{1}{K} \; \summy{k=1}{K} \ln \pr{ \vecteurno {s_1^k}{s_{T_s}^k}  } \nonumber\\
+                P &=&  2^H  \label{ngram_perplexite}
+                \end{eqnarray}
 
-Par rapport à \citeindex{Perraud2003}, l'article \citeindex{Yamamoto2003} propose une modélisation plus complexe, alliant probabilités de transitions pour les sous-séquences centrales de symboles et probabilité de transitions entre classes pour les sous-séquences au bord. Soit $n$ la dimension des n-grammes et $s = \vecteur{s_1}{s_T}$ une séquence de symboles dont les classes associées sont $\vecteur{c_1}{c_T}$ (les classes sont connues)~:
+Par rapport ï¿½ \citeindex{Perraud2003}, l'article \citeindex{Yamamoto2003} propose une modï¿½lisation plus complexe, alliant probabilitï¿½s de transitions pour les sous-sï¿½quences centrales de symboles et probabilitï¿½ de transitions entre classes pour les sous-sï¿½quences au bord. Soit $n$ la dimension des n-grammes et $s = \vecteur{s_1}{s_T}$ une sï¿½quence de symboles dont les classes associï¿½es sont $\vecteur{c_1}{c_T}$ (les classes sont connues)~:
 
-			\begin{eqnarray*}
-			 	\pr{  \vecteurno{s_1}{s_d}, \vecteurno{s_{d+1}}{s_{T-d}}, \vecteurno {s_{T-d+1}}{s_T}}  &=&
-				 \prody{i=1}{d} \pr { c_i \sac \vecteurno{c_1}{c_i} }  \; \pr{ s_i \sac s_i}  \\
-			&&	\prody{i=d+1}{T-d} \pr{ s_i \sac \vecteurno{s_{i-1}}{s_{i_d}} }  \\
-			&&	\prody{i=T-d+1}{T} \pr { c_i \sac \vecteurno{c_1}{c_i}  }   \; \pr{ s_i \sac s_i}
-			\end{eqnarray*}
+            \begin{eqnarray*}
+                 \pr{  \vecteurno{s_1}{s_d}, \vecteurno{s_{d+1}}{s_{T-d}}, \vecteurno {s_{T-d+1}}{s_T}}  &=&
+                 \prody{i=1}{d} \pr { c_i \sac \vecteurno{c_1}{c_i} }  \; \pr{ s_i \sac s_i}  \\
+            &&    \prody{i=d+1}{T-d} \pr{ s_i \sac \vecteurno{s_{i-1}}{s_{i_d}} }  \\
+            &&    \prody{i=T-d+1}{T} \pr { c_i \sac \vecteurno{c_1}{c_i}  }   \; \pr{ s_i \sac s_i}
+            \end{eqnarray*}
 
 
 
-Dans cette expression, les débuts et fin de mots, supposés moins fiables pour une estimation, sont modélisés par des classes de caractères tandis que pour la partie centrale, les caractères sont directement modélisés.
+Dans cette expression, les dï¿½buts et fin de mots, supposï¿½s moins fiables pour une estimation, sont modï¿½lisï¿½s par des classes de caractï¿½res tandis que pour la partie centrale, les caractï¿½res sont directement modï¿½lisï¿½s.
 
 
 
 \subsection{Choix de la dimension de n-grammes}
 
-\indexfr{perplexité}
+\indexfr{perplexitï¿½}
 \indexfrr{n-grammes}{dimension}
 
-La définition de la perplexité (\ref{ngram_perplexite}) implique nécessaire sa décroissance lorsque la dimension $n$ croît ainsi que le montre la table~\ref{ngrams_perplexite_dimension} regroupant les calculs de perplexité pour différentes valeurs de la dimension. Comme dans toute modélisation, la question du choix de la dimension appropriée se pose.
+La dï¿½finition de la perplexitï¿½ (\ref{ngram_perplexite}) implique nï¿½cessaire sa dï¿½croissance lorsque la dimension $n$ croï¿½t ainsi que le montre la table~\ref{ngrams_perplexite_dimension} regroupant les calculs de perplexitï¿½ pour diffï¿½rentes valeurs de la dimension. Comme dans toute modï¿½lisation, la question du choix de la dimension appropriï¿½e se pose.
 
 
 \indexfr{BIC}
 
-A l'instar de l'article \citeindex{Bicego2003}, il est possible d'utiliser un critère d'information comme le BIC -~ou Bayesian Information Criterion~- afin de mettre en rapport la baisse de la perplexité avec le nombre de coefficients ajoutés aux n-grammes lorsqu'on augmente leur dimension. Les notations utilisées sont celles de l'expression (\ref{ngram_perplexite}). On définit $N_k$ comme étant le nombre de paramètres libres pour le modèle de dimension $k$ et $S$ représente la somme des longueurs des séquences d'observations. Le meilleur modèle maximise le critère suivant~:
+A l'instar de l'article \citeindex{Bicego2003}, il est possible d'utiliser un critï¿½re d'information comme le BIC -~ou Bayesian Information Criterion~- afin de mettre en rapport la baisse de la perplexitï¿½ avec le nombre de coefficients ajoutï¿½s aux n-grammes lorsqu'on augmente leur dimension. Les notations utilisï¿½es sont celles de l'expression (\ref{ngram_perplexite}). On dï¿½finit $N_k$ comme ï¿½tant le nombre de paramï¿½tres libres pour le modï¿½le de dimension $k$ et $S$ reprï¿½sente la somme des longueurs des sï¿½quences d'observations. Le meilleur modï¿½le maximise le critï¿½re suivant~:
 
-			\begin{eqnarray}
-			BIC\pa{k} &=&	 \summy{k=1}{K} \ln \pr{ \vecteurno {s_1^k}{s_{T_s}^k}  }  - \frac{N_k}{2} \ln S
-			\end{eqnarray}
+            \begin{eqnarray}
+            BIC\pa{k} &=&     \summy{k=1}{K} \ln \pr{ \vecteurno {s_1^k}{s_{T_s}^k}  }  - \frac{N_k}{2} \ln S
+            \end{eqnarray}
 
-La table~\ref{ngrams_perplexite_dimension} montre les résultats obtenus pour un dictionnaire de cinq mille mots anglais courants. Le critère est maximum pour une dimension égale à trois. 
-
-
-					\begin{table}[ht]
-					$$\begin{array}{|rrr|} \hline
-					\text{dimension} & \log_2 \text{-perplexité } & \frac{BIC\pa{dimension}}{K} \\ \hline
-					 2   	 	& 	 19,75   	 & 	-20,29   	 \\ 
-					 3   	 	& 	 16,20   	 & 	-19,64   	 \\ 
-					 4   	 	& 	 12,23   	 & 	-21,61   	 \\ 
-					 5   	 	& 	 9,64   	 & 	-24,12   	 \\ 
-					 6   	 	& 	 8,81   	 & 	-26,47   	 \\ 
-					 7   	 	& 	 8,60   	 & 	-27,96   	 \\ 
-					8	 			& 	 8,54   	 & 	-28,69   	 \\ 
-					9	 			& 	 8,52   	 & 	-28,99   	 \\ 
-					10	 		& 	 8,52   	 & 	-29,14   	 \\  \hline
-					\end{array}$$
-					\caption{	Log-perplexité estimée pour différentes dimensions et sur un dictionnaire de 5000 mots anglais
-										employé de manière courante et contenant en moyenne entre cinq et six lettres. 
-										La perplexité décroît lorsque la dimension augmente tandis que le critère $BIC$ préconise 
-										une dimension égale à trois pour laquelle il est minimum.}
-					\label{ngrams_perplexite_dimension}
-					\indexfr{perplexité}
-					\end{table}
-		
-\indexfr{bi-grammes}		
-\indexfr{tri-grammes}		
-
-Il est possible de raffiner la méthode afin de sélectionner la meilleure dimension locale. Par exemple, dans le cas d'un mot incluant la lettre~"Z", il n'est pas nécessaire de connaître la lettre précédant la lettre "Z" pour prévoir celle qui suit. Pour la lettre "Z" les 2-grammes ou bi-grammes suffisent alors qu'avec la lettre "A", il est préférable de choisir des 3-grammes ou tri-grammes. Il s'agit donc ici d'estimer un modèle de n-grammes avec un $n$ assez grand puis de supprimer certains coefficients jusqu'à ce que le critère $BIC$ ait atteint son minimum. Dans ce cas, les n-grammes peuvent être considérés comme les états d'une chaîne de Markov, être classés par ordre décroissant de probabilité a posteriori\seeannex{hmm_ditribution_temporelle_etat}{probabilité des états} puis être supprimés selon cet ordre tant que le critère $BIC$ croît.
+La table~\ref{ngrams_perplexite_dimension} montre les rï¿½sultats obtenus pour un dictionnaire de cinq mille mots anglais courants. Le critï¿½re est maximum pour une dimension ï¿½gale ï¿½ trois. 
 
 
+                    \begin{table}[ht]
+                    $$\begin{array}{|rrr|} \hline
+                    \text{dimension} & \log_2 \text{-perplexitï¿½ } & \frac{BIC\pa{dimension}}{K} \\ \hline
+                     2            &      19,75        &     -20,29        \\ 
+                     3            &      16,20        &     -19,64        \\ 
+                     4            &      12,23        &     -21,61        \\ 
+                     5            &      9,64        &     -24,12        \\ 
+                     6            &      8,81        &     -26,47        \\ 
+                     7            &      8,60        &     -27,96        \\ 
+                    8                 &      8,54        &     -28,69        \\ 
+                    9                 &      8,52        &     -28,99        \\ 
+                    10             &      8,52        &     -29,14        \\  \hline
+                    \end{array}$$
+                    \caption{    Log-perplexitï¿½ estimï¿½e pour diffï¿½rentes dimensions et sur un dictionnaire de 5000 mots anglais
+                                        employï¿½ de maniï¿½re courante et contenant en moyenne entre cinq et six lettres. 
+                                        La perplexitï¿½ dï¿½croï¿½t lorsque la dimension augmente tandis que le critï¿½re $BIC$ prï¿½conise 
+                                        une dimension ï¿½gale ï¿½ trois pour laquelle il est minimum.}
+                    \label{ngrams_perplexite_dimension}
+                    \indexfr{perplexitï¿½}
+                    \end{table}
+        
+\indexfr{bi-grammes}        
+\indexfr{tri-grammes}        
+
+Il est possible de raffiner la mï¿½thode afin de sï¿½lectionner la meilleure dimension locale. Par exemple, dans le cas d'un mot incluant la lettre~"Z", il n'est pas nï¿½cessaire de connaï¿½tre la lettre prï¿½cï¿½dant la lettre "Z" pour prï¿½voir celle qui suit. Pour la lettre "Z" les 2-grammes ou bi-grammes suffisent alors qu'avec la lettre "A", il est prï¿½fï¿½rable de choisir des 3-grammes ou tri-grammes. Il s'agit donc ici d'estimer un modï¿½le de n-grammes avec un $n$ assez grand puis de supprimer certains coefficients jusqu'ï¿½ ce que le critï¿½re $BIC$ ait atteint son minimum. Dans ce cas, les n-grammes peuvent ï¿½tre considï¿½rï¿½s comme les ï¿½tats d'une chaï¿½ne de Markov, ï¿½tre classï¿½s par ordre dï¿½croissant de probabilitï¿½ a posteriori\seeannex{hmm_ditribution_temporelle_etat}{probabilitï¿½ des ï¿½tats} puis ï¿½tre supprimï¿½s selon cet ordre tant que le critï¿½re $BIC$ croï¿½t.
 
 
 
 
 
 
-\subsection{Groupe de lettres récurrents}
+
+
+\subsection{Groupe de lettres rï¿½currents}
 \indexfr{groupe de lettres}
 \indexfrr{n-grammes}{groupe de lettres}
 
-Lors du traitement des erreurs de segmentation\seeannex{hmm_bi_lettre}{erreur graphème}, la reconnaissance de l'écriture nécessite la sélection des groupes de lettres les plus fréquents. Si le "." signifie le début ou la fin d'un mot ou l'espace, ".a.", ".de.", "tion." reviennent fréquemment dans la langue française. On s'intéresse ici à des probabilités de transition entre des groupes de plusieurs lettres. Jusqu'à présent, les modèles de n-grammes présentés estime la probabilité de la lettre suivant sachant la ou les lettres précédentes. Dans ce cas, on cherche la probabilité des lettres suivantes sachant un passé d'une ou plusieurs lettres.
+Lors du traitement des erreurs de segmentation\seeannex{hmm_bi_lettre}{erreur graphï¿½me}, la reconnaissance de l'ï¿½criture nï¿½cessite la sï¿½lection des groupes de lettres les plus frï¿½quents. Si le "." signifie le dï¿½but ou la fin d'un mot ou l'espace, ".a.", ".de.", "tion." reviennent frï¿½quemment dans la langue franï¿½aise. On s'intï¿½resse ici ï¿½ des probabilitï¿½s de transition entre des groupes de plusieurs lettres. Jusqu'ï¿½ prï¿½sent, les modï¿½les de n-grammes prï¿½sentï¿½s estime la probabilitï¿½ de la lettre suivant sachant la ou les lettres prï¿½cï¿½dentes. Dans ce cas, on cherche la probabilitï¿½ des lettres suivantes sachant un passï¿½ d'une ou plusieurs lettres.
 
-		
-\indexfr{Astérix le Gaulois}
+        
+\indexfr{Astï¿½rix le Gaulois}
 
-La table~\ref{ngrams_asterix_gaulois} présente un extrait des noms utilisés dans la bande dessinée \textit{Astérix le Gaulois} dans laquelle les suffixes $ix.$ et $us.$ sont couramment employés. Il est naturel d'envisager la probabilité de ces triplets -~deux lettres plus la fin du mot~- sachant la lettre précédente. Il reste à estimer des probabilités comme $\pr{ u \sac t}$ et $ \pr{ us. \sac t }$. 
+La table~\ref{ngrams_asterix_gaulois} prï¿½sente un extrait des noms utilisï¿½s dans la bande dessinï¿½e \textit{Astï¿½rix le Gaulois} dans laquelle les suffixes $ix.$ et $us.$ sont couramment employï¿½s. Il est naturel d'envisager la probabilitï¿½ de ces triplets -~deux lettres plus la fin du mot~- sachant la lettre prï¿½cï¿½dente. Il reste ï¿½ estimer des probabilitï¿½s comme $\pr{ u \sac t}$ et $ \pr{ us. \sac t }$. 
 
-		\begin{table}[ht]
-		$$\begin{tabular}{|l|l|l|l|} \hline
-			Astérix 					& Obélix 						& Panoramix 					& Abraracourcix 		\\
-			Assurancetourix 	& Agécanonix				& Tragicomix					& Cétautomatix			\\
-			Idéfix						& Plaintecontrix		& Ordralfabétix				& Pneumatix					\\
-			Plantaquatix			& Elèvedelix				& Analgésix						& Monosyllabix			\\
-			Uniprix						& Linguistix				& Arrierboutix				& Obélodalix				\\
-			Harenbaltix				& Choucroutgarnix		& Bellodalix					& Zérozérosix 			\\
-			Allégorix					& Boulimix					& Porquépix						& Aplusbégalix      \\
-			Théorix  					& Homéopatix				& Tournedix 					& Squinotix      		\\ \hline
-			%
-			Cumulonimbus 			& Pleindastus				& Fleurdelotus				& Langélus 					\\
-			Yenapus						& Roideprus					& Fanfrelus						& Faipalgugus				\\
-			Détritus					& Diplodocus				& Garovirus						& Cubitus 					\\
-			Diplodocus				& Infarctus					& Suelburnus					& Saugrenus					\\
-			Volfgangamadéus		& Soutienmordicus		& Épinedecactus				& Cétinconsensus		\\ \hline
-		\end{tabular}$$
-		\caption{ Prénoms gaulois et romains extraits de la bande dessinée 
-							\textit{Astérix le Gaulois}. Pour cet extrait, $\pr{ ix. \sac t} = \frac{3}{10}$, 
-							$\pr{ us. \sac t} = \frac{2}{10}$.}
-		\label{ngrams_asterix_gaulois}
-		\end{table}
-						
-\indexfr{alphabet étendu}
+        \begin{table}[ht]
+        $$\begin{tabular}{|l|l|l|l|} \hline
+            Astï¿½rix                     & Obï¿½lix                         & Panoramix                     & Abraracourcix         \\
+            Assurancetourix     & Agï¿½canonix                & Tragicomix                    & Cï¿½tautomatix            \\
+            Idï¿½fix                        & Plaintecontrix        & Ordralfabï¿½tix                & Pneumatix                    \\
+            Plantaquatix            & Elï¿½vedelix                & Analgï¿½six                        & Monosyllabix            \\
+            Uniprix                        & Linguistix                & Arrierboutix                & Obï¿½lodalix                \\
+            Harenbaltix                & Choucroutgarnix        & Bellodalix                    & Zï¿½rozï¿½rosix             \\
+            Allï¿½gorix                    & Boulimix                    & Porquï¿½pix                        & Aplusbï¿½galix      \\
+            Thï¿½orix                      & Homï¿½opatix                & Tournedix                     & Squinotix              \\ \hline
+            %
+            Cumulonimbus             & Pleindastus                & Fleurdelotus                & Langï¿½lus                     \\
+            Yenapus                        & Roideprus                    & Fanfrelus                        & Faipalgugus                \\
+            Dï¿½tritus                    & Diplodocus                & Garovirus                        & Cubitus                     \\
+            Diplodocus                & Infarctus                    & Suelburnus                    & Saugrenus                    \\
+            Volfgangamadï¿½us        & Soutienmordicus        & ï¿½pinedecactus                & Cï¿½tinconsensus        \\ \hline
+        \end{tabular}$$
+        \caption{ Prï¿½noms gaulois et romains extraits de la bande dessinï¿½e 
+                            \textit{Astï¿½rix le Gaulois}. Pour cet extrait, $\pr{ ix. \sac t} = \frac{3}{10}$, 
+                            $\pr{ us. \sac t} = \frac{2}{10}$.}
+        \label{ngrams_asterix_gaulois}
+        \end{table}
+                        
+\indexfr{alphabet ï¿½tendu}
 \indexfr{relation d'ordre partiel}
 
-Pour ce faire, on définit un alphabet étendu $A = \vecteur{s_1}{s_N}$ incluant tous les groupes de lettres dont on veut estimer les transitions. On définit également $s + t$ comme étant la concaténation de deux sympboles de l'alphabet, par exemple~: $t + us = tus$. Pour un mot donné, on désigne par $E_A\pa{m}$ toutes les manières possibles d'écrire le mot $m$ en utilisant les symboles inclus dans~$A$. On dispose d'une base de mots $\vecteur{m_1}{m_K}$. Les probabilités de transitions sont alors définies par~:
+Pour ce faire, on dï¿½finit un alphabet ï¿½tendu $A = \vecteur{s_1}{s_N}$ incluant tous les groupes de lettres dont on veut estimer les transitions. On dï¿½finit ï¿½galement $s + t$ comme ï¿½tant la concatï¿½nation de deux sympboles de l'alphabet, par exemple~: $t + us = tus$. Pour un mot donnï¿½, on dï¿½signe par $E_A\pa{m}$ toutes les maniï¿½res possibles d'ï¿½crire le mot $m$ en utilisant les symboles inclus dans~$A$. On dispose d'une base de mots $\vecteur{m_1}{m_K}$. Les probabilitï¿½s de transitions sont alors dï¿½finies par~:
 
-		\begin{eqnarray}
-		N						&=& \summy{k=1}{K} \card{ E_A\pa{m_k}} \nonumber \\
-		\pr{ s }		&=&	\frac{1}{N} \;  \summy{k=1}{K} \; 	\cro{ \summyone{ \vecteur{s_1}{s_n} \in E_A\pa{m_k} } \;  
-																					\indicatrice{s_1 = s }} \\
-		\pr{ t \sac s }		&=&	\frac{   \summy{k=1}{K} \; 	\cro{ \summyone{ \vecteur{s_1}{s_n} \in E_A\pa{m_k} } \;  
-																						\summy{i = 2}{n} \indicatrice{s_{i-1} = s \text{ et } s_i = t  }
-																						}}
-															 {
-															      \summy{k=1}{K} \; 	\cro{ \summyone{ \vecteur{s_1}{s_n} \in E_A\pa{m_k} } \;  
-																						\summy{i = 2}{n} \indicatrice{s_{i-1} = s }
-																						}
-															 }
-		\end{eqnarray}
+        \begin{eqnarray}
+        N                        &=& \summy{k=1}{K} \card{ E_A\pa{m_k}} \nonumber \\
+        \pr{ s }        &=&    \frac{1}{N} \;  \summy{k=1}{K} \;     \cro{ \summyone{ \vecteur{s_1}{s_n} \in E_A\pa{m_k} } \;  
+                                                                                    \indicatrice{s_1 = s }} \\
+        \pr{ t \sac s }        &=&    \frac{   \summy{k=1}{K} \;     \cro{ \summyone{ \vecteur{s_1}{s_n} \in E_A\pa{m_k} } \;  
+                                                                                        \summy{i = 2}{n} \indicatrice{s_{i-1} = s \text{ et } s_i = t  }
+                                                                                        }}
+                                                             {
+                                                                  \summy{k=1}{K} \;     \cro{ \summyone{ \vecteur{s_1}{s_n} \in E_A\pa{m_k} } \;  
+                                                                                        \summy{i = 2}{n} \indicatrice{s_{i-1} = s }
+                                                                                        }
+                                                             }
+        \end{eqnarray}
 
-Cet ensemble n'est pas forcément réduit à un seul élément (voir table~\ref{ngrams_boa}). Avec ce formalisme, il est maintenant possible d'exprimer la probabilité d'un mot $m$ comme étant~:
+Cet ensemble n'est pas forcï¿½ment rï¿½duit ï¿½ un seul ï¿½lï¿½ment (voir table~\ref{ngrams_boa}). Avec ce formalisme, il est maintenant possible d'exprimer la probabilitï¿½ d'un mot $m$ comme ï¿½tant~:
 
-		\begin{eqnarray}
-		\pr{ m } = \summyone{ \vecteur{s_1}{s_n}  \in E_A\pa{m} } \;  \pr{ s_1} \, \prody{i = 2}{n} \, \pr{ s_i \sac s_{i-1} }
-		\end{eqnarray}
+        \begin{eqnarray}
+        \pr{ m } = \summyone{ \vecteur{s_1}{s_n}  \in E_A\pa{m} } \;  \pr{ s_1} \, \prody{i = 2}{n} \, \pr{ s_i \sac s_{i-1} }
+        \end{eqnarray}
 
 
-		\begin{table}[ht]
-		$$\begin{tabular}{|l|l|} \hline
-		alphabet 		& B - BO - O - OA - A 	\\  \hline
-		mot			 		& BOA 			  		 	\\ \hline
-		écriture 1	& B - OA						\\ 
-		écriture 2	& BO - A						\\ 
-		écriture 3	& B - O - A					\\ \hline
-		\end{tabular}$$
-		\caption{ 	Différentes manières d'écrire le mot "BOA". }
-		\label{ngrams_boa}
-		\end{table}
+        \begin{table}[ht]
+        $$\begin{tabular}{|l|l|} \hline
+        alphabet         & B - BO - O - OA - A     \\  \hline
+        mot                     & BOA                            \\ \hline
+        ï¿½criture 1    & B - OA                        \\ 
+        ï¿½criture 2    & BO - A                        \\ 
+        ï¿½criture 3    & B - O - A                    \\ \hline
+        \end{tabular}$$
+        \caption{     Diffï¿½rentes maniï¿½res d'ï¿½crire le mot "BOA". }
+        \label{ngrams_boa}
+        \end{table}
 
-\indexfrr{segmentation}{graphème}
-\indexfrr{graphème}{segmentation}
+\indexfrr{segmentation}{graphï¿½me}
+\indexfrr{graphï¿½me}{segmentation}
 
-Cet outil permet d'estimer des probabilités de transitions entre des modèles de Markoc cachées modélisant des groupes de lettres\seeannex{hmm_seq_modele_mot}{groupes de lettres} présentés au paragraphes~\ref{hmm_bi_lettre} (page~\pageref{hmm_bi_lettre}). L'ensemble $E_A\pa{m}$ n'est ici pas précisé et est supposé être l'ensemble des écritures possibles et admises par l'aphabet $A$. Cependant, pour la reconnaissance de l'écriture, toutes les écritures ne sont pas équiprobables puisqu'une écriture est définie comme étant le résultat de la segmentation en graphèmes dont les erreurs (voir figure~\ref{image_grapheme_erreur}, page~\pageref{image_grapheme_erreur}) déterminent l'ensemble $E_A\pa{m}$.
+Cet outil permet d'estimer des probabilitï¿½s de transitions entre des modï¿½les de Markoc cachï¿½es modï¿½lisant des groupes de lettres\seeannex{hmm_seq_modele_mot}{groupes de lettres} prï¿½sentï¿½s au paragraphes~\ref{hmm_bi_lettre} (page~\pageref{hmm_bi_lettre}). L'ensemble $E_A\pa{m}$ n'est ici pas prï¿½cisï¿½ et est supposï¿½ ï¿½tre l'ensemble des ï¿½critures possibles et admises par l'aphabet $A$. Cependant, pour la reconnaissance de l'ï¿½criture, toutes les ï¿½critures ne sont pas ï¿½quiprobables puisqu'une ï¿½criture est dï¿½finie comme ï¿½tant le rï¿½sultat de la segmentation en graphï¿½mes dont les erreurs (voir figure~\ref{image_grapheme_erreur}, page~\pageref{image_grapheme_erreur}) dï¿½terminent l'ensemble $E_A\pa{m}$.
 
 
 
@@ -386,17 +386,17 @@ Cet outil permet d'estimer des probabilités de transitions entre des modèles de 
 \indexfrr{lissage}{n-grammes}
 \indexfrr{n-grammes}{lissage}
 
-L'article \citeindex{Béchet2004} propose une méthode permettant de lisser des probabilités de transitions entre mots et d'obtenir par exemple des probabilités non nulles de transitions entre couples de caractères non représentés dans l'ensemble d'estimation. A partir des nombres de transitions $c_{ij}$ d'un contexte $h_i$ (un ou plusieurs mots) vers un mot $w_j$, les auteurs construisent un espace vectoriel $E_C$ de représentation des contextes. L'objectif est de construire des compteurs de transitions augmentés $a_{ij}$ prenant en compte non seulement les transitions du contexte $h_i$ vers le mot $w_j$ mais aussi les transitions des contextes proches de $h_i$ vers un mot proche de $w_j$, la proximité étant mesurée dans l'espace $E_C$ par une distance. L'article montre empiriquement que les performances dans une tâche de reconnaissance sont d'autant plus accrues par un tel lissage que la taille du vocabulaire est grande.
+L'article \citeindex{Bï¿½chet2004} propose une mï¿½thode permettant de lisser des probabilitï¿½s de transitions entre mots et d'obtenir par exemple des probabilitï¿½s non nulles de transitions entre couples de caractï¿½res non reprï¿½sentï¿½s dans l'ensemble d'estimation. A partir des nombres de transitions $c_{ij}$ d'un contexte $h_i$ (un ou plusieurs mots) vers un mot $w_j$, les auteurs construisent un espace vectoriel $E_C$ de reprï¿½sentation des contextes. L'objectif est de construire des compteurs de transitions augmentï¿½s $a_{ij}$ prenant en compte non seulement les transitions du contexte $h_i$ vers le mot $w_j$ mais aussi les transitions des contextes proches de $h_i$ vers un mot proche de $w_j$, la proximitï¿½ ï¿½tant mesurï¿½e dans l'espace $E_C$ par une distance. L'article montre empiriquement que les performances dans une tï¿½che de reconnaissance sont d'autant plus accrues par un tel lissage que la taille du vocabulaire est grande.
 
 
 
 
 
 \firstpassagedo{
-	\begin{thebibliography}{99}
-	\input{ngrams_biblio.tex}
-	\end{thebibliography}
-	\input{../xthese/nb_citations.tex}
+    \begin{thebibliography}{99}
+    \input{ngrams_biblio.tex}
+    \end{thebibliography}
+    \input{../xthese/nb_citations.tex}
 }
 
 

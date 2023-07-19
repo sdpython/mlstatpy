@@ -151,9 +151,9 @@ Ce paragraphe a pour objectif de démontrer que la
         \forall \pa{x,y} \in \pa{\mathcal{C}'}^2, \; c\pa{x,y} \text{ est le coût } \left\{
         \begin{array}{ll}
         \text { d'une comparaison}  & \text{si } \pa{x,y} \in \pa{\mathcal{C}}^2\\
-        \text { d'une insertion}		& \text{si } \pa{x,y} \in \pa{\mathcal{C}} \times \acc{.}\\
-        \text { d'une suppression} 	& \text{si } \pa{x,y} \in \acc {.} \times \pa{\mathcal{C}} \\
-        0 													& \text{si } \pa{x,y} = \pa{\acc{.},\acc{.}}
+        \text { d'une insertion}    & \text{si } \pa{x,y} \in \pa{\mathcal{C}} \times \acc{.}\\
+        \text { d'une suppression}  & \text{si } \pa{x,y} \in \acc {.} \times \pa{\mathcal{C}} \\
+        0                           & \text{si } \pa{x,y} = \pa{\acc{.},\acc{.}}
         \end{array}
         \right.
         \end{eqnarray*}
@@ -366,33 +366,33 @@ d'exprimer cette distance d'une autre manière afin de résoudre ce problème
     :tag: Définition
     :title: distance d'édition tronquée
     :label: definition_edit_dist_tronc
-		
+        
     Soient deux mots :math:`\pa{m_1,m_2}`, on définit la suite :
 
     .. math::
-		
+        
         \left( d_{i,j}^{m_{1},m_{2}}\right) _{\substack{0\leqslant
         i\leqslant n_{1}\\0\leqslant j\leqslant n_{2}}}\left( =\left(d_{i,j}\right) _{\substack{0\leqslant i\leqslant
         n_{1}\\0\leqslant
         j\leqslant n_{2}}}\text{ pour ne pas alourdir les notations}\right)
-		
+        
     Par :
 
     .. math::
-		
+        
         \left\{
         \begin{array}[c]{l}%
         d_{0,0}=0\\
         d_{i,j}=\min\left\{
         \begin{array}{lll}
-        d_{i-1,j-1}	&	+	& \text{comparaison}	\left(  m_1^i,m_2^j\right), \\
-        d_{i,j-1}		&	+	& \text{insertion}		\left(  m_2^j\right), \\
-        d_{i-1,j}		&	+	& \text{suppression}	\left(  m_1^i\right)
+        d_{i-1,j-1}    &    +    & \text{comparaison}    \left(  m_1^i,m_2^j\right), \\
+        d_{i,j-1}        &    +    & \text{insertion}        \left(  m_2^j\right), \\
+        d_{i-1,j}        &    +    & \text{suppression}    \left(  m_1^i\right)
         \end{array}
         \right\}%
         \end{array}
         \right.
-		
+        
 
 Cette suite tronquée permet d'obtenir le résultat de la propriété suivante :
 
@@ -424,11 +424,11 @@ Alors :
         \min\left\{
                 \begin{array}{lll}%
                 d\left(  m_{1}\left(  i-1\right)  ,m_{2}\left(  j-1\right)  \right)
-                		&	+	& \text{comparaison}\left(  m_{1,i},m_{2,j}\right), \\
+                        &    +    & \text{comparaison}\left(  m_{1,i},m_{2,j}\right), \\
                 d\left(  m_{1}\left(  i\right)  ,m_{2}\left(  j-1\right)  \right)
-                		&	+	& \text{insertion}\left(  m_{2,j}\right), \\
+                        &    +    & \text{insertion}\left(  m_{2,j}\right), \\
                 d\left(  m_{1}\left(  i-1\right)  ,m_{2}\left(  j\right)  \right)
-                		&	+	& \text{suppression}\left(  m_{1,i}\right)
+                        &    +    & \text{suppression}\left(  m_{1,i}\right)
                 \end{array}
             \right\}
     \end{eqnarray*}
@@ -512,7 +512,7 @@ aux permutations de lettres :
     :tag: Définition
     :title: distance d'édition tronquée étendue
     :label: definition_edit_dist_tronc_2
-		
+        
     Soit deux mots :math:`\pa{m_1,m_2}`, on définit la suite :
 
     .. math::
@@ -525,7 +525,7 @@ aux permutations de lettres :
     par :
 
     .. math::
-		
+        
         \left\{
         \begin{array}[c]{l}%
         d_{0,0}=0\\
@@ -564,7 +564,7 @@ possible de calculer une erreur s'exprimant sous la forme :
     \begin{eqnarray*}
     E = \sum_{i=1}^{N} \; \pa{d\pa{X_i,Y_i} - c_i}^2 =\sum_{i=1}^{N} \;
                 \pa{ \sum_{k=1}^{n} \alpha_{ik}\pa{\Theta} \, \theta_k - c_i}^2 \\
-    \end{eqnarray*}			
+    \end{eqnarray*}            
 
 Les coefficients :math:`\alpha_{ik}\pa{\Theta}` dépendent des paramètres :math:`\Theta`
 car la distance d'édition correspond au coût de la transformation de moindre coût
@@ -582,7 +582,7 @@ contrainte, ces coûts sont modélisés de la façon suivante :
 
     \begin{eqnarray*}
     E = \sum_{i=1}^{N} \; \pa{ \sum_{k=1}^{n} \, \alpha_{ik}\pa{\Omega} \, \frac{1}{1 + e^{-\omega_k}} - c_i}^2
-    \end{eqnarray*}			
+    \end{eqnarray*}            
 
 Les fonctions :math:`\alpha_{ik}\pa{\Omega}` ne sont pas dérivable par rapport
 :math:`\Omega` mais il est possible d'effectuer une optimisation sans contrainte

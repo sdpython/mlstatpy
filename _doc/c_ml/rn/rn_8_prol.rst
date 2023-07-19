@@ -30,7 +30,7 @@ de telle sorte que :
     B_a \neq \emptyset \text{ et } B_t \neq \emptyset \\
     B_a \cup B_t = B \text{ et } B_a \cap B_t = \emptyset \\
     \frac{\#{B_a}}{\#{B_a \cup B_t}} = p \in ]0,1[
-    			\text{, en règle générale, } p \in \cro{\frac{1}{2},\frac{3}{4}}
+                \text{, en règle générale, } p \in \cro{\frac{1}{2},\frac{3}{4}}
     \end{array}
 
 Ce découpage est valide si tous les exemples de la base :math:`B`
@@ -141,7 +141,7 @@ ne contient que des neurones définie par la définition précédente.
                                                                     \partialfrac{y_{c+1,l}}{z_{c,i}}
                                                                     \partialfrac{z_{c,i}}{y_{c,i}}  \\
          &=& \cro{ \sum_{l=1}^{C_{c+1}}
-         						\partialfrac{e}{y_{c+1,l}}
+                                 \partialfrac{e}{y_{c+1,l}}
                     \pa{ 2 w_{c+1,l,p+i} \pa{ w_{c+1,l,i} - z_{c,i} } } }
                     \partialfrac{z_{c,i}}{y_{c,i}}
     \end{eqnarray*}
@@ -187,11 +187,11 @@ sont les potentiels des neurones de la première couche, on en déduit que, dans
 
 .. math::
 
-		\dfrac{\partial e\left(  W,X_{k},Y_{k}\right)  }{\partial z_{0,i}} =
-			\underset{j=1}{\overset{C_{1}}{\sum}}\dfrac{\partial e\left(  W,X_{k}
-		,Y_{k}\right)  }{\partial y_{1,j}}\dfrac{\partial y_{1,j}}{\partial z_{0,i}
-		 }=\underset{j=1}{\overset{C_{1}}{\sum}}\dfrac{\partial e\left( W,X_{k}
-		,Y_{k}\right)  }{\partial y_{1,j}}w_{1,j,i}
+        \dfrac{\partial e\left(  W,X_{k},Y_{k}\right)  }{\partial z_{0,i}} =
+            \underset{j=1}{\overset{C_{1}}{\sum}}\dfrac{\partial e\left(  W,X_{k}
+        ,Y_{k}\right)  }{\partial y_{1,j}}\dfrac{\partial y_{1,j}}{\partial z_{0,i}
+         }=\underset{j=1}{\overset{C_{1}}{\sum}}\dfrac{\partial e\left( W,X_{k}
+        ,Y_{k}\right)  }{\partial y_{1,j}}w_{1,j,i}
 
 Comme le potentiel d'un neurone distance n'est pas linéaire par
 rapport aux entrées :math:`\left( y=\overset{N} {\underset{i=1}{\sum}}\left( w_{i}-z_{0,i}\right)  ^{2}+b\right)`,
@@ -199,11 +199,11 @@ la formule devient dans ce cas :
 
 .. math::
 
-		\dfrac{\partial e\left(  W,X_{k},Y_{k}\right)  }{\partial z_{0,i}} =
-				\underset{j=1}{\overset{C_{1}}{\sum}}\dfrac{\partial e\left(  W,X_{k}
-		,Y_{k}\right)  }{\partial y_{1,j}}\dfrac{\partial y_{1,j}}{\partial z_{0,i}
-			 }=-2\underset{j=1}{\overset{C_{1}}{\sum}}\dfrac{\partial e\left(
-		W,X_{k},Y_{k}\right)  }{\partial y_{1,j}}\left(  w_{1,j,i}-z_{0,i}\right)
+        \dfrac{\partial e\left(  W,X_{k},Y_{k}\right)  }{\partial z_{0,i}} =
+                \underset{j=1}{\overset{C_{1}}{\sum}}\dfrac{\partial e\left(  W,X_{k}
+        ,Y_{k}\right)  }{\partial y_{1,j}}\dfrac{\partial y_{1,j}}{\partial z_{0,i}
+             }=-2\underset{j=1}{\overset{C_{1}}{\sum}}\dfrac{\partial e\left(
+        W,X_{k},Y_{k}\right)  }{\partial y_{1,j}}\left(  w_{1,j,i}-z_{0,i}\right)
 
 .. _rn_decay:
 
@@ -299,7 +299,7 @@ On note :math:`\widehat{W}` les poids trouvés par apprentissage et
 
     \begin{eqnarray*}
     \text{la suite } \widehat{\varepsilon_{k}} &=&   f\left(  \widehat{W} ,X_{k}\right)  -Y_{k}, \;
-    							 \widehat{\sigma}_{N}^{2}=\dfrac{1}{N}\underset
+                                 \widehat{\sigma}_{N}^{2}=\dfrac{1}{N}\underset
                                     {k=1}{\overset{N}{\sum}}\widehat{\varepsilon_{k}}^{2} \\
     \text{la matrice }
     \widehat{\Sigma_{N}}      &=&   \dfrac{1}{N}\left[  \nabla_{\widehat{W}%
@@ -354,7 +354,7 @@ Ce théorème mène au corollaire suivant :
 .. mathdef::
     :title: nullité d'un coefficient
     :tag: Corollaire
-		
+        
     Les notations utilisées sont celles du théorème sur :ref:`loi asymptotique des coefficients <theoreme_loi_asym>`.
     Soit :math:`w_k` un poids du réseau de neurones
     d'indice quelconque :math:`k`. Sa valeur estimée est :math:`\widehat{w_k}`,
@@ -444,9 +444,9 @@ régression grâce à l'algorithme suivant.
     à un réseau de neurones plus riche que le modèle choisi
     dans l'étape d'initilisation. Le modèle sélectionné est noté :math:`g`.
 
-	*Validation*
+    *Validation*
 
-	Si :math:`\norm{f-g} \approx 0`,
+    Si :math:`\norm{f-g} \approx 0`,
     l'algorithme de
     :ref:`sélection <rn_algorithme_selection_connexion_1>`
     est validé.

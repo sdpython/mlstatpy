@@ -145,7 +145,7 @@ il faut inclure des polynômes de degré plus élevé que ceux déjà  employés
     compact muni de la norme
     :math:`\left\| f\right\| =\underset{x\in C}{\sup}\left\|  f\left( x\right)  \right\|`
     Alors :math:`E_{p}^{q}` est dense dans :math:`F_{p}^{q}`.
-			
+            
 
 La démonstration de ce théorème nécessite deux lemmes.
 Ceux-ci utilisent la définition usuelle du produit scalaire
@@ -184,8 +184,8 @@ sur :math:`\R^p`.
                     -\indicatrice{x\in C}\right| \leqslant\varepsilon
         \end{array}
         \end{array}
-		
-		
+        
+        
 **Démonstration du corollaire**
 
 *Partie 1*
@@ -552,11 +552,11 @@ L'équation :eq:`rn_coro_eq_1` est équivalente à l'équation matricielle :
     &\Longleftrightarrow& \left\{ \begin{array}{ccllllllll}
                                     \lambda_1  m_{11} &+& \lambda_2 & m_{12} &+& \ldots &+& \lambda_N & m_{1N} & = 0 \\
                                     0                 &+& \lambda_2 & \pa{ m_{22} m_{11} - m_{12} m_{21} }
-                                    									&+& \ldots &+& \lambda_N & \pa{ m_{2N} m_{11} - m_{1N} m_{21} }
-                                    									 & = 0 \\
+                                                                        &+& \ldots &+& \lambda_N & \pa{ m_{2N} m_{11} - m_{1N} m_{21} }
+                                                                         & = 0 \\
                                     \ldots \\
                                     0                 &+& \lambda_2 & \pa{ m_{N2} m_{11} - m_{12} m_{N1} } &+& \ldots
-                                    									&+& \lambda_N & \pa{ m_{NN} m_{11} - m_{1N} m_{N1} } & = 0
+                                                                        &+& \lambda_N & \pa{ m_{NN} m_{11} - m_{1N} m_{N1} } & = 0
                                     \end{array}
                                     \right.
     \end{array}
@@ -611,7 +611,7 @@ On vérifie que :
 
 .. math::
 
-		\underset{\alpha \longrightarrow +\infty} {\lim } \Delta\pa{\alpha} = V_*
+        \underset{\alpha \longrightarrow +\infty} {\lim } \Delta\pa{\alpha} = V_*
 
 On obtient, toujours pour :eq:`rn_coro_eq_1` :
 
@@ -621,16 +621,16 @@ On obtient, toujours pour :eq:`rn_coro_eq_1` :
 
     \begin{eqnarray}
                          &\Longleftrightarrow& \left\{ \begin{array}{cclc}
-                                    \lambda_1  m_{11}\pa{\alpha}	&+&
-                                    							\lambda_2  m_{12}\pa{\alpha} + \ldots + \lambda_N  m_{1N}\pa{\alpha}  &= 0 \\
+                                    \lambda_1  m_{11}\pa{\alpha}    &+&
+                                                                \lambda_2  m_{12}\pa{\alpha} + \ldots + \lambda_N  m_{1N}\pa{\alpha}  &= 0 \\
                                     0                &+&   \cro{m_{11}\pa{\alpha} M_* -
-                                    													\pa{ L_* + \pa{ \Delta_*\pa{\alpha} - L_* } } }
-                                    												\Lambda_* & = 0
+                                                                                        \pa{ L_* + \pa{ \Delta_*\pa{\alpha} - L_* } } }
+                                                                                    \Lambda_* & = 0
                                     \end{array}
                                     \right. \\ \nonumber\\
                          &\Longleftrightarrow& \left\{ \begin{array}{cclc}
-                                    \lambda_1  m_{11}\pa{\alpha}	&+&
-                                    							\lambda_2  m_{12}\pa{\alpha} + \ldots + \lambda_N  m_{1N}\pa{\alpha}  &= 0 \\
+                                    \lambda_1  m_{11}\pa{\alpha}    &+&
+                                                                \lambda_2  m_{12}\pa{\alpha} + \ldots + \lambda_N  m_{1N}\pa{\alpha}  &= 0 \\
                                     0                &+&   \pa{m_{11}\pa{\alpha} M_* -    L_* }      \Lambda_*
                                                          +  \pa{ \Delta_*\pa{\alpha} - L_* }     \Lambda_* &  = 0
                                     \end{array}
@@ -643,7 +643,7 @@ On étudie la limite lorsque :math:`\alpha \longrightarrow +\infty` :
 
     \begin{array}{crcl}
                         & \pa{ \Delta_*\pa{\alpha} - L_* }   &
-                        	\underset{ \alpha \rightarrow +\infty}{ \longrightarrow} & 0                 \\
+                            \underset{ \alpha \rightarrow +\infty}{ \longrightarrow} & 0                 \\
     \Longrightarrow     & \pa{m_{11}\pa{\alpha} M_* -   L_* }      \Lambda_* &
                             \underset{ \alpha \rightarrow +\infty}{ \longrightarrow} &  0\\
     \Longrightarrow     & \pa{M_* -  L_* }      \Lambda_* &   = &  0\\
