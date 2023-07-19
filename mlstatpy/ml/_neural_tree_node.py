@@ -94,6 +94,7 @@ class NeuralTreeNode(_TrainingAPI):
         About the sigmoid:
 
         .. math::
+            :align: left
 
             \\begin{array}{rcl}
             f(x) &=& \\frac{1}{1 + e^{-x}} \\\\
