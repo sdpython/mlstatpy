@@ -47,21 +47,21 @@ dans l'intervalle *[0, 255]*, 0 à gauche, 255 à droite.
 .. math::
 
     \begin{array}{rcl}
-    q_1(z, \lambda, x) &=& c_{0}^{255}\pa{\intf_{i8}{\frac{x}{\lambda}} + z} \text{ quantization}\\
+    q_1(z, \lambda, x) &=& c_{0}^{255}\pa{\intf{\frac{x}{\lambda}}_{i8} + z} \text{ quantization}\\
     q_2(z, \lambda, i) &=& \lambda(i - z) \text{ déquantization} \\
     q(z, \lambda, x) &=& q_2(z, \lambda, q_1(z, \lambda, x)) \\
-    &=& \lambda\pa{c_{0}^{255}\pa{\intf_{i8}{\frac{x}{\lambda}} + z} - z} \\
-    &=& \lambda\intf_{i8,z}{\frac{x}{\lambda}}
+    &=& \lambda\pa{c_{0}^{255}\pa{\intf{\frac{x}{\lambda}}_{i8} + z} - z} \\
+    &=& \lambda\intf{\frac{x}{\lambda}}_{i8,z}
     \end{array}
 
-La fonction :math:`\intf_{i8,z}{x}` est la partie entière asociée à la fonction
+La fonction :math:`\intf{x}_{i8,z}` est la partie entière asociée à la fonction
 :math:`c_{0}^{255}(i)`.
 
 .. math::
 
-    \norm{B - q(z,\lambda,B)}^2 = \sum_{ij} \pa{b_{ij} - \lambda\intf_{i8,z}{\frac{x}{\lambda}}}^2
+    \norm{B - q(z,\lambda,B)}^2 = \sum_{ij} \pa{b_{ij} - \lambda\intf{\frac{x}{\lambda}}_{i8,z}}^2
 
-Le problème est la fonction :math:`\intf_{i8,z}{.}` qui n'est pas dérivable.
+Le problème est la fonction :math:`\intf{.}_{i8,z}` qui n'est pas dérivable.
 C'est un problème d'optimisation discrète. Le paramètre :math:`\lambda`
 est appelé *scale* ou *échelle*. Il peut y en avoir un ou plusieurs
 mais dans ce cas, on considère les différentes parties de *B*
@@ -97,20 +97,60 @@ inférieur (ou le plus proche).
 
 .. math::
 
-    \norm{B - q(z,\lambda,B)}^2 = \sum_{ij} \pa{b_{ij} - \lambda\intf_{f8,z}{\frac{x}{\lambda}} }^2
+    \norm{B - q(z,\lambda,B)}^2 = \sum_{ij} \pa{b_{ij} - \lambda\intf{\frac{x}{\lambda}}_{f8,z} }^2
 
 Optimisation
 ============
 
 L'idée est de traiter la discrétisation sur un ensemble fini de valeurs,
-quel qu'il soit, des entiers ou des réels codés sur 8 bits. On note Cette
+quel qu'il soit, des entiers ou des réels codés sur 8 bits. On note cet
 ensemble :math:`(d_1, ..., d_n)`. On réécrit le problème d'optimisation :
 
 .. math::
 
     \begin{array}{rcl}
-    \norm{B - q(z,\lambda,B)}^2 &=& \sum_{ij} \pa{b_{ij} - \lambda\intf_{f8,z}{\frac{x}{\lambda}} }^2 \\
-    &=& \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda\intf_{f8}{\frac{x}{\lambda}} }^2
-    \indicatrice{\intf_{f8}{\frac{x}{\lambda}} = d_k}
+    \norm{B - q(z,\lambda,B)}^2 &=& \sum_{ij} \pa{b_{ij} - \lambda\intf{\frac{x}{\lambda}}_{f8,z} }^2 \\
+    &=& \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda\intf{\frac{x}{\lambda}}_{f8} }^2
+    \indicatrice{\intf{\frac{x}{\lambda}}_{f8} = d_k} \\
+    &=& \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k }^2
+    \indicatrice{\intf{\frac{x}{\lambda}}_{f8} = d_k} \\
     \end{array}
 
+On note :math:`K(u)=\frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}u^2}` le noyau gaussien.
+
+.. math::
+
+    \begin{array}{rcl}
+    \norm{B - q(z,\lambda,B)}^2 &=& \lim_{h\to 0} \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k }^2
+    \frac{1}{h} K\pa{\frac{b_{ij} - \lambda d_k}{h}}\indicatrice{\intf{\frac{x}{\lambda}}_{f8} = d_k}
+    \end{array}
+
+Cette notation ne tient pas compte du décalage *z* qu'on peut ajouter comme suit :
+
+.. math::
+
+    \begin{array}{rcl}
+    \norm{B - q(z,\lambda,B)}^2 &=& \lim_{h\to 0} \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k - z }^2
+    \frac{1}{h} K\pa{\frac{b_{ij} - \lambda d_k - z}{h}}\indicatrice{\intf{\frac{x}{\lambda}}_{?,z} = d_k}
+    \end{array}
+
+Le problème est beaucoup plus simple à résoudre si on enlève l'indicatrice
+et la fonction devient dérivable. L'idée est de regarder l'évolution des valeurs trouvées
+pour :math:`\lambda` et *z* en faisant tendre *h* vers 0.
+On commence par le plus simple, le cas float 8 pour lequel on impose :math:`z=0`.
+
+.. math::
+
+    f(B,\lambda,h) = \frac{1}{h} \sum_{k=1}^{n} \sum_{ij} \pa{b_{ij} - \lambda d_k - z }^2
+    K\pa{\frac{b_{ij} - \lambda d_k - z}{h}}
+
+Si on suppose que les coefficients de *B* suivent une certaine loi de probabilité,
+ce calcul devient une somme d'espérence.
+
+.. math::
+
+    f(X,\lambda,h) = \frac{1}{h} \sum_{k=1}^{n} \esp{X - \lambda d_k - z }^2
+    K\pa{\frac{X - \lambda d_k - z}{h}}
+
+Résolution
+==========

@@ -17,9 +17,9 @@ jobs:
         print_all: false
         timeout: 2
         retry_count# : 2
-        # exclude_urls: https://github, ...
-        # exclude_patterns: https://github.com/...
-        force_pass : true
+        # exclude_urls: https://dumps.wikimedia.org/other/pageviews/%Y/%Y-%m/pageviews-%Y%m%d-%H0000.gz,https://dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz
+        exclude_patterns: https://dumps.wikimedia.org/
+        # force_pass : true
 
     - name: urls-checker-docs
       uses: urlstechie/urlchecker-action@master
@@ -29,6 +29,6 @@ jobs:
         print_all: false
         timeout: 2
         retry_count# : 2
-        # exclude_urls: https://github, ...
-        # exclude_patterns: https://github.com/...
-        force_pass : true
+        exclude_urls: https://hal.archives-ouvertes.fr/hal-00990252/document
+        exclude_patterns: https://www.data.gouv.fr/fr/datasets/r/e3d83ab3-dc52-4c99-abaf-8a38050cc68c
+        # force_pass : true

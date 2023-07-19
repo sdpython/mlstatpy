@@ -1,8 +1,4 @@
 
-.. image:: https://travis-ci.com/sdpython/mlstatpy.svg?branch=main
-    :target: https://app.travis-ci.com/github/sdpython/mlstatpy
-    :alt: Build status
-
 .. image:: https://ci.appveyor.com/api/projects/status/5env33qptorgshaq?svg=true
     :target: https://ci.appveyor.com/project/sdpython/mlstatpy
     :alt: Build Status Windows
@@ -23,6 +19,9 @@
 .. image:: http://img.shields.io/github/issues/sdpython/mlstatpy.png
     :alt: GitHub Issues
     :target: https://github.com/sdpython/mlstatpy/issues
+
+.. image:: https://codecov.io/gh/sdpython/mlstatpy/branch/master/graph/badge.svg?token=2gKZsIVL3e 
+    :target: https://codecov.io/gh/sdpython/mlstatpy
 
 .. _l-README:
 
@@ -45,4 +44,4 @@ algorithm, a graph edit distance, some helpers on Wikipedia data,
 an algorithm to convert decision trees into neural network.
 
 * `GitHub/mlstatpy <https://github.com/sdpython/mlstatpy/>`_
-* `documentation <http://www.xavierdupre.fr/app/mlstatpy/helpsphinx/index.html>`_
+* `documentation <https://sdpython.github.io/doc/mlstatpy/>`_

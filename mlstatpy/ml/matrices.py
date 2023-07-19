@@ -110,8 +110,8 @@ def linear_regression(X, y, algo=None):
     ``algo=None`` computes :math:`\\beta = (X'X)^{-1} X'y`.
     ``algo='qr'`` uses a `QR <https://docs.scipy.org/doc/numpy/reference
     /generated/numpy.linalg.qr.html>`_ decomposition and calls function
-    `dtrtri <https://docs.scipy.org/doc/scipy/reference/generated/scipy.
-    linalg.lapack.dtrtri.html>`_ to invert an upper triangular matrix.
+    `dtrtri <https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lapack.dtrtri.html>`_
+    to invert an upper triangular matrix.
     ``algo='gram'`` uses :func:`gram_schmidt
     <mlstatpy.ml.matrices.gram_schmidt>` and then computes
     the solution of the linear regression (see above for a link

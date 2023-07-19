@@ -620,8 +620,6 @@ courbes ROC obtenues pour chacune des classes prise séparément
 Exemple
 =======
 
-Voir `ROC <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx/antiseches/ml_basic/plot_regression.html#sphx-glr-antiseches-ml-basic-plot-roc-py>`_.
-
 .. [Agarwal2005] Generalization Bounds for the Area Under the ROC Curve (2005),
    Shivani Agarwal, Thore Graepel, Ralf Herbich, Sariel Har-Peled, Dan Roth
    *Journal of Machine Learning Research, volume 6, pages 393-425*

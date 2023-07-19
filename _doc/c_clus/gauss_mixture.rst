@@ -56,7 +56,7 @@ L'estimation d'une telle densité s'effectue par l'intermédiaire
 d'un algorithme de type `Expectation Maximization (EM) <https://fr.wikipedia.org/wiki/Algorithme_esp%C3%A9rance-maximisation>`_
 (voir [Dempster1977]_) ou de ses variantes
 `SEM <https://fr.wikipedia.org/wiki/Algorithme_esp%C3%A9rance-maximisation#Algorithme_SEM>`_,
-`SAEM <http://wiki.webpopix.org/index.php/The_SAEM_algorithm_for_estimating_population_parameters>`_, ...
+`SAEM <https://wiki.inria.fr/popix/The_SAEM_algorithm_for_estimating_population_parameters>`_, ...
 (voir [Celeux1985]_, [Celeux1985b]_).
 La sélection du nombre de lois dans le mélange reste un
 problème ouvert abordé par l'article [Biernacki2001]_.

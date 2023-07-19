@@ -12,7 +12,7 @@ ce qui est le cas des réseaux de neurones. Plusieurs variantes seront proposée
 regroupées sous le terme de descente de gradient.
 Quelques lectures :
 
-* `An overview of gradient descent optimization algorithms <http://sebastianruder.com/optimizing-gradient-descent/>`_
+* `An overview of gradient descent optimization algorithms <https://arxiv.org/abs/1609.04747>`_
 * `Implementing a Neural Network from Scratch in Python – An Introduction <http://www.wildml.com/2015/09/implementing-a-neural-network-from-scratch/>`_
 
 .. _optimisation_newton:

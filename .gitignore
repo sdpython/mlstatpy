@@ -12,6 +12,8 @@ build/*
 onnxruntime_profile*
 prof
 temp_*
+_doc/CHANGELOGS.rst
+_doc/LICENSE.txt
 _doc/auto_examples/*
 _doc/examples/_cache/*
 _doc/examples/onnxruntime_profile*

@@ -1,24 +1,9 @@
-name: Documentation
+name: Documentation and Code Coverage
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  schedule:
-    #        ┌───────────── minute (0 - 59)
-    #        │  ┌───────────── hour (0 - 23)
-    #        │  │ ┌───────────── day of the month (1 - 31)
-    #        │  │ │ ┌───────────── month (1 - 12 or JAN-DEC)
-    #        │  │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
-    #        │  │ │ │ │
-    #        │  │ │ │ │
-    #        │  │ │ │ │
-    #        *  * * * *
-    - cron: '30 1 * * 0'
+on: [push]
 
 jobs:
-  build_wheels:
+  run:
     name: Build documentation on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -41,11 +26,33 @@ jobs:
       - name: Install requirements
         run: python -m pip install -r requirements.txt
 
-      - name: Install
-        run: python setup.py install
-
       - name: Install requirements dev
         run: python -m pip install -r requirements-dev.txt
+
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements-dev.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+
+      - name: Generate coverage report
+        run: |
+          pip install pytest
+          pip install pytest-cov
+          export PYTHONPATH=.
+          pytest --cov=./mlstatpy/ --cov-report=xml --durations=10 --ignore-glob=**LONG*.py --ignore-glob=**notebook*.py
+          export PYTHONPATH=
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Install
+        run: python setup.py install
 
       - name: Copy license
         run: cp LICENSE* ./_doc

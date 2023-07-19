@@ -5,8 +5,7 @@
 import os
 import unittest
 import copy
-import warnings
-from pyquickhelper.pycode import get_temp_folder, is_travis_or_appveyor, ExtTestCase
+from pyquickhelper.pycode import get_temp_folder, ExtTestCase
 from mlstatpy.graph.graph_distance import GraphDistance
 from mlstatpy.graph.graphviz_helper import draw_graph_graphviz
 
@@ -74,14 +73,15 @@ class TestGraphDistance(ExtTestCase):
         outfile2 = os.path.join(temp, "unittest_GraphDistance4_sub2.png")
         outfilef = os.path.join(temp, "unittest_GraphDistance4_subf.png")
 
-        if is_travis_or_appveyor() == "travis":
-            warnings.warn("graphviz is not available")
-            return
-
         vertices, edges = graph1.draw_vertices_edges()
         self.assertNotEmpty(vertices)
         self.assertNotEmpty(edges)
-        draw_graph_graphviz(vertices, edges, outfile1)
+        try:
+            draw_graph_graphviz(vertices, edges, outfile1)
+        except FileNotFoundError as e:
+            if "No such file or directory: 'dot'" in str(e):
+                return
+            raise e
 
         vertices, edges = graph2.draw_vertices_edges()
         self.assertNotEmpty(vertices)

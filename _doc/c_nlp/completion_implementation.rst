@@ -18,8 +18,8 @@ les listes des mots et des complétions sont connues à l'avance.
 Notion de trie
 ++++++++++++++
 
-Une implémentation des tries est décrites dans deux notebooks :
-`Arbre et Trie <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx/notebooks/_gs1a_A_arbre_trie.html>`_.
+Une implémentation des tries est décrite dans ce notebook :
+`Arbre et Trie <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx/notebooks/td1a_cenonce_session8.html>`_.
 Les résultats de ce chapitre ont été produits avec le module :mod:`completion <mlstatpy.nlp.completion>`
 et le notebook :ref:`/notebooks/nlp/completion_trie.ipynb`. Le notebook
 :ref:`/notebooks/nlp/completion_profiling.ipynb` montre les résultats du profiling.

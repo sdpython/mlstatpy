@@ -4,7 +4,7 @@
 """
 import os
 import unittest
-from pyquickhelper.pycode import get_temp_folder, is_travis_or_appveyor
+from pyquickhelper.pycode import get_temp_folder
 from pyquickhelper.ipythonhelper import (
     execute_notebook_list,
     execute_notebook_list_finalize_ut,
@@ -40,10 +40,6 @@ class TestRunNotebooksDsGarden(unittest.TestCase):
             if "open_window_params" in cell:
                 return False
             if '<div style="position:absolute' in cell:
-                return False
-            if "run_dot" in cell and is_travis_or_appveyor() == "travis":
-                return False
-            if "completion.dot" in cell and is_travis_or_appveyor() == "travis":
                 return False
             return True
 
