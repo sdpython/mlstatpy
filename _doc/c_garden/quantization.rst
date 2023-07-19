@@ -149,7 +149,7 @@ ce calcul devient une somme d'espérence.
 
 .. math::
 
-    f(X,\lambda,h) = \frac{1}{h} \sum_{k=1}^{n} \esp{X - \lambda d_k - z }^2
+    f(X,\lambda,h) = \frac{1}{h} \sum_{k=1}^{n} \esp\pa{X - \lambda d_k - z }^2
     K\pa{\frac{X - \lambda d_k - z}{h}}
 
 Résolution
