@@ -17,7 +17,7 @@ et nécessitent de plus en plus de puissance de calcul. La
 la mémoire nécessaire pour stocker les coefficients et le
 temps de calcul avec les dernières cartes graphiques.
 La quantization est équivalent à une discrétisation.
-Voir aussi [Gholami2021] et quelques bout de codes
+Voir aussi [Gholami2021]_ et quelques bout de codes
 `quantization.py
 <https://github.com/apache/mxnet/blob/master/python/mxnet/contrib/quantization.py>`_.
 
