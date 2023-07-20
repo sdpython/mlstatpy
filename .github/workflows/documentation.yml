@@ -1,6 +1,12 @@
 name: Documentation and Code Coverage
 
-on: [push]
+on:
+  push:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
 
 jobs:
   run:

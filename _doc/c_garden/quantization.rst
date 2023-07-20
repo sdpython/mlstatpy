@@ -17,9 +17,9 @@ et nécessitent de plus en plus de puissance de calcul. La
 la mémoire nécessaire pour stocker les coefficients et le
 temps de calcul avec les dernières cartes graphiques.
 La quantization est équivalent à une discrétisation.
-Voir aussi :
-`A Survey of Quantization Methods for Efficient
-Neural Network Inference <https://arxiv.org/pdf/2103.13630.pdf>`_.
+Voir aussi [Gholami2021]_ et quelques bout de codes
+`quantization.py
+<https://github.com/apache/mxnet/blob/master/python/mxnet/contrib/quantization.py>`_.
 
 Les produits matriciels sont fréquents dans les réseaux de neurones où
 on multiple les entrées *X* d'une couche de neurones avec les coefficients
@@ -195,3 +195,12 @@ Notebooks
     :maxdepth: 1
 
     ../notebooks/dsgarden/quantization_f8
+
+Bibliographie
+=============
+
+.. [Gholami2021] Amir Gholami, Sehoon Kim, Zhen Dong, Zhewei Yao, Michael W. Mahoney, Kurt Keutzer,
+    University of California, Berkeley
+    `A Survey of Quantization Methods for Efficient
+    Neural Network Inference <https://arxiv.org/pdf/2103.13630.pdf>`_
+
