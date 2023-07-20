@@ -30,5 +30,5 @@ jobs:
         timeout: 2
         retry_count# : 2
         exclude_urls: https://hal.archives-ouvertes.fr/hal-00990252/document,https://github.com/onnx/models/raw/main/vision/classification/mobilenet/model/mobilenetv2-12.onnx
-        exclude_patterns: https://www.data.gouv.fr/fr/datasets/r/e3d83ab3-dc52-4c99-abaf-8a38050cc68c
+        exclude_patterns: https://www.data.gouv.fr/fr/datasets/r/e3d83ab3-dc52-4c99-abaf-8a38050cc68c,https://github.com/onnx/models/raw/main/vision/classification/mobilenet/model/mobilenetv2-12.onnx
         # force_pass : true
