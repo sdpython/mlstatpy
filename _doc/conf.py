@@ -75,6 +75,8 @@ latex_elements = {
     "title": project,
 }
 
+mathjax3_config = {"chtml": {"displayAlign": "left"}}
+
 intersphinx_mapping = {
     "onnx": ("https://onnx.ai/onnx/", None),
     "matplotlib": ("https://matplotlib.org/", None),

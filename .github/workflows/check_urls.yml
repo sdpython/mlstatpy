@@ -1,6 +1,8 @@
 name: Check URLs
 
-on: [push]
+on:
+  schedule:
+    - cron: '0 0 0 * *'
 
 jobs:
   build:
@@ -15,8 +17,8 @@ jobs:
         subfolder: mlstatpy
         file_types: .md,.py,.rst,.ipynb
         print_all: false
-        timeout: 2
-        retry_count# : 2
+        timeout: 5
+        retry_count# : 3
         # exclude_urls: https://dumps.wikimedia.org/other/pageviews/%Y/%Y-%m/pageviews-%Y%m%d-%H0000.gz,https://dumps.wikimedia.org/frwiki/latest/latest-all-titles-in-ns0.gz
         exclude_patterns: https://dumps.wikimedia.org/
         # force_pass : true
@@ -27,8 +29,8 @@ jobs:
         subfolder: _doc
         file_types: .md,.py,.rst,.ipynb
         print_all: false
-        timeout: 2
-        retry_count# : 2
-        exclude_urls: https://hal.archives-ouvertes.fr/hal-00990252/document
-        exclude_patterns: https://www.data.gouv.fr/fr/datasets/r/e3d83ab3-dc52-4c99-abaf-8a38050cc68c
+        timeout: 5
+        retry_count# : 3
+        exclude_urls: https://hal.archives-ouvertes.fr/hal-00990252/document,https://github.com/onnx/models/raw/main/vision/classification/mobilenet/model/mobilenetv2-12.onnx
+        exclude_patterns: https://www.data.gouv.fr/fr/datasets/r/e3d83ab3-dc52-4c99-abaf-8a38050cc68c,https://github.com/onnx/models/raw/main/vision/classification/mobilenet/model/mobilenetv2-12.onnx
         # force_pass : true

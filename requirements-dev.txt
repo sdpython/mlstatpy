@@ -1,5 +1,7 @@
 astroid
 autopep8
+black
+black-nb
 blockdiag
 coverage
 Cython
@@ -36,6 +38,7 @@ pyinstrument
 pylint>=2.14.0
 pyquickhelper>=1.12
 pytest
+ruff
 seaborn
 setuptools
 snakeviz
