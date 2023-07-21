@@ -13,15 +13,12 @@
     :alt: MIT License
     :target: http://opensource.org/licenses/MIT
 
-.. image:: https://codecov.io/github/sdpython/mlstatpy/coverage.svg?branch=main
-    :target: https://codecov.io/github/sdpython/mlstatpy?branch=main
+.. image:: https://codecov.io/github/sdpython/mlstatpy/coverage.svg
+    :target: https://codecov.io/github/sdpython/mlstatpy/
 
 .. image:: http://img.shields.io/github/issues/sdpython/mlstatpy.png
     :alt: GitHub Issues
     :target: https://github.com/sdpython/mlstatpy/issues
-
-.. image:: https://codecov.io/gh/sdpython/mlstatpy/branch/master/graph/badge.svg?token=2gKZsIVL3e 
-    :target: https://codecov.io/gh/sdpython/mlstatpy
 
 .. _l-README:
 
