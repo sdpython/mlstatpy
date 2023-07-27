@@ -14,7 +14,8 @@ Avec les préfixes, un noeud a au plus 27 (26 lettres + espaces)
 caractères suivant possibles. Si le préfixe a des synonymes,
 rien n'empêche de relier ce noeud avec les successeurs de ses
 synonymes.
-A ce sujet, voir `Context-Sensitive Query Auto-Completion <http://technion.ac.il/~nkraus/papers/fr332-bar-yossef.pdf>`_,
+A ce sujet, voir `Context-Sensitive Query Auto-Completion
+<https://db-event.jpn.org/deim2018/data/papers/149.pdf>`_,
 de Ziv Bar-Yossef et Naama Kraus.
 
 Source
