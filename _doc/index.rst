@@ -52,7 +52,7 @@ Xavier Dupré
 
     .. image:: https://img.shields.io/badge/license-MIT-blue.svg
         :alt: MIT License
-        :target: http://opensource.org/licenses/MIT
+        :target: https://opensource.org/license/MIT/
 
     .. image:: https://codecov.io/github/sdpython/mlstatpy/coverage.svg
         :target: https://codecov.io/github/sdpython/mlstatpy

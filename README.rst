@@ -1,4 +1,10 @@
 
+.. image:: https://github.com/sdpython/sphinx-runpython/raw/main/_doc/_static/logo.png
+    :width: 120
+
+mlstatpy: détours mathématiques autour du machine learning
+==========================================================
+
 .. image:: https://ci.appveyor.com/api/projects/status/5env33qptorgshaq?svg=true
     :target: https://ci.appveyor.com/project/sdpython/mlstatpy
     :alt: Build Status Windows
@@ -11,7 +17,7 @@
 
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
     :alt: MIT License
-    :target: http://opensource.org/licenses/MIT
+    :target: https://opensource.org/license/MIT/
 
 .. image:: https://codecov.io/github/sdpython/mlstatpy/coverage.svg
     :target: https://codecov.io/github/sdpython/mlstatpy/
@@ -19,11 +25,6 @@
 .. image:: http://img.shields.io/github/issues/sdpython/mlstatpy.png
     :alt: GitHub Issues
     :target: https://github.com/sdpython/mlstatpy/issues
-
-.. _l-README:
-
-mlstatpy: détours mathématiques autour du machine learning
-==========================================================
 
 Le module contient essentiellement des digressions mathématiques
 autour du machine learning. Parmi les choses intéressantes,
@@ -40,5 +41,4 @@ automated segment detection in a image, some simple autocomplete
 algorithm, a graph edit distance, some helpers on Wikipedia data,
 an algorithm to convert decision trees into neural network.
 
-* `GitHub/mlstatpy <https://github.com/sdpython/mlstatpy/>`_
-* `documentation <https://sdpython.github.io/doc/mlstatpy/>`_
+* `documentation <https://sdpython.github.io/doc/mlstatpy/dev/>`_
