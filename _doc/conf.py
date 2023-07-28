@@ -185,7 +185,7 @@ epkg_dictionary = {
     "LAESA": "https://tavianator.com/aesa/",
     "LAPACK": "http://www.netlib.org/lapack/",
     "mlinsights": "http://www.xavierdupre.fr/app/mlinsights/helpsphinx/index.html",
-    "mlstatpy": "https://sdpython.github.io/doc/mlstatpy/",
+    "mlstatpy": "https://sdpython.github.io/doc/mlstatpy/dev/",
     "numpy": (
         "https://www.numpy.org/",
         ("https://docs.scipy.org/doc/numpy/reference/generated/numpy.{0}.html", 1),
