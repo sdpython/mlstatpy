@@ -13,7 +13,8 @@ Le site est aussi disponible (format brut de fonderie) sur
 `GitHub/mlstatpy <https://github.com/sdpython/mlstatpy>`_ |gitlogo|.
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
+    :caption: Mathematics
 
     c_clus/index
     c_ml/index
@@ -23,11 +24,21 @@ Le site est aussi disponible (format brut de fonderie) sur
     c_metric/index
     c_algo/index
     c_garden/index
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Examples
+
     api/index
     i_ex
     defthe_index
     auto_examples/index
     notebooks/index
+
+.. toctree::
+    :maxdepth: 1
+    :caption: More
+
     glossary
     CHANGELOGS
     license
