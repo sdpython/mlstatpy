@@ -267,7 +267,7 @@ class CompletionTrieNode:
         :param prefix: prefix
         :return: node or None for no result
         """
-        if len(prefix) == 0:
+        if not prefix:
             if not self.value:
                 return self
             else:

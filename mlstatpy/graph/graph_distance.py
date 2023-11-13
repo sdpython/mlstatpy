@@ -246,7 +246,7 @@ class GraphDistance:
             elif ve:
                 g = ve.groups()
                 vertex_label[g[0]] = g[1]
-        if len(vertex_label) == 0 or len(edge_list) == 0:
+        if not vertex_label or not edge_list:
             raise OSError(f"Unable to parse file {filename!r}.")  # pragma: no cover
         return GraphDistance(edge_list, vertex_label, add_loop)
 
@@ -510,7 +510,7 @@ class GraphDistance:
             add = {}
             for k, v in g.vertices.items():
                 v1, v2 = v.pair
-                if len(v.succE) == 0:
+                if not v.succE:
                     for e1 in v1.succE:
                         for e2 in v2.succE:
                             oe1 = self.edges[e1]
@@ -599,17 +599,17 @@ class GraphDistance:
     def enumerate_all_paths(self, edges_and_vertices, begin=None):
         if begin is None:
             begin = []
-        if len(self.vertices) > 0 and len(self.edges) > 0:
+        if self.vertices and self.edges:
             if edges_and_vertices:
-                last = begin[-1] if len(begin) > 0 else self.vertices[self.labelBegin]
+                last = begin[-1] if begin else self.vertices[self.labelBegin]
             else:
                 last = (
                     self.vertices[begin[-1].to]
-                    if len(begin) > 0
+                    if begin
                     else self.vertices[self.labelBegin]
                 )
 
-            if edges_and_vertices and len(begin) == 0:
+            if edges_and_vertices and not begin:
                 begin = [last]
 
             for ef in last.succE:

@@ -129,7 +129,7 @@ class TestGraphDistance(ExtTestCase):
         if distance is None:
             raise TypeError("expecting something different from None")
         allPaths = list(graph.enumerate_all_paths(True))
-        if len(allPaths) == 0:
+        if not allPaths:
             raise ValueError("the number of paths should not be null")
         if distance == 0:
             raise ValueError("expecting a distance > 0")

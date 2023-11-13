@@ -24,7 +24,7 @@ def run_graphviz(filename, image, engine="dot"):
     else:
         cmd = f'"{engine}" -Tpng "{filename}" -o "{image}"'
     out, err = run_cmd(cmd, wait=True)
-    if len(err) > 0:
+    if err:
         raise RuntimeError(
             f"Unable to run Graphviz\nCMD:\n{cmd}\nOUT:\n{out}\nERR:\n{err}"
         )

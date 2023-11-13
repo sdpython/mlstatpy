@@ -95,10 +95,11 @@ class NeuralTreeNet(_TrainingAPI):
     def _update_members(self, node=None, attr=None):
         "Updates internal members."
         if node is None or attr is None:
-            if len(self.nodes_attr) == 0:
-                self.size_ = self.dim
-            else:
-                self.size_ = max(d["output"] for d in self.nodes_attr) + 1
+            self.size_ = (
+                self.dim
+                if not self.nodes_attr
+                else (max(d["output"] for d in self.nodes_attr) + 1)
+            )
             self.output_to_node_ = {}
             self.input_to_node_ = {}
             for node2, attr2 in zip(self.nodes, self.nodes_attr):
@@ -150,7 +151,7 @@ class NeuralTreeNet(_TrainingAPI):
             self.nodes.append(node)
             first_coef = (
                 0
-                if len(self.nodes_attr) == 0
+                if not self.nodes_attr
                 else self.nodes_attr[-1]["first_coef"]
                 + self.nodes_attr[-1]["coef_size"]
             )
@@ -173,7 +174,7 @@ class NeuralTreeNet(_TrainingAPI):
             self.nodes.append(node)
             first_coef = (
                 0
-                if len(self.nodes_attr) == 0
+                if not self.nodes_attr
                 else self.nodes_attr[-1]["first_coef"]
                 + self.nodes_attr[-1]["coef_size"]
             )
@@ -702,7 +703,7 @@ class NeuralTreeNet(_TrainingAPI):
 
         whole_gradx = numpy.zeros(pred.shape, dtype=numpy.float64)
         whole_gradw = numpy.zeros(shape, dtype=numpy.float64)
-        if len(graddx.shape) == 0:
+        if not graddx.shape:
             whole_gradx[-1] = graddx
         else:
             whole_gradx[-graddx.shape[0] :] = graddx
