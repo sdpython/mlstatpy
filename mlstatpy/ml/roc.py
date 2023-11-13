@@ -190,7 +190,7 @@ class ROC:
         # if score is not None
         roc = self.confusion(nb=len(self), curve=curve, bootstrap=False, score=None)
         roc = roc[roc["threshold"] <= score]
-        if not roc:
+        if len(roc) == 0:
             raise ValueError(  # pragma: no cover
                 f"The requested confusion is empty for score={score}."
             )
