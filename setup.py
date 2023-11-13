@@ -18,7 +18,7 @@ try:
         requirements = f.read().strip(" \n\r\t").split("\n")
 except FileNotFoundError:
     requirements = []
-if len(requirements) == 0 or requirements == [""]:
+if not requirements or requirements == [""]:
     requirements = ["numpy", "mlinsight", "onnxruntime", "skl2onnx"]
 
 try:
@@ -34,7 +34,7 @@ with open(os.path.join(here, "mlstatpy/__init__.py"), "r") as f:
         for _ in [_.strip("\r\n ") for _ in f.readlines()]
         if _.startswith("__version__")
     ]
-    if len(line) > 0:
+    if line:
         version_str = line[0].split("=")[1].strip('" ')
 
 # see https://pypi.org/classifiers/

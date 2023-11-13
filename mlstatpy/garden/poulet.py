@@ -166,7 +166,7 @@ def f_proba_poisson_melange():
             à la loi de paramètre ``params[i]``
         :return: valeur
         """
-        if len(proba_poisson_melange_tableau) == 0:
+        if not proba_poisson_melange_tableau:
             proba_poisson_melange_tableau.extend(
                 histogramme_poisson_melange(params, coef)
             )
