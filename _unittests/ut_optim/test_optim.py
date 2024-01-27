@@ -1,6 +1,7 @@
 """
 @brief      test log(time=6s)
 """
+
 import io
 from contextlib import redirect_stdout
 import unittest
