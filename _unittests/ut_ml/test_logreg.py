@@ -2,6 +2,7 @@
 @brief      test log(time=2s)
 @author     Xavier Dupre
 """
+
 import unittest
 from pyquickhelper.pycode import ExtTestCase
 from mlstatpy.ml.logreg import criteria, criteria2, random_set_1d, plot_ds
