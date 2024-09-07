@@ -126,11 +126,11 @@ class TestDocumentationNotebook(ExtTestCase):
     def add_test_methods(cls):
         this = os.path.abspath(os.path.dirname(__file__))
         folds = [
-            os.path.join(this, "..", "..", "_doc", "notebook", "dsgarden"),
-            os.path.join(this, "..", "..", "_doc", "notebook", "image"),
-            os.path.join(this, "..", "..", "_doc", "notebook", "metric"),
-            os.path.join(this, "..", "..", "_doc", "notebook", "ml"),
-            os.path.join(this, "..", "..", "_doc", "notebook", "nlp"),
+            os.path.join(this, "..", "..", "_doc", "notebooks", "dsgarden"),
+            os.path.join(this, "..", "..", "_doc", "notebooks", "image"),
+            os.path.join(this, "..", "..", "_doc", "notebooks", "metric"),
+            os.path.join(this, "..", "..", "_doc", "notebooks", "ml"),
+            os.path.join(this, "..", "..", "_doc", "notebooks", "nlp"),
         ]
         for fold in folds:
             cls.add_test_methods_path(os.path.normpath(fold))
