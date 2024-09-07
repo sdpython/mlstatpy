@@ -1,5 +1,4 @@
 astroid
-autopep8
 black
 blockdiag
 coverage
@@ -17,14 +16,14 @@ jupyter_sphinx
 jupyter
 jupyter-black
 lifelines
-mako
 matplotlib
 memory_profiler
 mlinsights
 nbconvert
 nbsphinx
 notebook
-onnx_array_api
+onnx-array-api
+onnx-extended
 onnxruntime>=1.12
 pandas
 pillow
@@ -35,7 +34,6 @@ pyinstrument
 pytest
 ruff
 seaborn
-setuptools
 snakeviz
 scikit-learn>=1.1
 sklearn-onnx
@@ -43,7 +41,6 @@ sphinx
 sphinx-gallery
 sphinx-issues
 git+https://github.com/sdpython/sphinx-runpython.git
-sphinxcontrib.imagesvg
 stack_data
 statsmodels
 tqdm
