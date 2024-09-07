@@ -1,5 +1,9 @@
 import numpy
-from numpy.core._exceptions import UFuncTypeError
+
+try:
+    from numpy.core._exceptions import UFuncTypeError
+except ImportError:
+    UFuncTypeError = Exception
 
 
 class BaseOptimizer:

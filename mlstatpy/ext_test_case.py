@@ -341,6 +341,25 @@ class ExtTestCase(unittest.TestCase):
         if not os.path.exists(name):
             raise AssertionError(f"File or folder {name!r} does not exists.")
 
+    def assertEqual(self, *args, **kwargs):
+        if isinstance(args[0], numpy.ndarray):
+            self.assertEqualArray(*args, **kwargs)
+        else:
+            super().assertEqual(*args, **kwargs)
+
+    def assertNotEqualArray(
+        self,
+        expected: numpy.ndarray,
+        value: numpy.ndarray,
+        atol: float = 0,
+        rtol: float = 0,
+    ):
+        try:
+            self.assertEqualArray(expected, value, atol=atol, rtol=rtol)
+        except AssertionError:
+            return
+        raise AssertionError("Both arrays are equal.")
+
     def assertEqualArray(
         self,
         expected: numpy.ndarray,
@@ -365,11 +384,11 @@ class ExtTestCase(unittest.TestCase):
             value = numpy.array(value).astype(expected.dtype)
         self.assertEqualArray(expected, value, atol=atol, rtol=rtol)
 
-    def assertRaise(self, fct: Callable, exc_type: Exception):
+    def assertRaise(self, fct: Callable, exc_type: Optional[Exception] = None):
         try:
             fct()
-        except exc_type as e:
-            if not isinstance(e, exc_type):
+        except exc_type or Exception as e:
+            if exc_type is not None and not isinstance(e, exc_type):
                 raise AssertionError(f"Unexpected exception {type(e)!r}.")  # noqa: B904
             return
         raise AssertionError("No exception was raised.")

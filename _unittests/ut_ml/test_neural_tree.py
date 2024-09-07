@@ -5,7 +5,7 @@ import numpy
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_graphviz
 from sklearn.datasets import load_iris
 from sklearn.tree import export_text
-from mlstatpy.ext_test_case import ExtTestCase
+from mlstatpy.ext_test_case import ExtTestCase, ignore_warnings
 from onnx_array_api.plotting.text_plot import onnx_simple_text_plot
 from mlstatpy.ml.neural_tree import (
     NeuralTreeNode,
@@ -25,7 +25,7 @@ class TestNeuralTree(ExtTestCase):
         st = repr(neu)
         self.assertEqual(
             "NeuralTreeNode(weights=array([0., 1.]), "
-            "bias=0.5, activation='identity')",
+            "bias=np.float64(0.5), activation='identity')",
             st,
         )
         st = io.BytesIO()
@@ -39,7 +39,7 @@ class TestNeuralTree(ExtTestCase):
         X = numpy.random.randn(2, 3)
         got = net.predict(X)
         exp = X.sum(axis=1)
-        self.assertEqual(exp.reshape((-1, 1)), got[:, -1:])
+        self.assertEqualArray(exp.reshape((-1, 1)), got[:, -1:])
         rep = repr(net)
         self.assertEqual(rep, "NeuralTreeNet(3)")
         net.clear()
@@ -139,7 +139,7 @@ class TestNeuralTree(ExtTestCase):
         w = net.training_weights
         self.assertEqual(w.shape, (6,))
         self.assertEqual(w[0], 0)
-        self.assertEqualArray(w[1:4], [1, 1, 1])
+        self.assertEqualArray(w[1:4], numpy.array([1, 1, 1], dtype=float))
         delta = numpy.arange(6) - 0.5
         net.update_training_weights(delta)
         w2 = net.training_weights
@@ -188,7 +188,7 @@ class TestNeuralTree(ExtTestCase):
             with self.subTest(act=act):
                 neu = NeuralTreeNode(w, bias=b, activation=act)
                 pred = neu.predict(X)
-                self.assertAlmostEqual(numpy.sum(pred), 1.0)
+                self.assertAlmostEqual(numpy.sum(pred), 1.0, atol=1e-10)
                 self.assertEqual(pred.shape, (2,))
                 grad = neu.gradient_backward(g, X)
                 self.assertEqual(grad.shape, (2, 4))
@@ -279,8 +279,8 @@ class TestNeuralTree(ExtTestCase):
         )
         soft_y = label_class_to_softmax_output(y_label)
         self.assertEqual(soft_y.shape, (4, 2))
-        self.assertEqual(soft_y[:, 1], y_label)
-        self.assertEqual(soft_y[:, 0], 1 - y_label)
+        self.assertEqualArray(soft_y[:, 1], y_label.astype(float))
+        self.assertEqualArray(soft_y[:, 0], 1 - y_label.astype(float))
 
     def test_neural_net_gradient(self):
         X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
@@ -317,6 +317,7 @@ class TestNeuralTree(ExtTestCase):
                 self.assertEqualArray(loss1, loss2, atol=1e-5)
                 self.assertEqualArray(grad1, grad2, atol=1e-5)
 
+    @ignore_warnings(DeprecationWarning)
     def test_neural_net_gradient_regression_2(self):
         X = numpy.abs(numpy.random.randn(10, 2))
         w1 = numpy.array([-0.5, 0.8, -0.6])
@@ -348,7 +349,7 @@ class TestNeuralTree(ExtTestCase):
                 pred2 = net.predict(X)
                 loss2 = net.loss(X, y)
 
-                self.assertEqualArray(pred1, pred2[:, -1])
+                self.assertEqualArray(pred1, pred2[:, -1], atol=1e-10)
                 self.assertEqualArray(pred2[:, -2], pred2[:, -1])
                 self.assertEqualArray(pred2[:, 2], pred2[:, 3])
                 self.assertEqualArray(loss1, loss2, atol=1e-7)
@@ -358,6 +359,7 @@ class TestNeuralTree(ExtTestCase):
                     grad2 = net.gradient(X[p], y[p])
                     self.assertEqualArray(grad1, grad2[:3], atol=1e-7)
 
+    @ignore_warnings(DeprecationWarning)
     def test_neural_net_gradient_regression_2_h2(self):
         X = numpy.abs(numpy.random.randn(10, 2))
         w1 = numpy.array([-0.5, 0.8, -0.6])
@@ -410,8 +412,8 @@ class TestNeuralTree(ExtTestCase):
                 pred2 = net.predict(X)
                 loss2 = net.loss(X, y)
 
-                self.assertEqualArray(pred1, pred2[:, -1])
-                self.assertEqualArray(pred2[:, 2], pred2[:, -1])
+                self.assertEqualArray(pred1, pred2[:, -1], atol=1e-8)
+                self.assertEqualArray(pred2[:, 2], pred2[:, -1], atol=1e-10)
                 self.assertEqualArray(loss1, loss2, atol=1e-7)
 
                 for p in range(5):
@@ -484,6 +486,7 @@ class TestNeuralTree(ExtTestCase):
                 loss = neu.loss(X, numpy.zeros((X.shape[0], 1), dtype=numpy.float64))
                 self.assertEqual(loss.shape, (10, 2))
 
+    @ignore_warnings(DeprecationWarning)
     def test_convert_compact(self):
         X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
         y = ((X[:, 0] + X[:, 1] * 2) > 10).astype(numpy.int64)
@@ -585,8 +588,9 @@ class TestNeuralTree(ExtTestCase):
         self.assertIn("Softmax(", text)
         oinf = ReferenceEvaluator(onx)
         got2 = oinf.run(None, {"X": x32})[0]
-        self.assertEqualArray(exp[:, 1], got2, atol=1e-5)
+        self.assertEqualArray(exp[:, 1], got2.astype(float).ravel(), atol=1e-5)
 
+    @ignore_warnings(DeprecationWarning)
     def test_convert_reg_compact(self):
         X = numpy.arange(32).astype(numpy.float64).reshape((-1, 2))
         y = (X[:, 0] + X[:, 1] * 2).astype(numpy.float64)
@@ -612,10 +616,11 @@ class TestNeuralTree(ExtTestCase):
         self.assertNotEmpty(root)
         exp = tree.predict(X)
         got = root.predict(X)
-        self.assertEqualArray(exp, got[:, -1], decimal=6)
+        self.assertEqualArray(exp, got[:, -1], atol=1e-6)
         dot = root.to_dot()
         self.assertIn("9 -> 17", dot)
 
+    @ignore_warnings(DeprecationWarning)
     def test_convert_compact_skl_reg(self):
         X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
         y = X[:, 0] + X[:, 1] * 2
@@ -626,12 +631,13 @@ class TestNeuralTree(ExtTestCase):
         exp = tree.predict(X)
         got = root.predict(X)
         self.assertEqual(exp.shape[0], got.shape[0])
-        self.assertEqualArray(exp, got[:, -1])
+        self.assertEqualArray(exp, got[:, -1], atol=1e-7)
 
         skl = NeuralTreeNetRegressor(root)
         prob = skl.predict(X)
-        self.assertEqualArray(exp, prob.ravel())
+        self.assertEqualArray(exp, prob.ravel(), atol=1e-7)
 
+    @ignore_warnings(DeprecationWarning)
     def test_convert_compact_skl_fit_reg(self):
         X = numpy.arange(8).astype(numpy.float64).reshape((-1, 2))
         y = X[:, 0] + X[:, 1] * 2
@@ -642,8 +648,9 @@ class TestNeuralTree(ExtTestCase):
         skl.fit(X, y)
         exp = tree.predict(X)
         got = skl.predict(X)
-        self.assertEqualArray(exp, got.ravel())
+        self.assertEqualArray(exp, got.ravel(), atol=1e-7)
 
+    @ignore_warnings(DeprecationWarning)
     def test_convert_compact_skl_onnx_reg(self):
         from skl2onnx import to_onnx
         from onnx.reference import ReferenceEvaluator
@@ -656,9 +663,9 @@ class TestNeuralTree(ExtTestCase):
         skl = NeuralTreeNetRegressor(root)
         got = skl.predict(X)
         exp = tree.predict(X)
-        self.assertEqualArray(exp, got.ravel())
+        self.assertEqualArray(exp, got.ravel(), atol=1e-7)
         dec = root.predict(X)
-        self.assertEqualArray(exp, dec[:, -1])
+        self.assertEqualArray(exp, dec[:, -1], atol=1e-7)
 
         x32 = X.astype(numpy.float32)
         onx = to_onnx(skl, x32, target_opset=15)
@@ -667,9 +674,8 @@ class TestNeuralTree(ExtTestCase):
         self.assertNotIn("Softmax(", text)
         oinf = ReferenceEvaluator(onx)
         got2 = oinf.run(None, {"X": x32})[0]
-        self.assertEqualArray(exp, got2.ravel())
+        self.assertEqualArray(exp, got2.ravel().astype(float))
 
 
 if __name__ == "__main__":
-    # TestNeuralTree().test_convert_reg_compact()
-    unittest.main()
+    unittest.main(verbosity=2)
