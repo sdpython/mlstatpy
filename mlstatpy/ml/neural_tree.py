@@ -1,5 +1,3 @@
-# coding: utf-8
-
 from io import BytesIO
 import pickle
 import numpy
@@ -273,7 +271,7 @@ class NeuralTreeNet(_TrainingAPI):
         root = NeuralTreeNet(tree.max_features_, empty=True)
         feat_index = numpy.arange(0, max_features_)
         predecessor = {}
-        outputs = {i: [] for i in range(0, tree.n_classes_)}
+        outputs = {i: [] for i in range(tree.n_classes_)}
         for i in range(n_nodes):
             if children_left[i] != children_right[i]:
                 # node with a threshold
@@ -327,12 +325,12 @@ class NeuralTreeNet(_TrainingAPI):
         output = []
         index = [0]
         nb = []
-        for i in range(0, tree.n_classes_):
+        for i in range(tree.n_classes_):
             output.extend(outputs[i])
             nb.append(len(outputs[i]))
             index.append(len(outputs[i]) + index[-1])
         coef = numpy.zeros((len(nb), len(output)), dtype=numpy.float64)
-        for i in range(0, tree.n_classes_):
+        for i in range(tree.n_classes_):
             coef[i, index[i] : index[i + 1]] = k
         feat = [root[n.nodeid][1]["output"] for n in output]
         root.append(
@@ -528,7 +526,7 @@ class NeuralTreeNet(_TrainingAPI):
 
         labels = {}
 
-        for i in range(0, len(self)):  # pylint: disable=C0200
+        for i in range(len(self)):
             o = self[i][1]["output"]
             if isinstance(o, int):
                 lo = str(o)
@@ -598,7 +596,7 @@ class NeuralTreeNet(_TrainingAPI):
             pos += s
         return res
 
-    def update_training_weights(self, X, add=True):  # pylint: disable=W0237
+    def update_training_weights(self, X, add=True):
         """
         Updates weights.
 
@@ -669,8 +667,8 @@ class NeuralTreeNet(_TrainingAPI):
         """
         res, _, last_node, last_attr = self._common_loss_dloss(X, y, cache=cache)
         if len(res.shape) <= 1:
-            return last_node.loss(res[last_attr["inputs"]], y)  # pylint: disable=E1120
-        return last_node.loss(res[:, last_attr["inputs"]], y)  # pylint: disable=E1120
+            return last_node.loss(res[last_attr["inputs"]], y)
+        return last_node.loss(res[:, last_attr["inputs"]], y)
 
     def dlossds(self, X, y, cache=None):
         """
@@ -678,12 +676,8 @@ class NeuralTreeNet(_TrainingAPI):
         """
         res, _, last_node, last_attr = self._common_loss_dloss(X, y, cache=cache)
         if len(res.shape) <= 1:
-            return last_node.dlossds(
-                res[last_attr["inputs"]], y
-            )  # pylint: disable=E1120
-        return last_node.dlossds(
-            res[:, last_attr["inputs"]], y
-        )  # pylint: disable=E1120
+            return last_node.dlossds(res[last_attr["inputs"]], y)
+        return last_node.dlossds(res[:, last_attr["inputs"]], y)
 
     def gradient_backward(self, graddx, X, inputs=False, cache=None):
         """
@@ -847,7 +841,7 @@ class BaseNeuralTreeNet(BaseEstimator):
         Converts this model into ONNX.
         """
         from skl2onnx.common.data_types import guess_numpy_type
-        from skl2onnx.algebra.onnx_ops import (  # pylint: disable=E0611
+        from skl2onnx.algebra.onnx_ops import (
             OnnxIdentity,
             OnnxArgMax,
             OnnxAdd,

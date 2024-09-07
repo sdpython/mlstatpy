@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import warnings
 import numpy
 from sklearn.linear_model import LinearRegression
@@ -11,8 +9,6 @@ class VoronoiEstimationError(Exception):
     """
     Raised when the algorithm failed.
     """
-
-    pass
 
 
 def voronoi_estimation_from_lr(
@@ -73,7 +69,7 @@ def voronoi_estimation_from_lr(
     nb_constraints = numpy.zeros((L.shape[0],))
     matL = []
     matB = []
-    for i in range(0, L.shape[0]):
+    for i in range(L.shape[0]):
         for j in range(i + 1, L.shape[0]):
             li = L[i, :]
             lj = L[j, :]
@@ -104,7 +100,7 @@ def voronoi_estimation_from_lr(
                     continue
                 found = True
             if not found:
-                raise ValueError(  # pragma: no cover
+                raise ValueError(
                     "Matrix L has two similar rows {0} and {1}. "
                     "Problem cannot be solved.".format(i, j)
                 )
@@ -132,8 +128,9 @@ def voronoi_estimation_from_lr(
 
     if nbeq * 2 <= L.shape[0] * L.shape[1]:
         if C is None and D is None:
-            warnings.warn(  # pragma: no cover
-                "[voronoi_estimation_from_lr] Additional condition are required."
+            warnings.warn(
+                "[voronoi_estimation_from_lr] Additional condition are required.",
+                stacklevel=0,
             )
         if C is not None and D is not None:
             matL = numpy.vstack([matL, numpy.zeros((1, matL.shape[1]))])
@@ -144,7 +141,7 @@ def voronoi_estimation_from_lr(
                 raise TypeError(f"D must be a float not {type(D)}")
             matB = numpy.hstack([matB, [D]])
         elif C is None and D is None:
-            pass  # pragma: no cover
+            pass
         else:
             raise ValueError("C and D must be None together or not None together.")
 
@@ -152,7 +149,7 @@ def voronoi_estimation_from_lr(
     tol = numpy.abs(matL.ravel()).max() * 1e-8 / matL.shape[0]
     order_removed = []
     removed = set()
-    for it in range(0, max(max_iter, 1)):
+    for it in range(max(max_iter, 1)):
         if qr:
             clr = QuantileLinearRegression(
                 fit_intercept=False, max_iter=max(matL.shape)
@@ -210,7 +207,7 @@ def voronoi_estimation_from_lr(
                             break
                     pos -= 1
                 if pos < 0:
-                    raise VoronoiEstimationError(  # pragma: no cover
+                    raise VoronoiEstimationError(
                         "Two classes have been merged in a single Voronoi point "
                         "(dist={0} < {1}). max_iter should be lower than "
                         "{2}".format(dist[-1][0], tol, it)

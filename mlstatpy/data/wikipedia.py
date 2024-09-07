@@ -1,5 +1,5 @@
 import os
-from pyquickhelper.filehelper import get_url_content_timeout, ungzip_files
+from mlstatpy.ext_test_case import get_url_content_timeout, ungzip_files
 from .data_exceptions import DataException
 
 
@@ -34,9 +34,7 @@ def download_pageviews(dt, folder=".", unzip=True, timeout=-1, overwrite=False):
         os.remove(name)
         if isinstance(names, list):
             if len(names) != 1:
-                raise DataException(  # pragma: no cover
-                    f"Expecting only one file, not '{names}'"
-                )
+                raise DataException(f"Expecting only one file, not '{names}'")
             return names[0]
         return names
     return name
@@ -54,7 +52,7 @@ def download_dump(country, name, folder=".", unzip=True, timeout=-1, overwrite=F
     :param overwrite: overwrite
     """
     url = "https://dumps.wikimedia.org/{0}wiki/latest/{0}wiki-{1}".format(country, name)
-    file = url.split("/")[-1]  # pylint: disable=C0207
+    file = url.split("/")[-1]
     name = os.path.join(folder, file)
     unzipname = os.path.splitext(name)[0]
     if overwrite or (not os.path.exists(name) and not os.path.exists(unzipname)):
@@ -66,9 +64,7 @@ def download_dump(country, name, folder=".", unzip=True, timeout=-1, overwrite=F
         os.remove(name)
         if isinstance(names, list):
             if len(names) != 1:
-                raise DataException(  # pragma: no cover
-                    f"Expecting only one file, not '{names}'"
-                )
+                raise DataException(f"Expecting only one file, not '{names}'")
             return names[0]
         return names
     return name[:-3] if name.endswith(".gz") else name

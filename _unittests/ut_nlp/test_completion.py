@@ -1,12 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-@brief      test log(time=3s)
-"""
-# pylint: disable=W0719
 import os
 import unittest
 import itertools
-from pyquickhelper.pycode import ExtTestCase
+from mlstatpy.ext_test_case import ExtTestCase
 from mlstatpy.nlp.completion import CompletionTrieNode
 from mlstatpy.data.wikipedia import normalize_wiki_text, enumerate_titles
 from mlstatpy.nlp.normalize import remove_diacritics
@@ -195,12 +190,12 @@ class TestCompletion(ExtTestCase):
             raise AssertionError(f"gmks={gmks} gmksd={gmksd}")
         if gmksd == 0:
             i = 0
-            for node in trie:
+            for _node in trie:
                 # print(node.value, "--", node.stat.str_mks())
                 if i > 20:
                     break
                 i += 1
-            assert False
+            raise AssertionError("should not happen")
 
         trie = CompletionTrieNode.build(titles)
         nb2, gmks2, gmksd2, size = cmks(trie)

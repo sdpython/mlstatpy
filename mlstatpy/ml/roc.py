@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import math
 import itertools
 from enum import Enum
@@ -64,9 +62,7 @@ class ROC:
             else:
                 self.data = pandas.DataFrame(df, columns=["score", "label", "weight"])
         elif not isinstance(df, pandas.DataFrame):
-            raise TypeError(  # pragma: no cover
-                f"df should be a DataFrame, not {type(df)}"
-            )
+            raise TypeError(f"df should be a DataFrame, not {type(df)}")
         else:
             self.data = df.copy()
         self.data.sort_values(self.data.columns[0], inplace=True)
@@ -140,9 +136,9 @@ class ROC:
             cloud["cw"] = cloud[cloud.columns[2]].cumsum()
             cloud["clw"] = cloud["lw"].cumsum()
             if cloud.columns[4] != "cw":
-                raise ValueError("Column 4 should be 'cw'.")  # pragma: no cover
+                raise ValueError("Column 4 should be 'cw'.")
             if cloud.columns[5] != "clw":
-                raise ValueError("Column 5 should be 'clw'.")  # pragma: no cover
+                raise ValueError("Column 5 should be 'clw'.")
 
             pos_roc = 0
             pos_seuil = 0
@@ -183,7 +179,7 @@ class ROC:
                 roc.iloc[pos_roc:, 3] = 0
                 roc.iloc[pos_roc:, 4] = min(cloud.iloc[:, 0])
                 return roc
-            raise NotImplementedError(  # pragma: no cover
+            raise NotImplementedError(
                 f"Unexpected type '{curve}', only ROC is allowed."
             )
 
@@ -191,9 +187,7 @@ class ROC:
         roc = self.confusion(nb=len(self), curve=curve, bootstrap=False, score=None)
         roc = roc[roc["threshold"] <= score]
         if len(roc) == 0:
-            raise ValueError(  # pragma: no cover
-                f"The requested confusion is empty for score={score}."
-            )
+            raise ValueError(f"The requested confusion is empty for score={score}.")
         return roc[:1]
 
     def precision(self):
@@ -241,9 +235,7 @@ class ROC:
 
         if curve is ROC.CurveType.SKROC:
             if nb > 0:
-                raise NotImplementedError(  # pragma: no cover
-                    "nb must be <= 0 si curve is SKROC"
-                )
+                raise NotImplementedError("nb must be <= 0 si curve is SKROC")
             from sklearn.metrics import roc_curve
 
             fpr, tpr, thresholds = roc_curve(
@@ -275,9 +267,9 @@ class ROC:
         cloud["clw"] = cloud["lw"].cumsum()
         sum_weights_ans = cloud["lw"].sum()
         if cloud.columns[4] != "cw":
-            raise ValueError("Column 4 should be 'cw'.")  # pragma: no cover
+            raise ValueError("Column 4 should be 'cw'.")
         if cloud.columns[5] != "clw":
-            raise ValueError("Column 5 should be 'clw'.")  # pragma: no cover
+            raise ValueError("Column 5 should be 'clw'.")
 
         pos_roc = 0
         pos_seuil = 0
@@ -325,9 +317,7 @@ class ROC:
             roc.iloc[pos_roc:, 2] = cloud.iloc[-1, 0]
 
         else:
-            raise NotImplementedError(  # pragma: no cover
-                f"Unknown curve type '{curve}'."
-            )
+            raise NotImplementedError(f"Unknown curve type '{curve}'.")
 
         return roc
 
@@ -372,10 +362,10 @@ class ROC:
             ckwargs["legend"] = False
             if "label" in ckwargs:
                 del ckwargs["label"]
-            for _ in range(0, bootstrap):
+            for _ in range(bootstrap):
                 roc = self.compute_roc_curve(nb, curve=curve, bootstrap=True)
                 if thresholds:
-                    cols = list(_ for _ in roc.columns if _ != "threshold")
+                    cols = [_ for _ in roc.columns if _ != "threshold"]
                     roc = roc.sort_values("threshold").reset_index(drop=True)
                     ax = roc.plot(
                         x="threshold",
@@ -385,7 +375,7 @@ class ROC:
                         **ckwargs,
                     )
                 else:
-                    cols = list(_ for _ in roc.columns[1:] if _ != "threshold")
+                    cols = [_ for _ in roc.columns[1:] if _ != "threshold"]
                     roc = roc.sort_values(roc.columns[0]).reset_index(drop=True)
                     ax = roc.plot(
                         x=roc.columns[0],
@@ -404,13 +394,11 @@ class ROC:
             if not thresholds:
                 roc = roc[[_ for _ in roc.columns if _ != "threshold"]]
 
-            cols = list(_ for _ in roc.columns if _ != "threshold")
+            cols = [_ for _ in roc.columns if _ != "threshold"]
             final = 0
             if thresholds:
                 if "label" in kwargs and len(cols) != len(kwargs["label"]):
-                    raise ValueError(  # pragma: no cover
-                        f"label must have {len(cols)} values"
-                    )
+                    raise ValueError(f"label must have {len(cols)} values")
                 roc = roc.sort_values("threshold").reset_index(drop=True)
                 ax = roc.plot(x="threshold", y=cols, ax=ax, **kwargs)
                 ax.set_ylim([0, 1])
@@ -466,7 +454,7 @@ class ROC:
             elif a[0] >= b[0]:
                 auc += a[2] * b[2] / 2
         if auc == 0 and good.shape[0] + wrong.shape[0] < self.data.shape[0]:
-            raise ValueError(  # pragma: no cover
+            raise ValueError(
                 "Label are not right, expect 0 and 1 not {0}".format(
                     set(cloud[cloud.columns[1]])
                 )
@@ -485,9 +473,9 @@ class ROC:
         @return                     dictionary of values
         """
         if bootstrap <= 1:
-            raise ValueError("Use auc instead, bootstrap < 2")  # pragma: no cover
+            raise ValueError("Use auc instead, bootstrap < 2")
         rate = []
-        for _ in range(0, bootstrap):
+        for _ in range(bootstrap):
             cloud = self.random_cloud()
             auc = self.auc(cloud)
             rate.append(auc)
@@ -555,7 +543,7 @@ class ROC:
         """
 
         rate = []
-        for _ in range(0, bootstrap):
+        for _ in range(bootstrap):
             roc = self.compute_roc_curve(nb, curve=curve, bootstrap=True)
             r = self.roc_intersect(roc, x)
             rate.append(r)

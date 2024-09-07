@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@brief      test log(time=38s)
-"""
 import unittest
 from mlstatpy.image.detection_segment import tabule_queue_binom
 

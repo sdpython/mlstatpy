@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@brief      test log(time=4s)
-"""
 import unittest
 from mlstatpy.garden.poulet import (
     maximum,

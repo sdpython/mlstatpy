@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@brief      test log(time=6s)
-"""
 import math
 import unittest
 from io import StringIO
@@ -9,13 +5,10 @@ from contextlib import redirect_stdout
 import numpy
 from sklearn.datasets import load_iris
 from sklearn.linear_model import LogisticRegression
-from pyquickhelper.pycode import ExtTestCase, add_missing_development_version
+from mlstatpy.ext_test_case import ExtTestCase
 
 
 class TestVoronoi(ExtTestCase):
-    def setUp(self):
-        add_missing_development_version(["mlinsights"], __file__, hide=True)
-
     def test_iris(self):
         from mlstatpy.ml import voronoi_estimation_from_lr
 
@@ -43,7 +36,7 @@ class TestVoronoi(ExtTestCase):
             expected_values = numpy.array(
                 [[3.0, 4.137], [5.044, 0.281], [5.497, 0.184]]
             )
-            self.assertEqualArray(expected_values, points, decimal=2)
+            self.assertEqualArray(expected_values, points, atol=1e-2)
 
             points = voronoi_estimation_from_lr(
                 clr.coef_, clr.intercept_, C, D, qr=True, verbose=True
@@ -52,7 +45,7 @@ class TestVoronoi(ExtTestCase):
             expected_values = numpy.array(
                 [[3.0, 4.137], [5.044, 0.281], [5.497, 0.184]]
             )
-            self.assertEqualArray(expected_values, points, decimal=2)
+            self.assertEqualArray(expected_values, points, atol=1e-2)
         std = std.getvalue()
         self.assertIn("[voronoi_estimation_from_lr] iter=", std)
 
@@ -79,7 +72,7 @@ class TestVoronoi(ExtTestCase):
         self.assertEqual(points.shape, (3, 4))
         points2 = voronoi_estimation_from_lr(clr.coef_, clr.intercept_, C, D, qr=True)
         self.assertEqual(points2.shape, (3, 4))
-        self.assertEqualArray(points2, points2, decimal=5)
+        self.assertEqualArray(points2, points2, atol=1e-5)
 
     def test_square(self):
         from mlstatpy.ml.voronoi import voronoi_estimation_from_lr
@@ -87,8 +80,8 @@ class TestVoronoi(ExtTestCase):
         Xs = []
         Ys = []
         n = 20
-        for i in range(0, 4):
-            for j in range(0, 3):
+        for i in range(4):
+            for j in range(3):
                 x1 = numpy.random.rand(n) + i * 1.1
                 x2 = numpy.random.rand(n) + j * 1.1
                 Xs.append(numpy.vstack([x1, x2]).T)
@@ -116,7 +109,7 @@ class TestVoronoi(ExtTestCase):
         for i in range(n):
             for j in range(n):
                 dil = ((i + 1) ** 2 + (j + 1) ** 2) ** 0.6
-                for _ in range(0, 20):
+                for _ in range(20):
                     x = i + j * math.cos(a)
                     y = j * math.sin(a)
                     points.append([x * dil, y * dil])
@@ -124,7 +117,7 @@ class TestVoronoi(ExtTestCase):
                     mi = 0.5
                     for r in [0.1, 0.3, mi]:
                         nb = 6 if r == mi else 12
-                        for k2 in range(0, nb):
+                        for k2 in range(nb):
                             ang = math.pi * 2 / nb * k2 + math.pi / 6
                             x = i + j * math.cos(a) + r * math.cos(ang)
                             y = j * math.sin(a) + r * math.sin(ang)

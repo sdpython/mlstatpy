@@ -116,8 +116,8 @@ class CompletionTrieNode:
         def iter_local(node):
             if node.leave and (max_weight is None or node.weight <= max_weight):
                 yield node.weight, None, node.value
-            for w, k, v in sorted(node.items()):
-                for w_, k_, v_ in iter_local(v):
+            for _w, _k, v in sorted(node.items()):
+                for w_, k_, v_ in iter_local(v):  # noqa: UP028
                     yield w_, k_, v_
 
         for w, _, v in sorted(iter_local(self)):
@@ -150,7 +150,7 @@ class CompletionTrieNode:
         nodes.reverse()
         all_res = []
         for node in nodes:
-            res = list(n[1] for n in node.iter_leaves())
+            res = [n[1] for n in node.iter_leaves()]
             all_res.append((node, res))
         all_res.reverse()
         return all_res
@@ -256,7 +256,7 @@ class CompletionTrieNode:
             new_node.weight = w
             if disp is not None:
                 new_node.disp = disp
-            nb += 1
+            nb += 1  # noqa: SIM113
         root.weight = minw
         return root
 
@@ -314,7 +314,7 @@ class CompletionTrieNode:
         metric = len(word)
         best = len(word)
         for node in nodes[1:]:
-            res = list(n[1] for n in node.iter_leaves())
+            res = [n[1] for n in node.iter_leaves()]
             ind = res.index(word)
             m = len(node.value) + ind + 1
             if m < metric:

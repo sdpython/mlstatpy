@@ -6,7 +6,7 @@ import io
 from contextlib import redirect_stdout
 import unittest
 import numpy
-from pyquickhelper.pycode import ExtTestCase
+from mlstatpy.ext_test_case import ExtTestCase
 from mlstatpy.optim import SGDOptimizer
 
 
@@ -99,7 +99,7 @@ class TestOptim(ExtTestCase):
     def test_sgd_optimizer_raise(self):
         coef = numpy.array([0.5, 0.6, 0.7])
 
-        rs = numpy.random.RandomState(seed=0)  # pylint: disable=E1101
+        rs = numpy.random.RandomState(seed=0)
         X = rs.randn(10, 3)
         y = X @ coef
 

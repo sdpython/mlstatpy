@@ -1,5 +1,9 @@
 import numpy
-from numpy.core._exceptions import UFuncTypeError
+
+try:
+    from numpy.core._exceptions import UFuncTypeError
+except ImportError:
+    UFuncTypeError = Exception
 
 
 class BaseOptimizer:
@@ -68,16 +72,16 @@ class BaseOptimizer:
         if self.min_threshold is not None:
             try:
                 self.coef = numpy.maximum(self.coef, self.min_threshold)
-            except UFuncTypeError:  # pragma: no cover
-                raise RuntimeError(  # pylint: disable=W0707
+            except UFuncTypeError:
+                raise RuntimeError(  # noqa: B904
                     "Unable to compute an upper bound with coef={} "
                     "max_threshold={}".format(self.coef, self.min_threshold)
                 )
         if self.max_threshold is not None:
             try:
                 self.coef = numpy.minimum(self.coef, self.max_threshold)
-            except UFuncTypeError:  # pragma: no cover
-                raise RuntimeError(  # pylint: disable=W0707
+            except UFuncTypeError:
+                raise RuntimeError(  # noqa: B904
                     "Unable to compute a lower bound with coef={} "
                     "max_threshold={}".format(self.coef, self.max_threshold)
                 )
@@ -87,7 +91,6 @@ class BaseOptimizer:
         Performs update to learning rate and potentially other states at the
         end of an iteration.
         """
-        pass  # pragma: no cover
 
     def train(
         self, X, y, fct_loss, fct_grad, max_iter=100, early_th=None, verbose=False
@@ -135,9 +138,7 @@ class BaseOptimizer:
                 if isinstance(verbose, int) and verbose >= 10:
                     self._display_progress(0, max_iter, loss, grad, "grad")
                 if numpy.isnan(grad).sum() > 0:
-                    raise RuntimeError(  # pragma: no cover
-                        "The gradient has nan values."
-                    )
+                    raise RuntimeError("The gradient has nan values.")
                 self.update_coef(grad)
                 n_samples += 1
 
@@ -180,18 +181,18 @@ class BaseOptimizer:
             return False
         if numpy.isnan(losses[-5]):
             if numpy.isnan(losses[-1]):
-                if verbose:  # pragma: no cover
+                if verbose:
                     self._display_progress(
                         it + 1, max_iter, losses[-1], losses=losses[-5:]
                     )
                 return True
             return False
         if numpy.isnan(losses[-1]):
-            if verbose:  # pragma: no cover
+            if verbose:
                 self._display_progress(it + 1, max_iter, losses[-1], losses=losses[-5:])
             return True
         if abs(losses[-1] - losses[-5]) <= early_th:
-            if verbose:  # pragma: no cover
+            if verbose:
                 self._display_progress(it + 1, max_iter, losses[-1], losses=losses[-5:])
             return True
         return False
@@ -327,9 +328,7 @@ class SGDOptimizer(BaseOptimizer):
         elif self.lr_schedule == "constant":
             pass
         else:
-            raise ValueError(  # pragma: no cover
-                f"Unexpected value: lr_schedule='{self.lr_schedule}'."
-            )
+            raise ValueError(f"Unexpected value: lr_schedule='{self.lr_schedule}'.")
 
     def _get_updates(self, grad):
         """

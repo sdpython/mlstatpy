@@ -1,4 +1,3 @@
-# coding: utf-8
 """
 .. _l-example-logistic-decision:
 
@@ -21,6 +20,7 @@ Un cas simple et un cas compliqué
 Il faut choisir un seuil sur l'axe des abscisses qui
 permette de classer le jeu de données.
 """
+
 import numpy
 import matplotlib.pyplot as plt
 from pandas import DataFrame

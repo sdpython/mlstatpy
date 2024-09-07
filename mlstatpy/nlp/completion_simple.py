@@ -1,4 +1,4 @@
-from typing import Tuple, List, Iterator, Dict
+from typing import Tuple, List, Iterator, Dict, Optional
 from .completion import CompletionTrieNode
 
 
@@ -125,7 +125,7 @@ class CompletionElement:
                 completions = self._info._completions.get(prefix, [])
                 for i2, el in enumerate(completions):
                     ar = "   " if el.value != self.value else "-> "
-                    add = "{5}{0}:{1} -- {2}{4}-- {3}".format(
+                    add = "{5}{0}:{1} -- {2}{4}-- {3}".format(  # noqa: UP030
                         i2,
                         el.weight,
                         el.value,
@@ -139,7 +139,7 @@ class CompletionElement:
         return "\n".join(rows)
 
     def init_metrics(
-        self, position: int, completions: List["CompletionElement"] = None
+        self, position: int, completions: Optional[List["CompletionElement"]] = None
     ):
         """
         Initializes the metrics.
@@ -198,7 +198,7 @@ class CompletionElement:
         position: int,
         improved: dict,
         delta: float,
-        completions: List["CompletionElement"] = None,
+        completions: Optional[List["CompletionElement"]] = None,
         iteration=-1,
     ):
         """
@@ -379,9 +379,7 @@ class CompletionSystem:
         :return: element or None
         """
         if is_sorted:
-            raise NotImplementedError(  # pragma: no cover
-                "No optimisation for the sorted case."
-            )
+            raise NotImplementedError("No optimisation for the sorted case.")
         for e in self:
             if e.value == value:
                 return e
@@ -411,24 +409,19 @@ class CompletionSystem:
         """
         Iterates over elements.
         """
-        for e in self._elements:
-            yield e
+        yield from self._elements
 
     def sort_values(self):
         """
         sort the elements by value
         """
-        self._elements = list(
-            _[-1] for _ in sorted((e.value, e.weight, e) for e in self)
-        )
+        self._elements = [_[-1] for _ in sorted((e.value, e.weight, e) for e in self)]
 
     def sort_weight(self):
         """
         Sorts the elements by value.
         """
-        self._elements = list(
-            _[-1] for _ in sorted((e.weight, e.value, e) for e in self)
-        )
+        self._elements = [_[-1] for _ in sorted((e.weight, e.value, e) for e in self)]
 
     def compare_with_trie(self, delta=0.8):
         """
@@ -439,7 +432,7 @@ class CompletionSystem:
         """
 
         def format_diff(el, f, diff):
-            s = (
+            s = (  # noqa: UP030
                 "VALUE={0}\nSYST=[{1}]\nTRIE=[{2}]\nMORE SYSTEM:"
                 "\n{3}\n######\nMORE TRIE:\n{4}"
             ).format(
@@ -491,9 +484,7 @@ class CompletionSystem:
         """
         self.sort_weight()
         if ffilter is not None:
-            raise NotImplementedError(  # pragma: no cover
-                "ffilter not None is not implemented"
-            )
+            raise NotImplementedError("ffilter not None is not implemented")
         if details:
             store_completions = {"": []}
 
@@ -516,8 +507,8 @@ class CompletionSystem:
         while updates > 0:
             displayed = {}
             updates = 0
-            for i, el in enumerate(self._elements):
-                for k in range(0, len(el.value)):
+            for _i, el in enumerate(self._elements):
+                for k in range(len(el.value)):
                     prefix = el.value[:k]
                     if prefix not in displayed:
                         displayed[prefix] = 0
@@ -621,7 +612,7 @@ class CompletionSystem:
         It then calls @see me enumerate_metric.
         """
         res = dict(mks0=0.0, mks1=0.0, mks2=0.0, sum_weights=0.0, sum_wlen=0.0, n=0)
-        hist = {k: {} for k in {"mks0", "mks1", "mks2", "l"}}  # pylint: disable=C0208
+        hist = {k: {} for k in {"mks0", "mks1", "mks2", "l"}}
         wei = {k: {} for k in hist}
         res["hist"] = hist
         res["histnow"] = wei

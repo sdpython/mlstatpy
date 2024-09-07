@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-@brief      test log(time=1s)
-"""
 import unittest
 import numpy
 from numpy.testing import assert_array_equal
-from pyquickhelper.pycode import ExtTestCase, ignore_warnings
+from mlstatpy.ext_test_case import ExtTestCase, ignore_warnings
 from sklearn.neighbors import NearestNeighbors
 from mlstatpy.ml.kppv import NuagePoints
 from mlstatpy.ml.kppv_laesa import NuagePointsLaesa

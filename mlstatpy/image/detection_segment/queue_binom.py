@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 def tabule_queue_binom(n, p):
     """
     Retourne un dictionnaire dont la clé est couple d'entiers *(a,b)*

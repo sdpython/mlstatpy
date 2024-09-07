@@ -1,16 +1,14 @@
-# -*- coding: utf-8 -*-
 """
-@brief      test log(time=2s)
-
 https://dumps.wikimedia.org/frwiki/latest/frwiki-latest-all-titles.gz
 https://dumps.wikimedia.org/frwiki/latest/frwiki-latest-all-titles-in-ns0.gz
 """
+
 import os
 import unittest
 import cProfile
 import pstats
 import io
-from pyquickhelper.pycode import get_temp_folder
+from mlstatpy.ext_test_case import get_temp_folder
 from mlstatpy.nlp.completion import CompletionTrieNode
 
 
@@ -52,9 +50,7 @@ class TestCompletionProfiling(unittest.TestCase):
             res = s.getvalue().replace(rem, "")
             if show:
                 print(res)
-            with open(
-                os.path.join(temp, "profiling%d.txt" % n), "w"
-            ) as f:  # pylint: disable=W1514
+            with open(os.path.join(temp, "profiling%d.txt" % n), "w") as f:
                 f.write(res)
 
         prof(1, show=False)
