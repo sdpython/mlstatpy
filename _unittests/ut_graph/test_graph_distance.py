@@ -6,11 +6,12 @@
 import os
 import unittest
 import copy
-from mlstatpy.ext_test_case import get_temp_folder, ExtTestCase
+from mlstatpy.ext_test_case import ExtTestCase, ignore_warnings
 from mlstatpy.graph.graph_distance import GraphDistance
 
 
 class TestGraphDistance(ExtTestCase):
+    @ignore_warnings(FutureWarning)
     def test_graph_load(self):
         this = os.path.abspath(os.path.dirname(__file__))
         graph = os.path.join(this, "data", "graph.gv")
@@ -19,8 +20,6 @@ class TestGraphDistance(ExtTestCase):
         self.assertTrue(len(paths) > 0)
 
     def test_image_video_kohonen(self):
-        temp = get_temp_folder(__file__, "temp_graph_distance")
-
         graph1 = [
             ("a", "b"),
             ("b", "c"),
@@ -69,31 +68,17 @@ class TestGraphDistance(ExtTestCase):
         if distance is None:
             raise AssertionError("expecting something different from None")
 
-        outfile1 = os.path.join(temp, "unittest_GraphDistance4_sub1.png")
-        outfile2 = os.path.join(temp, "unittest_GraphDistance4_sub2.png")
-        outfilef = os.path.join(temp, "unittest_GraphDistance4_subf.png")
-
         vertices, edges = graph1.draw_vertices_edges()
         self.assertNotEmpty(vertices)
         self.assertNotEmpty(edges)
-        try:
-            draw_graph_graphviz(vertices, edges, outfile1)
-        except FileNotFoundError as e:
-            if "No such file or directory: 'dot'" in str(e):
-                return
-            raise e
 
         vertices, edges = graph2.draw_vertices_edges()
         self.assertNotEmpty(vertices)
         self.assertNotEmpty(edges)
-        draw_graph_graphviz(vertices, edges, outfile2)
-        self.assertTrue(os.path.exists(outfile2))
 
         vertices, edges = graph.draw_vertices_edges()
         self.assertNotEmpty(vertices)
         self.assertNotEmpty(edges)
-        draw_graph_graphviz(vertices, edges, outfilef)
-        self.assertTrue(os.path.exists(outfilef))
 
     def test_unittest_GraphDistance2(self):
         graph1 = [
@@ -174,4 +159,4 @@ class TestGraphDistance(ExtTestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)

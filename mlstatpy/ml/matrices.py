@@ -130,7 +130,7 @@ def linear_regression(X, y, algo=None):
         # T = P X
         return (y.T @ T.T @ P).ravel()
     if algo == "qr":
-        Q, R = numpy.linalg.qr(X, "full")
+        Q, R = numpy.linalg.qr(X, "reduced")
         Ri = dtrtri(R)[0]
         gamma = (y.T @ Q).ravel()
         return (gamma @ Ri.T).ravel()

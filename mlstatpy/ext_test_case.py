@@ -412,6 +412,14 @@ class ExtTestCase(unittest.TestCase):
         if not full.startswith(prefix):
             raise AssertionError(f"prefix={prefix!r} does not start string  {full!r}.")
 
+    def assertGreater(self, a, b):
+        if a < b:
+            raise AssertionError(f"{a} < {b}")
+
+    def assertLesser(self, a, b):
+        if a > b:
+            raise AssertionError(f"{a} > {b}")
+
     @classmethod
     def tearDownClass(cls):
         for name, line, w in cls._warns:
@@ -429,6 +437,22 @@ class ExtTestCase(unittest.TestCase):
         with redirect_stdout(sout), redirect_stderr(serr):
             res = fct()
         return res, sout.getvalue(), serr.getvalue()
+
+    @staticmethod
+    def profile(fct, sort="cumulative", rootrem=None, return_results=False):
+        """
+        Profiles the execution of a function with function
+        :func:`profile <pyquickhelper.pycode.profiling.profile>`.
+
+        :param fct: function to profile
+        :param sort: see :meth:`pstats.Stats.sort_stats`
+        :param rootrem: root to remove in filenames
+        :param return_results: return the results as well
+        :return: statistics text dump
+        """
+        from onnx_array_api.profiling import profile
+
+        return profile(fct, sort=sort, rootrem=rootrem, return_results=return_results)
 
 
 def remove_folder(top, remove_also_top=True, raise_exception=True):

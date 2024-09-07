@@ -116,7 +116,7 @@ def _calcule_gradient(img, color=None):
     dy1 = img[1:-1, :] - img[:-2, :]
     dy2 = img[2:, :] - img[1:-1, :]
     dy = (dy1 + dy2) / 2
-    res = numpy.zeros(*img.shape, 2)
+    res = numpy.zeros((*img.shape, 2))
     res[:, 1:-1, 0] = dx
     res[1:-1, :, 1] = dy
     return res

@@ -36,7 +36,7 @@ class TestVoronoi(ExtTestCase):
             expected_values = numpy.array(
                 [[3.0, 4.137], [5.044, 0.281], [5.497, 0.184]]
             )
-            self.assertEqualArray(expected_values, points, decimal=2)
+            self.assertEqualArray(expected_values, points, atol=1e-2)
 
             points = voronoi_estimation_from_lr(
                 clr.coef_, clr.intercept_, C, D, qr=True, verbose=True
@@ -45,7 +45,7 @@ class TestVoronoi(ExtTestCase):
             expected_values = numpy.array(
                 [[3.0, 4.137], [5.044, 0.281], [5.497, 0.184]]
             )
-            self.assertEqualArray(expected_values, points, decimal=2)
+            self.assertEqualArray(expected_values, points, atol=1e-2)
         std = std.getvalue()
         self.assertIn("[voronoi_estimation_from_lr] iter=", std)
 
@@ -72,7 +72,7 @@ class TestVoronoi(ExtTestCase):
         self.assertEqual(points.shape, (3, 4))
         points2 = voronoi_estimation_from_lr(clr.coef_, clr.intercept_, C, D, qr=True)
         self.assertEqual(points2.shape, (3, 4))
-        self.assertEqualArray(points2, points2, decimal=5)
+        self.assertEqualArray(points2, points2, atol=1e-5)
 
     def test_square(self):
         from mlstatpy.ml.voronoi import voronoi_estimation_from_lr
