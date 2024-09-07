@@ -8,7 +8,6 @@ import unittest
 import copy
 from mlstatpy.ext_test_case import get_temp_folder, ExtTestCase
 from mlstatpy.graph.graph_distance import GraphDistance
-from mlstatpy.graph.graphviz_helper import draw_graph_graphviz
 
 
 class TestGraphDistance(ExtTestCase):

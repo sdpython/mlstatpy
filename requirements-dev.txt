@@ -5,6 +5,7 @@ coverage
 Cython
 cytoolz
 dill
+graphviz
 hummingbird-ml
 ijson
 importlib_metadata
