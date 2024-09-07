@@ -6,11 +6,11 @@ import subprocess
 import time
 import warnings
 from nbconvert import PythonExporter
-from mlstatpy import __file__ as teachpyx_file
+from mlstatpy import __file__ as mlstatpy_file
 from mlstatpy.ext_test_case import ExtTestCase
 
 VERBOSE = 0
-ROOT = os.path.realpath(os.path.abspath(os.path.join(teachpyx_file, "..", "..")))
+ROOT = os.path.realpath(os.path.abspath(os.path.join(mlstatpy_file, "..", "..")))
 
 
 def import_source(module_file_path, module_name):

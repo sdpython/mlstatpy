@@ -1,6 +1,6 @@
 import unittest
 from math import cos
-from teachpyx.ext_test_case import ExtTestCase, measure_time
+from mlstatpy.ext_test_case import ExtTestCase, measure_time
 
 
 class TestMeasureTime(ExtTestCase):
