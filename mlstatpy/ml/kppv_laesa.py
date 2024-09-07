@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import random
 import numpy
 from .kppv import NuagePoints
@@ -51,7 +49,7 @@ class NuagePointsLaesa(NuagePoints):
         # on calcule aussi la distance de chaque éléments au pivots
         self.dist = numpy.zeros((self.nuage.shape[0], len(self.pivots)))
         for i in range(self.nuage.shape[0]):
-            for j in range(len(self.pivots)):  # pylint: disable=C0200
+            for j in range(len(self.pivots)):
                 self.dist[i, j] = self.distance(
                     self.nuage[i, :], self.nuage[self.pivots[j], :]
                 )
@@ -75,10 +73,10 @@ class NuagePointsLaesa(NuagePoints):
         dm, im, _ = min(dp)
 
         # améliorations
-        for i in range(0, self.nuage.shape[0]):
+        for i in range(self.nuage.shape[0]):
             # on regarde si un pivot permet d'éliminer l'élément i
             calcul = True
-            for d, p, ip in dp:
+            for d, _p, ip in dp:
                 delta = abs(d - self.dist[i, ip])
                 if delta > dm:
                     calcul = False

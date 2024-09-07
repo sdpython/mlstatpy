@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-@brief      test log(time=2s)
-"""
 import os
 import unittest
 import numpy
-from pyquickhelper.pycode import ExtTestCase, get_temp_folder
+from mlstatpy.ext_test_case import ExtTestCase, get_temp_folder
 from mlstatpy.image.detection_segment.random_image import (
     random_noise_image,
     random_segment_image,
@@ -43,7 +39,7 @@ class TestRandomImage(ExtTestCase):
         img3 = convert_PIL2array(pil2)
         self.assertEqual(timg255, img3)
 
-        for _ in range(0, 100):
+        for _ in range(100):
             seg = random_segment_image(img, lmin=0.5, density=2.0)
             self.assertGreater(seg["x1"], 0)
             self.assertGreater(seg["y1"], 0)

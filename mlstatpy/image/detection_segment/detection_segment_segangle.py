@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import math
 import copy
 from .detection_segment_bord import SegmentBord_Commun

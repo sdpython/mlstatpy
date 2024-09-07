@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-
 import math
 import numpy
-import numpy.random as nprnd  # pylint: disable=E1101
+import numpy.random as nprnd
 
 
 def random_noise_image(size, ratio=0.1):
@@ -51,7 +49,7 @@ def random_segment_image(image, lmin=0.1, lmax=1.0, noise=0.01, density=1.0):
     lmin = int(mind * lmin)
     lmax = int(mind * lmax)
     size = nprnd.randint(lmin, lmax)
-    angle = nprnd.random() * math.pi  # pylint: disable=E1101
+    angle = nprnd.random() * math.pi
     x1 = nprnd.randint(image.shape[1] - int(size * abs(math.cos(angle)) - 1))
     y1 = nprnd.randint(image.shape[0] - int(size * math.sin(angle) - 1))
     x2 = x1 + size * math.cos(angle)
@@ -62,27 +60,21 @@ def random_segment_image(image, lmin=0.1, lmax=1.0, noise=0.01, density=1.0):
     t = nprnd.randint(0, size, int(size * density))
     xs = t * math.cos(angle) + x1
     ys = t * math.sin(angle) + x2
-    noise = (
-        nprnd.randn(xs.shape[0] * 2).reshape(xs.shape[0], 2)  # pylint: disable=E1101
-        * noise
-        * mind
-    )
+    noise = nprnd.randn(xs.shape[0] * 2).reshape(xs.shape[0], 2) * noise * mind
     xs += noise[:, 0]
     ys += noise[:, 1]
-    xs = numpy.maximum(xs, numpy.zeros(xs.shape[0]))  # pylint: disable=E1111
-    ys = numpy.maximum(
-        ys, numpy.zeros(xs.shape[0])
-    )  # pylint: disable=E1111,E1101,E1136
+    xs = numpy.maximum(xs, numpy.zeros(xs.shape[0]))
+    ys = numpy.maximum(ys, numpy.zeros(xs.shape[0]))
     xs = numpy.minimum(
-        xs, numpy.zeros(xs.shape[0]) + image.shape[1] - 1  # pylint: disable=E1101,E1136
-    )  # pylint: disable=E1111,E1101,E1136
+        xs,
+        numpy.zeros(xs.shape[0]) + image.shape[1] - 1,
+    )
     ys = numpy.minimum(
-        ys, numpy.zeros(xs.shape[0]) + image.shape[0] - 1  # pylint: disable=E1101,E1136
-    )  # pylint: disable=E1111,E1101,E1136
-    xs = xs.astype(numpy.int32)  # pylint: disable=E1101
-    ys = ys.astype(numpy.int32)  # pylint: disable=E1101
+        ys,
+        numpy.zeros(xs.shape[0]) + image.shape[0] - 1,
+    )
+    xs = xs.astype(numpy.int32)
+    ys = ys.astype(numpy.int32)
     image[ys, xs] = 1
-    res = dict(
-        size=size, angle=angle, x1=x1, y1=y1, x2=x2, y2=y2, nbpoints=xs.shape[0]
-    )  # pylint: disable=E1136
+    res = dict(size=size, angle=angle, x1=x1, y1=y1, x2=x2, y2=y2, nbpoints=xs.shape[0])
     return res

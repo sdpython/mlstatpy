@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-@brief      test log(time=60s)
-"""
 import unittest
-from pyquickhelper.pycode import get_temp_folder, ExtTestCase
+from mlstatpy.ext_test_case import get_temp_folder, ExtTestCase
 from mlstatpy.data.wikipedia import download_dump
 
 

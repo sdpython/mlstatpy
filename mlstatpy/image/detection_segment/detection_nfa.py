@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from .geometrie import Segment
 
 
@@ -92,7 +90,7 @@ class LigneGradient:
         """
         ext = []
         if self.has_aligned_point():
-            for i in range(0, len(self)):
+            for i in range(len(self)):
                 if self.info_ligne[i].aligne and (
                     i == 0
                     or i == len(self) - 1

@@ -1,8 +1,6 @@
-# coding: utf-8
-
 import numpy
 import numpy.random as rnd
-from scipy.special import expit, softmax, kl_div as kl_fct  # pylint: disable=E0611
+from scipy.special import expit, softmax, kl_div as kl_fct
 from ._neural_tree_api import _TrainingAPI
 
 
@@ -82,9 +80,7 @@ class NeuralTreeNode(_TrainingAPI):
             return NeuralTreeNode._leakyrelu
         if activation == "identity":
             return lambda x: x
-        raise ValueError(  # pragma: no cover
-            f"Unknown activation function '{activation}'."
-        )
+        raise ValueError(f"Unknown activation function '{activation}'.")
 
     @staticmethod
     def get_activation_gradient_function(activation):
@@ -114,9 +110,7 @@ class NeuralTreeNode(_TrainingAPI):
             return NeuralTreeNode._dleakyrelu
         if activation == "identity":
             return lambda x: numpy.ones(x.shape, dtype=x.dtype)
-        raise ValueError(  # pragma: no cover
-            f"Unknown activation gradient function '{activation}'."
-        )
+        raise ValueError(f"Unknown activation gradient function '{activation}'.")
 
     @staticmethod
     def get_activation_loss_function(activation):
@@ -169,9 +163,7 @@ class NeuralTreeNode(_TrainingAPI):
                 return (x - y) * 2
 
             return dregdx
-        raise ValueError(  # pragma: no cover
-            f"Unknown activation function '{activation}'."
-        )
+        raise ValueError(f"Unknown activation function '{activation}'.")
 
     def __init__(self, weights, bias=None, activation="sigmoid", nodeid=-1, tag=None):
         self.tag = tag
@@ -201,9 +193,7 @@ class NeuralTreeNode(_TrainingAPI):
             self.coef[:, 1:] = weights
             self.coef[:, 0] = bias
         else:
-            raise RuntimeError(  # pragma: no cover
-                f"Unexpected weights shape: {weights.shape}"
-            )
+            raise RuntimeError(f"Unexpected weights shape: {weights.shape}")
 
         self.activation = activation
         self.nodeid = nodeid
@@ -253,9 +243,7 @@ class NeuralTreeNode(_TrainingAPI):
     def __eq__(self, obj):
         if self.coef.shape != obj.coef.shape:
             return False
-        if any(
-            map(lambda xy: xy[0] != xy[1], zip(self.coef.ravel(), obj.coef.ravel()))
-        ):
+        if any(xy[0] != xy[1] for xy in zip(self.coef.ravel(), obj.coef.ravel())):
             return False
         if self.activation != obj.activation:
             return False
@@ -310,7 +298,7 @@ class NeuralTreeNode(_TrainingAPI):
         "Returns the weights stored in the neuron."
         return self.coef.ravel()
 
-    def update_training_weights(self, X, add=True):  # pylint: disable=W0237
+    def update_training_weights(self, X, add=True):
         """
         Updates weights.
 
@@ -349,8 +337,8 @@ class NeuralTreeNode(_TrainingAPI):
         """
         act = self._common_loss_dloss(X, y, cache=cache)
         if len(X.shape) == 1:
-            return self.losss_(act, y)  # pylint: disable=E1120
-        return self.losss_(act, y)  # pylint: disable=E1120
+            return self.losss_(act, y)
+        return self.losss_(act, y)
 
     def dlossds(self, X, y, cache=None):
         """

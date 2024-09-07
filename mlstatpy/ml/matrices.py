@@ -1,12 +1,12 @@
 import warnings
 import numpy
 import numpy.linalg
-from scipy.linalg.lapack import dtrtri  # pylint: disable=E0611
+from scipy.linalg.lapack import dtrtri
 
 
 def gram_schmidt(mat, change=False):
     """
-    Applies the `Gram–Schmidt process
+    Applies the `Gram-Schmidt process
     <https://en.wikipedia.org/wiki/Gram%E2%80%93Schmidt_process>`_.
     Due to performance, every row is considered as a vector.
 
@@ -35,9 +35,9 @@ def gram_schmidt(mat, change=False):
         print(P)
     """
     if len(mat.shape) != 2:
-        raise ValueError("mat must be a matrix.")  # pragma: no cover
+        raise ValueError("mat must be a matrix.")
     if mat.shape[1] < mat.shape[0]:
-        raise RuntimeError(  # pragma: no cover
+        raise RuntimeError(
             "The function only works if the number of rows is less "
             "than the number of columns."
         )
@@ -45,9 +45,9 @@ def gram_schmidt(mat, change=False):
         base = numpy.identity(mat.shape[0])
     # The following code is equivalent to:
     # res = numpy.empty(mat.shape)
-    # for i in range(0, mat.shape[0]):
+    # for i in range(mat.shape[0]):
     #     res[i, :] = mat[i, :]
-    #     for j in range(0, i):
+    #     for j in range(i):
     #         d = numpy.dot(res[j, :], mat[i, :])
     #         res[i, :] -= res[j, :] * d
     #         if change:
@@ -60,7 +60,7 @@ def gram_schmidt(mat, change=False):
     #             base[i, :] /= d
     # But it is faster to write it this way:
     res = numpy.empty(mat.shape)
-    for i in range(0, mat.shape[0]):
+    for i in range(mat.shape[0]):
         res[i, :] = mat[i, :]
         if i > 0:
             d = numpy.dot(res[:i, :], mat[i, :])
@@ -118,8 +118,9 @@ def linear_regression(X, y, algo=None):
     to the algorithm).
     """
     if len(y.shape) != 1:
-        warnings.warn(  # pragma: no cover
-            "This function is not tested for a multidimensional linear regression."
+        warnings.warn(
+            "This function is not tested for a multidimensional linear regression.",
+            stacklevel=0,
         )
     if algo is None:
         inv = numpy.linalg.inv(X.T @ X)
@@ -133,7 +134,7 @@ def linear_regression(X, y, algo=None):
         Ri = dtrtri(R)[0]
         gamma = (y.T @ Q).ravel()
         return (gamma @ Ri.T).ravel()
-    raise ValueError(f"Unknwown algo='{algo}'.")  # pragma: no cover
+    raise ValueError(f"Unknwown algo='{algo}'.")
 
 
 def norm2(X):
@@ -162,11 +163,11 @@ def streaming_gram_schmidt_update(Xk, Pk):
     tki = Pk @ Xk
     idi = numpy.identity(Pk.shape[0])
 
-    for i in range(0, Pk.shape[0]):
+    for i in range(Pk.shape[0]):
         val = tki[i]
 
         if i > 0:
-            # for j in range(0, i):
+            # for j in range(i):
             #    d = tki[j] * val
             #    tki[i] -= tki[j] * d
             #    Pk[i, :] -= Pk[j, :] * d
@@ -178,7 +179,7 @@ def streaming_gram_schmidt_update(Xk, Pk):
             Pk[i, :] -= numpy.multiply(Pk[:i, :], dv).sum(axis=0)
             idi[i, :] -= numpy.multiply(idi[:i, :], dv).sum(axis=0)
 
-        d = numpy.square(idi[i, :]).sum()  # pylint: disable=E1101
+        d = numpy.square(idi[i, :]).sum()
         d = tki[i] ** 2 + d
         if d > 0:
             d **= 0.5
@@ -219,7 +220,7 @@ def streaming_gram_schmidt(mat, start=None):
             print(t.T @ t)
     """
     if len(mat.shape) != 2:
-        raise ValueError("mat must be a matrix.")  # pragma: no cover
+        raise ValueError("mat must be a matrix.")
     if mat.shape[1] < mat.shape[0]:
         raise RuntimeError(
             "The function only works if the number of rows is less "
@@ -281,15 +282,16 @@ def streaming_linear_regression(mat, y, start=None):
             print("iteration", i, bk, bk0)
     """
     if len(mat.shape) != 2:
-        raise ValueError("mat must be a matrix.")  # pragma: no cover
+        raise ValueError("mat must be a matrix.")
     if mat.shape[0] < mat.shape[1]:
         raise RuntimeError(
             "The function only works if the number of rows is more "
             "than the number of columns."
         )
     if len(y.shape) != 1:
-        warnings.warn(  # pragma: no cover
-            "This function is not tested for a multidimensional linear regression."
+        warnings.warn(
+            "This function is not tested for a multidimensional linear regression.",
+            stacklevel=0,
         )
     if start is None:
         start = mat.shape[1]
@@ -352,15 +354,16 @@ def streaming_linear_regression_gram_schmidt(mat, y, start=None):
             print("iteration", i, bk, bk0)
     """
     if len(mat.shape) != 2:
-        raise ValueError("mat must be a matrix.")  # pragma: no cover
+        raise ValueError("mat must be a matrix.")
     if mat.shape[0] < mat.shape[1]:
         raise RuntimeError(
             "The function only works if the number of rows is more "
             "than the number of columns."
         )
     if len(y.shape) != 1:
-        warnings.warn(  # pragma: no cover
-            "This function is not tested for a multidimensional linear regression."
+        warnings.warn(
+            "This function is not tested for a multidimensional linear regression.",
+            stacklevel=0,
         )
     if start is None:
         start = mat.shape[1]

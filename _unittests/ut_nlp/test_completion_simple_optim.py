@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@brief      test log(time=3s)
-"""
 import unittest
 from mlstatpy.nlp.completion_simple import CompletionSystem
 
@@ -21,7 +17,7 @@ class TestCompletionSimpleOptimisation(unittest.TestCase):
         cset = CompletionSystem(comp)
         cset.compute_metrics()
         queries = [(q, 1) for q in comp]
-        for el, found in cset.enumerate_test_metric(queries):
+        for _el, found in cset.enumerate_test_metric(queries):
             # print(el, found)
             assert found is not None
         res = cset.test_metric(queries)

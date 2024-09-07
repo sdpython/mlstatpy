@@ -1,5 +1,3 @@
-# coding: utf-8
-
 import numpy
 import numpy.linalg
 from scipy.spatial.distance import euclidean
@@ -16,7 +14,6 @@ class NuagePoints:
         """
         constructeur
         """
-        pass
 
     def fit(self, X, y=None):
         """
@@ -38,13 +35,9 @@ class NuagePoints:
         @return                         array (dist), array (indices)
         """
         if n_neighbors != 1:
-            raise NotImplementedError(  # pragma: no cover
-                "Not implemented when n_neighbors != 1."
-            )
+            raise NotImplementedError("Not implemented when n_neighbors != 1.")
         if not return_distance:
-            raise NotImplementedError(  # pragma: no cover
-                "Not implemented when return_distance is False."
-            )
+            raise NotImplementedError("Not implemented when return_distance is False.")
 
         dist = numpy.zeros(X.shape[0])
         ind = numpy.zeros(X.shape[0], dtype=numpy.int64)

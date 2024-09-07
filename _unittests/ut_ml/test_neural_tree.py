@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@brief      test log(time=23s)
-"""
 import io
 import unittest
 import pickle
@@ -9,7 +5,7 @@ import numpy
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_graphviz
 from sklearn.datasets import load_iris
 from sklearn.tree import export_text
-from pyquickhelper.pycode import ExtTestCase
+from mlstatpy.ext_test_case import ExtTestCase
 from onnx_array_api.plotting.text_plot import onnx_simple_text_plot
 from mlstatpy.ml.neural_tree import (
     NeuralTreeNode,
@@ -204,7 +200,7 @@ class TestNeuralTree(ExtTestCase):
                 self.assertEqualArray(w0, numpy.zeros(w0.shape))
 
     def test_optim_regression(self):
-        state = numpy.random.RandomState(seed=0)  # pylint: disable=E1101
+        state = numpy.random.RandomState(seed=0)
         X = numpy.abs(state.randn(10, 2))
         w0 = state.randn(3)
         w1 = numpy.array([-0.5, 0.8, -0.6])
@@ -357,7 +353,7 @@ class TestNeuralTree(ExtTestCase):
                 self.assertEqualArray(pred2[:, 2], pred2[:, 3])
                 self.assertEqualArray(loss1, loss2, atol=1e-7)
 
-                for p in range(0, 5):
+                for p in range(5):
                     grad1 = neu.gradient(X[p], y[p])
                     grad2 = net.gradient(X[p], y[p])
                     self.assertEqualArray(grad1, grad2[:3], atol=1e-7)
@@ -418,7 +414,7 @@ class TestNeuralTree(ExtTestCase):
                 self.assertEqualArray(pred2[:, 2], pred2[:, -1])
                 self.assertEqualArray(loss1, loss2, atol=1e-7)
 
-                for p in range(0, 5):
+                for p in range(5):
                     grad1 = neu.gradient(X[p], y[p])
                     grad2 = net.gradient(X[p], y[p])
                     self.assertEqualArray(grad1, grad2[:3], atol=1e-7)

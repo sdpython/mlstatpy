@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:00.000** total execution time for 1 file **from all galleries**:
+**00:01.098** total execution time for 1 file **from all galleries**:
 
 .. container::
 
@@ -33,5 +33,5 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_examples_plot_logistic_decision.py` (``examples/plot_logistic_decision.py``)
-     - 00:00.000
+     - 00:01.098
      - 0.0

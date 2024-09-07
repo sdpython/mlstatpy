@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-@brief      test log(time=10s)
-"""
 import os
 import unittest
 import math
-from pyquickhelper.pycode import ExtTestCase, get_temp_folder
+from mlstatpy.ext_test_case import ExtTestCase, get_temp_folder
 from mlstatpy.image.detection_segment.geometrie import Point
 from mlstatpy.image.detection_segment.detection_segment_segangle import SegmentBord
 from mlstatpy.image.detection_segment.detection_segment import (
@@ -28,7 +24,7 @@ class TestSegments(ExtTestCase):
         res = []
         while n:
             res.append(s.copy())
-            n = s.next()  # pylint: disable=E1102
+            n = s.next()
         self.assertEqual(len(res), 279)
         self.assertEqual(res[-1].a, Point(0, 3))
         self.assertEqual(res[-1].b, Point(7, 2))
@@ -55,7 +51,7 @@ class TestSegments(ExtTestCase):
                             reste = False
                             break
 
-            import pygame  # pylint: disable=C0415
+            import pygame
 
             pygame.init()
             screen = pygame.display.set_mode((xx * 4, yy * 4))
@@ -98,7 +94,7 @@ class TestSegments(ExtTestCase):
                 pygame.draw.line(screen, couleur[c % len(couleur)], a, b)
                 pygame.display.flip()
 
-            n = s.next()  # pylint: disable=E1102
+            n = s.next()
             if angle != s.angle:
                 if TestSegments.visual and __name__ == "__main__":
                     print("changement angle = ", angle, " --> ", s.angle, "   clic ", s)
@@ -127,7 +123,7 @@ class TestSegments(ExtTestCase):
             os.path.abspath(os.path.join(os.path.dirname(rootfile), ".."))
         )
         _, res = self.profile(
-            lambda: _calcule_gradient(img, color=0),  # pylint: disable=W0632
+            lambda: _calcule_gradient(img, color=0),
             rootrem=rootrem,
         )
         short = "\n".join(res.split("\n")[:15])
@@ -158,7 +154,7 @@ class TestSegments(ExtTestCase):
             os.path.abspath(os.path.join(os.path.dirname(rootfile), ".."))
         )
         _, res = self.profile(
-            lambda: detect_segments(img, stop=100),  # pylint: disable=W0632
+            lambda: detect_segments(img, stop=100),
             rootrem=rootrem,
         )
         short = "\n".join(res.split("\n")[:25])

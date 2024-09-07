@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-@brief      test log(time=2s)
-"""
 import unittest
 import numpy
 import numpy.random as rnd
-from pyquickhelper.pycode import ExtTestCase
+from mlstatpy.ext_test_case import ExtTestCase
 from mlstatpy.ml.matrices import (
     gram_schmidt,
     linear_regression,
@@ -85,9 +81,7 @@ class TestMatrices(ExtTestCase):
     def test_dim_lin_reg(self):
         X = rnd.randn(100, 7)
         eps = rnd.randn(100, 1) / 3
-        y = (
-            X.sum(axis=1).reshape((X.shape[0], 1)) + eps  # pylint: disable=E1101
-        )  # pylint: disable=E1101
+        y = X.sum(axis=1).reshape((X.shape[0], 1)) + eps
         y = y.ravel()
         b1 = linear_regression(X, y)
         b3 = linear_regression(X, y, algo="gram")
@@ -103,9 +97,9 @@ class TestMatrices(ExtTestCase):
         Xt = X.T
         Tt = numpy.empty(Xt.shape)
         Pt = numpy.identity(X.shape[1])
-        for i in range(0, Xt.shape[0]):
+        for i in range(Xt.shape[0]):
             Tt[i, :] = Xt[i, :]
-            for j in range(0, i):
+            for j in range(i):
                 d = numpy.dot(Tt[j, :], Xt[i, :])
                 Tt[i, :] -= Tt[j, :] * d
                 Pt[i, :] -= Pt[j, :] * d
@@ -150,7 +144,7 @@ class TestMatrices(ExtTestCase):
                 self.assertEqualArray(t_.T @ t_, idd, atol=1e-10)
             algo2 = []
             self.assertRaise(
-                lambda: list(streaming_gram_schmidt(X)),  # pylint: disable=W0640
+                lambda X=X: list(streaming_gram_schmidt(X)),
                 RuntimeError,
             )
             for i, p in enumerate(streaming_gram_schmidt(Xt)):
@@ -183,9 +177,7 @@ class TestMatrices(ExtTestCase):
                 algo1.append(bk)
             algo2 = []
             self.assertRaise(
-                lambda: list(
-                    streaming_linear_regression(X.T, y)
-                ),  # pylint: disable=W0640
+                lambda X=X, y=y: list(streaming_linear_regression(X.T, y)),
                 RuntimeError,
             )
             for i, bk in enumerate(streaming_linear_regression(X, y)):
@@ -215,9 +207,7 @@ class TestMatrices(ExtTestCase):
                 algo1.append(bk)
             algo2 = []
             self.assertRaise(
-                lambda: list(
-                    streaming_linear_regression_gram_schmidt(X.T, y)
-                ),  # pylint: disable=W0640
+                lambda X=X, y=y: list(streaming_linear_regression_gram_schmidt(X.T, y)),
                 RuntimeError,
             )
             for i, bk in enumerate(streaming_linear_regression_gram_schmidt(X, y)):
@@ -230,9 +220,7 @@ class TestMatrices(ExtTestCase):
         N = 1000
         X = rnd.randn(N, 10)
         eps = rnd.randn(N, 1) / 3
-        y = (
-            X.sum(axis=1).reshape((X.shape[0], 1)) + eps  # pylint: disable=E1101
-        )  # pylint: disable=E1101
+        y = X.sum(axis=1).reshape((X.shape[0], 1)) + eps
         y = y.ravel()
         res = self.profile(lambda: list(streaming_linear_regression_gram_schmidt(X, y)))
         if __name__ == "__main__":

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import numpy
 from ..optim import SGDOptimizer
 
@@ -12,7 +10,7 @@ class _TrainingAPI:
     @property
     def training_weights(self):
         "Returns the weights."
-        raise NotImplementedError("This should be overwritten.")  # pragma: no cover
+        raise NotImplementedError("This should be overwritten.")
 
     def update_training_weights(self, grad, add=True):
         """
@@ -21,25 +19,25 @@ class _TrainingAPI:
         :param grad: vector to add to the weights such as gradient
         :param add: addition or replace
         """
-        raise NotImplementedError("This should be overwritten.")  # pragma: no cover
+        raise NotImplementedError("This should be overwritten.")
 
     def fill_cache(self, X):
         """
         Creates a cache with intermediate results.
         """
-        return None  # pragma: no cover
+        return None
 
     def loss(self, X, y, cache=None):
         """
         Computes the loss. Returns a float.
         """
-        raise NotImplementedError("This should be overwritten.")  # pragma: no cover
+        raise NotImplementedError("This should be overwritten.")
 
     def dlossds(self, X, y, cache=None):
         """
         Computes the loss derivative due to prediction error.
         """
-        raise NotImplementedError("This should be overwritten.")  # pragma: no cover
+        raise NotImplementedError("This should be overwritten.")
 
     def gradient_backward(self, graddx, X, inputs=False, cache=None):
         """
@@ -52,7 +50,7 @@ class _TrainingAPI:
         :param cache: cache intermediate results to avoid more computation
         :return: gradient
         """
-        raise NotImplementedError("This should be overwritten.")  # pragma: no cover
+        raise NotImplementedError("This should be overwritten.")
 
     def gradient(self, X, y, inputs=False):
         """
@@ -65,10 +63,10 @@ class _TrainingAPI:
         :return: gradient
         """
         if len(X.shape) != 1:
-            raise ValueError(  # pragma: no cover
+            raise ValueError(
                 f"X must a vector of one dimension but has shape {X.shape}."
             )
-        cache = self.fill_cache(X)  # pylint: disable=E1128
+        cache = self.fill_cache(X)
         dlossds = self.dlossds(X, y, cache=cache)
         return self.gradient_backward(dlossds, X, inputs=inputs, cache=cache)
 

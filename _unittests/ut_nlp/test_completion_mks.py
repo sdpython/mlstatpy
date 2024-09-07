@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@brief      test log(time=3s)
-"""
 import os
 import unittest
 from mlstatpy.nlp.completion import CompletionTrieNode

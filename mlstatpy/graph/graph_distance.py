@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import copy
 import re
 
@@ -68,7 +66,7 @@ class _Edge:
 
     def __init__(self, from_, to, label, weight):
         self.from_, self.to = from_, to
-        self.nb = from_, to  # pylint: disable=E1101
+        self.nb = from_, to
         self.label = label
 
 
@@ -90,15 +88,15 @@ class Edge(_Edge):
         self.pair = (None, None)
         self.weight = weight
         if self.from_ == "00" and self.to == "00":
-            raise AssertionError("should not happen")  # pragma: no cover
+            raise AssertionError("should not happen")
         if self.from_ == "11" and self.to == "11":
-            raise AssertionError("should not happen")  # pragma: no cover
+            raise AssertionError("should not happen")
 
     def __str__(self):
         """
         usual
         """
-        return f"{self.nb[0]} -> {self.nb[1]} [{self.Label}]"  # pylint: disable=E1101
+        return f"{self.nb[0]} -> {self.nb[1]} [{self.Label}]"
 
     def __repr__(self):
         """
@@ -106,10 +104,10 @@ class Edge(_Edge):
         """
         return "Edge({}, {}, {}, {})".format(
             repr(self.nb[0]),
-            repr(self.nb[1]),  # pylint: disable=E1101
+            repr(self.nb[1]),
             repr(self.Label),
             self.weight,
-        )  # pylint: disable=E1101
+        )
 
     def is_vertex(self):
         """
@@ -219,7 +217,7 @@ class GraphDistance:
             return self.vertices[index]
         if isinstance(index, tuple):
             return self.edges[index]
-        raise KeyError("unable to get element " + str(index))  # pragma: no cover
+        raise KeyError("unable to get element " + str(index))
 
     @staticmethod
     def load_from_file(filename, add_loop):
@@ -228,11 +226,11 @@ class GraphDistance:
         @param      filename        file name
         @param      add_loop         @see me __init__
         """
-        lines = open(filename, "r").readlines()  # pylint: disable=R1732,W1514
+        with open(filename, "r") as f:
+            lines = f.readlines()
         regV = re.compile('\\"?([a-z0-9_]+)\\"? *[[]label=\\"(.*)\\"[]]')
         regE = re.compile(
-            '\\"?([a-z0-9_]+)\\"? *-> *\\"?'
-            + '([a-z0-9_]+)\\"? *[[]label=\\"(.*)\\"[]]'
+            '\\"?([a-z0-9_]+)\\"? *-> *\\"?([a-z0-9_]+)\\"? *[[]label=\\"(.*)\\"[]]'
         )
         edge_list = []
         vertex_label = {}
@@ -247,7 +245,7 @@ class GraphDistance:
                 g = ve.groups()
                 vertex_label[g[0]] = g[1]
         if not vertex_label or not edge_list:
-            raise OSError(f"Unable to parse file {filename!r}.")  # pragma: no cover
+            raise OSError(f"Unable to parse file {filename!r}.")
         return GraphDistance(edge_list, vertex_label, add_loop)
 
     def _private__init__(self, add_loop, weight_vertex, weight_edge):
@@ -312,7 +310,7 @@ class GraphDistance:
         li = []
         for v in self.vertices.values():
             li.append(str(v))
-        for k, e in self.edges.items():
+        for _k, e in self.edges.items():
             li.append(str(e))
         return "\n".join(li)
 
@@ -422,19 +420,19 @@ class GraphDistance:
                         if v2 is None:
                             return 0.0
                         if not v2.is_vertex():
-                            raise TypeError("v2 should be a vertex")  # pragma: no cover
+                            raise TypeError("v2 should be a vertex")
                         return v2.weight * w2
                     elif v2 is None:
                         if not v1.is_vertex():
-                            raise TypeError("v1 should be a vertex")  # pragma: no cover
+                            raise TypeError("v1 should be a vertex")
                         if not v1.is_vertex():
-                            raise TypeError("v1 should be a vertex")  # pragma: no cover
+                            raise TypeError("v1 should be a vertex")
                         return v1.weight * w1
                     else:
                         if not v1.is_vertex():
-                            raise TypeError("v1 should be a vertex")  # pragma: no cover
+                            raise TypeError("v1 should be a vertex")
                         if not v2.is_vertex():
-                            raise TypeError("v2 should be a vertex")  # pragma: no cover
+                            raise TypeError("v2 should be a vertex")
                         return (
                             0
                             if v1.label == v2.label
@@ -508,7 +506,7 @@ class GraphDistance:
         while modif > 0:
             modif = 0
             add = {}
-            for k, v in g.vertices.items():
+            for _k, v in g.vertices.items():
                 v1, v2 = v.pair
                 if not v.succE:
                     for e1 in v1.succE:
@@ -625,8 +623,7 @@ class GraphDistance:
                 if v.label == self.labelEnd:
                     yield path
                 else:
-                    for p in self.enumerate_all_paths(edges_and_vertices, path):
-                        yield p
+                    yield from self.enumerate_all_paths(edges_and_vertices, path)
 
     def edit_distance_path(
         self,
@@ -742,7 +739,7 @@ class GraphDistance:
     def private_count_left_right(self, valuesInList):
         countLeft = {}
         countRight = {}
-        for k, v in valuesInList:
+        for _k, v in valuesInList:
             i, j = v
             if i not in countRight:
                 countRight[i] = {}
@@ -886,7 +883,7 @@ class GraphDistance:
             print("[distance_matching_graphs_paths] pair_count_vertex")
         pair_count_edge = {}
         pair_count_vertex = {}
-        for k, v in reduction:
+        for _k, v in reduction:
             path = matrix_distance[v][1]
             for el in path:
                 n1, n2 = el[2]
@@ -935,7 +932,7 @@ class GraphDistance:
             newv = Vertex(v.nb, v.label, weight_vertex)
             res_graph.vertices[k] = newv
             if v.nb in count_vertex_right:
-                ind = list(count_vertex_right[v.nb].keys())[0]
+                ind = list(count_vertex_right[v.nb].keys())[0]  # noqa: RUF015
                 newv.pair = (v, graph2.vertices[ind])
                 doneVertex[ind] = newv
                 if newv.pair[0].label != newv.pair[1].label:
@@ -954,7 +951,7 @@ class GraphDistance:
             newe = Edge(e.from_, e.to, e.label, weight_edge)
             res_graph.edges[k] = newe
             if e.nb in count_edge_right:
-                ind = list(count_edge_right[e.nb].keys())[0]
+                ind = list(count_edge_right[e.nb].keys())[0]  # noqa: RUF015
                 newe.pair = (e, graph2.edges[ind])
                 done_edge[ind] = newe
             else:
@@ -964,21 +961,21 @@ class GraphDistance:
             if k in done_edge:
                 continue
             from_ = (
-                list(count_vertex_left[e.from_].keys())[0]
+                list(count_vertex_left[e.from_].keys())[0]  # noqa: RUF015
                 if e.from_ in count_vertex_left
                 else f"2a.{e.from_}"
             )
             to = (
-                list(count_vertex_left[e.to].keys())[0]
+                list(count_vertex_left[e.to].keys())[0]  # noqa: RUF015
                 if e.to in count_vertex_left
                 else f"2a.{e.to}"
             )
             if from_ not in res_graph.vertices:
-                raise RuntimeError("should not happen " + from_)  # pragma: no cover
+                raise RuntimeError("should not happen " + from_)
             if to not in res_graph.vertices:
-                raise RuntimeError("should not happen " + to)  # pragma: no cover
+                raise RuntimeError("should not happen " + to)
             newe = Edge(from_, to, e.label, weight_edge)
-            res_graph.edges[newe.nb] = newe  # pylint: disable=E1101
+            res_graph.edges[newe.nb] = newe
             newe.pair = (None, e)
 
         if verbose > 0:
@@ -1011,9 +1008,9 @@ class GraphDistance:
             elif v.pair[0] is None:
                 vertices.append((k, "+" + v.label, "green"))
             else:
-                raise RuntimeError("?")  # pragma: no cover
+                raise RuntimeError("?")
 
-        for k, v in self.edges.items():
+        for _k, v in self.edges.items():
             if v.pair == (None, None) or (
                 v.pair[0] is not None and v.pair[1] is not None
             ):
@@ -1023,6 +1020,6 @@ class GraphDistance:
             elif v.pair[0] is None:
                 edges.append((v.from_, v.to, "+" + v.label, "green"))
             else:
-                raise RuntimeError("?")  # pragma: no cover
+                raise RuntimeError("?")
 
         return vertices, edges

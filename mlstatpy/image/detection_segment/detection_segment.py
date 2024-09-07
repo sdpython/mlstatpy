@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import math
 import copy
 import time
@@ -70,20 +68,20 @@ def _load_image(img, format="PIL", mode=None):
             elif len(img.shape) == 3:
                 gray = img.shape[0] * img.shape[1] * img.shape[2] - d1 * d0
             else:
-                raise ValueError(f"Unexpected shape {img.shape}")  # pragma: no cover
+                raise ValueError(f"Unexpected shape {img.shape}")
             if gray == 0:
                 img = img.reshape((d1, d0))
             else:
                 img = img.reshape((d1, d0, 3))
             return img
-        raise ValueError(f"Unexpected value for fomat: '{format}'")  # pragma: no cover
+        raise ValueError(f"Unexpected value for fomat: '{format}'")
     if isinstance(img, numpy.ndarray):
         if format == "array":
             return img
         if format == "PIL":
             return Image.fromarray(img, mode=mode)
-        raise ValueError(f"Unexpected value for fomat: '{format}'")  # pragma: no cover
-    raise TypeError(f"numpy array expected not {type(img)}")  # pragma: no cover
+        raise ValueError(f"Unexpected value for fomat: '{format}'")
+    raise TypeError(f"numpy array expected not {type(img)}")
 
 
 def compute_gradient(img, color=None):
@@ -118,7 +116,7 @@ def _calcule_gradient(img, color=None):
     dy1 = img[1:-1, :] - img[:-2, :]
     dy2 = img[2:, :] - img[1:-1, :]
     dy = (dy1 + dy2) / 2
-    res = numpy.zeros(img.shape + (2,))
+    res = numpy.zeros(*img.shape, 2)
     res[:, 1:-1, 0] = dx
     res[1:-1, :, 1] = dy
     return res
@@ -136,8 +134,8 @@ def plot_gradient(image, gradient, more=None, direction=-1):
     image = ImageDraw.Draw(image_)
     X, Y = image_.size
     if direction != -1:
-        for x in range(0, X - 1):
-            for y in range(0, Y - 1):
+        for x in range(X - 1):
+            for y in range(Y - 1):
                 n = gradient[y, x]
                 if more is None:
                     v = int((n[0] ** 2 + n[1] ** 2) ** 0.5 + 0.5)
@@ -150,8 +148,8 @@ def plot_gradient(image, gradient, more=None, direction=-1):
         pass
     elif direction > 0:
         # on dessine des petits gradients dans l'image
-        for x in range(0, X, direction):
-            for y in range(0, Y, direction):
+        for x in range(X, direction):
+            for y in range(Y, direction):
                 n = gradient[y, x]
                 t = (n[0] ** 2 + n[1] ** 2) ** 0.5
                 if t == 0:
@@ -167,8 +165,8 @@ def plot_gradient(image, gradient, more=None, direction=-1):
     elif direction == -2:
         # derniere solution, la couleur represente l'orientation
         # en chaque point de l'image
-        for x in range(0, X):
-            for y in range(0, Y):
+        for x in range(X):
+            for y in range(Y):
                 n = gradient[y, x]
                 i = int(-n[0] * 10 + 128)
                 j = int(n[1] * 10 + 128)
@@ -176,9 +174,7 @@ def plot_gradient(image, gradient, more=None, direction=-1):
                 i, j = max(i, 0), max(j, 0)
                 image.line([(x, y), (x, y)], fill=(0, j, i))
     else:
-        raise ValueError(  # pragma: no cover
-            f"Unexpected value for direction={direction}"
-        )
+        raise ValueError(f"Unexpected value for direction={direction}")
 
     return image_
 
@@ -207,7 +203,7 @@ def plot_segments(image, segments, outfile=None, color=(255, 0, 0)):
 def detect_segments(
     image,
     proba_bin=1.0 / 16,
-    cos_angle=math.cos(1.0 / 16 / 2 * (math.pi * 2)),
+    cos_angle=math.cos(1.0 / 16 / 2 * (math.pi * 2)),  # noqa: B008
     seuil_nfa=1e-5,
     seuil_norme=2,
     angle=math.pi / 24.0,
@@ -259,7 +255,7 @@ def detect_segments(
     # on cree une classe permettant de recevoir les informations relatives
     # a l'image et au gradient pour un segment reliant deux points
     # du contour de l'image
-    points = [InformationPoint(Point(0, 0), False, 0) for i in range(0, xx + yy)]
+    points = [InformationPoint(Point(0, 0), False, 0) for i in range(xx + yy)]
     ligne = LigneGradient(points, seuil_norme=seuil_norme, seuil_nfa=seuil_nfa)
 
     # premier segment
@@ -287,12 +283,12 @@ def detect_segments(
             not_aligned += 1
 
         # on passe au segment suivant
-        cont = seg.next()  # pylint: disable=E1102
+        cont = seg.next()
         n += 1
 
         # pour verifier que cela avance
         if verbose and n % 1000 == 0:
-            print(  # pragma: no cover
+            print(
                 "n = ",
                 n,
                 " ... ",

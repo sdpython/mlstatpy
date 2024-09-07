@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import math
 import random
 
@@ -53,7 +51,7 @@ def esperance(X, p, q, s, lx):
     :return: espérance du profit
     """
     res = 0.0
-    for i in range(0, lx * 2):
+    for i in range(lx * 2):
         res += profit(float(i), X, p, q, s) * proba_poisson(lx, i)
     return res
 
@@ -70,7 +68,7 @@ def maximum(p, q, s, lx):
     :return: liste ``(X, profit)``
     """
     res = []
-    for X in range(0, 2 * lx):
+    for X in range(2 * lx):
         r = esperance(X, p, q, s, lx)
         res.append((X, r))
     return res
@@ -137,13 +135,13 @@ def histogramme_poisson_melange(params, coef, n=100000):
         à la loi de paramètre ``params[i]``
     :return: histogramme
     """
-    h = [0.0 for i in range(0, 4 * max(params))]
-    for i in range(0, n):
+    h = [0.0 for i in range(4 * max(params))]
+    for _i in range(n):
         x = poisson_melange(params, coef)
         if x < len(h):
             h[x] += 1
     s = sum(h)
-    for i in range(0, len(h)):
+    for i in range(len(h)):
         h[i] = float(h[i]) / s
     return h
 
@@ -171,7 +169,7 @@ def f_proba_poisson_melange():
                 histogramme_poisson_melange(params, coef)
             )
         if i >= len(proba_poisson_melange_tableau):
-            return 0.0  # pragma: no cover
+            return 0.0
         return proba_poisson_melange_tableau[i]
 
     return local_proba_poisson_melange

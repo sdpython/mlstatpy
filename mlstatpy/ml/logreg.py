@@ -39,9 +39,9 @@ def plot_ds(X, y, ax=None, title=None):
     features, *y* contains the binary labels.
     """
     if ax is None:
-        import matplotlib.pyplot as plt  # pragma: no cover
+        import matplotlib.pyplot as plt
 
-        ax = plt.gca()  # pragma: no cover
+        ax = plt.gca()
     colors = {0: "#88CCCC", 1: "#CCCC88"}
     c = [colors[_] for _ in y]
     ax.scatter(X[:, 0], X[:, 1], c=c, s=20, edgecolor="k", lw=0.1)
