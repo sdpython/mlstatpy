@@ -385,9 +385,10 @@ class ExtTestCase(unittest.TestCase):
         self.assertEqualArray(expected, value, atol=atol, rtol=rtol)
 
     def assertRaise(self, fct: Callable, exc_type: Optional[Exception] = None):
+        exct = exc_type or Exception
         try:
             fct()
-        except exc_type or Exception as e:
+        except exct as e:
             if exc_type is not None and not isinstance(e, exc_type):
                 raise AssertionError(f"Unexpected exception {type(e)!r}.")  # noqa: B904
             return
