@@ -78,8 +78,8 @@ problème de régression.
     :tag: Définition
 
     On dispose d'un ensemble de *n* couples
-    :math:`(X_i, Y_i)` avec :math:`X_i \in \R^d`
-    et :math:`Y_i \in \R`. La régression quantile
+    :math:`(X_i, Y_i)` avec :math:`X_i \in \mathbb{R}^d`
+    et :math:`Y_i \in \mathbb{R}`. La régression quantile
     consiste à trouver :math:`\alpha, \beta` tels que la
     somme :math:`\sum_i \abs{\alpha + \beta X_i - Y_i}`
     est minimale.
@@ -230,8 +230,8 @@ pour un quantile autre que la médiane.
     :tag: Définition
 
     On dispose d'un ensemble de *n* couples
-    :math:`(X_i, Y_i)` avec :math:`X_i \in \R^d`
-    et :math:`Y_i \in \R`. La régression quantile
+    :math:`(X_i, Y_i)` avec :math:`X_i \in \mathbb{R}^d`
+    et :math:`Y_i \in \mathbb{R}`. La régression quantile
     consiste à trouver :math:`\alpha, \beta` tels que la
     somme :math:`\sum_i p \abs{\alpha + \beta X_i - Y_i}^+ + (1-p) \abs{\alpha + \beta X_i - Y_i}^-`
     est minimale.

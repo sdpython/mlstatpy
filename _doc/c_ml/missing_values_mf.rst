@@ -206,9 +206,9 @@ a montré que :
 
     \begin{eqnarray*}
     S =
-    \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \arg \max } \;
+    \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\mathbb{R}} \\ W'W = I_d \end{subarray} } { \arg \max } \;
                         \cro { \sum_{i=1}^{N} \norm{W'X_i}^2 } &=&
-    \underset{ W \in M_{p,d}\pa{\R} } { \arg \min } \;  \cro { \sum_{i=1}^{N} \norm{WW'X_i - X_i}^2 }
+    \underset{ W \in M_{p,d}\pa{\mathbb{R}} } { \arg \min } \;  \cro { \sum_{i=1}^{N} \norm{WW'X_i - X_i}^2 }
     \end{eqnarray*}
 
 Dans notre cas, chaque ligne de la matrice :math:`M` est un vecteur :math:`X_i`.

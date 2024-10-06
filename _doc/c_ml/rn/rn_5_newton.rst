@@ -20,8 +20,8 @@ Quelques lectures :
 Algorithme et convergence
 +++++++++++++++++++++++++
 
-Soit :math:`g : \R \dans \R` une fonction dérivable dont il faut trouver
-:math:`\overset{*}{x} = \underset{x \in \R}{\arg \min} \; g\pa{x}`,
+Soit :math:`g : \mathbb{R} \dans \mathbb{R}` une fonction dérivable dont il faut trouver
+:math:`\overset{*}{x} = \underset{x \in \mathbb{R}}{\arg \min} \; g\pa{x}`,
 le schéma suivant illustre la méthode de descente de gradient
 dans le cas où :math:`g \pa{x} = x^2`.
 
@@ -35,7 +35,7 @@ L'abscisse à l'itération :math:`t+1` sera
 :math:`\varepsilon_{t}` est le pas de gradient à l'itération :math:`t`.
 
 On suppose maintenant que :math:`g` est une fonction dérivable
-:math:`g : \R^q \dans \R` dont il faut trouver le minimum, le théorème suivant démontre
+:math:`g : \mathbb{R}^q \dans \mathbb{R}` dont il faut trouver le minimum, le théorème suivant démontre
 la convergence de l'algorithme de descente de gradient à condition
 que certaines hypothèses soient vérifiées. Une généralisation de ce théorème est présentée dans
 [Driancourt1996]_.
@@ -47,25 +47,25 @@ que certaines hypothèses soient vérifiées. Une généralisation de ce théor�
 
     [Bottou1991]_
 
-    Soit une fonction continue :math:`g : W \in \R^M \dans \R`
+    Soit une fonction continue :math:`g : W \in \mathbb{R}^M \dans \mathbb{R}`
     de classe :math:`C^{1}`.
     On suppose les hypothèses suivantes vérifiées :
 
-    * **H1** : :math:`\underset{W\in \R^q}{\arg\min} \;
+    * **H1** : :math:`\underset{W\in \mathbb{R}^q}{\arg\min} \;
       g\left(  W\right) =\left\{  W^{\ast}\right\}`
       est un singleton
     * **H2** : :math:`\forall\varepsilon>0, \; \underset{\left|  W-W^{\ast}\right|
       >\varepsilon}{\inf}\left[  \left(  W-W^{\ast}\right)  ^{\prime}.\nabla
       g\left(  W\right)  \right]  >0`
-    * **H3** : :math:`\exists\left(  A,B\right)  \in \R^2` tels que :math:`\forall W\in\R^p,\; \left\|
+    * **H3** : :math:`\exists\left(  A,B\right)  \in \mathbb{R}^2` tels que :math:`\forall W\in\mathbb{R}^p,\; \left\|
       \nabla g\left( W\right) \right\| ^{2}\leqslant A^{2}+B^{2}\left\|  W-W^{\ast}\right\|  ^{2}`
     * **H4** : la suite :math:`\left(  \varepsilon_{t}\right)_{t\geqslant0}` vérifie,
-      :math:`\forall t>0, \; \varepsilon_{t}\in \R_{+}^{\ast}`
+      :math:`\forall t>0, \; \varepsilon_{t}\in \mathbb{R}_{+}^{\ast}`
       et :math:`\sum_{t\geqslant 0}\varepsilon_{t}=+\infty`,
       :math:`\sum_{t\geqslant 0}\varepsilon_{t}^{2}<+\infty`
 
     Alors la suite :math:`\left(  W_{t}\right)  _{t\geqslant 0}` construite de la manière suivante
-    :math:`W_{0} \in \R^M`, :math:`\forall t\geqslant0` :
+    :math:`W_{0} \in \mathbb{R}^M`, :math:`\forall t\geqslant0` :
     :math:`W_{t+1}=W_{t}-\varepsilon_{t}\,\nabla g\left(  W_{t}\right)`
     vérifie :math:`\lim_{ t \dans+\infty}W_{t}=W^{\ast}`.
 
@@ -80,10 +80,10 @@ de fonctions sigmoïdes que sont les réseaux de neurones à une couche cachée.
 *Partie 1*
 
 Soit la suite :math:`u_{t}=\ln\left(  1+\varepsilon_{t}^{2}x^{2}\right)`
-avec :math:`x\in\R`, comme :math:`\sum_{t\geqslant 0} \varepsilon_{t}^{2} < +\infty, \;
+avec :math:`x\in\mathbb{R}`, comme :math:`\sum_{t\geqslant 0} \varepsilon_{t}^{2} < +\infty, \;
 u_{t}\thicksim\varepsilon_{t}^{2}x^{2}`, on a :math:`\sum_{t\geqslant 0} u_{t} < +\infty`.
 
-Par conséquent, si :math:`v_{t}=e^{u_{t}}` alors :math:`\prod_{t=1}^T v_{t}\overset{T \rightarrow \infty}{\longrightarrow}D \in \R`.
+Par conséquent, si :math:`v_{t}=e^{u_{t}}` alors :math:`\prod_{t=1}^T v_{t}\overset{T \rightarrow \infty}{\longrightarrow}D \in \mathbb{R}`.
 
 *Partie 2*
 

@@ -426,7 +426,7 @@ et l'élément :math:`x` soit connue et que l'ensemble
     :nowrap:
 
     \begin{eqnarray*}
-    \exists \pa{\alpha,\beta} \in \R^+_* \text{ tels que } && \nonumber\\
+    \exists \pa{\alpha,\beta} \in \mathbb{R}^+_* \text{ tels que } && \nonumber\\
     \forall \pa{x,y} \in E^2, \; \forall i\, && \alpha \, d\pa{x,y} \supegal
                     \abs{d\pa{x,p_i} - d\pa{p_i,y}} \label{space_metric_cond_1} \\
     \forall \pa{x,y} \in E^2, && \underset{i}{\max} \; \abs{d\pa{x,p_i} - d\pa{p_i,y}} \supegal
@@ -496,7 +496,7 @@ Et un petit théorème.
 
         p\pa{x,r} = P_X \pa{B\pa{x,r}} = \pr{  Z \in B\pa{x,r}}
 
-    On suppose qu'il existe :math:`d > 0` et une fonction :math:`f : X \longrightarrow \R`
+    On suppose qu'il existe :math:`d > 0` et une fonction :math:`f : X \longrightarrow \mathbb{R}`
     tels que :
 
     .. math::

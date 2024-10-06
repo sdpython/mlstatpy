@@ -64,7 +64,7 @@ Une cha�ne de Markov est un mod�le probabiliste mod�lisant des s�quences
 
 
 
-Afin de simplifier les notations ult�rieurement, on d�finit pour la cha�ne de Markov $M$, la matrice des probabilit�s de transition $A_M \in M_N\pa{\R}$~: \indexfrr{notation}{probabilit� de transition}
+Afin de simplifier les notations ult�rieurement, on d�finit pour la cha�ne de Markov $M$, la matrice des probabilit�s de transition $A_M \in M_N\pa{\mathbb{R}}$~: \indexfrr{notation}{probabilit� de transition}
 
         \begin{eqnarray}
         A_{M}=  \pa {  a_{M,ij} }                              _{\substack{1\leqslant i\leqslant N\\1\leqslant j\leqslant N}} =
@@ -72,7 +72,7 @@ Afin de simplifier les notations ult�rieurement, on d�finit pour la cha�ne
         \label{hmm_eq_1}
         \end{eqnarray}
 
-On d�finit �galement le vecteur des probabilit�s d'entr�es $\pi_M \in \R^N$ :
+On d�finit �galement le vecteur des probabilit�s d'entr�es $\pi_M \in \mathbb{R}^N$ :
 
         \begin{eqnarray}
         \forall i\in \ensemble{1}{N} ,\, \pi_{M,i}=\pa { q_{1}=i \sachant  M }
@@ -1581,8 +1581,8 @@ Ces lemmes servent des d�monstrations plus rigoureuses expos�es au paragraph
 
             \begin{xlemma}{Levinson1983 (1)}\label{hmm_lemme_baumwelch_1_un} (voir \citeindex{Levinson1983})
             
-            Soit $\left(  u_{1},...,u_{N}\right)  \in\left( \R_{+}^{\ast}\right)  ^{N}$ et
-             $\left(  v_{1},...,v_{N}\right) \in\left( \R_{+}\right) ^{N}$ tels que $\overset{N}{\underset {i=1}{\sum}}v_{i}>0$ alors :
+            Soit $\left(  u_{1},...,u_{N}\right)  \in\left( \mathbb{R}_{+}^{\ast}\right)  ^{N}$ et
+             $\left(  v_{1},...,v_{N}\right) \in\left( \mathbb{R}_{+}\right) ^{N}$ tels que $\overset{N}{\underset {i=1}{\sum}}v_{i}>0$ alors :
             
                     $$
                     \ln\left[  \frac{\overset{N}{\underset{i=1}{\sum}}v_{i}}{\overset{N}{\underset{i=1}{\sum}}
@@ -1615,7 +1615,7 @@ On utilise la concavit� de la fonction logarithme :
 
 
         \begin{xlemma}{Levinson1983 (2)}\label{hmm_lemme_baumwelch_2_deux} (voir \citeindex{Levinson1983})
-        Soit $\left(  u_{1},...,u_{N}\right)  \in\left( \R_{+}^{\ast}\right)  ^{N}$, 
+        Soit $\left(  u_{1},...,u_{N}\right)  \in\left( \mathbb{R}_{+}^{\ast}\right)  ^{N}$, 
         la solution unique de la maximisation sous contrainte suivante~:
                 $$
                 \left|
@@ -1708,14 +1708,14 @@ C'est ce lemme qui est � la source du th�or�me~\ref{theorem_loglogconvexe}
             Soit une fonction :
                     $$
                     \begin{array}{rccl}
-                    f : & \pa{\R^*_+}^n &\longrightarrow& \R+^* \\
+                    f : & \pa{\mathbb{R}^*_+}^n &\longrightarrow& \mathbb{R}+^* \\
                     & \vecteur{x_1}{x_n} &\longrightarrow& f \vecteur{x_1}{x_n}
                     \end{array}
                     $$
             $f$ est une fonction \emph{log-log-convexe} si et seulement si la fonction :
                     $$
                     \begin{array}{rccl}
-                    g : & \pa{\R}^n &\longrightarrow& \R+^* \\
+                    g : & \pa{\mathbb{R}}^n &\longrightarrow& \mathbb{R}+^* \\
                     & \vecteur{u_1}{u_n} &\longrightarrow& g\vecteur{u_1}{u_n} = \ln \crochet{ f \vecteur{e^{u_1}}{e^{u_n}}}
                     \end{array}
                     $$
@@ -1731,7 +1731,7 @@ C'est ce lemme qui est � la source du th�or�me~\ref{theorem_loglogconvexe}
             \begin{xlemma}{distance de Kullback-Leiber}
             \label{lemme_loglogconvexe}%
             \indexfrr{distance}{Kullback-Leiber}%
-            On pose $D = \accolade{x=\vecteur{x_1}{x_n} \in \R^n \left| \summy{i=1}{n} x_i = 1 \text{ et } 
+            On pose $D = \accolade{x=\vecteur{x_1}{x_n} \in \mathbb{R}^n \left| \summy{i=1}{n} x_i = 1 \text{ et } 
                             \forall i \in \intervalle{1}{n}, x_i > 0 \right.} $.\newline%
             Soit $\pa{x,y} \in D^2$ alors :
                     $$
@@ -1765,9 +1765,9 @@ La fonction $x \longrightarrow \ln x$ est concave, donc :
             \begin{xtheorem}{fonction log-log-convexe}
             \label{theorem_loglogconvexe}%
             \indexfr{log-log-convexe}%
-            On pose $D = \accolade{x=\vecteur{x_1}{x_n} \in \R^n \left| \summy{i=1}{n} x_i = 1 \text{ et } \forall i 
+            On pose $D = \accolade{x=\vecteur{x_1}{x_n} \in \mathbb{R}^n \left| \summy{i=1}{n} x_i = 1 \text{ et } \forall i 
             \in \intervalle{1}{n}, x_i > 0 \right.} $.\newline%
-            Soit $f : \pa{\R^*_+}^n \longrightarrow \R+^*$ une fonction log-log-convexe d�rivable.\newline%
+            Soit $f : \pa{\mathbb{R}^*_+}^n \longrightarrow \mathbb{R}+^*$ une fonction log-log-convexe d�rivable.\newline%
             Soit $x \in D$, on d�finit $y \pa{x} = \vecteur{y_1\pa{x}}{y_n\pa{x}} \in D$ tel que :
                     $$
                     \forall i \in \intervalle{1}{n}, \; y_i \pa{x} = \frac{x_i \partialfrac{f}{x_i}\pa{x}}
@@ -1784,7 +1784,7 @@ La fonction $x \longrightarrow \ln x$ est concave, donc :
             
 \begin{xdemo}{th�or�me}{\ref{theorem_loglogconvexe}}
 
-Soit $\pa{x,x'} \in D^2$, on d�finit $\pa{u,u'} \in \pa{\R^n}^2$ tel que :
+Soit $\pa{x,x'} \in D^2$, on d�finit $\pa{u,u'} \in \pa{\mathbb{R}^n}^2$ tel que :
 
         $$
         \forall i \in \intervalle{1}{n}, \; u_i = \ln x_i \text{ et } u'_i = \ln x'_i
@@ -1835,10 +1835,10 @@ Si $x' = y\pa{x} = \pa{y_i \pa{x} = \frac{x_i \partialfrac{f}{x_i}\pa{x}}{\summy
         \indexfr{log-log-convexe}%
         \indexfr{polyn�me}%
         
-        Soit $P : \R^N \dans \R$ un polyn�me dont les coefficients sont tous positifs, 
-        soit $x = \vecteur{x_1}{x_N} \in \R^N$ tels que $\summy{i=1}{N}x_i = 1$ et $\forall i \in \intervalle{1}{N}, 
+        Soit $P : \mathbb{R}^N \dans \mathbb{R}$ un polyn�me dont les coefficients sont tous positifs, 
+        soit $x = \vecteur{x_1}{x_N} \in \mathbb{R}^N$ tels que $\summy{i=1}{N}x_i = 1$ et $\forall i \in \intervalle{1}{N}, 
                 \; x_i \supegal 0$, 
-        soit $y = \vecteur{y_1}{y_N} \in \R^N$ d�fini par~:
+        soit $y = \vecteur{y_1}{y_N} \in \mathbb{R}^N$ d�fini par~:
                 $$
                 \forall i \in \intervalle{1}{N}, \; y_i = \frac{x_i \partialfrac{P}{x_i}\pa{x}}{\summy{k=1}{N}x_k \partialfrac{P}{x_k}\pa{x}}
                 $$
@@ -1881,7 +1881,7 @@ On pose $i = \vecteur{i_1}{i_n}$. On en d�duit pour $m \in \intervalle{1}{n}$ 
             \summyone{i} \summyone{j} \; a_i \, a_j \, i_l \pa{i_m -j_m} \, e^{\scal{i,u}} \, e^{\scal{j,u}}}
         \end{eqnarray*}
 
-Il faut montrer que la matrice $\pa{\dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m}}_{u_l u_m}$ est d�finie positive. On cherche donc � montrer que pour tout $y \in \R^n$, $\summyone{l,m} y_l y_m \dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m} \supegal 0$. On note $b_{\vecteurno{i_1}{i_n}} = a_{\vecteurno{i_1}{i_n}} e^{ \summy{k=1}{n} i_k u_k} \supegal 0 $.
+Il faut montrer que la matrice $\pa{\dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m}}_{u_l u_m}$ est d�finie positive. On cherche donc � montrer que pour tout $y \in \mathbb{R}^n$, $\summyone{l,m} y_l y_m \dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m} \supegal 0$. On note $b_{\vecteurno{i_1}{i_n}} = a_{\vecteurno{i_1}{i_n}} e^{ \summy{k=1}{n} i_k u_k} \supegal 0 $.
 
         \begin{eqnarray*}
         \summyone{l,m} y_l y_m \dfrac{\partial \pa{\ln P\pa{e^u}}}{\partial u_l \partial u_m} & = &
@@ -2180,8 +2180,8 @@ On retrouve les formules de Baum-Welch. Si on note $\left(  M_{t}\right)  $ la s
 Dans le cas g�n�ral, l'algorithme permet d'estimer les param�tres d'une loi lorsque certaines donn�es sont manquantes ou cach�es. On consid�re deux variables al�atoires~:
 
 \begin{itemize}
-\item $X\in\mathcal{X}\subset \R^p$ de densit� $f\left(  x\left|  \theta\right.  \right)  $ avec $\theta\in\Theta$ ($\Theta$ est l'ensemble des param�tres) 
-\item $Z\in\mathcal{Z}\subset\R^{q}$ de densit� $g\left(  z\left|  \theta\right.  \right)  $
+\item $X\in\mathcal{X}\subset \mathbb{R}^p$ de densit� $f\left(  x\left|  \theta\right.  \right)  $ avec $\theta\in\Theta$ ($\Theta$ est l'ensemble des param�tres) 
+\item $Z\in\mathcal{Z}\subset\mathbb{R}^{q}$ de densit� $g\left(  z\left|  \theta\right.  \right)  $
 \end{itemize}
 
 
@@ -2265,7 +2265,7 @@ Or :
             \begin{xtheorem}{In�galit� de Jensen}
             \label{theoreme_inegalite_jensen_1}%
             \indexfr{Jensen}%
-            Soit $X\in\mathcal{X}$ une variable al�atoire de densit� $f$, soit $g:\mathcal{X}\longrightarrow\R$ 
+            Soit $X\in\mathcal{X}$ une variable al�atoire de densit� $f$, soit $g:\mathcal{X}\longrightarrow\mathbb{R}$ 
             une fonction convexe alors~:
             
                     $$
@@ -2521,7 +2521,7 @@ Les formules de Baum-Welch (voir table~\ref{figure_formule_baumwelch-fig}) impli
 Afin d'�viter cet �cueil, les coefficients inf�rieurs � un certain seuil sont modifi�s al�atoirement de sorte qu'ils soient sup�rieurs � ce seuil, ce seuil $s_t$ d�cro�t avec le nombre d'it�rations~$t$~:
 
             $$
-            s_t = \frac{s_0}{ 1 + \gamma t } \text{ avec } \gamma \in \R^+
+            s_t = \frac{s_0}{ 1 + \gamma t } \text{ avec } \gamma \in \mathbb{R}^+
             $$
 
 La vraisemblance des mod�les obtenue lors des it�rations successives d�cro�t globalement mais l'al�atoire introduit entre chaque it�ration fait osciller la valeur de cette vraisemblance lorsque les coefficients sont proches d'un optimum local. Cette oscillation d�cro�t au fur et � mesure que $s_t$ d�cro�t.
@@ -2998,7 +2998,7 @@ Par cons�quent, $g^{-1}$ existe et, on notera $\left[g^{-1}\left(l\right)\righ
 Dans toute la suite, les �tat de sorties et d'entr�es ne seront plus distincts des autres �tats, ceci permettra de ne pas traiter les probabilit�s de transition, les probabilit�s d'entr�e et les probabilit�s de sortie de mani�re s�par�e.
 
 
-Soit une cha�ne de Markov $M$ d'ordre $n$ contenant $N$ �tats repr�sent�s par l'ensemble $\vecteur{1}{N}$. Cette cha�ne est enti�rement d�finie par une hyper-matrice carr�e $A_{M}\in\mathcal{M}_{N}^{n+1}\left(\R\right)  $ contenant les $\left( N\right)^{n+1}$ probabilit�s de transition de la cha�ne de Markov $M\in\mathcal{M}_{n}$~:
+Soit une cha�ne de Markov $M$ d'ordre $n$ contenant $N$ �tats repr�sent�s par l'ensemble $\vecteur{1}{N}$. Cette cha�ne est enti�rement d�finie par une hyper-matrice carr�e $A_{M}\in\mathcal{M}_{N}^{n+1}\left(\mathbb{R}\right)  $ contenant les $\left( N\right)^{n+1}$ probabilit�s de transition de la cha�ne de Markov $M\in\mathcal{M}_{n}$~:
 
         $$
         A_{M}\left(i_{1},...,i_{n},i_{n+1}\right)  =\pr{  q_{t}=i_{n+1}\left| 
@@ -3019,7 +3019,7 @@ Si $e$ est l'�tat d'entr�e du mod�le, on pose comme convention :
         \right. \label{hmm_equation_convention_ordre}
         \end{eqnarray}
 
-On construit la cha�ne de Markov $M^{\prime}$ d'ordre un contenant $N^{n}$ �tats repr�sent�s par l'ensemble $\vecteur{1}{N^n}$. Cette cha�ne est enti�rement d�finie par sa matrice carr�e $A_{M^{\prime}}^{\prime }\in \mathcal{M}_{N^{n}}^{2}\left( \R\right) $ contenant les $\pa{N^n}^2$ probabilit�s de transition de la cha�ne $M^{\prime}\in\mathcal{M}_1$~:
+On construit la cha�ne de Markov $M^{\prime}$ d'ordre un contenant $N^{n}$ �tats repr�sent�s par l'ensemble $\vecteur{1}{N^n}$. Cette cha�ne est enti�rement d�finie par sa matrice carr�e $A_{M^{\prime}}^{\prime }\in \mathcal{M}_{N^{n}}^{2}\left( \mathbb{R}\right) $ contenant les $\pa{N^n}^2$ probabilit�s de transition de la cha�ne $M^{\prime}\in\mathcal{M}_1$~:
 
         $$
         A_{M^{\prime}}^{\prime}\left(  k,l\right)=\pr{ q_{t}=l\left| q_{t-1}=k,M^{\prime}\right.  }

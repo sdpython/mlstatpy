@@ -11,13 +11,13 @@ Formulation du problème de la régression
 ++++++++++++++++++++++++++++++++++++++++
 
 Soient deux variables aléatoires continues
-:math:`\pa{X,Y} \in \R^p \times \R^q \sim \loi` quelconque,
+:math:`\pa{X,Y} \in \mathbb{R}^p \times \mathbb{R}^q \sim \loi` quelconque,
 la résolution du problème de :ref:`régression <problem-regression>`
 est l'estimation de la fonction :math:`\esp(Y|X) = F\pa{X}`.
 Pour cela, on dispose d'un ensemble de points
 :math:`A = \acc{ \pa{X_{i},Y_{i}} \sim \loi | 1 \infegal i \infegal N }`.
 
-Soit :math:`f : \R^M \times \R^p \longrightarrow \R^q` une fonction, on définit
+Soit :math:`f : \mathbb{R}^M \times \mathbb{R}^p \longrightarrow \mathbb{R}^q` une fonction, on définit
 :math:`\forall i \in \intervalle{1}{N}, \; \widehat{Y_{i}^{W}} = f \pa{W,X_{i}}`.
 On appelle aussi :math:`\widehat{Y_{i}^{W}}` la valeur prédite pour :math:`X_{i}`.
 On pose alors
@@ -65,9 +65,9 @@ qui maximisent la vraisemblance :math:`L_W` sont :
     :label: rn_eqn_regression_1
 
     \begin{array}{rcl}
-    \overset{*}{W}   &=& \underset{W \in \R^M}{\arg \min} \sum_{i=1}^{N}
+    \overset{*}{W}   &=& \underset{W \in \mathbb{R}^M}{\arg \min} \sum_{i=1}^{N}
                                             \pa {Y_{i} - \widehat{Y_{i}^W}}^2 \\
-                     &=& \underset{W \in \R^M}{\arg \min} \sum_{i=1}^{N}
+                     &=& \underset{W \in \mathbb{R}^M}{\arg \min} \sum_{i=1}^{N}
                             \pa {Y_{i} - f \pa{W,X_{i}}}^2
     \end{array}
 
@@ -76,7 +76,7 @@ l'équation :eq:`rn_eqn_regression_1` alors l'estimateur défini par
 :math:`f` est sans biais
 Il suffit pour s'en convaincre de poser
 :math:`g = f + \alpha` avec
-:math:`\alpha \in \R` et de vérifier que la valeur optimale pour
+:math:`\alpha \in \mathbb{R}` et de vérifier que la valeur optimale pour
 :math:`\alpha` est
 :math:`\alpha = - \frac{1}{N}\, \sum_{i=1}^{N} \, \left. Y_i - f\pa{W,X_i} \right.`.
 L'estimateur minimise la vraisemblance :math:`L_W`.
@@ -89,13 +89,13 @@ peut généralisée par :eq:`rn_eqn_regression_2`.
     :label: rn_eqn_regression_2
 
     \begin{array}{rcl}
-    \overset{*}{W}     &=& \underset{W \in \R^M}{\arg \min} \sum_{i=1}^{N}
+    \overset{*}{W}     &=& \underset{W \in \mathbb{R}^M}{\arg \min} \sum_{i=1}^{N}
                                                             e\pa {Y_{i} - \widehat{Y_{i}^W}} \\
-                        &=& \underset{W \in \R^M}{\arg \min} \sum_{i=1}^{N}
+                        &=& \underset{W \in \mathbb{R}^M}{\arg \min} \sum_{i=1}^{N}
                                 e\pa{Y_{i} - f \pa{W,X_{i}}}
     \end{array}
 
-Où la fonction :math:`e : \R^q \in \R` est appelée fonction d'erreur.
+Où la fonction :math:`e : \mathbb{R}^q \in \mathbb{R}` est appelée fonction d'erreur.
 
 Densité des réseaux de neurones
 +++++++++++++++++++++++++++++++
@@ -141,7 +141,7 @@ il faut inclure des polynômes de degré plus élevé que ceux déjà  employés
     :math:`\left(  x\rightarrow 1-\frac{2}{1+e^{x}}\right)`,
     une couche de sortie dont la fonction de seuil est linéaire
     Soit :math:`F_{p}^{q}` l'ensemble des fonctions continues de
-    :math:`C\subset\R^{p}\longrightarrow\R^{q}` avec :math:`C`
+    :math:`C\subset\mathbb{R}^{p}\longrightarrow\mathbb{R}^{q}` avec :math:`C`
     compact muni de la norme
     :math:`\left\| f\right\| =\underset{x\in C}{\sup}\left\|  f\left( x\right)  \right\|`
     Alors :math:`E_{p}^{q}` est dense dans :math:`F_{p}^{q}`.
@@ -149,22 +149,22 @@ il faut inclure des polynômes de degré plus élevé que ceux déjà  employés
 
 La démonstration de ce théorème nécessite deux lemmes.
 Ceux-ci utilisent la définition usuelle du produit scalaire
-sur :math:`\R^p` défini par
-:math:`\pa{x,y} = \pa{\vecteurno{x_1}{x_p},\vecteurno{y_1}{y_p}} \in \R^{2p} \longrightarrow
+sur :math:`\mathbb{R}^p` défini par
+:math:`\pa{x,y} = \pa{\vecteurno{x_1}{x_p},\vecteurno{y_1}{y_p}} \in \mathbb{R}^{2p} \longrightarrow
 \left\langle x,y \right\rangle = \sum_{i=1}^{p} x_i y_i`.
 et la norme infinie :
-:math:`x = \vecteur{x_1}{x_p} \in \R^p \longrightarrow \norm{x} =
+:math:`x = \vecteur{x_1}{x_p} \in \mathbb{R}^p \longrightarrow \norm{x} =
 \underset{i \in \intervalle{1}{p}}{\max} x_i`.
 Toutes les normes sont
 `équivalentes <https://fr.wikipedia.org/wiki/Norme_%C3%A9quivalente>`_
-sur :math:`\R^p`.
+sur :math:`\mathbb{R}^p`.
 
 .. mathdef::
     :title: approximation d'une fonction créneau
     :lid: theoreme_densite_lemme_a
     :tag: Corollaire
 
-    Soit :math:`C \subset \R^p, \; C= \acc { \vecteur{y_1}{y_p} \in \R^p \, | \forall i\in \intervalle{1}{p},\, 0 \leqslant y_{i}\leqslant 1   }`,
+    Soit :math:`C \subset \mathbb{R}^p, \; C= \acc { \vecteur{y_1}{y_p} \in \mathbb{R}^p \, | \forall i\in \intervalle{1}{p},\, 0 \leqslant y_{i}\leqslant 1   }`,
     alors :
 
     .. math::
@@ -172,14 +172,14 @@ sur :math:`\R^p`.
         \begin{array}{l}
         \forall \varepsilon > 0, \; \forall \alpha>0, \; \exists n \in \N^*, \;
                     \exists \vecteur{x_1}{x_n}
-                    \in\left(  \R^p\right)  ^{n}, \; \exists
-            \vecteur{\gamma_1}{\gamma_n} \in \R^n  \text{ tels que } \forall x\in \R^p, \\ \\
+                    \in\left(  \mathbb{R}^p\right)  ^{n}, \; \exists
+            \vecteur{\gamma_1}{\gamma_n} \in \mathbb{R}^n  \text{ tels que } \forall x\in \mathbb{R}^p, \\ \\
         \begin{array}{ll}
         &   \left| \underset{i=1}{\overset{n}{\sum}}\dfrac{\gamma_i}
                         {1+e^{\left\langle x_{i},x\right\rangle +b_{i}}}-\indicatrice{x\in C
             }\right| \leqslant1 \\ \\
         \text{ et } &   \underset{y\in Fr\left( C\right)  }{\inf }\left\| x-y\right\| >
-                        \alpha\Rightarrow\left| \underset{i=1}{\overset
+                        \alpha\mathbb{R}ightarrow\left| \underset{i=1}{\overset
             {n}{\sum}}\dfrac{\gamma_i}{1+e^{\left\langle x_{i},x\right\rangle +b_{i}}}
                     -\indicatrice{x\in C}\right| \leqslant\varepsilon
         \end{array}
@@ -268,20 +268,20 @@ Il existe :math:`n \in \N` tel qu'il soit possible d'écrire :math:`f` sous la f
     :lid: theoreme_densite_lemme_b
     :tag: Corollaire
 
-    Soit :math:`C\subset\R^p` compact, alors :
+    Soit :math:`C\subset\mathbb{R}^p` compact, alors :
 
     .. math::
 
         \begin{array}{c}
         \forall\varepsilon>0, \; \forall\alpha>0, \; \exists\left(  x_{1},...,x_{n}\right)
-                \in\left(  \R^{p}\right)^{n}, \; \exists\left(
-        b_{1},...,b_{n}\right)  \in\R^n \text{ tels que } \forall x\in\R^{p},\\ \\
+                \in\left(  \mathbb{R}^{p}\right)^{n}, \; \exists\left(
+        b_{1},...,b_{n}\right)  \in\mathbb{R}^n \text{ tels que } \forall x\in\mathbb{R}^{p},\\ \\
         \begin{array}{ll}
         &   \left|  \sum_{i=1}^n \dfrac{\gamma_i}
                     {1+e^{\left\langle x_{i},x\right\rangle +b_{i}}}-\indicatrice{x\in C
             }\right|  \leqslant1+2\varepsilon^2\\ \\
         \text{ et } &   \underset{y\in Fr\left( C\right)  }{\inf}\left\|  x-y\right\|
-            >\alpha\Rightarrow\left| \sum_{i=1}^n
+            >\alpha\mathbb{R}ightarrow\left| \sum_{i=1}^n
                         \dfrac{\gamma_i}{1+e^{\left\langle x_{i} ,x\right\rangle +b_{i}}}-
             \indicatrice{x\in C}\right| \leqslant \varepsilon
         \end{array}
@@ -291,10 +291,10 @@ Il existe :math:`n \in \N` tel qu'il soit possible d'écrire :math:`f` sous la f
 
 *Partie 1*
 
-Soit :math:`C_1=\left\{  y=\left(  y_{1},...,y_{p}\right)  \in\R^p
+Soit :math:`C_1=\left\{  y=\left(  y_{1},...,y_{p}\right)  \in\mathbb{R}^p
 \,\left| \, \forall i\in\left\{  1,...,n\right\}  ,\,0\leqslant y_{i}\leqslant1\right.  \right\}`
 et :math:`C_{2}^{j}=\left\{  y=\left(
-y_{1},...,y_{p}\right)  \in\R^p\,\left| \,
+y_{1},...,y_{p}\right)  \in\mathbb{R}^p\,\left| \,
 \forall i\neq j,\,0\leqslant y_{i}\leqslant1 \text{ et }1\leqslant y_{j}\leqslant2\right.
 \right\}`
 
@@ -367,7 +367,7 @@ compacts connexes par arcs et disjoints
 
 On démontre le théorème dans le cas où :math:`q=1`.
 Soit :math:`f` une fonction continue du compact
-:math:`C\subset\R^p\rightarrow \R` et soit :math:`\varepsilon>0`.
+:math:`C\subset\mathbb{R}^p\rightarrow \mathbb{R}` et soit :math:`\varepsilon>0`.
 
 On suppose également que :math:`f` est positive, dans le cas contraire, on pose
 :math:`f=\underset{\text{fonction positive}}{\underbrace{f-\inf f}}+\inf f`.
@@ -437,7 +437,7 @@ telles que :
     \left(  \left\|  h_{k}\left(  x\right)  -\indicatrice{x\in C_{k}}\right\|
         \leqslant1 \right)  \text{ et } \left( \underset{y\in
     Fr\left(  C\right)  }{\inf}\left\|  x-y\right\|  >\dfrac{\alpha}{2}%
-    \Rightarrow\left\|  h_{k}\left(  x\right)  -\indicatrice{x\in C_{k}}\right\|  \leqslant\varepsilon^{2}\right)
+    \mathbb{R}ightarrow\left\|  h_{k}\left(  x\right)  -\indicatrice{x\in C_{k}}\right\|  \leqslant\varepsilon^{2}\right)
 
 On en déduit que :
 
@@ -459,7 +459,7 @@ h_{k}\left(  x\right)` est de la forme désirée, le théorème est démontré d
 *Partie 2*
 
 Dans le cas :math:`q>1`, on utilise la méthode précédente pour chacune des projections de :math:`f`
-dans un repère orthonormé de :math:`\R^{q}`. Il suffit de
+dans un repère orthonormé de :math:`\mathbb{R}^{q}`. Il suffit de
 sommer sur chacune des dimensions.
 
 Ce théorème montre qu'il est judicieux de modéliser la fonction
@@ -475,7 +475,7 @@ Ce théorème permet de déduire le corollaire suivant :
     :lid: corollaire_famille_libre
 
     Soit :math:`F_{p}` l'ensemble des fonctions continues de
-    :math:`C\subset\R^{p}\longrightarrow\R` avec :math:`C`
+    :math:`C\subset\mathbb{R}^{p}\longrightarrow\mathbb{R}` avec :math:`C`
     compact muni de la norme :
     :math:`\left\| f\right\| =\underset{x\in C}{\sup}\left\|  f\left( x\right)  \right\|`
     Alors l'ensemble :math:`E_{p}` des fonctions sigmoïdes :
@@ -483,7 +483,7 @@ Ce théorème permet de déduire le corollaire suivant :
     .. math::
 
       E_{p} =  \acc{ x \longrightarrow 1 - \dfrac{2}{1 + e^{<y,x>+b}} | y
-      \in \R^p \text{ et } b \in \R}
+      \in \mathbb{R}^p \text{ et } b \in \mathbb{R}}
 
     est une base de :math:`F_{p}`.
 
@@ -491,17 +491,17 @@ Ce théorème permet de déduire le corollaire suivant :
 
 Le théorème de :ref:`densité <theoreme_densite>` montre que la famille
 :math:`E_{p}` est une famille génératrice. Il reste à montrer que c'est une
-famille libre. Soient :math:`\pa{y_i}_{1 \infegal i \infegal N} \in \pa{\R^p}^N` et
-:math:`\pa{b_i}_{1 \infegal i \infegal N} \in \R^N` vérifiant :
+famille libre. Soient :math:`\pa{y_i}_{1 \infegal i \infegal N} \in \pa{\mathbb{R}^p}^N` et
+:math:`\pa{b_i}_{1 \infegal i \infegal N} \in \mathbb{R}^N` vérifiant :
 :math:`i \neq j \Longrightarrow y_i \neq y_j \text{ ou } b_i \neq b_j`.
-Soit :math:`\pa{\lambda_i}_{1 \infegal i \infegal N} \in \R^N`, il faut montrer que :
+Soit :math:`\pa{\lambda_i}_{1 \infegal i \infegal N} \in \mathbb{R}^N`, il faut montrer que :
 
 .. math::
     :nowrap:
     :label: corollaire_demo_recurrence_base
 
     \begin{eqnarray}
-    \forall x \in \R^p, \; \sum_{i=1}^{N} \lambda_i \pa{ 1 - \dfrac{2}{1 + e^{<y_i,x>+b_i}  }} = 0
+    \forall x \in \mathbb{R}^p, \; \sum_{i=1}^{N} \lambda_i \pa{ 1 - \dfrac{2}{1 + e^{<y_i,x>+b_i}  }} = 0
     \Longrightarrow \forall i \, \lambda_i = 0
     \end{eqnarray}
 
@@ -675,7 +675,7 @@ C'est une des raisons pour lesquelles les réseaux de neurones
 ont du succès. Le théorème :ref:`densité <theoreme_densite>`
 et le corollaire :ref:`famille libre <corollaire_famille_libre>`
 sont aussi vraies pour des fonctions du type exponentielle :
-:math:`\pa{y,b} \in \R^p \times \R \longrightarrow e^{-\pa{<y,x>+b}^2}`.
+:math:`\pa{y,b} \in \mathbb{R}^p \times \mathbb{R} \longrightarrow e^{-\pa{<y,x>+b}^2}`.
 Maintenant qu'il est prouvé que les réseaux de neurones conviennent
 pour modéliser :math:`f` dans l'équation :eq:`rn_eqn_regression_2`,
 il reste à étudier les méthodes qui permettent de trouver

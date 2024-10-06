@@ -27,7 +27,7 @@ Les \emph{Support Vector Machine} ou \emph{S�parateurs � Vastes Marges} (SVM
 \indexfrr{ensemble}{s�parable}
 
 
-On s'int�resse tout d'abord � l'hyperplan s�parateur d'un ensemble de points r�partis en deux classes. Cet ensemble est not� $\pa{X_i,Y_i}_{1 \infegal i \infegal N}$ o�, $\forall i$, $X_i \in \R^d$ et $Y_i \in \acc{-1,1}$. Pour simplifier les expressions par la suite, les deux classes sont donc labell�es -1 et~1. On cherche alors un vecteur $w$ et une constante $b$ qui v�rifient~:
+On s'int�resse tout d'abord � l'hyperplan s�parateur d'un ensemble de points r�partis en deux classes. Cet ensemble est not� $\pa{X_i,Y_i}_{1 \infegal i \infegal N}$ o�, $\forall i$, $X_i \in \mathbb{R}^d$ et $Y_i \in \acc{-1,1}$. Pour simplifier les expressions par la suite, les deux classes sont donc labell�es -1 et~1. On cherche alors un vecteur $w$ et une constante $b$ qui v�rifient~:
 
             $$
             \forall i, \; 1 \infegal i \infegal N, \; 
@@ -50,7 +50,7 @@ Comme on cherche �galement un vecteur $w$ de norme minimum, l'hyperplan cherch
             \begin{xproblem}{meilleur hyperplan s�parateur, cas s�parable}\label{svm_problem_def}
             \indexfr{s�parable}\indexfrr{hyperplan}{s�parateur}
             Le meilleur hyperplan s�parateur de l'ensemble de points labell�s
-            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \R^d \times \acc{-1,1} }^N$ est la solution
+            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
             d'un probl�me de minimisation. Cet hyperplan a pour �quation $x.w^* + b^* = 0$ o� 
             $w^*$ et $b^*$ v�rifient~:
                     $$
@@ -94,7 +94,7 @@ Cette derni�re �quation (\ref{svm_lagrange_lineaire_2}) est importante puisq
 \subsection{Ensemble non s�parable}
 \indexfrr{ensemble}{non s�parable}
 
-Le paragraphe pr�c�dent supposait que l'ensemble $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \R^d \times \acc{-1,1} }^N$ �tait s�parable ce qui, d'apr�s le paragraphe~\ref{svm_dimension_vc_lin} implique dans la plupart des cas que $N \infegal d+1$. Pour un ensemble non s�parable (voir figure~\ref{svm_non_separable_fig}), il est impossible de trouver un hyperplan s�parateur. Par cons�quent, il n'existe pas de solution au probl�me~\ref{svm_problem_def} v�rifiant les contraintes telles qu'elles ont �t� exprim�es. La recherche du meilleur hyperplan s�parateur devient alors l'�nonc�~\ref{svm_problem_def_2}.
+Le paragraphe pr�c�dent supposait que l'ensemble $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ �tait s�parable ce qui, d'apr�s le paragraphe~\ref{svm_dimension_vc_lin} implique dans la plupart des cas que $N \infegal d+1$. Pour un ensemble non s�parable (voir figure~\ref{svm_non_separable_fig}), il est impossible de trouver un hyperplan s�parateur. Par cons�quent, il n'existe pas de solution au probl�me~\ref{svm_problem_def} v�rifiant les contraintes telles qu'elles ont �t� exprim�es. La recherche du meilleur hyperplan s�parateur devient alors l'�nonc�~\ref{svm_problem_def_2}.
 
 
         \begin{figure}[ht]
@@ -108,9 +108,9 @@ Le paragraphe pr�c�dent supposait que l'ensemble $\pa{X_i,Y_i}_{1 \infegal i
 
             \begin{xproblem}{meilleur hyperplan s�parateur, cas non s�parable}\label{svm_problem_def_2}
             \indexfr{non s�parable}
-            Soit $C \in \R^*_+$ une constante et $k \in \N^*$ un entier,
+            Soit $C \in \mathbb{R}^*_+$ une constante et $k \in \N^*$ un entier,
             le meilleur hyperplan s�parateur de l'ensemble de points labell�s
-            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \R^d \times \acc{-1,1} }^N$ est la solution
+            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
             d'un probl�me de minimisation. Cet hyperplan a pour �quation $x.w^* + b^* = 0$ o� 
             $w^*$ et $b^*$ v�rifient~:
                     $$
@@ -127,9 +127,9 @@ $C$ et $k$ sont des constantes � d�terminer. Toutefois, dans le cas o� $k 
 
             \begin{xproblem}{meilleur hyperplan s�parateur, cas non s�parable, probl�me dual}
             \label{svm_problem_def_2p}\indexfr{non s�parable}\indexfrr{probl�me}{dual}
-            Soit $C \in \R^*_+$ une constante,
+            Soit $C \in \mathbb{R}^*_+$ une constante,
             le meilleur hyperplan s�parateur de l'ensemble de points labell�s
-            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \R^d \times \acc{-1,1} }^N$ est la solution
+            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
             d'un probl�me de minimisation. 
                     $$
                     \begin{array}{rcl}    \pa{\alpha_i^*} &=& \underset{\alpha_i}{\arg \min} \dfrac{1}{2}  
@@ -167,9 +167,9 @@ Dans le probl�me de classification introduit au chapitre~\ref{svm_separateur_l
 
 
             \begin{xdefinition}{dimension de Vapnik-Chervonenkis}
-            Soit $\pa{X_i}_{1 \infegal i \infegal N}$ un ensemble de points appartenant � $\R^d$. On d�finit une 
-            fonction $f\pa{x,\alpha} : \R^d \times \Omega \longmapsto  \R$ 
-            o� $x \in \R^d$ et $\alpha \in \Omega$.
+            Soit $\pa{X_i}_{1 \infegal i \infegal N}$ un ensemble de points appartenant � $\mathbb{R}^d$. On d�finit une 
+            fonction $f\pa{x,\alpha} : \mathbb{R}^d \times \Omega \longmapsto  \mathbb{R}$ 
+            o� $x \in \mathbb{R}^d$ et $\alpha \in \Omega$.
             $\Omega$ est appel� l'ensemble des param�tres.
             On d�finit la dimension de Vapnik-Chervonenkis comme �tant le nombre de suites 
             $\pa{Y_i}_{1 \infegal i \infegal N} \in \acc{-1,1}^N$ v�rifiant~:
@@ -197,13 +197,13 @@ Dans le cas o� la fonction $f$ est lin�aire, il existe quelques r�sultats 
 
 
         \begin{xtheorem}{dimension VC d'un ensemble de vecteurs lin�airement ind�pendants}
-        Soit un ensemble de $N$ points inclus dans l'espace vectoriel $\R^d$ dont un d�finit l'origine.
+        Soit un ensemble de $N$ points inclus dans l'espace vectoriel $\mathbb{R}^d$ dont un d�finit l'origine.
         Alors les $N$ points peuvent �tre s�par�s de n'importe quel mani�re en deux classes
         par des hyperplans orient�s si et seulement si les vecteurs positions sont lin�airement ind�pendants.
         \end{xtheorem}
 
         \begin{xcorollary}{dimension VC d'un ensemble de vecteurs lin�airement ind�pendants}
-        La dimension de Vapnik-Chervonenkis d'un ensemble d'hyperplans s�parateurs de $\R^d$ est $d+1$
+        La dimension de Vapnik-Chervonenkis d'un ensemble d'hyperplans s�parateurs de $\mathbb{R}^d$ est $d+1$
         puisqu'il est toujours possible de choisir $d+1$ points lin�airement ind�pendants qui puissent 
         �tre s�par�s quelque soit leurs classes.
         \end{xcorollary}
@@ -215,7 +215,7 @@ Dans le cas o� la fonction $f$ est lin�aire, il existe quelques r�sultats 
 On d�finit la suite de points $\pa{X_i}_{1 \infegal i \infegal N}$ par $\forall i, \, 1 \infegal i \infegal N, \; X_i = 10^{-i}$ et l'ensemble de fonctions~:
 
             $$
-            \acc{\alpha \in \R, \; f\pa{x,\alpha} = \left\{
+            \acc{\alpha \in \mathbb{R}, \; f\pa{x,\alpha} = \left\{
                                                                 \begin{array}{rl}
                                                                 1     & \text{ si } \sin \alpha x \supegal 0 \\
                                                                 -1    & \text{ si } \sin \alpha x < 0 
@@ -254,7 +254,7 @@ Et le risque empirique pour le nuage de points $\pa{X_i,Y_i}_{1 \infegal i \infe
         \begin{xtheorem}{majoration du risque empirique}
         En reprenant les notations utilis�es dans les expressions 
         (\ref{svm_risque_theorique}) et (\ref{svm_risque_empirique}). Pour 
-        un nuage de points  $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{\R^d \times \acc{-1,1} }^N$, 
+        un nuage de points  $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{\mathbb{R}^d \times \acc{-1,1} }^N$, 
         on d�montre (voir \citeindex{Vapnik1995}) que $\forall \eta \in \cro{0,1}$~:
                     $$
                     \pr{ 
@@ -286,9 +286,9 @@ Il est possible d'�tendre les SVM au cas non lin�aire � partir du probl�
             \begin{xproblem}{meilleur hyperplan, cas non s�parable, non lin�aire, probl�me dual}\label{svm_problem_def_3}
             \indexfr{non s�parable}
             \indexfrr{probl�me}{dual}
-            Soit $C \in \R^*_+$ une constante, soit $K : \R^d \times \R^d \longmapsto \R^+$ une fonction noyau,
+            Soit $C \in \mathbb{R}^*_+$ une constante, soit $K : \mathbb{R}^d \times \mathbb{R}^d \longmapsto \mathbb{R}^+$ une fonction noyau,
             le meilleur hyperplan s�parateur de l'ensemble de points labell�s
-            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \R^d \times \acc{-1,1} }^N$ est la solution
+            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
             d'un probl�me de minimisation~: 
                     $$
                     \begin{array}{rcl}    \pa{\alpha_i^*} &=& \underset{\alpha_i}{\arg \min} \dfrac{1}{2}  
@@ -301,7 +301,7 @@ Il est possible d'�tendre les SVM au cas non lin�aire � partir du probl�
                                          \text{et }          && \summy{i=1}{N} Y_i \, \alpha_i = 0
                     \end{array}                                        
                     $$
-            La classification d'un �l�ment $x \in \R^d$ d�pend du signe de la fonction~:
+            La classification d'un �l�ment $x \in \mathbb{R}^d$ d�pend du signe de la fonction~:
                     $$
                     f\pa{x} = \summy{i=1}{N} \alpha_i Y_i K\pa{X_i,x} + b
                     $$
@@ -311,13 +311,13 @@ Il est possible d'�tendre les SVM au cas non lin�aire � partir du probl�
 \subsection{Interpr�tation, exemple}
 
 
-Le probl�me~\ref{svm_problem_def_3} revient en fait � projeter l'�l�ment $X_i \in \R^d$ dans un autre espace de dimension g�n�ralement sup�rieure $\R^{d'}$ dans lequel la s�paration sera un hyperplan. Par exemple, on d�finit le noyau $K : \R^2 \times \R^2 \longmapsto \R^+$ par~:
+Le probl�me~\ref{svm_problem_def_3} revient en fait � projeter l'�l�ment $X_i \in \mathbb{R}^d$ dans un autre espace de dimension g�n�ralement sup�rieure $\mathbb{R}^{d'}$ dans lequel la s�paration sera un hyperplan. Par exemple, on d�finit le noyau $K : \mathbb{R}^2 \times \mathbb{R}^2 \longmapsto \mathbb{R}^+$ par~:
 
             $$
             K\pa{X_i,X_j} = \pa{X_i.X_j}^2
             $$
 
-On d�finit �galement la fonction $\Phi : \R^2 \longmapsto \R^3$ par~:
+On d�finit �galement la fonction $\Phi : \mathbb{R}^2 \longmapsto \mathbb{R}^3$ par~:
 
             $$
             \Phi\pa{x_1,x_2} = \pa{ \begin{array}{c} x_1^2 \\ \sqrt{2} x_1 x_2 \\ x_2^2 \end{array} }
@@ -348,9 +348,9 @@ Le probl�me~\ref{svm_problem_def_3} peut �tre formul� d'une mani�re diff
 
             \begin{xproblem}{meilleur hyperplan s�parateur, cas non s�parable, non lin�aire}\label{svm_problem_def_4}
             \indexfr{non s�parable}
-            Soit $C \in \R^*_+$ une constante, soit $K : \R^d \times \R^d \longmapsto \R^+$ une fonction noyau,
+            Soit $C \in \mathbb{R}^*_+$ une constante, soit $K : \mathbb{R}^d \times \mathbb{R}^d \longmapsto \mathbb{R}^+$ une fonction noyau,
             le meilleur hyperplan s�parateur de l'ensemble de points labell�s
-            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \R^d \times \acc{-1,1} }^N$ est la solution
+            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
             d'un probl�me de minimisation~: 
                     $$
                     \begin{array}{rcl}    \pa{\alpha_i^*, \xi_i^*} &=& \underset{\alpha_i}{\arg \min} \dfrac{1}{2}  
@@ -363,7 +363,7 @@ Le probl�me~\ref{svm_problem_def_3} peut �tre formul� d'une mani�re diff
                                          \text{et }            && \forall i, \; \xi_i \supegal 0 
                     \end{array}                                        
                     $$
-            La classification d'un �l�ment $x \in \R^d$ d�pend du signe de la fonction~:
+            La classification d'un �l�ment $x \in \mathbb{R}^d$ d�pend du signe de la fonction~:
                     $$
                     f\pa{x} = \summy{i=1}{N} \alpha_i Y_i K\pa{X_i,x} + b
                     $$

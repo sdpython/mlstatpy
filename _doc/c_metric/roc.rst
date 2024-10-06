@@ -90,12 +90,12 @@ La courbe ROC s'obtient en faisant varier :math:`s`.
     On suppose également que tous les scores sont indépendants.
     On note :math:`F_Y` et :math:`F_X` les fonctions de répartition de ces variables.
     :math:`F_Y(s)=\pr{Y \infegal s}` et :math:`F_X(s)=\pr{X \infegal s}`.
-    On définit en fonction d'un seuil :math:`s \in \R` :
+    On définit en fonction d'un seuil :math:`s \in \mathbb{R}` :
 
     * :math:`R(s) = 1 - F_Y(s) = \pr{Y > s}`
     * :math:`E(s) = 1 - F_X(s) = \pr{X > s}`
 
-    La courbe ROC est le graphe :math:`\pa{E(s),R(s)}` lorsque :math:`s` varie dans :math:`\R`.
+    La courbe ROC est le graphe :math:`\pa{E(s),R(s)}` lorsque :math:`s` varie dans :math:`\mathbb{R}`.
 
 :math:`TP(s)` désigne les true positifs au-dessus du seuil :math:`s`,
 avec les notations *TP*, *FP*, *FN*, *TN*, cela revient à :
@@ -181,7 +181,7 @@ De plus, soit :math:`g` une fonction intégrable quelconque, on pose :math:`u = 
 
 .. math::
 
-    \int_{\R} g(x) \, f(x) \,dx = \int_{\cro{0,1}} g(F^{-1}(u)) \, du
+    \int_{\mathbb{R}} g(x) \, f(x) \,dx = \int_{\cro{0,1}} g(F^{-1}(u)) \, du
 
 **Démonstration**
 
@@ -337,7 +337,7 @@ est construite une courbe ROC (voir :ref:`Courbe ROC <def_roc_2>`).
     :lid: algo_courb_ROC
 
     On suppose qu'on dispose d'un ensemble de points :math:`\pa{X_i,\theta_i}
-    \in \R \times \acc{0,1}` pour :math:`i \in \ensemble{1}{n}`.
+    \in \mathbb{R} \times \acc{0,1}` pour :math:`i \in \ensemble{1}{n}`.
     `X_i` est le score obtenu pour l'expérience :math:`i`,
     `\theta_i` vaut 1 si elle a réussi et 0 si elle a échoué.
     On suppose également que cette liste est triée par ordre croissant :
@@ -405,7 +405,7 @@ On s'inspire pour cela des méthodes de `bootstrap <https://fr.wikipedia.org/wik
     :lid: roc_boostrap_algo
 
     On dispose toujours du nuage de points
-    :math:`E = \pa{X_i,\theta_i} \in \R \times \acc{0,1}` avec :math:`i \in \ensemble{1}{n}`.
+    :math:`E = \pa{X_i,\theta_i} \in \mathbb{R} \times \acc{0,1}` avec :math:`i \in \ensemble{1}{n}`.
     On choisit :math:`C \in \N` le nombre de courbes ROC qu'on désire tracer.
     Pour chaque courbe :math:`c \in \ensemble{1}{C}` :
 

@@ -21,12 +21,12 @@ Un neurone
     :lid: def-neurone
 
     Un neurone à :math:`p` entrées est une fonction
-    :math:`f : \R^{p+1} \times \R^p \longrightarrow \R`
+    :math:`f : \mathbb{R}^{p+1} \times \mathbb{R}^p \longrightarrow \mathbb{R}`
     définie par :
 
-    * :math:`g : \R \longrightarrow \R`
-    * :math:`W \in \R^{p+1}`, :math:`W=\pa{w_1,\dots,w_{p+1}}`
-    * :math:`\forall x \in \R^p, \; f\pa{W,x} = g \pa { \sum_{i=1}^{p} w_i x_i + w_{p+1}}`
+    * :math:`g : \mathbb{R} \longrightarrow \mathbb{R}`
+    * :math:`W \in \mathbb{R}^{p+1}`, :math:`W=\pa{w_1,\dots,w_{p+1}}`
+    * :math:`\forall x \in \mathbb{R}^p, \; f\pa{W,x} = g \pa { \sum_{i=1}^{p} w_i x_i + w_{p+1}}`
       avec :math:`x = \pa{x_1,\dots,x_p}`
 
 Cette définition est inspirée du neurone biologique, les poids jouant le rôle
@@ -72,7 +72,7 @@ La fonction *g* est appelée *fonction de transfert* ou *fonction de seuil*.
 
         \end{picture}
 
-    Le vecteur :math:`\left(  x_1,...,x_p\right) \in \R^p`
+    Le vecteur :math:`\left(  x_1,...,x_p\right) \in \mathbb{R}^p`
     joue le rôle des *entrées*.
     :math:`y` est appelé parfois le *potentiel*.
     :math:`y=\sum_{i=1}^{p} w_ix_i+b`.
@@ -120,18 +120,18 @@ Une couche de neurones
     :lid: rn_definition_couche_neurone_1
 
     Soit :math:`p` et :math:`n` deux entiers naturels,
-    on note :math:`W \in \R^{n\pa{p+1}} = \pa{W_1,\dots,W_n}`
-    avec :math:`\forall i \in \intervalle{1}{n}, \; W_i \in \R^{p+1}`.
+    on note :math:`W \in \mathbb{R}^{n\pa{p+1}} = \pa{W_1,\dots,W_n}`
+    avec :math:`\forall i \in \intervalle{1}{n}, \; W_i \in \mathbb{R}^{p+1}`.
     Une couche de :math:`n` neurones et :math:`p` entrées est une fonction :
 
     .. math::
 
-        F : \R^{n\pa{p+1}} \times \R^p \longrightarrow \R^n
+        F : \mathbb{R}^{n\pa{p+1}} \times \mathbb{R}^p \longrightarrow \mathbb{R}^n
 
     vérfifiant :
 
     * :math:`\forall i \in \intervalle {1}{n}, \; f_i` est un neurone.
-    * :math:`\forall W \in \R^{n\pa{p+1}} \times \R^p, \; F\pa{W,x} = \pa {f_1\pa{W_1,x}, \dots, f_n\pa{W_n,x}}`
+    * :math:`\forall W \in \mathbb{R}^{n\pa{p+1}} \times \mathbb{R}^p, \; F\pa{W,x} = \pa {f_1\pa{W_1,x}, \dots, f_n\pa{W_n,x}}`
 
 Une couche de neurones représente la juxtaposition de plusieurs neurones
 partageant les mêmes entrées mais ayant chacun leur propre vecteur de
@@ -162,7 +162,7 @@ Un réseau de neurones : le perceptron
     .. math::
 
         \begin{array}{l}
-        Z_0 \in \R^p \\
+        Z_0 \in \mathbb{R}^p \\
         \forall i \in \intervalle{1}{C}, \; Z_i = F_i \pa {W_1^i,\dots,W_{n_i}^i,Z_{i-1}}\end{array}
 
     On pose :math:`M = M = \sum_{i=1}^{C}n_i\pa{p_i+1}`,
@@ -171,7 +171,7 @@ Un réseau de neurones : le perceptron
     .. math::
 
         \begin{array}{lrll}
-        F : & \R ^ M \times \R^p & \longrightarrow & \R^n \\
+        F : & \mathbb{R} ^ M \times \mathbb{R}^p & \longrightarrow & \mathbb{R}^n \\
             & \pa{W,Z_0} & \longrightarrow & Z_C
         \end{array}
 
