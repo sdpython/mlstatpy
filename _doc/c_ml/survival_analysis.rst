@@ -63,9 +63,9 @@ des dates à intervalles plutôt réguliers et croissants. La suite :math:`(n_i)
 est décroissantes (on ne rescuscite pas).
 Ces calculs rappellent les calculs liés à l'espérance de vie
 (voir `Evoluation d’une population - énoncé
-<http://www.xavierdupre.fr/app/actuariat_python/helpsphinx/notebooks/seance4_projection_population_enonce.html>`_,
+<https://github.com/sdpython/actuariat_python/blob/master/_doc/notebooks/sessions/seance4_projection_population_enonce.ipynb>`_,
 `Evoluation d'une population (correction)
-<http://www.xavierdupre.fr/app/actuariat_python/helpsphinx/notebooks/seance4_projection_population_correction.html>`_).
+<https://github.com/sdpython/actuariat_python/blob/master/_doc/notebooks/sessions/seance4_projection_population_correction.ipynb>`_).
 L'espérance de vie est définie par :
 
 .. math::

@@ -17,7 +17,7 @@ construire une fonction prédictive
 :math:`\hat{y_i} = f(X_i) = <X_i, \beta> = X_i \beta` où
 :math:`\beta` est un vecteur de dimension *d*
 (voir `classification
-<http://www.xavierdupre.fr/app/papierstat/helpsphinx/lectures/regclass.html#classification>`_).
+<https://sdpython.github.io/doc/teachpyx/dev/c_ml/regclass.html>`_).
 Le signe de la fonction :math:`f(X_i)`
 indique la classe de l'observation :math:`X_i` et la valeur
 :math:`\frac{1}{1 + e^{f(X)}}` la probabilité d'être dans la classe 1.

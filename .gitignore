@@ -4,6 +4,8 @@
 *.pyc
 *.pyd
 *.so
+*.gv
+*.gv.*
 .coverage
 .eggs/*
 _cache/*
@@ -31,3 +33,8 @@ _unittests/ut__main/*.html
 _unittests/.hypothesis/*
 _doc/notebooks/ml/*.onnx
 _doc/notebooks/dsgarden/*.onnx
+_doc/notebooks/nlp/frwiki-*
+_doc/notebooks/nlp/sample*.txt
+frwiki-*
+mobilenetv2-12.onnx
+sample1000.txt

@@ -44,7 +44,7 @@ Problème et regréssion linéaire dans un espace à une dimension
 
 Tout d'abord, une petite
 illustration du problème avec la classe `PiecewiseRegression
-<http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/piecewise_linear_regression.html>`_
+<https://sdpython.github.io/doc/mlinsights/dev/auto_examples/plot_piecewise_linear_regression.html>`_
 implémentée selon l'API de :epkg:`scikit-learn`.
 
 .. toctree::

@@ -384,7 +384,10 @@ class RenderJsDot(RenderJS):
             js = os.path.join(this, "..", "js", "vizjs", jsvers)
             libs = [js]
         else:
-            libs = ["http://www.xavierdupre.fr/js/vizjs/" + jsvers]
+            libs = [
+                "https://raw.githubusercontent.com/sdpython/jyquickhelper/refs/heads/master/src/jyquickhelper/js/vizjs/"
+                + jsvers
+            ]
         css = None
         return libs, css
 

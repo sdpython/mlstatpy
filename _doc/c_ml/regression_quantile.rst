@@ -298,7 +298,7 @@ Bilbiographie
 
 Des références sont disponibles sur la page de :epkg:`statsmodels` :
 `QuantReg <http://www.statsmodels.org/stable/generated/statsmodels.regression.quantile_regression.QuantReg.html>`_ ou
-là : `Régression quantile <http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/quantile_regression.html>`_.
+là : `Régression quantile <https://sdpython.github.io/doc/mlinsights/dev/auto_examples/plot_quantile_regression.html>`_.
 
 .. [Koenker2017] `Quantile Regression, 40 years on <http://www.econ.uiuc.edu/~roger/courses/NIPE/handouts/QR40.pdf>`_,
     Roger Koenker (2017)

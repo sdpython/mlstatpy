@@ -55,7 +55,7 @@ def voronoi_estimation_from_lr(
     is the Voronoï point attached to class *cl*.
     `Quantile regression <https://fr.wikipedia.org/wiki/R%C3%A9gression_quantile>`_
     is not implemented in :epkg:`scikit-learn`.
-    We use `QuantileLinearRegression <http://www.xavierdupre.fr/app/mlinsights/helpsphinx/mlinsights/mlmodel/quantile_regression.html>`_.
+    We use :epkg:`QuantileLinearRegression`.
 
     After the first iteration, the function determines
     the furthest pair of points and removes it from the list

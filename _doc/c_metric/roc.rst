@@ -614,8 +614,7 @@ Le premier cas correspond par exemple à des problèmes de
 `détection de fraude <https://en.wikipedia.org/wiki/Predictive_analytics#Fraud_detection>`_.
 Le second cas correspond à taux de classification global. La courbe ROC
 pour ce cas est en règle général moins bonne que la plupart des
-courbes ROC obtenues pour chacune des classes prise séparément
-(voir `Régression logistique <http://www.xavierdupre.fr/app/papierstat/helpsphinx/notebooks/wines_color.html>`_).
+courbes ROC obtenues pour chacune des classes prise séparément.
 
 Exemple
 =======
