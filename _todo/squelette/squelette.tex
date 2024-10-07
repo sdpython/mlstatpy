@@ -37,7 +37,7 @@ L'article \citeindex{Lam1992} propose une revue des algorithmes de squelettisati
 \indexfrr{squelette}{continu}
 \indexfrr{forme}{continue}
 
-On se place ici dans le plan $\R^2$ et on consid�re une partie $F$ du plan qu'on appellera par la suite \emph{forme continue}. C'est en g�n�ral une partie connexe d'int�rieur non vide. L'objectif est ici de d�finir le squelette de cette forme, c'est-�-dire une partie d'int�rieur vide la repr�sentant le mieux possible. On d�finit une boule comme un disque de rayon strictement positif du plan. Les d�finitions qui suivent restent valables pour des espaces de dimension sup�rieure � deux (voir \citeindex{Blum1973}, \citeindex{Thiel1994}).
+On se place ici dans le plan $\mathbb{R}^2$ et on consid�re une partie $F$ du plan qu'on appellera par la suite \emph{forme continue}. C'est en g�n�ral une partie connexe d'int�rieur non vide. L'objectif est ici de d�finir le squelette de cette forme, c'est-�-dire une partie d'int�rieur vide la repr�sentant le mieux possible. On d�finit une boule comme un disque de rayon strictement positif du plan. Les d�finitions qui suivent restent valables pour des espaces de dimension sup�rieure � deux (voir \citeindex{Blum1973}, \citeindex{Thiel1994}).
 
         \begin{xdefinition}{boule maximale}
         \indexfr{boule maximale}
@@ -290,7 +290,7 @@ La figure~\ref{ske_cart_dist} illustre une carte de distance pour une distance q
         &
         \begin{minipage}{6.5cm}
         Exemple de masque 5x5, si ce masque est not� 
-        $M \in M_5\pa{\R} = \pa{m_{ij}}_{ -2 \infegal i,j \infegal 2}$,
+        $M \in M_5\pa{\mathbb{R}} = \pa{m_{ij}}_{ -2 \infegal i,j \infegal 2}$,
         lorsque $m_{20} > 2 m_{10}$, le calcul de distance d�fini en~\ref{squelette_def_dist_masque} ne fera jamais
         intervenir le d�placement $\vecteurim{2}{0}$.
         \end{minipage}
@@ -350,7 +350,7 @@ La figure~\ref{ske_cart_dist} illustre une carte de distance pour une distance q
         \begin{xdefinition}{masque de distance}
         \indexfrr{masque}{distance}
         
-        Soit $M \in M_{2n+1}\pa{\R} = \pa{m_{ij}}_{ -n \infegal i,j \infegal n}$ une matrice carr�e 
+        Soit $M \in M_{2n+1}\pa{\mathbb{R}} = \pa{m_{ij}}_{ -n \infegal i,j \infegal n}$ une matrice carr�e 
         de dimension $2n+1$. La matrice $M$ est un masque de distance de dimension $n$ si~:
         
                 \begin{itemize}
@@ -1965,7 +1965,7 @@ Pour m�moire~:
 \indexfr{niveaux de gris}
 \indexfr{�rosion}
 
-L'article \citeindex{Kalm\'ar1999} propose une squelettisation d'images floues bas�e sur un r�seau de neurones. Sa m�thode propose l'�rosion d'une image en niveaux de gris. On suppose que l'image est form�e d'une suite de pixels $\pa{x_i}_i$ et $f\pa{x_i} \in \cro{0,1}$ est l'intensit� du pixel. Les neurones de la premi�re couche sont not�s $\pa{n_i^1}_i$, deux points $p_i, \, a_i \in \R^2$ sont associ�s � chacun de ces neurones, $\pa{a_i}$ est calcul� comme suit~:
+L'article \citeindex{Kalm\'ar1999} propose une squelettisation d'images floues bas�e sur un r�seau de neurones. Sa m�thode propose l'�rosion d'une image en niveaux de gris. On suppose que l'image est form�e d'une suite de pixels $\pa{x_i}_i$ et $f\pa{x_i} \in \cro{0,1}$ est l'intensit� du pixel. Les neurones de la premi�re couche sont not�s $\pa{n_i^1}_i$, deux points $p_i, \, a_i \in \mathbb{R}^2$ sont associ�s � chacun de ces neurones, $\pa{a_i}$ est calcul� comme suit~:
 
             \begin{eqnarray}
             \forall i, \; a_i &=&  \summyone{j} \;   x_j \; f\pa{x_j} \, \exp \cro{ \frac{ - \norme{p_i - x_j}^2} {d_0^2}} 

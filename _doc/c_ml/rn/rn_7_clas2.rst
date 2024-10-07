@@ -58,7 +58,7 @@ est la solution du problème suivant :
     .. math::
 
         \begin{array}{l}
-        \vecteur{p_1^*}{p_N^*} = \underset{ \vecteur{p_1}{p_C} \in \R^C }{\arg \max}
+        \vecteur{p_1^*}{p_N^*} = \underset{ \vecteur{p_1}{p_C} \in \mathbb{R}^C }{\arg \max}
                        \sum_{k=1}^{C} d_k \ln p_k \medskip \\
         \quad \text{avec } \left \{
             \begin{array}{l}
@@ -121,14 +121,14 @@ n'est pas nécessaire de connaître la classe d'appartenance
 de chaque exemple mais seulement les probabilités d'appartenance
 de cet exemple à chacune des classes.
 
-Soient une variable aléatoire continue :math:`X \in \R^p`
+Soient une variable aléatoire continue :math:`X \in \mathbb{R}^p`
 et une variable aléatoire discrète multinomiale
 :math:`Y \in \intervalle{1}{C}`, on veut estimer la loi de :
 
 .. math::
 
     Y|X \sim \loimultinomiale {p_1\pa{W,X},\dots , p_C\pa{W,X}}
-    \text { avec } W \in \R^M
+    \text { avec } W \in \mathbb{R}^M
 
 Le vecteur :math:`\vecteur{p_1\pa{W,X}}{p_C\pa{W,X}}`
 est une fonction :math:`f` de :math:`\pa{W,X}` où
@@ -139,7 +139,7 @@ poids :math:`W` qui correspondent le mieux à l'échantillon :
 
 .. math::
 
-    A = \acc{\left. \pa {X_i,y_i=\pa{\eta_i^k}_{1 \infegal k \infegal C}} \in \R^p \times \cro{0,1}^C
+    A = \acc{\left. \pa {X_i,y_i=\pa{\eta_i^k}_{1 \infegal k \infegal C}} \in \mathbb{R}^p \times \cro{0,1}^C
                \text{ tel que } \sum_{k=1}^{c}y_i^k=1 \right| 1 \infegal i \infegal N }
 
 On suppose que les variables :math:`\pa{Y_i|X_i}_{1 \infegal i \infegal N}`
@@ -155,15 +155,15 @@ vérifie d'après l'équation :eq:`rn_equation_vraisemblance_kullbck_leiber` :
     \ln L_W & \propto & \sum_{i=1}^{N}\sum_{k=1}^{C} \eta_i^k \ln\cro { p_k\pa{W,X_i}}
     \end{eqnarray*}
 
-La solution du problème  :math:`\overset{*}{W} = \underset{W \in \R^l}{\arg \max} \; L_W`
+La solution du problème  :math:`\overset{*}{W} = \underset{W \in \mathbb{R}^l}{\arg \max} \; L_W`
 est celle d'un problème d'optimisation sous contrainte. Afin de contourner
 ce problème, on définit la fonction :math:`f` :
 
 .. math::
 
     \begin{array}{l}
-    f : \R^M \times \R^p \longrightarrow \R^C \\
-    \forall \pa{W,x} \in \R^M \times \R^p, \; f\pa{W,x} = \pa{f_1\pa{W,x}}, \dots ,
+    f : \mathbb{R}^M \times \mathbb{R}^p \longrightarrow \mathbb{R}^C \\
+    \forall \pa{W,x} \in \mathbb{R}^M \times \mathbb{R}^p, \; f\pa{W,x} = \pa{f_1\pa{W,x}}, \dots ,
                     f_C\pa{W,x} \vspace{0.5ex}\\
     \text{et }\forall i \in \intervalle{1}{N}, \; \forall k \in \intervalle{1}{C}, \;
                     p^k \pa{W,X_i} = \dfrac{e^{f_k\pa{W,X_i}}}
@@ -217,7 +217,7 @@ Ceci mène à la définition du problème de classification suivant :
     .. math::
 
         A = \acc {\left. \pa {X_i,y_i=\pa{\eta_i^k}_{1 \infegal k \infegal C}} \in
-                                                \R^p \times \R^C
+                                                \mathbb{R}^p \times \mathbb{R}^C
                             \text{ tel que } \sum_{k=1}^{c}\eta_i^k=1 \right| 1 \infegal i \infegal N }
 
     :math:`y_i^k` représente la probabilité que l'élément
@@ -229,7 +229,7 @@ Ceci mène à la définition du problème de classification suivant :
     .. math::
 
         \begin{array}{rcl}
-        f : \R^M \times \R^p &\longrightarrow& \R^C \\
+        f : \mathbb{R}^M \times \mathbb{R}^p &\longrightarrow& \mathbb{R}^C \\
         \pa{W,X}    &\longrightarrow&  \vecteur{f_1\pa{W,X}}{f_p\pa{W,X}} \\
         \end{array}
 
@@ -245,21 +245,21 @@ Réseau de neurones adéquat
 ++++++++++++++++++++++++++
 
 Dans le problème précédent, la maximisation de
-:math:`\overset{*}{W} = \underset{W \in \R^M}{\arg \max} \, L_W`
+:math:`\overset{*}{W} = \underset{W \in \mathbb{R}^M}{\arg \max} \, L_W`
 aboutit au choix d'une fonction :
 
 .. math::
 
-    X \in \R^p \longrightarrow f(\overset{*}{W},X) \in \R^C
+    X \in \mathbb{R}^p \longrightarrow f(\overset{*}{W},X) \in \mathbb{R}^C
 
 Le réseau de neurones :ref:`suivant <figure_rn_classification_adequat_figure>`
-:math:`g : \pa{W,X} \in \R^M \times \R^p \longrightarrow \R^C`
+:math:`g : \pa{W,X} \in \mathbb{R}^M \times \mathbb{R}^p \longrightarrow \mathbb{R}^C`
 choisi pour modéliser :math:`f` aura pour sorties :
 
 .. math::
 
     \begin{array}{l}
-    X \in \R^p \longrightarrow g(\overset{*}{W},X) \in \R^C\\
+    X \in \mathbb{R}^p \longrightarrow g(\overset{*}{W},X) \in \mathbb{R}^C\\
     \forall k \in \intervalle{1}{C}, \; g_k \pa{W,X} = e^{f_k\pa{W,X}}
     \end{array}
 
@@ -272,7 +272,7 @@ choisi pour modéliser :math:`f` aura pour sorties :
 
 On en déduit que la fonction de transert des neurones de la couche de sortie est :
 :math:`x \longrightarrow e^x`.
-La probabilité pour le vecteur :math:`x\in\R^p`
+La probabilité pour le vecteur :math:`x\in\mathbb{R}^p`
 d'appartenir à la classe :math:`k\in\intervalle{1}{C}` est
 :math:`p_k(\overset{*}{W},x) = \pr{Y=k|x} = \dfrac { g_k(\overset{*}{W},x)}
 {\sum_{l=1}^{C} g_l(\overset{*}{W},x) }`.
@@ -282,10 +282,10 @@ La fonction d'erreur à minimiser est l'opposé de la log-vraisemblance du modè
     :nowrap:
 
     \begin{eqnarray*}
-    \overset{*}{W} &=& \underset{W \in \R^M}{\arg \min}
+    \overset{*}{W} &=& \underset{W \in \mathbb{R}^M}{\arg \min}
           \cro {\sum_{i=1}^{N} \pa { - \sum_{k=1}^{C} \eta_i^k  \ln \pa{g_k\pa{W,X_i}} +
                         \ln \cro{ \sum_{l=1}^{C} g_l\pa{W,X_i} }}} \\
-          &=& \underset{W \in \R^M}{\arg \min}  \cro {\sum_{i=1}^{N} h\pa{W,X_i,\eta_i^k}}
+          &=& \underset{W \in \mathbb{R}^M}{\arg \min}  \cro {\sum_{i=1}^{N} h\pa{W,X_i,\eta_i^k}}
     \end{eqnarray*}
 
 On note :math:`C_{rn}` le nombre de couches du réseau de neurones,

@@ -23,7 +23,7 @@
 \sloppy
 
 
-Chercher des mots identiques ou similaires dans un dictionnaire est un probl�me classique et peut �tre d�fini pour tout espace m�trique. \indexfr{dictionnaire}\indexfr{lexique}\indexfr{plus proches voisins}\indexfrr{distance}{�dition} Soit $\pa{E,d}$ un espace m�trique quelconque et $D \subset E$ un ensemble fini quelconque, $x \in E$ est un �l�ment de $E$ et $s \in \R_+$ un r�el positif. L'objectif est de trouver le sous-ensemble $D'\pa{x,s} \subset D$ des voisins les plus proches de $x$ tels que~:
+Chercher des mots identiques ou similaires dans un dictionnaire est un probl�me classique et peut �tre d�fini pour tout espace m�trique. \indexfr{dictionnaire}\indexfr{lexique}\indexfr{plus proches voisins}\indexfrr{distance}{�dition} Soit $\pa{E,d}$ un espace m�trique quelconque et $D \subset E$ un ensemble fini quelconque, $x \in E$ est un �l�ment de $E$ et $s \in \mathbb{R}_+$ un r�el positif. L'objectif est de trouver le sous-ensemble $D'\pa{x,s} \subset D$ des voisins les plus proches de $x$ tels que~:
 
     $$
     D'\pa{x,s} = \acc{  y \in D \sac d\pa{x,y} \infegal s}
@@ -592,7 +592,7 @@ Soit $P \subset E$ une partie dont le centre est $C\pa{P}$ et le rayon $R\pa{P}$
         \begin{xalgorithm}{recherche rapide}\label{algorithm_optimisation}%
         Soit $r$ la racine de l'arbre $A$ obtenu par un des algorithmes~\ref{algorithm_AHC},
         \ref{algorithm_insertion_all},
-        $\ref{algorithm_insertion}^*$. $N$ est un ensemble de n\oe uds. Soit $s \in \R_+$, $B\pa{s}$ est 
+        $\ref{algorithm_insertion}^*$. $N$ est un ensemble de n\oe uds. Soit $s \in \mathbb{R}_+$, $B\pa{s}$ est 
         l'ensemble cherch�, il est d�fini par $B\pa{s} = \acc{ x \in D \sachant d\pa{x,m} \infegal s }$.
         
         \begin{xalgostep}{initialisation}
@@ -1431,7 +1431,7 @@ Il existe d'autres versions de l'algorithme LAESA comme TLAESA (Tree - LAESA) (v
 L'article~\citeindex{Farag\'o1993} d�montre �galement qu'il existe une majoration du nombre moyen de calcul de distances pour peu que la mesure de l'espace contenant l'ensemble $E$ et l'�l�ment $x$ soit connue et que l'ensemble $B = \ensemble{p_1}{p_P}$ des pivots v�rifie~:
 
             \begin{eqnarray}
-            \exists \pa{\alpha,\beta} \in \R^+_* \text{ tels que } && \nonumber\\
+            \exists \pa{\alpha,\beta} \in \mathbb{R}^+_* \text{ tels que } && \nonumber\\
             \forall \pa{x,y} \in E^2, \; \forall i\, && \alpha \, d\pa{x,y} \supegal 
                             \abs{d\pa{x,p_i} - d\pa{p_i,y}} \label{space_metric_cond_1} \\
             \forall \pa{x,y} \in E^2, && \underset{i}{\max} \; \abs{d\pa{x,p_i} - d\pa{p_i,y}} \supegal 
@@ -1495,7 +1495,7 @@ L'algorithme~\ref{space_metric_algo_farago} est en fait valable pour une distanc
                         p\pa{x,r} = P_X \pa{B\pa{x,r}} = \pr{  Z \in B\pa{x,r}}
                         $$
                         
-            On suppose qu'il existe $d > 0$ et une fonction $f : X \longrightarrow \R$ tels que~:
+            On suppose qu'il existe $d > 0$ et une fonction $f : X \longrightarrow \mathbb{R}$ tels que~:
                         $$
                         \underset { r \rightarrow 0 } { \lim } \; \frac{ p\pa{x,r} } { r^d } = f\pa{x} > 0
                         $$

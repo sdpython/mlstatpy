@@ -53,8 +53,8 @@ minimisant l'erreur de prédiction est :
 
 .. math::
 
-    \hat{\theta} = \underset {\theta \in \R^p}{\arg \min} \; \esp \pa {\theta}
-                 = \underset {\theta \in \R^p}{\arg \min}
+    \hat{\theta} = \underset {\theta \in \mathbb{R}^p}{\arg \min} \; \esp \pa {\theta}
+                 = \underset {\theta \in \mathbb{R}^p}{\arg \min}
                    \cro{ \sum_{i=1}^{N} \cro{Y_{i}-f \pa{\theta,X_{i}}}^{2}}
 
 Le lien entre les variables :math:`X` et :math:`Y` dépend des hypothèses faites

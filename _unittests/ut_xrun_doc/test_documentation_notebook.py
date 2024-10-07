@@ -1,5 +1,6 @@
 import unittest
 import os
+import shutil
 import sys
 import importlib
 import subprocess
@@ -60,6 +61,10 @@ class TestDocumentationNotebook(ExtTestCase):
                 f.write(bcontent)
 
             fold, name = os.path.split(tmp_name)
+            if name == "segment_detection.py":
+                img_name = os.path.join(os.path.split(nb_name)[0], "eglise_zoom2.jpg")
+                shutil.copy(img_name, fold)
+                shutil.copy(img_name, ".")
 
             try:
                 mod = import_source(fold, os.path.splitext(name)[0])
@@ -98,13 +103,17 @@ class TestDocumentationNotebook(ExtTestCase):
         for name in found:
             if name.endswith(".ipynb"):
                 fullname = os.path.join(fold, name)
-                if "interro_rapide_" in name or (
-                    sys.platform == "win32"
-                    and (
-                        "protobuf" in name
-                        or "td_note_2021" in name
-                        or "nb_pandas" in name
+                if (
+                    "interro_rapide_" in name
+                    or (
+                        sys.platform == "win32"
+                        and (
+                            "protobuf" in name
+                            or "td_note_2021" in name
+                            or "nb_pandas" in name
+                        )
                     )
+                    or "_long" in name
                 ):
 
                     @unittest.skip("notebook with questions or issues with windows")

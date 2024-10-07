@@ -21,7 +21,7 @@ Parallèle entre un neurone et une régression logistique
 Les paragraphes :ref:`rn-classification` et
 :ref:`nn-classification` présente le problème de la classification
 qui consiste à trouver une fonction *f* qui maximise la vraisemblance
-du nuage de points :math:`(X_i, y_i)_i` où :math:`X_i \in \R^d`
+du nuage de points :math:`(X_i, y_i)_i` où :math:`X_i \in \mathbb{R}^d`
 et :math:`y_i \in \acc{0, 1}`.
 
 .. math::
@@ -241,8 +241,8 @@ On remarque que :
 
     \begin{array}{rcl}
     f(x) &=& \frac{1}{1 + e^{-x}} \\
-    \Rightarrow f(-x) &=& \frac{1}{1 + e^{x}} = \frac{e^{-x}}{1 + e^{-x}} \\
-    \Rightarrow f(x) + f(-x) &=& \frac{1}{1 + e^{-x}} + \frac{e^{-x}}{1 + e^{-x}} = 1
+    \mathbb{R}ightarrow f(-x) &=& \frac{1}{1 + e^{x}} = \frac{e^{-x}}{1 + e^{-x}} \\
+    \mathbb{R}ightarrow f(x) + f(-x) &=& \frac{1}{1 + e^{-x}} + \frac{e^{-x}}{1 + e^{-x}} = 1
     \end{array}
 
 Cela explique pour on utilise souvent cette fonction pour transformer

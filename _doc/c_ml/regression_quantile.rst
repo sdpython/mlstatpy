@@ -78,8 +78,8 @@ problème de régression.
     :tag: Définition
 
     On dispose d'un ensemble de *n* couples
-    :math:`(X_i, Y_i)` avec :math:`X_i \in \R^d`
-    et :math:`Y_i \in \R`. La régression quantile
+    :math:`(X_i, Y_i)` avec :math:`X_i \in \mathbb{R}^d`
+    et :math:`Y_i \in \mathbb{R}`. La régression quantile
     consiste à trouver :math:`\alpha, \beta` tels que la
     somme :math:`\sum_i \abs{\alpha + \beta X_i - Y_i}`
     est minimale.
@@ -230,8 +230,8 @@ pour un quantile autre que la médiane.
     :tag: Définition
 
     On dispose d'un ensemble de *n* couples
-    :math:`(X_i, Y_i)` avec :math:`X_i \in \R^d`
-    et :math:`Y_i \in \R`. La régression quantile
+    :math:`(X_i, Y_i)` avec :math:`X_i \in \mathbb{R}^d`
+    et :math:`Y_i \in \mathbb{R}`. La régression quantile
     consiste à trouver :math:`\alpha, \beta` tels que la
     somme :math:`\sum_i p \abs{\alpha + \beta X_i - Y_i}^+ + (1-p) \abs{\alpha + \beta X_i - Y_i}^-`
     est minimale.
@@ -298,7 +298,7 @@ Bilbiographie
 
 Des références sont disponibles sur la page de :epkg:`statsmodels` :
 `QuantReg <http://www.statsmodels.org/stable/generated/statsmodels.regression.quantile_regression.QuantReg.html>`_ ou
-là : `Régression quantile <http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/quantile_regression.html>`_.
+là : `Régression quantile <https://sdpython.github.io/doc/mlinsights/dev/auto_examples/plot_quantile_regression.html>`_.
 
 .. [Koenker2017] `Quantile Regression, 40 years on <http://www.econ.uiuc.edu/~roger/courses/NIPE/handouts/QR40.pdf>`_,
     Roger Koenker (2017)

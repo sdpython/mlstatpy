@@ -38,7 +38,7 @@ discrète et :math:`Y \in \acc{0,1}`, on dispose pour cela d'une liste :
 
 .. math::
 
-    \acc{ \pa{ X_i,Y_i } \in \R \times \acc{0,1} | 1 \infegal i \infegal N }
+    \acc{ \pa{ X_i,Y_i } \in \mathbb{R} \times \acc{0,1} | 1 \infegal i \infegal N }
 
 .. image:: rnimg/classificationnd.png
 

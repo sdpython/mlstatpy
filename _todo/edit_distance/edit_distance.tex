@@ -6,26 +6,26 @@
 
 
 \label{edit_distance_annexe}
-\indexfrr{distance}{édition}
-\indexsee{édition}{distance d'édition}
+\indexfrr{distance}{ï¿½dition}
+\indexsee{ï¿½dition}{distance d'ï¿½dition}
 
-Les distances d'édition permettent de comparer deux mots entre eux ou plus généralement deux séquences de symboles entre elles. L'usage le plus simple est de trouver, pour un mot mal orthographié, le mot le plus proche dans un dictionnaire, c'est une option proposée dans la plupart des traitements de texte. La distance présentée est la distance de Levenstein (voir \citeindex{Levenstein1966}).\indexfr{Levenstein} Elle est parfois appelée Damerau Levenstein Matching (DLM) (voir également \citeindex{Damerau1964}). Cette distance fait intervenir trois opérations élémentaires~:
+Les distances d'ï¿½dition permettent de comparer deux mots entre eux ou plus gï¿½nï¿½ralement deux sï¿½quences de symboles entre elles. L'usage le plus simple est de trouver, pour un mot mal orthographiï¿½, le mot le plus proche dans un dictionnaire, c'est une option proposï¿½e dans la plupart des traitements de texte. La distance prï¿½sentï¿½e est la distance de Levenstein (voir \citeindex{Levenstein1966}).\indexfr{Levenstein} Elle est parfois appelï¿½e Damerau Levenstein Matching (DLM) (voir ï¿½galement \citeindex{Damerau1964}). Cette distance fait intervenir trois opï¿½rations ï¿½lï¿½mentaires~:
 
     \begin{enumerate}
-    \item comparaison entre deux caractères
-    \item insertion d'un caractère
-    \item suppression d'un caractère
+    \item comparaison entre deux caractï¿½res
+    \item insertion d'un caractï¿½re
+    \item suppression d'un caractï¿½re
     \end{enumerate}
 
-Pour comparer deux mots, il faut construire une méthode associant ces trois opérations afin que le premier mot se transforme en le second mot. L'exemple~\ref{figure_distance_edition_exemple_un} utilise les mots "idstzance" et "distances", il montre une méthode permettant de passer du premier au second. La distance sera la somme des coûts associés à chacune des opérations choisies. La comparaison entre deux lettres identiques est en général de coût nul, toute autre opération étant de coût strictement positif. 
+Pour comparer deux mots, il faut construire une mï¿½thode associant ces trois opï¿½rations afin que le premier mot se transforme en le second mot. L'exemple~\ref{figure_distance_edition_exemple_un} utilise les mots "idstzance" et "distances", il montre une mï¿½thode permettant de passer du premier au second. La distance sera la somme des coï¿½ts associï¿½s ï¿½ chacune des opï¿½rations choisies. La comparaison entre deux lettres identiques est en gï¿½nï¿½ral de coï¿½t nul, toute autre opï¿½ration ï¿½tant de coï¿½t strictement positif. 
 
 
     \begin{figure}[ht]
     $$
     \frame{$%
     \begin{array}[c]{cc|c|c}%
-    \text{\textbf{mot 1}} & \text{\textbf{mot 2}} & \text{\textbf{opération}}%
-    & \text{\textbf{coût}}\\ \hline
+    \text{\textbf{mot 1}} & \text{\textbf{mot 2}} & \text{\textbf{opï¿½ration}}%
+    & \text{\textbf{coï¿½t}}\\ \hline
     i & d & \text{comparaison entre "i" et "d"} & 1\\
     d & i & \text{comparaison entre "d" et "i"} & 1\\
     s & s & \text{comparaison entre "s" et "s"} & 0\\
@@ -40,9 +40,9 @@ Pour comparer deux mots, il faut construire une méthode associant ces trois opér
     \end{array}
     $}
     $$
-    \caption{	Distance d'édition entre les mots "idstzance" et "distances".
-    					La succession d'opérations proposée n'est pas la seule qui permettent 
-    					de construire le second mot à partir du premier mais c'est la moins coûteuse. }
+    \caption{	Distance d'ï¿½dition entre les mots "idstzance" et "distances".
+    					La succession d'opï¿½rations proposï¿½e n'est pas la seule qui permettent 
+    					de construire le second mot ï¿½ partir du premier mais c'est la moins coï¿½teuse. }
     \label{figure_distance_edition_exemple_un}
     \end{figure}
 
@@ -53,30 +53,30 @@ Pour comparer deux mots, il faut construire une méthode associant ces trois opér
 
 
 %--------------------------------------------------------------------------------------------------------------------
-\section{Définition et propriétés}\indexfrr{distance}{édition}
+\section{Dï¿½finition et propriï¿½tï¿½s}\indexfrr{distance}{ï¿½dition}
 %--------------------------------------------------------------------------------------------------------------------
 
-\subsection{Définition} 
+\subsection{Dï¿½finition} 
 
 \indexfr{mot}
-\indexfr{séquence}
+\indexfr{sï¿½quence}
 
-Tout d'abord, il faut définir ce qu'est un mot ou une séquence~:
+Tout d'abord, il faut dï¿½finir ce qu'est un mot ou une sï¿½quence~:
 
 		\begin{xdefinition}{mot}\label{definition_edit_mot}
-		On note $\mathcal{C}$ l'espace des caractères ou des symboles. Un mot ou une séquence est 
+		On note $\mathcal{C}$ l'espace des caractï¿½res ou des symboles. Un mot ou une sï¿½quence est 
 		une suite finie de $\mathcal{C}$. On note
-		$\mathcal{S}_\mathcal{C} = \union{k=1}{\infty} C^k$ l'espace des mots formés de caractères appartenant à $\mathcal{C}$.
+		$\mathcal{S}_\mathcal{C} = \union{k=1}{\infty} C^k$ l'espace des mots formï¿½s de caractï¿½res appartenant ï¿½ $\mathcal{C}$.
 		\end{xdefinition}
 
-On peut définir la distance d'édition~:
+On peut dï¿½finir la distance d'ï¿½dition~:
 
-		\begin{xdefinition}{distance d'édition}\label{defition_distance_edition_1}%
-		La distance d'édition $d$ sur $\mathcal{S}_\mathcal{C}$ est définie par~:
+		\begin{xdefinition}{distance d'ï¿½dition}\label{defition_distance_edition_1}%
+		La distance d'ï¿½dition $d$ sur $\mathcal{S}_\mathcal{C}$ est dï¿½finie par~:
     $$
     \begin{array}{crcl}
-    d : & \mathcal{S}_\mathcal{C} \times \mathcal{S}_\mathcal{C} & \longrightarrow & \R^+\\
-    & \pa{m_1,m_2} & \longrightarrow & \underset{ \begin{subarray} OO \text{ séquence} \\ \text{d'opérations}
+    d : & \mathcal{S}_\mathcal{C} \times \mathcal{S}_\mathcal{C} & \longrightarrow & \mathbb{R}^+\\
+    & \pa{m_1,m_2} & \longrightarrow & \underset{ \begin{subarray} OO \text{ sï¿½quence} \\ \text{d'opï¿½rations}
     \end{subarray}}{ \min}
                         \, d\pa{m_1,m_2,O}
     \end{array}
@@ -84,8 +84,8 @@ On peut définir la distance d'édition~:
 		\end{xdefinition}
 
 
-La distance~\ref{defition_distance_edition_1} est le coût de la transformation du mot $m_1$ en $m_2$ la moins coûteuse. Il reste à démontrer que cette distance en est bien une (paragraphe~\ref{edit_demonstration}) puis à proposer une méthode de
-calcul plus rapide que celle suggérée par cette définition.
+La distance~\ref{defition_distance_edition_1} est le coï¿½t de la transformation du mot $m_1$ en $m_2$ la moins coï¿½teuse. Il reste ï¿½ dï¿½montrer que cette distance en est bien une (paragraphe~\ref{edit_demonstration}) puis ï¿½ proposer une mï¿½thode de
+calcul plus rapide que celle suggï¿½rï¿½e par cette dï¿½finition.
 
 
 
@@ -97,18 +97,18 @@ calcul plus rapide que celle suggérée par cette définition.
 
 
 
-\subsection{Propriétés}\label{edit_demonstration}\indexfrr{distance}{édition}
+\subsection{Propriï¿½tï¿½s}\label{edit_demonstration}\indexfrr{distance}{ï¿½dition}
 
-Ce paragraphe a pour objectif de démontrer que la distance définie en~\ref{defition_distance_edition_1} en est bien une.
+Ce paragraphe a pour objectif de dï¿½montrer que la distance dï¿½finie en~\ref{defition_distance_edition_1} en est bien une.
 
 
 
-		\begin{xdefinition}{distance entre caractères}
+		\begin{xdefinition}{distance entre caractï¿½res}
 		\label{edition_distance_definition_1}
-		Soit $\mathcal{C}' = \mathcal{C} \bigcup \accolade{.}$ l'ensemble des caractères ajouté au caractère vide "$.$".\newline%
-		On note $c : \pa{\mathcal{C}'}^2 \longrightarrow \R^+$ la fonction coût définie comme suit :
+		Soit $\mathcal{C}' = \mathcal{C} \bigcup \accolade{.}$ l'ensemble des caractï¿½res ajoutï¿½ au caractï¿½re vide "$.$".\newline%
+		On note $c : \pa{\mathcal{C}'}^2 \longrightarrow \mathbb{R}^+$ la fonction coï¿½t dï¿½finie comme suit :
     \begin{eqnarray}
-    \forall \pa{x,y} \in \pa{\mathcal{C}'}^2, \; c\pa{x,y} \text{ est le coût } \left\{
+    \forall \pa{x,y} \in \pa{\mathcal{C}'}^2, \; c\pa{x,y} \text{ est le coï¿½t } \left\{
     \begin{array}{ll}
     \text { d'une comparaison}  & \text{si } \pa{x,y} \in \pa{\mathcal{C}}^2\\
     \text { d'une insertion}		& \text{si } \pa{x,y} \in \pa{\mathcal{C}} \times \accolade{.}\\
@@ -123,28 +123,28 @@ Ce paragraphe a pour objectif de démontrer que la distance définie en~\ref{defit
 		\end{xdefinition}
 
 
-Pour modéliser les transformations d'un mot vers un autre, on définit pour un mot $m$ un \emph{mot
+Pour modï¿½liser les transformations d'un mot vers un autre, on dï¿½finit pour un mot $m$ un \emph{mot
 acceptable}\indexfrr{mot}{acceptable}~:
 
 
 		\begin{xdefinition}{mot acceptable}
 		\label{edition_distance_mot_acceptable_1}%
 		\indexfrr{mot}{acceptable}%
-		Soit $m = \vecteur{m_1}{m_n}$ un mot tel qu'il est défini en~\ref{definition_edit_mot}. Soit $M=\pa{M_i}_{i \supegal 1}$
-		une suite infinie de caractères, on dit que $M$ est un mot acceptable pour $m$ si et seulement si la sous-suite
-		extraite de $M$ contenant tous les caractères différents de $\acc{.}$ est égal au mot $m$. On note $acc\pa{m}$ 
+		Soit $m = \vecteur{m_1}{m_n}$ un mot tel qu'il est dï¿½fini en~\ref{definition_edit_mot}. Soit $M=\pa{M_i}_{i \supegal 1}$
+		une suite infinie de caractï¿½res, on dit que $M$ est un mot acceptable pour $m$ si et seulement si la sous-suite
+		extraite de $M$ contenant tous les caractï¿½res diffï¿½rents de $\acc{.}$ est ï¿½gal au mot $m$. On note $acc\pa{m}$ 
 		l'ensemble des mots acceptables pour le mot $m$.
 		\end{xdefinition}
 
-Par conséquent, tout mot acceptable $m'$ pour le mot $m$ est égal à $m$ si on supprime les caractères $\acc{.}$ du mot $m'$. En particulier, à partir d'un certain indice, $m'$ est une suite infinie de caractères $\acc{.}$. Il reste alors à exprimer la définition~\ref{defition_distance_edition_1} en utilisant les mots acceptables~:
+Par consï¿½quent, tout mot acceptable $m'$ pour le mot $m$ est ï¿½gal ï¿½ $m$ si on supprime les caractï¿½res $\acc{.}$ du mot $m'$. En particulier, ï¿½ partir d'un certain indice, $m'$ est une suite infinie de caractï¿½res $\acc{.}$. Il reste alors ï¿½ exprimer la dï¿½finition~\ref{defition_distance_edition_1} en utilisant les mots acceptables~:
 
 
-		\begin{xdefinition}{distance d'édition}\label{defition_distance_edition_2}%
-		Soit $c$ la distance définie en~\ref{edition_distance_definition_1}, la distance d'édition $d$ sur
-		$\mathcal{S}_\mathcal{C}$ est définie par~:
+		\begin{xdefinition}{distance d'ï¿½dition}\label{defition_distance_edition_2}%
+		Soit $c$ la distance dï¿½finie en~\ref{edition_distance_definition_1}, la distance d'ï¿½dition $d$ sur
+		$\mathcal{S}_\mathcal{C}$ est dï¿½finie par~:
 		    \begin{eqnarray}
 		    \begin{array}{crcl}
-		    d : & \mathcal{S}_\mathcal{C} \times \mathcal{S}_\mathcal{C} & \longrightarrow & \R^+\\
+		    d : & \mathcal{S}_\mathcal{C} \times \mathcal{S}_\mathcal{C} & \longrightarrow & \mathbb{R}^+\\
 		        & \pa{m_1,m_2} & \longrightarrow &
 		                        \min \acc{  \summy{i=1}{+\infty} c\pa{M_1^i, M_2^i} \sachant
 		                                    \pa{M_1,M_2} \in acc\pa{m_1} \times acc\pa{m_2}}
@@ -154,15 +154,15 @@ Par conséquent, tout mot acceptable $m'$ pour le mot $m$ est égal à $m$ si on su
 		\end{xdefinition}
 
 
-Il est évident que la série $\summy{i=1}{+\infty} c\pa{M_1^i, M_2^i}$ est convergente. La distance de caractères définie en~\ref{edition_distance_definition_1} implique que les distance d'édition définies en~\ref{defition_distance_edition_1} et~\ref{defition_distance_edition_2} sont identiques.
+Il est ï¿½vident que la sï¿½rie $\summy{i=1}{+\infty} c\pa{M_1^i, M_2^i}$ est convergente. La distance de caractï¿½res dï¿½finie en~\ref{edition_distance_definition_1} implique que les distance d'ï¿½dition dï¿½finies en~\ref{defition_distance_edition_1} et~\ref{defition_distance_edition_2} sont identiques.
 
 
 
 
 
-		\begin{xtheoremmine}{distance d'édition}
+		\begin{xtheoremmine}{distance d'ï¿½dition}
 		\label{edition_distance_theoreme001}
-		Soit $c$ et $d$ les fonctions définies respectivement par (\ref{equation_edit_car}) et (\ref{equation_edit_mot}),
+		Soit $c$ et $d$ les fonctions dï¿½finies respectivement par (\ref{equation_edit_car}) et (\ref{equation_edit_mot}),
 		alors~:
 		    $$
 		    c \text{ est une distance sur } \mathcal{C}' \Longleftrightarrow d \text { est une distance sur }
@@ -176,24 +176,24 @@ Il est évident que la série $\summy{i=1}{+\infty} c\pa{M_1^i, M_2^i}$ est conver
 
 
 
-\begin{xdemomine}{théorème}{\ref{edition_distance_theoreme001}}
+\begin{xdemomine}{thï¿½orï¿½me}{\ref{edition_distance_theoreme001}}
 
 \itemdemo
 
-On cherche d'abord à démontrer que~:
+On cherche d'abord ï¿½ dï¿½montrer que~:
     \[
     \begin{tabular}{c}
     $c$ est une distance sur $\mathcal{C}'$ $\Longleftarrow$ $d$ est une distance sur $\mathcal{S}_\mathcal{C}$
     \end{tabular}
     \]
 
-Cette assertion est évidente car, si $\pa{m_1,m_2}$ sont deux mots de un caractère, la distance $d$ sur
-$\mathcal{S}_\mathcal{C}$ définit alors la distance $c$ sur $\mathcal{C}'$.
+Cette assertion est ï¿½vidente car, si $\pa{m_1,m_2}$ sont deux mots de un caractï¿½re, la distance $d$ sur
+$\mathcal{S}_\mathcal{C}$ dï¿½finit alors la distance $c$ sur $\mathcal{C}'$.
 
 
 \itemdemo
 
-On cherche démontrer que~:
+On cherche dï¿½montrer que~:
     \[
     \begin{tabular}{c}
     $c$ est une distance sur $\mathcal{C}'$ $\Longrightarrow$ $d$ est une distance sur $\mathcal{S}_\mathcal{C}$
@@ -206,7 +206,7 @@ $\mathcal{C}'$~:
         d\pa{M_1,M_2} = d\pa{M_2,M_1}
         $$
 
-D'où, d'après la définition~\ref{defition_distance_edition_2}~:
+D'oï¿½, d'aprï¿½s la dï¿½finition~\ref{defition_distance_edition_2}~:
         \begin{eqnarray}
         d\pa{m_1,m_2} = d\pa{m_2,m_1}  \label{edit_demo_eq_1}
         \end{eqnarray}
@@ -225,12 +225,12 @@ Alors~:
         d\pa{m_1,m_2} = 0   & \Longrightarrow &     m_1 = m_2  \label{edit_demo_eq_2}
         \end{eqnarray}
 
-Il reste à démontrer l'inégalité triangulaire. Soient trois mots $\pa{m_1,m_2,m_3}$, on veut démontrer que~:
+Il reste ï¿½ dï¿½montrer l'inï¿½galitï¿½ triangulaire. Soient trois mots $\pa{m_1,m_2,m_3}$, on veut dï¿½montrer que~:
     $$
     d\pa{m_1,m_3} \infegal d\pa{m_1,m_2} + d \pa{m_2,m_3}
     $$
 
-On définit~:
+On dï¿½finit~:
 
     \begin{eqnarray*}
     \pa{N_1,N_2} \in acc\pa{m_1} \times acc\pa{m_2}    & \text{ tels que }     &  d\pa{m_1,m_2} = d\pa{N_1,N_2} \\
@@ -238,7 +238,7 @@ On définit~:
     \pa{O_1,O_3} \in acc\pa{m_1} \times acc\pa{m_3}    & \text{ tels que }     &  d\pa{m_1,m_3} = d\pa{O_1,O_3}
     \end{eqnarray*}
 
-Mais il est possible, d'après la définition~\ref{edition_distance_mot_acceptable_1} d'insérer des caractères $\acc{.}$
+Mais il est possible, d'aprï¿½s la dï¿½finition~\ref{edition_distance_mot_acceptable_1} d'insï¿½rer des caractï¿½res $\acc{.}$
 dans les mots $N_1,N_2,P_2,P_3,O_1,O_3$ de telle sorte qu'il existe $\pa{M_1,M_2,M_3} \in acc\pa{m_1} \times \in
 acc\pa{m_2} \times \in acc\pa{m_3}$ tels que~: (voir figure~\ref{edition_distance_demonstration})
 
@@ -253,7 +253,7 @@ Or comme la fonction $c$ est une distance sur $\mathcal{C}'$, on peut affirmer q
     d\pa{M_1,M_3} \infegal d\pa{M_1,M_2} + d \pa{M_2,M_3}
     $$
 
-D'où~:
+D'oï¿½~:
     \begin{eqnarray}
     d\pa{m_1,m_3} \infegal d\pa{m_1,m_2} + d \pa{m_2,m_3} \label{edit_demo_eq_3}
     \end{eqnarray}
@@ -271,7 +271,7 @@ distance.
     $M_3$ & d & i & s & t &   & a & n & c & e & s \\ \hline
     \end{tabular}
     \]
-    \caption{Démonstration du théorème~\ref{edition_distance_theoreme001}, illustration des suites $M_1,M_2,M_3$ pour les mots
+    \caption{Dï¿½monstration du thï¿½orï¿½me~\ref{edition_distance_theoreme001}, illustration des suites $M_1,M_2,M_3$ pour les mots
                 \textit{idtzance}, \textit{tonce}, \textit{distances}}
     \label{edition_distance_demonstration}
     \end{figure}
@@ -288,23 +288,23 @@ distance.
 
 \begin{xremark}{longueur des mots}
 
-La distance d'édition~\ref{defition_distance_edition_2} ne tient pas compte de la longueur des mots qu'elle compare. On
-serait tenté de définir une nouvelle distance d'édition inspirée de la précédente~:
+La distance d'ï¿½dition~\ref{defition_distance_edition_2} ne tient pas compte de la longueur des mots qu'elle compare. On
+serait tentï¿½ de dï¿½finir une nouvelle distance d'ï¿½dition inspirï¿½e de la prï¿½cï¿½dente~:
 
-Soit $d^*$ la distance d'édition définie en~\ref{defition_distance_edition_2} pour laquelle les coûts
-de comparaison, d'insertion et de suppression sont tous égaux à 1.\newline%
-La distance d'édition $d'$ sur $\mathcal{S}_\mathcal{C}$ est définie par :
+Soit $d^*$ la distance d'ï¿½dition dï¿½finie en~\ref{defition_distance_edition_2} pour laquelle les coï¿½ts
+de comparaison, d'insertion et de suppression sont tous ï¿½gaux ï¿½ 1.\newline%
+La distance d'ï¿½dition $d'$ sur $\mathcal{S}_\mathcal{C}$ est dï¿½finie par :
     \begin{eqnarray}
     \begin{array}{crcl}
-    d' : & \mathcal{S}_\mathcal{C} \times \mathcal{S}_\mathcal{C} & \longrightarrow & \R^+\\
+    d' : & \mathcal{S}_\mathcal{C} \times \mathcal{S}_\mathcal{C} & \longrightarrow & \mathbb{R}^+\\
     & \pa{m_1,m_2} & \longrightarrow & d'\pa{m_1,m_2} = \dfrac{d^*\pa{m_1,m_2}}{ \max \acc {l\pa{m_1}, l\pa{m_2}}} \\ \\
-    & & & \text{où } l\pa{m} \text{ est la longueur du mot } m
+    & & & \text{oï¿½ } l\pa{m} \text{ est la longueur du mot } m
     \end{array}
     \label{edit_equ_pseudo_dist}
     \end{eqnarray}
 
-Le tableau~\ref{edition_distance_tableau_longueur_un} donne un exemple pour lequel l'inégalité triangulaire n'est pas
-vérifiée. La fonction $d^*$ n'est donc pas une distance.
+Le tableau~\ref{edition_distance_tableau_longueur_un} donne un exemple pour lequel l'inï¿½galitï¿½ triangulaire n'est pas
+vï¿½rifiï¿½e. La fonction $d^*$ n'est donc pas une distance.
 
 \end{xremark}
 
@@ -321,16 +321,16 @@ vérifiée. La fonction $d^*$ n'est donc pas une distance.
     APOLLINE     &   APPOLINE   & 2                       & 2 / 8
     \end{array} \\ \\
     \begin{array}{l}
-    \text{Par conséquent : } \\
+    \text{Par consï¿½quent : } \\
     d\pa{APOLLINE,APPOLINE} > \\
     \quad d\pa{APOLLINE,APPOLLINE} + d\pa{APPOLLINE,APPOLINE}
     \end{array}
     \end{array}
     $}
     $$
-    \caption{Distance d'édition et longueur de mots, cas particulier où la fonction $d^*$ définie par
+    \caption{Distance d'ï¿½dition et longueur de mots, cas particulier oï¿½ la fonction $d^*$ dï¿½finie par
                 (\ref{edit_equ_pseudo_dist})
-                ne vérifie pas l'inégalité triangulaire.}
+                ne vï¿½rifie pas l'inï¿½galitï¿½ triangulaire.}
     \label{edition_distance_tableau_longueur_un}
 		\end{table}
 
@@ -346,13 +346,13 @@ vérifiée. La fonction $d^*$ n'est donc pas une distance.
 \section{Factorisation des calculs}
 %---------------------------------------------------------------------------------------------------------------------
 
-La définition de la distance d'édition ne permet pas d'envisager le calcul de la distance dans un temps raisonnable. Il
-est possible néanmoins d'exprimer cette distance d'une autre manière afin de résoudre ce problème
-(\citeindex{Wagner1974}). On définit la suite suivante~:
+La dï¿½finition de la distance d'ï¿½dition ne permet pas d'envisager le calcul de la distance dans un temps raisonnable. Il
+est possible nï¿½anmoins d'exprimer cette distance d'une autre maniï¿½re afin de rï¿½soudre ce problï¿½me
+(\citeindex{Wagner1974}). On dï¿½finit la suite suivante~:
 
-		\begin{xdefinition}{distance d'édition tronquée} \label{definition_edit_dist_tronc}
+		\begin{xdefinition}{distance d'ï¿½dition tronquï¿½e} \label{definition_edit_dist_tronc}
 		
-		Soient deux mots $\pa{m_1,m_2}$, on définit la suite~:
+		Soient deux mots $\pa{m_1,m_2}$, on dï¿½finit la suite~:
 		    $$
 		    \left( d_{i,j}^{m_{1},m_{2}}\right) _{\substack{0\leqslant
 		    i\leqslant n_{1}\\0\leqslant j\leqslant n_{2}}}\left( =\left(d_{i,j}\right) _{\substack{0\leqslant i\leqslant
@@ -382,28 +382,28 @@ est possible néanmoins d'exprimer cette distance d'une autre manière afin de rés
 		\end{xdefinition}
 		
 
-Cette suite tronquée permet d'obtenir le résultat de la propriété suivante~:
+Cette suite tronquï¿½e permet d'obtenir le rï¿½sultat de la propriï¿½tï¿½ suivante~:
 
-		\begin{xproperty}{calcul rapide de la distance d'édition}
+		\begin{xproperty}{calcul rapide de la distance d'ï¿½dition}
 		\label{edition_distance_propriete_001}%
-		La suite définie en~\ref{definition_edit_dist_tronc} vérifie~:
+		La suite dï¿½finie en~\ref{definition_edit_dist_tronc} vï¿½rifie~:
 		    $$
 		    d\left(  m_{1},m_{2}\right)  =d_{n_{1},n_{2}}
 		    $$
-		où $d$ est la distance d'édition définie en~\ref{defition_distance_edition_1} ou ~\ref{defition_distance_edition_2}.
+		oï¿½ $d$ est la distance d'ï¿½dition dï¿½finie en~\ref{defition_distance_edition_1} ou ~\ref{defition_distance_edition_2}.
 		\end{xproperty}
 
 
 
 
-Cette factorisation des calculs est illustrée par les tableaux de la figure~\ref{figure_distance_edition_exemple_deux}
+Cette factorisation des calculs est illustrï¿½e par les tableaux de la figure~\ref{figure_distance_edition_exemple_deux}
 (page~\pageref{figure_distance_edition_exemple_deux}).
 
 
 
-\begin{xdemo}{propriété}{\ref{edition_distance_propriete_001}}
+\begin{xdemo}{propriï¿½tï¿½}{\ref{edition_distance_propriete_001}}
 
-La démonstration s'effectue par récurrence, la définition~\ref{definition_edit_dist_tronc} est bien sûr équivalente à~\ref{defition_distance_edition_1} pour des mots de longueur un. On suppose donc que ce résultat est vrai pour un couple de mots $\pa{m_1,m_2}$ de longueur $\pa{l_1,l_2}$ vérifiant $l_1 \infegal i$ et $l_2 \infegal j$ avec au plus une égalité. Soit $m$ un mot, on note $n$ le nombre de lettres qu'il contient. On note  $m\left(  l\right)  $ le mot formé des $l$ premières lettres de $m$. Alors~:
+La dï¿½monstration s'effectue par rï¿½currence, la dï¿½finition~\ref{definition_edit_dist_tronc} est bien sï¿½r ï¿½quivalente ï¿½~\ref{defition_distance_edition_1} pour des mots de longueur un. On suppose donc que ce rï¿½sultat est vrai pour un couple de mots $\pa{m_1,m_2}$ de longueur $\pa{l_1,l_2}$ vï¿½rifiant $l_1 \infegal i$ et $l_2 \infegal j$ avec au plus une ï¿½galitï¿½. Soit $m$ un mot, on note $n$ le nombre de lettres qu'il contient. On note  $m\left(  l\right)  $ le mot formï¿½ des $l$ premiï¿½res lettres de $m$. Alors~:
 
     \begin{eqnarray*}
     d_{i,j}^{m_{1},m_{2}} &=& d\left(  m_{1}\left( i\right) ,m_{2}\left( j\right)  \right)\\
@@ -424,7 +424,7 @@ La démonstration s'effectue par récurrence, la définition~\ref{definition_edit_d
 
 \end{xdemo}
 
-Le calcul factorisé de la distance d'édition entre deux mots de longueur $l_1$ et $l_2$ a un coût de l'ordre $O\pa{l_1 l_2}$. Il est souvent illustré par un tableau comme celui de la figure~\ref{figure_distance_edition_exemple_deux} qui permet également de retrouver la meilleure séquence d'opérations permettant de passer du premier mot au second.
+Le calcul factorisï¿½ de la distance d'ï¿½dition entre deux mots de longueur $l_1$ et $l_2$ a un coï¿½t de l'ordre $O\pa{l_1 l_2}$. Il est souvent illustrï¿½ par un tableau comme celui de la figure~\ref{figure_distance_edition_exemple_deux} qui permet ï¿½galement de retrouver la meilleure sï¿½quence d'opï¿½rations permettant de passer du premier mot au second.
 
 
 
@@ -496,15 +496,15 @@ Le calcul factorisé de la distance d'édition entre deux mots de longueur $l_1$ e
             \\
             \begin{tabular}{c}%
                 \begin{minipage}{15cm}
-                Chaque case $\pa{i,j}$ contient la distance qui sépare les $i$ premières lettres du mot $1$
-                des $j$ premières lettres du mot $2$ selon le chemin ou la méthode choisie.
-                La dernière case indique la distance qui sépare les deux mots quel que soit le chemin choisi.
+                Chaque case $\pa{i,j}$ contient la distance qui sï¿½pare les $i$ premiï¿½res lettres du mot $1$
+                des $j$ premiï¿½res lettres du mot $2$ selon le chemin ou la mï¿½thode choisie.
+                La derniï¿½re case indique la distance qui sï¿½pare les deux mots quel que soit le chemin choisi.
                 \end{minipage}
             \end{tabular}
         \end{array}
         $}%
         $$
-        \caption{Chemins possibles afin de comparer les mots "idstzance" et "distances" avec une distance d'édition}
+        \caption{Chemins possibles afin de comparer les mots "idstzance" et "distances" avec une distance d'ï¿½dition}
         \label{figure_distance_edition_exemple_deux}
     \end{figure}
 
@@ -516,17 +516,17 @@ Le calcul factorisé de la distance d'édition entre deux mots de longueur $l_1$ e
 
 
 %----------------------------------------------------------------------------------------------------------------------
-\section{Extension de la distance d'édition}
+\section{Extension de la distance d'ï¿½dition}
 %----------------------------------------------------------------------------------------------------------------------
 
-Jusqu'à présent, seuls trois types d'opérations ont été envisagés pour constuire la distance d'édition, tous trois portent sur des caractères et aucunement sur des paires de caractères. L'article~\citeindex{Kripasundar1996} (voir aussi~\citeindex{Seni1996}) suggère d'étendre la définition~\ref{definition_edit_dist_tronc} aux permutations de lettres~:
+Jusqu'ï¿½ prï¿½sent, seuls trois types d'opï¿½rations ont ï¿½tï¿½ envisagï¿½s pour constuire la distance d'ï¿½dition, tous trois portent sur des caractï¿½res et aucunement sur des paires de caractï¿½res. L'article~\citeindex{Kripasundar1996} (voir aussi~\citeindex{Seni1996}) suggï¿½re d'ï¿½tendre la dï¿½finition~\ref{definition_edit_dist_tronc} aux permutations de lettres~:
 
 
 
 
-		\begin{xdefinition}{distance d'édition tronquée étendue} \label{definition_edit_dist_tronc_2}
+		\begin{xdefinition}{distance d'ï¿½dition tronquï¿½e ï¿½tendue} \label{definition_edit_dist_tronc_2}
 		
-		Soit deux mots $\pa{m_1,m_2}$, on définit la suite~:
+		Soit deux mots $\pa{m_1,m_2}$, on dï¿½finit la suite~:
 		    $$
 		    \left( d_{i,j}^{m_{1},m_{2}}\right) _{\substack{0\leqslant
 		    i\leqslant n_{1}\\0\leqslant j\leqslant n_{2}}}\left( =\left(d_{i,j}\right) _{\substack{0\leqslant i\leqslant
@@ -557,8 +557,8 @@ Jusqu'à présent, seuls trois types d'opérations ont été envisagés pour constuire
 		    \indexfr{permutation}
 		\end{xdefinition}
 
-La distance d'édition cherchée est toujours $d\pa{m_1,m_2} = d_{n_1,n_2}$ mais la démonstration du
-fait que $d$ est bien une distance ne peut pas être copiée sur celle du théorème~\ref{edition_distance_theoreme001} mais sur les travaux présentés dans l'article~\citeindex{Wagner1974}.
+La distance d'ï¿½dition cherchï¿½e est toujours $d\pa{m_1,m_2} = d_{n_1,n_2}$ mais la dï¿½monstration du
+fait que $d$ est bien une distance ne peut pas ï¿½tre copiï¿½e sur celle du thï¿½orï¿½me~\ref{edition_distance_theoreme001} mais sur les travaux prï¿½sentï¿½s dans l'article~\citeindex{Wagner1974}.
 
 
 
@@ -568,18 +568,18 @@ fait que $d$ est bien une distance ne peut pas être copiée sur celle du théorème
 
 
 %---------------------------------------------------------------------------------------------------------------------
-\section{Apprentissage d'une distance d'édition}\indexfrr{apprentissage}{distance d'édition}
+\section{Apprentissage d'une distance d'ï¿½dition}\indexfrr{apprentissage}{distance d'ï¿½dition}
 %---------------------------------------------------------------------------------------------------------------------
 \label{distance_edition_apprentissage_coef_par}
 
-L'article \citeindex{Waard1995} suggère l'apprentissage des coûts des opérations élémentaires associées à une distance d'édition (comparaison, insertion, suppression, permutation,~...). On note l'ensemble de ces coûts ou paramètres $\Theta = \vecteur{\theta_1}{\theta_n}$. On considère deux mots $X$ et $Y$, la distance d'édition $d\pa{X,Y}$ est une fonction linéaire des coûts. Soit $D = \vecteur{\pa{X_1,Y_1}}{\pa{X_N,Y_N}}$ une liste de couple de mots pour lesquels le résultat de la distance d'édition est connu et noté $\vecteur{c_1}{c_N}$, il est alors possible de calculer une erreur s'exprimant sous la forme~: 
+L'article \citeindex{Waard1995} suggï¿½re l'apprentissage des coï¿½ts des opï¿½rations ï¿½lï¿½mentaires associï¿½es ï¿½ une distance d'ï¿½dition (comparaison, insertion, suppression, permutation,~...). On note l'ensemble de ces coï¿½ts ou paramï¿½tres $\Theta = \vecteur{\theta_1}{\theta_n}$. On considï¿½re deux mots $X$ et $Y$, la distance d'ï¿½dition $d\pa{X,Y}$ est une fonction linï¿½aire des coï¿½ts. Soit $D = \vecteur{\pa{X_1,Y_1}}{\pa{X_N,Y_N}}$ une liste de couple de mots pour lesquels le rï¿½sultat de la distance d'ï¿½dition est connu et notï¿½ $\vecteur{c_1}{c_N}$, il est alors possible de calculer une erreur s'exprimant sous la forme~: 
 
 			\begin{eqnarray}
 			E = \summy{i=1}{N} \; \pa{d\pa{X_i,Y_i} - c_i}^2 =\summy{i=1}{N} \; 
 						\pa{ \summy{k=1}{n} \alpha_{ik}\pa{\Theta} \, \theta_k - c_i}^2 \\
 			\end{eqnarray}			
 
-Les coefficients $\alpha_{ik}\pa{\Theta}$ dépendent des paramètres $\Theta$ car la distance d'édition correspond au coût de la transformation de moindre coût d'après la définition~\ref{defition_distance_edition_2}, $\alpha_{ik}\pa{\Theta}$ correspond au nombre de fois que le paramètre $\theta_k$ intervient dans la transformation de moindre coût entre $X_i$ et $Y_i$. Cette expression doit être minimale afin d'optenir les coûts $\Theta$ optimaux. Toutefois, les coûts $\theta_k$ sont tous strictement positifs et plutôt que d'effectuer une optimisation sous contrainte, ces coûts sont modélisés de la façon suivante~:
+Les coefficients $\alpha_{ik}\pa{\Theta}$ dï¿½pendent des paramï¿½tres $\Theta$ car la distance d'ï¿½dition correspond au coï¿½t de la transformation de moindre coï¿½t d'aprï¿½s la dï¿½finition~\ref{defition_distance_edition_2}, $\alpha_{ik}\pa{\Theta}$ correspond au nombre de fois que le paramï¿½tre $\theta_k$ intervient dans la transformation de moindre coï¿½t entre $X_i$ et $Y_i$. Cette expression doit ï¿½tre minimale afin d'optenir les coï¿½ts $\Theta$ optimaux. Toutefois, les coï¿½ts $\theta_k$ sont tous strictement positifs et plutï¿½t que d'effectuer une optimisation sous contrainte, ces coï¿½ts sont modï¿½lisï¿½s de la faï¿½on suivante~:
 
 			\begin{eqnarray}
 			E = \summy{i=1}{N} \; \pa{ \summy{k=1}{n} \, \alpha_{ik}\pa{\Omega} \, \frac{1}{1 + e^{-\omega_k}} - c_i}^2
@@ -590,32 +590,32 @@ Les coefficients $\alpha_{ik}\pa{\Theta}$ dépendent des paramètres $\Theta$ car 
 \indexfrr{optimisation}{sans contrainte}
 \indexfr{descente de gradient}
 
-Les fonctions $\alpha_{ik}\pa{\Omega}$ ne sont pas dérivable par rapport $\Omega$ mais il est possible d'effectuer une optimisation sans contrainte par descente de gradient. Les coûts sont donc appris en deux étapes~:
+Les fonctions $\alpha_{ik}\pa{\Omega}$ ne sont pas dï¿½rivable par rapport $\Omega$ mais il est possible d'effectuer une optimisation sans contrainte par descente de gradient. Les coï¿½ts sont donc appris en deux ï¿½tapes~:
 
 
-		\begin{xalgorithm}{apprentissage d'une distance d'édition}\label{edit_distance_app_optom}
-		Les notations sont celles utilisés pour l'équation (\ref{edit_distance_eq_2_app}). Les coûts $\Omega$ sont tirés 
-		aléatoirement.
+		\begin{xalgorithm}{apprentissage d'une distance d'ï¿½dition}\label{edit_distance_app_optom}
+		Les notations sont celles utilisï¿½s pour l'ï¿½quation (\ref{edit_distance_eq_2_app}). Les coï¿½ts $\Omega$ sont tirï¿½s 
+		alï¿½atoirement.
 		
 		\begin{xalgostep}{estimation}\label{edit_distance_step_b_app}
-		Les coefficients $\alpha_{ik}\pa{\Omega}$ sont calculées.
+		Les coefficients $\alpha_{ik}\pa{\Omega}$ sont calculï¿½es.
 		\end{xalgostep}
 		
 		\begin{xalgostep}{calcul du gradient}\label{edit_distance_step_a_app}
-		Dans cette étape, les coefficients $\alpha_{ik}\pa{\Omega}$ restent constants. Il suffit alors de minimiser la fonction
-		dérivable $E\pa{\Omega}$ sur $\R^n$, ceci peut être effectué au moyen d'un algorithme de descente de 
-		gradient\seeannex{optimisation_newton}{descente de gradient} similaire à ceux utilisés pour les réseaux de neurones.
+		Dans cette ï¿½tape, les coefficients $\alpha_{ik}\pa{\Omega}$ restent constants. Il suffit alors de minimiser la fonction
+		dï¿½rivable $E\pa{\Omega}$ sur $\mathbb{R}^n$, ceci peut ï¿½tre effectuï¿½ au moyen d'un algorithme de descente de 
+		gradient\seeannex{optimisation_newton}{descente de gradient} similaire ï¿½ ceux utilisï¿½s pour les rï¿½seaux de neurones.
 		\end{xalgostep}
 		
 		\begin{xalgostep}{calcul du gradient}\label{edit_distance_step_c_app}
-		Tant que l'erreur $E\pa{\Omega}$ ne converge pas, retour à l'étape~\ref{edit_distance_step_b_app}.
+		Tant que l'erreur $E\pa{\Omega}$ ne converge pas, retour ï¿½ l'ï¿½tape~\ref{edit_distance_step_b_app}.
 		\end{xalgostep}
 		
 		\end{xalgorithm}
 
 
-\begin{xremark}{décroissance de l'erreur}
-A partir du moment où l'étape~\ref{edit_distance_step_a_app} de l'algorithme~\ref{edit_distance_app_optom} fait décroître l'erreur $E$, l'erreur $E$ diminue jusqu'à converger puisque l'étape~\ref{edit_distance_step_b_app}, qui réestime les coefficients $\alpha_{ik}\pa{\Omega}$, les minimise à $\Omega = \vecteur{\omega_1}{\omega_n}$ constant.
+\begin{xremark}{dï¿½croissance de l'erreur}
+A partir du moment oï¿½ l'ï¿½tape~\ref{edit_distance_step_a_app} de l'algorithme~\ref{edit_distance_app_optom} fait dï¿½croï¿½tre l'erreur $E$, l'erreur $E$ diminue jusqu'ï¿½ converger puisque l'ï¿½tape~\ref{edit_distance_step_b_app}, qui rï¿½estime les coefficients $\alpha_{ik}\pa{\Omega}$, les minimise ï¿½ $\Omega = \vecteur{\omega_1}{\omega_n}$ constant.
 \end{xremark}
 
 

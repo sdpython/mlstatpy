@@ -117,7 +117,7 @@ On peut définir la distance d'édition :
     .. math::
 
         \begin{array}{crcl}
-        d : & \mathcal{S}_\mathcal{C} \times \mathcal{S}_\mathcal{C} & \longrightarrow & \R^+\\
+        d : & \mathcal{S}_\mathcal{C} \times \mathcal{S}_\mathcal{C} & \longrightarrow & \mathbb{R}^+\\
         & \pa{m_1,m_2} & \longrightarrow & \underset{ \begin{subarray} OO \text{ séquence} \\ \text{d'opérations} \end{subarray}}{ \min} \, d\pa{m_1,m_2,O}
         \end{array}
 
@@ -140,7 +140,7 @@ Ce paragraphe a pour objectif de démontrer que la
 
     Soit :math:`\mathcal{C}' = \mathcal{C} \bigcup \acc{.}`
     l'ensemble des caractères ajouté au caractère vide ``.``.
-    On note :math:`c : \pa{\mathcal{C}'}^2 \longrightarrow \R^+`
+    On note :math:`c : \pa{\mathcal{C}'}^2 \longrightarrow \mathbb{R}^+`
     la fonction coût définie comme suit :
 
     .. math::
@@ -197,7 +197,7 @@ en utilisant les mots acceptables :
 
         \begin{eqnarray}
         \begin{array}{crcl}
-        d : & \mathcal{S}_\mathcal{C} \times \mathcal{S}_\mathcal{C} & \longrightarrow & \R^+\\
+        d : & \mathcal{S}_\mathcal{C} \times \mathcal{S}_\mathcal{C} & \longrightarrow & \mathbb{R}^+\\
             & \pa{m_1,m_2} & \longrightarrow &
                             \min \acc{  \sum_{i=1}^{+\infty} c\pa{M_1^i, M_2^i} |
                                         \pa{M_1,M_2} \in acc\pa{m_1} \times acc\pa{m_2}}
@@ -334,7 +334,7 @@ serait tenté de définir une nouvelle distance d'édition inspirée de la préc
 
         \begin{eqnarray*}
         \begin{array}{crcl}
-        d' : & \mathcal{S}_\mathcal{C} \times \mathcal{S}_\mathcal{C} & \longrightarrow & \R^+\\
+        d' : & \mathcal{S}_\mathcal{C} \times \mathcal{S}_\mathcal{C} & \longrightarrow & \mathbb{R}^+\\
         & \pa{m_1,m_2} & \longrightarrow & d'\pa{m_1,m_2} = \dfrac{d^*\pa{m_1,m_2}}{ \max \acc {l\pa{m_1}, l\pa{m_2}}} \\ \\
         & & & \text{où } l\pa{m} \text{ est la longueur du mot } m
         \end{array}
@@ -604,7 +604,7 @@ par descente de gradient. Les coûts sont donc appris en deux étapes :
 
     Dans cette étape, les coefficients :math:`\alpha_{ik}\pa{\Omega}`
     restent constants. Il suffit alors de minimiser la fonction
-    dérivable :math:`E\pa{\Omega}` sur :math:`\R^n`, ceci peut être
+    dérivable :math:`E\pa{\Omega}` sur :math:`\mathbb{R}^n`, ceci peut être
     effectué au moyen d'un algorithme de descente de gradient
     similaire à ceux utilisés pour les réseaux de neurones.
 

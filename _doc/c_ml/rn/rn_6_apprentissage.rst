@@ -23,7 +23,7 @@ et proposent une convergence vers un minimum local.
 .. math::
     :label: rn_suite_epsilon_train
 
-    \forall t>0,\quad\varepsilon_{t}\in \R_{+}^{\ast} \text{ et }
+    \forall t>0,\quad\varepsilon_{t}\in \mathbb{R}_{+}^{\ast} \text{ et }
     \sum_{t\geqslant0}\varepsilon_{t}=+\infty,\quad
     \sum_{t\geqslant0}\varepsilon_{t}^{2}<+\infty
 
@@ -117,7 +117,7 @@ cette direction est appelée gradient conjugué (voir [Moré1977]_).
 
 Ces techniques sont basées sur une approximation du second degré de la fonction à minimiser.
 On note :math:`M` le nombre de coefficients du réseau de neurones (biais compris).
-Soit :math:`h: \R^{M} \dans \R` la fonction d'erreur associée au réseau de neurones :
+Soit :math:`h: \mathbb{R}^{M} \dans \mathbb{R}` la fonction d'erreur associée au réseau de neurones :
 :math:`h \pa {W} = \sum_{i} e \pa{Y_i,f \pa{ W,X_i} }`.
 Au voisinage de :math:`W_{0}`, un développement limité donne :
 
@@ -132,7 +132,7 @@ admet un minimum local si :math:`\frac{\partial^{2}h\left( W_{0}\right) }{\parti
 est définie positive strictement.
 
 *Rappel :* :math:`\dfrac{\partial^{2}h\left(  W_{0}\right)  }{\partial W^{2}}`
-est définie positive strictement :math:`\Longleftrightarrow\forall Z\in\R^{N},\; Z\neq0\Longrightarrow
+est définie positive strictement :math:`\Longleftrightarrow\forall Z\in\mathbb{R}^{N},\; Z\neq0\Longrightarrow
 Z^{\prime}\dfrac{\partial ^{2}h\left( W_{0}\right)  }{\partial W^{2}}Z>0`.
 
 Une matrice symétrique définie strictement positive est inversible,

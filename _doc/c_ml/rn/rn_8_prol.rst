@@ -81,11 +81,11 @@ vecteur des poids et celui des entrées mais
     :tag: Définition
 
     Un neurone distance à :math:`p` entrées est une fonction
-    :math:`f : \R^{p+1} \times \R^p \longrightarrow \R` définie par :
+    :math:`f : \mathbb{R}^{p+1} \times \mathbb{R}^p \longrightarrow \mathbb{R}` définie par :
 
-    * :math:`g : \R \dans \R`
-    * :math:`W \in \R^{p+1}`, :math:`W=\pa{w_1,\dots,w_{p+1}} = \pa{W',w_{p+1}}`
-    * :math:`\forall x \in \R^p, \; f\pa{W,x} = e^{-\norm{W'-x}^2 + w_{p+1}}`
+    * :math:`g : \mathbb{R} \dans \mathbb{R}`
+    * :math:`W \in \mathbb{R}^{p+1}`, :math:`W=\pa{w_1,\dots,w_{p+1}} = \pa{W',w_{p+1}}`
+    * :math:`\forall x \in \mathbb{R}^p, \; f\pa{W,x} = e^{-\norm{W'-x}^2 + w_{p+1}}`
       avec :math:`x = \pa{x_1,\dots,x_p}`
 
 Ce neurone est un cas particulier du suivant qui pondère chaque
@@ -97,14 +97,14 @@ coefficients où :math:`p` est le nombre d'entrée.
     :tag: Définition
     :lid: rn_definition_neurone_dist_pond
 
-    Pour un vecteur donné :math:`W \in \R^p = \pa{w_1,\dots,w_p}`,
+    Pour un vecteur donné :math:`W \in \mathbb{R}^p = \pa{w_1,\dots,w_p}`,
     on note :math:`W_i^j = \pa{w_i,\dots,w_j}`.
     Un neurone distance pondérée à :math:`p` entrées est une fonction
-    :math:`f : \R^{2p+1} \times \R^p \longrightarrow \R` définie par :
+    :math:`f : \mathbb{R}^{2p+1} \times \mathbb{R}^p \longrightarrow \mathbb{R}` définie par :
 
-    * :math:`g : \R \dans \R`
-    * :math:`W \in \R^{2p+1}`, :math:`W=\pa{w_1,\dots,w_{2p+1}} = \pa{w_1,w_{2p+1}}`
-    * :math:`\forall x \in \R^p, \; f\pa{W,x} =
+    * :math:`g : \mathbb{R} \dans \mathbb{R}`
+    * :math:`W \in \mathbb{R}^{2p+1}`, :math:`W=\pa{w_1,\dots,w_{2p+1}} = \pa{w_1,w_{2p+1}}`
+    * :math:`\forall x \in \mathbb{R}^p, \; f\pa{W,x} =
       \exp \cro {-\cro{\sum_{i=1}^{p} w_{p+i}\pa{w_i - x_i}^2 } + w_{p+1}}`
       avec :math:`x = \pa{x_1,\dots,x_p}`
 
@@ -426,7 +426,7 @@ régression grâce à l'algorithme suivant.
     *Choix aléatoire d'un modèle*
 
     Un réseau de neurones est choisi aléatoirement,
-    soit :math:`f : \R^p \dans \R` la fonction qu'il représente.
+    soit :math:`f : \mathbb{R}^p \dans \mathbb{R}` la fonction qu'il représente.
     Une base d'apprentissage :math:`A` (ou échantillon)
     de :math:`N` observations est générée aléatoirement à partir de ce modèle :
 

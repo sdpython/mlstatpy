@@ -29,12 +29,12 @@ critère appelé *inertie* ou variance *intra-classe*.
 
     .. math::
 
-        \left(X_i\right)_{1\leqslant i\leqslant P}\in\left(\R^N\right)^P
+        \left(X_i\right)_{1\leqslant i\leqslant P}\in\left(\mathbb{R}^N\right)^P
 
     A chaque point est associée une classe :
     :math:`\left(c_i\right)_{1\leqslant i\leqslant P}\in\left\{1,...,C\right\}^P`.
     On définit les barycentres des classes :
-    :math:`\left( G_i\right)_{1\leqslant i\leqslant C}\in\left(\R^N\right)^C`.
+    :math:`\left( G_i\right)_{1\leqslant i\leqslant C}\in\left(\mathbb{R}^N\right)^C`.
 
     *Initialisation*
 
@@ -86,9 +86,9 @@ La démonstration du théorème nécessite le lemme suivant.
     :tag: Lemme
     :lid: lemme_inertie_minimum
 
-    Soit :math:`\vecteur{X_1}{X_P} \in \pa{\R^N}^P`,
-    :math:`P` points de :math:`\R^N`, le minimum de la quantité
-    :math:`Q\pa{Y \in \R^N}` :
+    Soit :math:`\vecteur{X_1}{X_P} \in \pa{\mathbb{R}^N}^P`,
+    :math:`P` points de :math:`\mathbb{R}^N`, le minimum de la quantité
+    :math:`Q\pa{Y \in \mathbb{R}^N}` :
 
     .. math::
         :nowrap:
@@ -100,8 +100,8 @@ La démonstration du théorème nécessite le lemme suivant.
     est atteint pour :math:`Y=G=\dfrac{1}{P} \sum_{i=1}^{P} X_i`
     le barycentre des points :math:`\vecteur{X_1}{X_P}`.
 
-Soit :math:`\vecteur{X_1}{X_P} \in \pa{\R^N}^P`,
-:math:`P` points de :math:`\R^N`.
+Soit :math:`\vecteur{X_1}{X_P} \in \pa{\mathbb{R}^N}^P`,
+:math:`P` points de :math:`\mathbb{R}^N`.
 
 .. math::
     :nowrap:
@@ -109,7 +109,7 @@ Soit :math:`\vecteur{X_1}{X_P} \in \pa{\R^N}^P`,
     \begin{eqnarray*}
                         \sum_{i=1}^{P} \overrightarrow{GX_{i}} = \overrightarrow{0}
     &\Longrightarrow&      \sum_{i=1}^{P} d^2\pa{X_i,Y} = \sum_{i=1}^{P} d^2\pa{X_i,G}+ P \, d^2\pa{G,Y} \\
-    &\Longrightarrow&     \underset{Y\in\R^N}{\arg\min} \; \sum_{i=1}^{P} d^2\pa{X_i,Y} = \acc{G}
+    &\Longrightarrow&     \underset{Y\in\mathbb{R}^N}{\arg\min} \; \sum_{i=1}^{P} d^2\pa{X_i,Y} = \acc{G}
     \end{eqnarray*}
 
 On peut maintenant démontrer le théorème.
@@ -166,7 +166,7 @@ Homogénéité des dimensions
 ++++++++++++++++++++++++++
 
 Les coordonnées des points
-:math:`\left(X_i\right) \in \R^N` sont généralement non homogènes :
+:math:`\left(X_i\right) \in \mathbb{R}^N` sont généralement non homogènes :
 les ordres de grandeurs de chaque dimension sont différents.
 C'est pourquoi il est conseillé de centrer et normaliser chaque dimension.
 On note : :math:`\forall i \in \intervalle{1}{P}, \; X_i = \vecteur{X_{i,1}}{X_{i,N}}` :
@@ -225,7 +225,7 @@ par la suivante :
 
     .. math::
 
-        X=\left(X_i\right)_{1\leqslant i\leqslant P}\in\left(\R^N\right)^P
+        X=\left(X_i\right)_{1\leqslant i\leqslant P}\in\left(\mathbb{R}^N\right)^P
 
     A chaque point est associée une classe :
     :math:`\left(c_i\right)_{1\leqslant i\leqslant P}\in\left\{1,...,C\right\}^P`.
@@ -279,7 +279,7 @@ que :ref:`l-kmeanspp` mais plus rapide et parallélisable.
 
     .. math::
 
-        X=\left(X_i\right)_{1\leqslant i\leqslant P}\in\left(\R^N\right)^P
+        X=\left(X_i\right)_{1\leqslant i\leqslant P}\in\left(\mathbb{R}^N\right)^P
 
     A chaque point est associée une classe :
     :math:`\left(c_i\right)_{1\leqslant i\leqslant P}\in\left\{1,...,C\right\}^P`.
@@ -429,7 +429,7 @@ Maxima de la fonction densité
 L'article [Herbin2001]_ propose une méthode différente pour estimer
 le nombre de classes, il s'agit tout d'abord d'estimer la fonction
 densité du nuage de points qui est une fonction de
-:math:`\R^n \longrightarrow \R`. Cette estimation est effectuée au moyen
+:math:`\mathbb{R}^n \longrightarrow \mathbb{R}`. Cette estimation est effectuée au moyen
 d'une méthode non paramètrique telle que les estimateurs à noyau
 (voir [Silverman1986]_)
 Soit :math:`\vecteur{X_1}{X_N}` un nuage de points inclus dans une image,
@@ -451,7 +451,7 @@ d'image qui ne peut pas être résolu par la méthode des nuées
 dynamiques puisque la forme des classes n'est pas convexe,
 ainsi que le montre la figure suivante. La fonction de densité
 :math:`f` est seuillée de manière à obtenir une fonction
-:math:`g : \R^n \longrightarrow \acc{0,1}` définie par :
+:math:`g : \mathbb{R}^n \longrightarrow \acc{0,1}` définie par :
 
 .. math::
 
@@ -459,7 +459,7 @@ ainsi que le montre la figure suivante. La fonction de densité
 
 .. index:: composante connexe
 
-L'ensemble :math:`g^{-1}\pa{\acc{1}} \subset \R^n`
+L'ensemble :math:`g^{-1}\pa{\acc{1}} \subset \mathbb{R}^n`
 est composée de :math:`N` composantes connexes notées
 :math:`\vecteur{C_1}{C_N}`, la classe d'un point :math:`x`
 est alors l'indice de la composante connexe à la
@@ -499,7 +499,7 @@ L'inertie de ce nuage de points est définie par :
     I  =  \sum_{x \in X} \; \norme{ x - y_{C\pa{x} }}^2
 
 On définit tout d'abord une distance
-:math:`\alpha \in \R^+`, puis l'ensemble
+:math:`\alpha \in \mathbb{R}^+`, puis l'ensemble
 :math:`V\pa{y,\alpha} = \acc{ z \in Y \sac d\pa{y,z} \infegal \alpha }`,
 :math:`V\pa{y,\alpha}` est donc l'ensemble des voisins des
 centres dont la distance avec :math:`y` est inférieur à :math:`\alpha`.
@@ -877,7 +877,7 @@ lors de l'estimation des centres des classes, l'algorithme évite la formation d
     Soit un nuage de points :math:`\vecteur{X_1}{X_N}`,
     soit :math:`C` vecteurs :math:`\vecteur{\omega_1}{\omega_C}`
     initialisés de manière aléatoires.
-    Soit :math:`F : \pa{u,t} \in \R^2 \longrightarrow \R^+`
+    Soit :math:`F : \pa{u,t} \in \mathbb{R}^2 \longrightarrow \mathbb{R}^+`
     croissante par rapport à :math:`u`.
     Soit une suite de réels :math:`\vecteur{u_1}{u_C}`,
     soit une suite :math:`\epsilon\pa{t} \in \cro{0,1}` décroissante où :math:`t`

@@ -26,7 +26,7 @@ L'algorithme implémentant l'analyse en composantes principales
 est basé sur un réseau linéaire dit *"diabolo"*, ce réseau
 possède une couche d'entrées à :math:`N` entrées, une couche cachée et une couche
 de sortie à :math:`N` sorties. L'objectif est
-d'apprendre la fonction identité sur l'espace :math:`\R^N`.
+d'apprendre la fonction identité sur l'espace :math:`\mathbb{R}^N`.
 Ce ne sont plus les sorties qui nous intéressent mais la couche
 cachée intermédiaire qui effectue une compression ou projection
 des vecteurs d'entrées puisque les entrées et les
@@ -42,8 +42,8 @@ sorties du réseau auront pour but d'être identiques.
 
         \begin{picture}(241,100)(0,-10)
 
-        \put(1,1)   {\framebox(40,22){\footnotesize \begin{tabular}{c}vecteur \\ $X \in \R^N$ \end{tabular}}}
-        \put(85,-9)  {\framebox(45,32){\footnotesize \begin{tabular}{c}vecteur \\ $Y \in \R^M$ \\ et $M < N$ \end{tabular}}}
+        \put(1,1)   {\framebox(40,22){\footnotesize \begin{tabular}{c}vecteur \\ $X \in \mathbb{R}^N$ \end{tabular}}}
+        \put(85,-9)  {\framebox(45,32){\footnotesize \begin{tabular}{c}vecteur \\ $Y \in \mathbb{R}^M$ \\ et $M < N$ \end{tabular}}}
         \put(200,1) {\framebox(40,22){\footnotesize \begin{tabular}{c}vecteur \\ $Z \approx X$ \end{tabular}}}
 
         \put(20,40) {\framebox(90,45){\footnotesize
@@ -63,8 +63,8 @@ sorties du réseau auront pour but d'être identiques.
 
         \end{picture}
 
-La figure suivante illustre un exemple de compression de vecteur de :math:`\R^3`
-dans :math:`\R^2`.
+La figure suivante illustre un exemple de compression de vecteur de :math:`\mathbb{R}^3`
+dans :math:`\mathbb{R}^2`.
 
 .. mathdef::
     :title: Réseau diabolo : réduction d'une dimension
@@ -143,8 +143,8 @@ L'analyse en composantes principales ou ACP est définie de la manière suivante
     :tag: Problème
 
     Soit :math:`\pa{X_i}_{1 \infegal i \infegal N}` avec :math:`\forall i \in \ensemble{1}{N},
-    \; X_i \in \R^p`.
-    Soit :math:`W \in M_{p,d}\pa{\R}`, :math:`W = \vecteur{C_1}{C_d}`
+    \; X_i \in \mathbb{R}^p`.
+    Soit :math:`W \in M_{p,d}\pa{\mathbb{R}}`, :math:`W = \vecteur{C_1}{C_d}`
     où les vecteurs :math:`\pa{C_i}`
     sont les colonnes de :math:`W` et :math:`d < p`.
     On suppose également que les :math:`\pa{C_i}` forment une base othonormée.
@@ -167,9 +167,9 @@ L'analyse en composantes principales ou ACP est définie de la manière suivante
         :label: rn_equation_acp_error
 
         \begin{eqnarray*}
-        W^* &=& \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} }
+        W^* &=& \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\mathbb{R}} \\ W'W = I_d \end{subarray} }
                                             { \arg \max } \; E\pa{W}
-            =  \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \arg \max } \;
+            =  \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\mathbb{R}} \\ W'W = I_d \end{subarray} } { \arg \max } \;
                             \cro { \sum_{i=1}^{N} \norm{W'X_i}^2 }
         \end{eqnarray*}
 
@@ -200,9 +200,9 @@ afin de passer d'une optimisation sous contrainte à une optimisation sans contr
         
         \begin{eqnarray*}
         S =
-        \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \arg \max } \;
+        \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\mathbb{R}} \\ W'W = I_d \end{subarray} } { \arg \max } \;
                             \cro { \sum_{i=1}^{N} \norm{W'X_i}^2 } &=&
-        \underset{ W \in M_{p,d}\pa{\R} } { \arg \min } \;  \cro { \sum_{i=1}^{N} \norm{WW'X_i - X_i}^2 }
+        \underset{ W \in M_{p,d}\pa{\mathbb{R}} } { \arg \min } \;  \cro { \sum_{i=1}^{N} \norm{WW'X_i - X_i}^2 }
         \end{eqnarray*}
         
     De plus :math:`S` est l'espace vectoriel engendré par les :math:`d`
@@ -218,16 +218,16 @@ L'objectif de cette partie est de chercher la valeur de :
 
 .. math::
 
-    \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \max }\; E\pa{W}
+    \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\mathbb{R}} \\ W'W = I_d \end{subarray} } { \max }\; E\pa{W}
 
-Soit :math:`X=\vecteur{X_1}{X_N} \in \pa{\R^p}^N`, alors :
+Soit :math:`X=\vecteur{X_1}{X_N} \in \pa{\mathbb{R}^p}^N`, alors :
 
 .. math::
 
     E\pa{W} = \sum_{i=1}^{N} \norm{W'X_i}^2 = \trace{X'WW'X} = \trace{XX'WW'}
 
 La matrice :math:`XX'` est symétrique, elle est donc diagonalisable
-et il existe une matrice :math:`P \in M_p\pa{\R}:math:` telle qu :
+et il existe une matrice :math:`P \in M_p\pa{\mathbb{R}}:math:` telle qu :
 
 .. math::
     :label: acp_equation_memo_1
@@ -269,17 +269,17 @@ Donc :
     :label: acp_demo_partie_a
 
     \begin{eqnarray*}
-    \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \max }\; E\pa{W} =
-            \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \max }\;
+    \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\mathbb{R}} \\ W'W = I_d \end{subarray} } { \max }\; E\pa{W} =
+            \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\mathbb{R}} \\ W'W = I_d \end{subarray} } { \max }\;
                 \trace{ D_X P'WW'P }
-    = \underset{ \begin{subarray}{c} Y \in M_{p,d}\pa{\R} \\ Y'Y = I_d \end{subarray} } { \max }\; \trace{ D_X YY'
+    = \underset{ \begin{subarray}{c} Y \in M_{p,d}\pa{\mathbb{R}} \\ Y'Y = I_d \end{subarray} } { \max }\; \trace{ D_X YY'
                 }
     = \sum_{i=1}{d} \lambda_i
     \end{eqnarray*}
 
 *Partie 2*
 
-Soit :math:`Y \in \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \max }\; \trace{X'WW'X}`,
+Soit :math:`Y \in \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\mathbb{R}} \\ W'W = I_d \end{subarray} } { \max }\; \trace{X'WW'X}`,
 :math:`Y = \vecteur{Y_1}{Y_d} = \pa{y_i^k}_{ \begin{subarray}{c} 1 \infegal i \infegal d \\ 1 \infegal k \infegal p \end{subarray} }`.
 
 Chaque vecteur :math:`Y_i` est écrit dans la base
@@ -342,7 +342,7 @@ Ceci permet d'affirmer que :
     :label: acp_demo_partie_b
 
     \begin{eqnarray*}
-    Y \in \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \max }\;
+    Y \in \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\mathbb{R}} \\ W'W = I_d \end{subarray} } { \max }\;
                 \trace{X'WW'X}  \Longrightarrow
     vect \vecteur{Y_1}{Y_d} = vect \vecteur{P_1}{P_d}
     \end{eqnarray*}
@@ -373,9 +373,9 @@ D'où :
     :label: acp_demo_partie_c
 
     \begin{eqnarray*}
-    \underset{ \begin{subarray} \, W \in M_{p,d} \pa{\R} \\
+    \underset{ \begin{subarray} \, W \in M_{p,d} \pa{\mathbb{R}} \\
                             W'W=I_d \end{subarray}} { \; \max \; } \;  \pa {  \sum_{i=1}^{N} \norm{ W'X_i}^2 }  =
-    \underset{ \begin{subarray} \, W \in M_{p,d} \pa{\R} \\
+    \underset{ \begin{subarray} \, W \in M_{p,d} \pa{\mathbb{R}} \\
                             W'W=I_d \end{subarray}} { \; \min \; } \;  \pa {  \sum_{i=1}^{N} \norm{ WW'X_i - X_i}^2 }
     \end{eqnarray*}
 
@@ -385,7 +385,7 @@ D'où :
 
 .. math::
 
-    \exists P\in GL_N \pa{\R}  \text{ telle que } P'XX'P=D_p \text{ où } D_p \text{ est diagonale}
+    \exists P\in GL_N \pa{\mathbb{R}}  \text{ telle que } P'XX'P=D_p \text{ où } D_p \text{ est diagonale}
 
 On en déduit que :
 
@@ -409,7 +409,7 @@ D'où :
 
     \begin{eqnarray*}
     \underset{Y}{\arg\min}\acc{ tr\left(  D_{p}\left( YY^{\prime}-I_{p}\right)  ^{2}\right)}  = \left\{  Y\in
-    M_{Nd}\left( \R\right) \left|
+    M_{Nd}\left( \mathbb{R}\right) \left|
         YY^{\prime}=I_{d}\right.  \right\}
     \end{eqnarray*}
 
@@ -421,9 +421,9 @@ première partie du théorème, à savoir :eq:`rn_acp_contrainte` :
 
     \begin{eqnarray*}
     S =
-    \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\R} \\ W'W = I_d \end{subarray} } { \arg \max } \;
+    \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\mathbb{R}} \\ W'W = I_d \end{subarray} } { \arg \max } \;
                         \cro { \sum_{i=1}^{N} \norm{W'X_i}^2 } &=&
-    \underset{ W \in M_{p,d}\pa{\R} } { \arg \min } \;  \cro { \sum_{i=1}^{N} \norm{WW'X_i - X_i}^2 }
+    \underset{ W \in M_{p,d}\pa{\mathbb{R}} } { \arg \min } \;  \cro { \sum_{i=1}^{N} \norm{WW'X_i - X_i}^2 }
     \end{eqnarray*}
 
 .. _par_ACP_deux:
@@ -443,8 +443,8 @@ neurones sur la couche cachée, et :math:`p` le nombre d'entrées.
 
     \forall i\in\left\{  1,...,d\right\}  ,\,y_{1,i}=\sum_{j=1}^p w_{ji}x_{j}
 
-Soit :math:`X\in\R^{p}` les entrées,
-:math:`Y=\left(  y_{1,1},...,y_{1,d}\right)  \in\R^{d}`,
+Soit :math:`X\in\mathbb{R}^{p}` les entrées,
+:math:`Y=\left(  y_{1,1},...,y_{1,d}\right)  \in\mathbb{R}^{d}`,
 on obtient que : :math:`Y=W'X`.
 
 Les poids de la seconde couche sont définis comme suit :
@@ -453,7 +453,7 @@ Les poids de la seconde couche sont définis comme suit :
 
     \forall\left( i,j\right)  \in\left\{  1,...,p\right\}  \times\left\{ 1,...,d\right\} \,w_{2,j,i}=w_{1,i,j}
 
-Par conséquent, le vecteur des sorties :math:`Z\in\R^{p}`
+Par conséquent, le vecteur des sorties :math:`Z\in\mathbb{R}^{p}`
 du réseau ainsi construit est :math:`Z=WW'X`.
 On veut minimiser l'erreur pour :math:`\left(  X_{i}\right)  _{1\leqslant i\leqslant N}` :
 
@@ -465,7 +465,7 @@ Il suffit d'apprendre le réseau de neurones pour obtenir :
 
 .. math::
 
-    W_{d}^{\ast}=\underset{W\in M_{pd}\left(  \R\right)  }
+    W_{d}^{\ast}=\underset{W\in M_{pd}\left(  \mathbb{R}\right)  }
     {\arg\max }\,\sum_{i=1}^N\left\| WW'X_{i}-X_{i}\right\|
     ^{2}
 
@@ -491,7 +491,7 @@ on trouve l'ensemble des vecteurs propres de la matrice :math:`XX^{\prime}`.
     L'orthonormalisation de Shmidt :
 
     Soit :math:`\left(  e_{i}\right)  _{1\leqslant i\leqslant N}`
-    une base de :math:`\R^{p}`
+    une base de :math:`\mathbb{R}^{p}`
 
     On définit la famille :math:`\left(  \varepsilon_{i}\right)  _{1\leqslant i\leqslant p}`
     par :
@@ -516,7 +516,7 @@ car :math:`\forall k\in\left\{ 1,...,N\right\}  ,\; vect\left( e_{1},...,e_{k}\r
     :tag: Propriété
 
     La famille :math:`\left(  \varepsilon_{i}\right)  _{1\leqslant i\leqslant p}`
-    est une base orthonormée de :math:`\R^{p}`.
+    est une base orthonormée de :math:`\mathbb{R}^{p}`.
 
 L'algorithme qui permet de déterminer les vecteurs propres de la matrice :math:`XX'`
 définie par le théorème de l':ref:`ACP <theorem_acp_resolution>` est le suivant :
@@ -532,7 +532,7 @@ définie par le théorème de l':ref:`ACP <theorem_acp_resolution>` est le suiva
     :math:`d` valeurs propres de plus grands module.
 
     | for :math:`d, p`
-    |   Un réseau diabolo est construit avec les poids :math:`W_d \in M_{p,d}\pa{\R}` puis appris.
+    |   Un réseau diabolo est construit avec les poids :math:`W_d \in M_{p,d}\pa{\mathbb{R}}` puis appris.
     |   Le résultat de cet apprentissage sont les poids :math:`W^*_d`.
     |   if :math:`d > 1`
     |       L'orthonormalisation de Schmit permet de déduire :math:`V^*_d` de :math:`V^*_{d-1}` et :math:`W^*_d`.
@@ -554,7 +554,7 @@ Soit :math:`\left(  X_{1},...,X_{N}\right)` un ensemble de
 
 .. math::
 
-    \forall i\in\left\{  1,...,N\right\},\;X_{i}\in\R^{p}
+    \forall i\in\left\{  1,...,N\right\},\;X_{i}\in\mathbb{R}^{p}
 
 L'ACP consiste à projeter ce nuage de point sur un plan
 qui conserve le maximum d'information. Par conséquent, il
@@ -562,7 +562,7 @@ s'agit de résoudre le problème :
 
 .. math::
 
-    W^{\ast}=\underset{ \begin{subarray} \, W\in M_{p,d}\left(  \R\right)  \\
+    W^{\ast}=\underset{ \begin{subarray} \, W\in M_{p,d}\left(  \mathbb{R}\right)  \\
     W^{\prime }W=I_{d} \end{subarray}}{\arg\min}%
     \left(\underset{i=1}{\overset{N}{\sum}}\left\| W'X_{i}\right\|  ^{2}\right)  \text{ avec }d<N
 
@@ -571,7 +571,7 @@ et :ref:`par_ACP_deux`, il suffit d'appliquer
 l'algorithme :ref:`vecteurs propres <algorithm_vecteur_propre>`.
 
 Soit :math:`\left(  X_{i}\right)  _{1\leqslant i\leqslant N}` avec
-:math:`\forall i\in\left\{  1,...,N\right\} ,\,X_{i}\in\R^{p}`.
+:math:`\forall i\in\left\{  1,...,N\right\} ,\,X_{i}\in\mathbb{R}^{p}`.
 Soit :math:`\pa{P_1,\dots,P_p}` l'ensemble des vecteurs propres
 normés de la matrice :math:`XX'` associés aux valeurs propres
 :math:`\pa{\lambda_1,\dots,\lambda_p}` classées par ordre décroissant de modules.
@@ -585,7 +585,7 @@ On suppose que le nuage de points est centré, alors :
         \forall d \in \intervalle{1}{p}, \; I_d = \sum_{k=1}^{N}
         \pa{P_d' X_k}^2 = tr \pa{X' P_d P_d' X} = tr \pa{XX' P_d P_d'} = \lambda_d
 
-Comme :math:`\pa{P_1,\dots,P_p}` est une base orthonormée de :math:`\R^p`,
+Comme :math:`\pa{P_1,\dots,P_p}` est une base orthonormée de :math:`\mathbb{R}^p`,
 on en déduit que :
 
 .. math::

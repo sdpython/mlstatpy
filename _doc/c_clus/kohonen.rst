@@ -35,12 +35,12 @@ linéaire, rectangulaire, triangulaire.
     :tag: Algorithme
     :lid: classification_som_algo
 
-    Soient :math:`\vecteur{\mu_1^t}{\mu_N^t} \in \pa{\R^n}^N`
-    des neurones de l'espace vectoriel :math:`\R^n`. On
+    Soient :math:`\vecteur{\mu_1^t}{\mu_N^t} \in \pa{\mathbb{R}^n}^N`
+    des neurones de l'espace vectoriel :math:`\mathbb{R}^n`. On
     désigne par :math:`V\pa{\mu_j}` l'ensemble des neurones
     voisins de :math:`\mu_j` pour cette carte de Kohonen.
     Par définition, on a :math:`\mu_j \in V\pa{\mu_j}`.
-    Soit :math:`\vecteur{X_1}{X_K} \in \pa{\R^n}^K` un nuage de points.
+    Soit :math:`\vecteur{X_1}{X_K} \in \pa{\mathbb{R}^n}^K` un nuage de points.
     On utilise une suite de réels positifs
     :math:`\pa{\alpha_t}` vérifiant
     :math:`\sum_{t \supegal 0} \alpha_t^2 < \infty` et
@@ -49,7 +49,7 @@ linéaire, rectangulaire, triangulaire.
     *initialisation*
 
     Les neurones :math:`\vecteur{\mu_1^0}{\mu_N^0}`
-    sont répartis dans l'espace :math:`\R^n`
+    sont répartis dans l'espace :math:`\mathbb{R}^n`
     de manière régulière selon la forme de leur voisinage.
     :math:`t \longleftarrow 0`.
 
@@ -202,7 +202,8 @@ Autres utilisation des cartes de Kohenen
 On peut les utiliser pour déterminer le plus court
 chemin passant par tous les noeuds d'un graphe,
 c'est à dire appliquer
-`Kohonen au problème du voyageur de commerce <http://www.xavierdupre.fr/app/ensae_teaching_cs/helpsphinx/specials/tsp_kohonen.html>`_.
+`Kohonen au problème du voyageur de commerce
+<https://sdpython.github.io/doc/teachpyx/dev/c_expose/tsp/tsp_kohonen.html>`_.
 
 Bibliographie
 =============
