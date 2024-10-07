@@ -1,5 +1,6 @@
 import unittest
 import os
+import shutil
 import sys
 import importlib
 import subprocess
@@ -60,6 +61,10 @@ class TestDocumentationNotebook(ExtTestCase):
                 f.write(bcontent)
 
             fold, name = os.path.split(tmp_name)
+            if name == "segment_detection.py":
+                img_name = os.path.join(os.path.split(nb_name)[0], "eglise_zoom2.jpg")
+                shutil.copy(img_name, fold)
+                shutil.copy(img_name, ".")
 
             try:
                 mod = import_source(fold, os.path.splitext(name)[0])

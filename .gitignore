@@ -6,6 +6,7 @@
 *.so
 *.gv
 *.gv.*
+*.jpg
 .coverage
 .eggs/*
 _cache/*
