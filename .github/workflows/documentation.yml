@@ -1,4 +1,4 @@
-name: Documentation and Code Coverage
+name: Test, Documentation and Code Coverage
 
 on:
   push:
@@ -50,6 +50,9 @@ jobs:
           export PYTHONPATH=.
           pytest --cov=./mlstatpy/ --cov-report=xml --durations=10 --ignore-glob=**LONG*.py --ignore-glob=**notebook*.py
           export PYTHONPATH=
+
+      - name: test notebooks
+        run: python -m pytest _unittests/ut_xrun_doc/test_documentation_notebook.py --durations=10
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
