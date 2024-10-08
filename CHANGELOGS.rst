@@ -4,11 +4,11 @@ Change Logs
 0.5.0
 +++++
 
-* :pr:`42`: quantization
-* :pr:`39`: refactoring, use black, better documentation
-
 0.4.0
 =====
+
+* :pr:`42`: quantization
+* :pr:`39`: refactoring, use black, better documentation
 * :pr:`32`: Improves usability of distance_matching_graphs_paths (2021-08-10)
 * :pr:`31`: Links to notebooks are broken, notebooks slides are not working. (2021-03-31)
 * :pr:`30`: Fixes #26, implements a compact architecture (2021-01-23)

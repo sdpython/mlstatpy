@@ -264,7 +264,7 @@ tels que :math:`d\pa{m_1,m_2} = d\pa{N_2,N_1}` alors :
 Il reste à démontrer l'inégalité triangulaire.
 Soient trois mots :math:`\pa{m_1,m_2,m_3}`,
 on veut démontrer que
-:math:`d\pa{m_1,m_3} \infegal d\pa{m_1,m_2} + d \pa{m_2,m_3}`.
+:math:`d\pa{m_1,m_3} \leqslant d\pa{m_1,m_2} + d \pa{m_2,m_3}`.
 On définit :
 
 .. math::
@@ -292,7 +292,7 @@ tels que :
     \end{eqnarray*}
 
 Or comme la fonction :math:`c` est une distance sur :math:`\mathcal{C}'`, on peut affirmer que :
-:math:`d\pa{M_1,M_3} \infegal d\pa{M_1,M_2} + d \pa{M_2,M_3}`.
+:math:`d\pa{M_1,M_3} \leqslant d\pa{M_1,M_2} + d \pa{M_2,M_3}`.
 D'où :
 
 .. math::
@@ -300,7 +300,7 @@ D'où :
     :label: edit_demo_eq_3
 
     \begin{eqnarray*}
-    d\pa{m_1,m_3} \infegal d\pa{m_1,m_2} + d \pa{m_2,m_3}
+    d\pa{m_1,m_3} \leqslant d\pa{m_1,m_2} + d \pa{m_2,m_3}
     \end{eqnarray*}
 
 Les assertions :eq:`1 <edit_demo_eq_1>`, :eq:`2 <edit_demo_eq_2>`, :eq:`3 <edit_demo_eq_3>`
@@ -410,7 +410,7 @@ La démonstration s'effectue par récurrence, la définition :ref:`3 <definition
 est bien sûr équivalente :ref:`1 <defition_distance_edition_1>`
 pour des mots de longueur un. On suppose donc que ce résultat est
 vrai pour un couple de mots :math:`\pa{m_1,m_2}` de longueur :math:`\pa{l_1,l_2}`
-vérifiant :math:`l_1 \infegal i` et `l_2 \infegal j` avec au plus une égalité.
+vérifiant :math:`l_1 \leqslant i` et `l_2 \leqslant j` avec au plus une égalité.
 Soit :math:`m` un mot, on note :math:`n` le nombre de lettres qu'il contient.
 On note  :math:`m\left(  l\right)` le mot formé des :math:`l` premières lettres de :math:`m`.
 Alors :

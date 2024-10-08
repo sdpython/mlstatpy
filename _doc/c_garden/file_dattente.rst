@@ -83,7 +83,7 @@ pas du temps.
         :nowrap:
 
         \begin{eqnarray}
-        f(t) &=& \mu  \; e^{- \mu t} \text{ et } \pr {X \infegal t} =
+        f(t) &=& \mu  \; e^{- \mu t} \text{ et } \pr {X \leqslant t} =
                     \int_0^t \mu  \; e^{- \mu x} dx = 1 - e^{-\mu t}
         \end{eqnarray}
 
@@ -117,7 +117,7 @@ suivant une loi exponentielle, alors :
     :nowrap:
 
     \begin{eqnarray*}
-    \pr{B(x,t,dt)} &=& \pr{ D \infegal t+dt-x \sac D > t-x } \\
+    \pr{B(x,t,dt)} &=& \pr{ D \leqslant t+dt-x \sac D > t-x } \\
                                 &=& \frac{ \pr{  t+dt-x \supegal D > t-x } } { \pr{ D > t-x }} \\
                                 &=& \frac{ \int_{t-x}^{t+dt-x} \mu e^{-\mu u} du } { \int_{t-x}^{\infty} \mu e^{-\mu u} du }
                                 = \frac{ e^{- \mu (t-x) } - e^{- \mu (t-x+dt) } } { e^{-\mu (t-x) }} \\
@@ -250,16 +250,16 @@ la probabilité qu'une personne parmi :math:`k` quitte un guichet est :
     :nowrap:
 
     \begin{eqnarray*}
-    \pr{ \min \ensemble{D_1}{D_k} \infegal dt } &=& 1 - \pr {\min \ensemble{D_1}{D_k} > dt} \\
+    \pr{ \min \ensemble{D_1}{D_k} \leqslant dt } &=& 1 - \pr {\min \ensemble{D_1}{D_k} > dt} \\
     &=& 1 - \cro{\prod_{n=1}^{k} \pr {D_n > dt}} \\
-    &=& 1 - \cro{\prod_{n=1}^{k} 1 - \pr {D_n \infegal dt}} \\
+    &=& 1 - \cro{\prod_{n=1}^{k} 1 - \pr {D_n \leqslant dt}} \\
     &=& 1 - \cro{\prod_{n=1}^{k}  e^{-\mu dt}} \\
     &=& 1 - e^{- k\mu dt} \sim k \mu dt + o(dt)
     \end{eqnarray*}
 
 Pour déterminer les probabilités :math:`\pa{p_n}_n`, on applique le
 même raisonnement que pour un système :math:`M/M/1` en distinguant
-les cas :math:`n \infegal S` et :math:`n > S`. On adapte la récurrence
+les cas :math:`n \leqslant S` et :math:`n > S`. On adapte la récurrence
 donnée par le système d'équations :eq:`systeme_mm1` au cas :math:`M/M/S` :
 
 .. math::
@@ -269,7 +269,7 @@ donnée par le système d'équations :eq:`systeme_mm1` au cas :math:`M/M/S` :
     \begin{eqnarray*}
     &&     \left \{ \begin{array}{lll}
             \mu p_1  -   \lambda    p_0 &=& 0  \\
-            \lambda  p_{n-1} + \pa{n+1} \mu p_{n+1}   - \pa {n \mu  + \lambda  }  p_n &=& 0 \text{ si } 1 \infegal n < S \\
+            \lambda  p_{n-1} + \pa{n+1} \mu p_{n+1}   - \pa {n \mu  + \lambda  }  p_n &=& 0 \text{ si } 1 \leqslant n < S \\
             \lambda  p_{n-1} + S \mu p_{n+1}   - \pa { S \mu  + \lambda  }  p_n &=& 0 \text{ si } n \supegal S
             \end{array}\right.
     \end{eqnarray*}
@@ -453,7 +453,7 @@ Cette fonction vérifie :math:`F_{\mu}^{-1}\pa{F_{\mu}(x)} = 1`.
 Or si :math:`U` est une variable aléatoire uniforme sur
 :math:`\cro{0,1}`, alors la variable :math:`V = F_{\mu}^{-1}(U)`
 suit la loi exponentielle avec :math:`\mu` pour paramètre.
-Effectivement, :math:`\pr{ V \infegal t} = \pr{ F_{\mu}^{-1}(U) \infegal t} = \pr{U \infegal F_{\mu}(t)} = F_{\mu}(x)`.
+Effectivement, :math:`\pr{ V \leqslant t} = \pr{ F_{\mu}^{-1}(U) \leqslant t} = \pr{U \leqslant F_{\mu}(t)} = F_{\mu}(x)`.
 La fonction de répartition de la variable :math:`V` est :math:`F_{\mu}`,
 :math:`V` est donc une loi exponentielle de paramètre :math:`\mu`.
 La première fonction simule une variable exponentielle de paramètre :math:`\mu` :

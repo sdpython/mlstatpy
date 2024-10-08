@@ -45,7 +45,7 @@ Cette m�thode propos�e dans~\citeindex{Martinetz1993} constitue une m�thod
         \begin{xalgostep}{mise � jour} \label{class_neural_gas_step_2}
         Choisir al�atoirement un point $X_i$. \\
         Classer les centres $C_k$ par proximit� croissante de $X_i$ de sorte que~:
-        $d\pa{X_i,C_{\sigma\pa{1}}} \infegal ... \infegal d\pa{X_i,C_{\sigma\pa{T}}}$ \\
+        $d\pa{X_i,C_{\sigma\pa{1}}} \leqslant ... \leqslant d\pa{X_i,C_{\sigma\pa{T}}}$ \\
         \begin{xfor}{j}{1}{C}
         $
         \begin{array}{lcl}
@@ -167,26 +167,26 @@ L'article \citeindex{Bandyopadhyay2004} propose une m�thode qui s'appuie sur l
         entre les �l�ments $x_i$ et $x_j$ de l'ensemble $\vecteur{x_1}{x_N}$. $S$ d�signe l'ensemble
         des sommets et $A$ l'ensemble des arcs $A = \pa{e_{ij}}_{ij}$. 
         On num�rote les ar�tes de $1$
-        � $N^2$ de telle sorte qu'elles soient tri�es~: $w_{\sigma(1)} \infegal w_{\sigma(2)} \infegal ... \infegal
+        � $N^2$ de telle sorte qu'elles soient tri�es~: $w_{\sigma(1)} \leqslant w_{\sigma(2)} \leqslant ... \leqslant
         w_{\sigma(N^2)}$. On �limine dans cette liste les arcs de m�me poids, on construit donc la fonction $\sigma'$
-        de telle sorte que~: $w_{\sigma'(1)} < w_{\sigma'(2)} < ... < w_{\sigma'(n)}$ avec $n \infegal N^2$. On pose
+        de telle sorte que~: $w_{\sigma'(1)} < w_{\sigma'(2)} < ... < w_{\sigma'(n)}$ avec $n \leqslant N^2$. On pose
         $\lambda = 2$.
         
         \begin{xalgostep}{d�termination de l'ensemble des arcs � conserver}
         On d�signe par $X$ l'ensemble des arcs � conserver. $X = A$. Si $w_{\sigma'(n)} < \lambda w_{\sigma'(1)}$ alors $X$
         est inchang� et on passe � l'�tape suivante. Sinon, on construit la suite 
         $\delta_i = w_{\sigma'(i+1)} - w_{\sigma'(i)}$ pour $i \in \ensemble{1}{n-1}$. La suite $\delta_{\phi(i)}$
-        correspond � la m�me suite tri�e~: $\delta_{\phi(1)} \infegal  ... \infegal \delta_{\phi(n-1)}$. On d�finit 
+        correspond � la m�me suite tri�e~: $\delta_{\phi(1)} \leqslant  ... \leqslant \delta_{\phi(n-1)}$. On d�finit 
         $t = \frac{\delta_{\phi(1)} + \delta_{\phi(n-1)}} {2}$. On d�finit alors le seuil $\alpha$ tel que~:
                     $$
                     \alpha = \min \acc{ w_{\sigma(i)} \sac
-                                                            1 \infegal i \infegal n-1 \text{ et } 
+                                                            1 \leqslant i \leqslant n-1 \text{ et } 
                                                             w_{\sigma'(i+1)} - w_{\sigma'(i)} \supegal t \text{ et }
                                                             w_{\sigma'(i)} \supegal \lambda w_{\sigma'(1)}}
                     $$
         Si $\alpha$ n'est pas d�fini, $X$ est inchang� et on passe � l'�tape suivante, sinon~:
                     $$
-                    X = \acc{ e_{ij} \in A \sac d_{ij} \infegal \alpha}
+                    X = \acc{ e_{ij} \in A \sac d_{ij} \leqslant \alpha}
                     $$
         \end{xalgostep}
         
@@ -394,7 +394,7 @@ Dans cet article, la densit� $f_X\pa{x}$ est estim�e de fa�on non param�
         \end{eqnarray}
 
 
-La densit� $f_X$ est estim�e avec un estimateur � noyau � l'aide de l'�chantillon $\pa{X_i,Y_i}_{1 \infegal i \infegal N}$~:
+La densit� $f_X$ est estim�e avec un estimateur � noyau � l'aide de l'�chantillon $\pa{X_i,Y_i}_{1 \leqslant i \leqslant N}$~:
 
         
         \begin{eqnarray}

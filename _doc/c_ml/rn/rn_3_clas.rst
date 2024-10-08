@@ -17,7 +17,7 @@ suivant une `loi multinomiale <https://fr.wikipedia.org/wiki/Loi_multinomiale>`_
     et une variable aléatoire discrète :math:`Y \in \N`,
     l'objectif est d'approximer la fonction :math:`\esp\pa{Y | X} = f\pa{X}`.
     Les données du problème sont
-    un échantillon de points : :math:`\acc { \pa{ X_{i},Y_{i} } | 1 \infegal i \infegal N }`
+    un échantillon de points : :math:`\acc { \pa{ X_{i},Y_{i} } | 1 \leqslant i \leqslant N }`
     avec :math:`\forall i \in \ensemble{1}{N}, \; Y_i \in \ensemble{1}{C}`
     et un modèle paramétré avec :math:`\theta` :
 
@@ -38,7 +38,7 @@ discrète et :math:`Y \in \acc{0,1}`, on dispose pour cela d'une liste :
 
 .. math::
 
-    \acc{ \pa{ X_i,Y_i } \in \mathbb{R} \times \acc{0,1} | 1 \infegal i \infegal N }
+    \acc{ \pa{ X_i,Y_i } \in \mathbb{R} \times \acc{0,1} | 1 \leqslant i \leqslant N }
 
 .. image:: rnimg/classificationnd.png
 

@@ -18,7 +18,7 @@ Enoncé 1
     des complétions :math:`S=(s_i)` qu'on considère comme une permutation
     :math:`\sigma` de l'ensemble de départ : :math:`S(\sigma) = (s_i) = (c_{\sigma(j)})`.
     Ce système de complétion est destiné à un des utilisateurs qui forment des recherches ou requêtes
-    :math:`Q=(q_i, w_i)_{1 \infegal i \infegal N_Q}`.
+    :math:`Q=(q_i, w_i)_{1 \leqslant i \leqslant N_Q}`.
     :math:`q_i` est la requête, :math:`w_i` est la fréquence associée
     à cette requête. On définit l'effort demandé aux utilisateurs
     par ce système de complétion :
@@ -82,7 +82,7 @@ Enoncé 2
     à l'utilisateur, elle ne change pas l'ordre mais peut cacher certaines suggestions
     si elles ne sont pas pertinentes.
     Ce système de complétion est destiné à un des utilisateurs qui forment des recherches ou requêtes
-    :math:`Q=(q_i, w_i)_{1 \infegal i \infegal N_Q}`.
+    :math:`Q=(q_i, w_i)_{1 \leqslant i \leqslant N_Q}`.
     :math:`q_i` est la requête, :math:`w_i` est la fréquence associée
     à cette requête. On définit l'effort demandé aux utilisateurs
     par ce système de complétion :
@@ -128,7 +128,7 @@ partageant le même préfixe.
         M'(q', S) = M'(q'-q, S') + M'(q, S)
 
 On sait déjà, par construction que
-:math:`M'(q', S) \infegal M'(q'-q, S') + M'(q, S)`.
+:math:`M'(q', S) \leqslant M'(q'-q, S') + M'(q, S)`.
 Par l'absurde, on suppose que :math:`M'(q', S) < M'(q'-q, S') + M'(q, S)`,
 comme la requête :math:`q-q'` est toujours affichée avant la requête
 :math:`q'`, cela voudrait dire qu'on aurait trouvé une façon plus optimale
@@ -153,7 +153,7 @@ permettre de procéder par sous-ensemble pour trouver l'ordre optimal.
     .. math::
         :label: best-order-lemme-completion
 
-        \forall k, \; \sigma(q[1..k]) \infegal \sigma(q[1..k+1])
+        \forall k, \; \sigma(q[1..k]) \leqslant \sigma(q[1..k+1])
 
     On note l'ensemble :math:`S'(q[1..k]) = \acc{ q[k+1..len(q)] \in S }` :
 

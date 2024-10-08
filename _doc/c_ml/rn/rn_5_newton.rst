@@ -224,7 +224,7 @@ puisque le gradient s'en déduit facilement. La dernière couche du réseau de n
                                       &=& \partialfrac{e}{z_{C,i}} \pa{W,X} f'_{c,i}\pa{y_{C,i}} \nonumber
     \end{eqnarray}
 
-Pour les autres couches :math:`c` telles que :math:`1 \infegal c \infegal C-1`, on a :
+Pour les autres couches :math:`c` telles que :math:`1 \leqslant c \leqslant C-1`, on a :
 
 .. math::
     :nowrap:

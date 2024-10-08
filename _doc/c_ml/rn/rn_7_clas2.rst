@@ -10,7 +10,7 @@ Classification
 Vraisemblance d'un échantillon de variable suivant une loi multinomiale
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Soit :math:`\pa{Y_i}_{1 \infegal i \infegal N}`
+Soit :math:`\pa{Y_i}_{1 \leqslant i \leqslant N}`
 un échantillon de variables aléatoires i.i.d. suivant la loi multinomiale
 :math:`\loimultinomiale { \vecteurno{p_1}{p_C}}`.
 On définit :math:`\forall k \in \intervalle{1}{C}, \; d_k = \frac{1}{N}
@@ -101,8 +101,8 @@ La fonction :math:`x \longrightarrow \ln x` est concave, d'où :
     \begin{eqnarray*}
     \Delta  &=&         \sum_{k=1}^{C} d_k \ln p_k - \sum_{k=1}^{C} d_k \ln d_k \\
             &=&         \sum_{k=1}^{C} d_k \pa{ \ln p_k - \ln d_k } = \sum_{k=1}^{C} d_k \ln \frac{p_k}{d_k} \\
-            &\infegal&  \ln \pa{ \sum_{k=1}^{C} d_k \frac{p_k}{d_k} } = \ln \pa { \sum_{k=1}^{C} p_k } = \ln 1 = 0 \\
-            &\infegal&  0
+            &\leqslant&  \ln \pa{ \sum_{k=1}^{C} d_k \frac{p_k}{d_k} } = \ln \pa { \sum_{k=1}^{C} p_k } = \ln 1 = 0 \\
+            &\leqslant&  0
     \end{eqnarray*}
 
 La distance de KullBack-Leiber compare deux distributions de
@@ -139,11 +139,11 @@ poids :math:`W` qui correspondent le mieux à l'échantillon :
 
 .. math::
 
-    A = \acc{\left. \pa {X_i,y_i=\pa{\eta_i^k}_{1 \infegal k \infegal C}} \in \mathbb{R}^p \times \cro{0,1}^C
-               \text{ tel que } \sum_{k=1}^{c}y_i^k=1 \right| 1 \infegal i \infegal N }
+    A = \acc{\left. \pa {X_i,y_i=\pa{\eta_i^k}_{1 \leqslant k \leqslant C}} \in \mathbb{R}^p \times \cro{0,1}^C
+               \text{ tel que } \sum_{k=1}^{c}y_i^k=1 \right| 1 \leqslant i \leqslant N }
 
-On suppose que les variables :math:`\pa{Y_i|X_i}_{1 \infegal i \infegal N}`
-suivent les lois respectives :math:`\pa{\loimultinomiale{y_i}}_{1 \infegal i \infegal N}`
+On suppose que les variables :math:`\pa{Y_i|X_i}_{1 \leqslant i \leqslant N}`
+suivent les lois respectives :math:`\pa{\loimultinomiale{y_i}}_{1 \leqslant i \leqslant N}`
 et sont indépendantes entre elles, la vraisemblance du modèle
 vérifie d'après l'équation :eq:`rn_equation_vraisemblance_kullbck_leiber` :
 
@@ -216,9 +216,9 @@ Ceci mène à la définition du problème de classification suivant :
 
     .. math::
 
-        A = \acc {\left. \pa {X_i,y_i=\pa{\eta_i^k}_{1 \infegal k \infegal C}} \in
+        A = \acc {\left. \pa {X_i,y_i=\pa{\eta_i^k}_{1 \leqslant k \leqslant C}} \in
                                                 \mathbb{R}^p \times \mathbb{R}^C
-                            \text{ tel que } \sum_{k=1}^{c}\eta_i^k=1 \right| 1 \infegal i \infegal N }
+                            \text{ tel que } \sum_{k=1}^{c}\eta_i^k=1 \right| 1 \leqslant i \leqslant N }
 
     :math:`y_i^k` représente la probabilité que l'élément
     :math:`X_i` appartiennent à la classe :math:`k` :
@@ -306,7 +306,7 @@ On calcule :
 
 Cette équation permet d'adapter l'algorithme de la :ref:`rétropropagation <algo_retropropagation>`
 décrivant rétropropagation pour le problème de la classification et pour
-un exemple :math:`\pa {X,y=\pa{\eta^k}_{1 \infegal k \infegal C}}`.
+un exemple :math:`\pa {X,y=\pa{\eta^k}_{1 \leqslant k \leqslant C}}`.
 Seule la couche de sortie change.
 
 .. mathdef::

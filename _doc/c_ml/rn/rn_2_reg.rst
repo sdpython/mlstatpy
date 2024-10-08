@@ -15,7 +15,7 @@ On suppose parfois que ce bruit suive une loi normale.
     :lid: def-bruit-blanc
 
     Une suite de variables aléatoires réelles
-    :math:`\pa{\epsilon_i}_{1 \infegal i \infegal N}`
+    :math:`\pa{\epsilon_i}_{1 \leqslant i \leqslant N}`
     est un bruit blanc :
 
     * :math:`\exists \sigma > 0`, :math:`\forall i \in \intervalle{1}{N}, \; \epsilon_i \sim \loinormale{0}{\sigma}`
@@ -32,7 +32,7 @@ Une régression consiste à résoudre le problème suivant :
     l'objectif est d'approximer la fonction
     :math:`\esp\pa{Y | X} = f\pa{X}`.
     Les données du problème sont
-    un échantillon de points :math:`\acc{ \pa{ X_{i},Y_{i} } | 1 \infegal i \infegal N }`
+    un échantillon de points :math:`\acc{ \pa{ X_{i},Y_{i} } | 1 \leqslant i \leqslant N }`
     et un modèle paramétré avec :math:\theta` :
 
     .. math::
@@ -40,7 +40,7 @@ Une régression consiste à résoudre le problème suivant :
             \forall i \in \intervalle{1}{N}, \; Y_{i} = f \pa{\theta,X_{i}} + \epsilon_{i}
 
     avec :math:`n \in \N`,
-    :math:`\pa{\epsilon_{i}}_{1 \infegal i \infegal N}` :ref:`bruit blanc <def-bruit-blanc>`,
+    :math:`\pa{\epsilon_{i}}_{1 \leqslant i \leqslant N}` :ref:`bruit blanc <def-bruit-blanc>`,
     :math:`f` est une fonction de paramètre :math:`\theta`.
         
 

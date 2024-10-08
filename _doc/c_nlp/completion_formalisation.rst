@@ -50,13 +50,13 @@ dans le premier cas ou 8+1=9 touches dans le second cas.
     .. math::
         :label: completion-metric1
 
-        M(q,S) = \min_{0 \infegal k \infegal l(q)}  k + K(q, k, S)
+        M(q,S) = \min_{0 \leqslant k \leqslant l(q)}  k + K(q, k, S)
 
     La quantité :math:`K(q, k, S)` représente le nombre de touche vers le bas qu'il faut taper pour
     obtenir la chaîne :math:`q` avec le système de complétion :math:`S` et les :math:`k`
     premières lettres de :math:`q`.
 
-De façon évidente, :math:`K(q, l(q), S)=0` et :math:`M(q,S) \infegal l(q)`
+De façon évidente, :math:`K(q, l(q), S)=0` et :math:`M(q,S) \leqslant l(q)`
 et :math:`K(q, k, S) > 0` si :math:`k < l(q)`. On prend également
 comme convention :math:`\forall q \notin S, \; K(q, k, S) = \infty`
 et :math:`\forall q \notin S, \; M(q, S) = l(q)`.

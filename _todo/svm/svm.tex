@@ -27,20 +27,20 @@ Les \emph{Support Vector Machine} ou \emph{S�parateurs � Vastes Marges} (SVM
 \indexfrr{ensemble}{s�parable}
 
 
-On s'int�resse tout d'abord � l'hyperplan s�parateur d'un ensemble de points r�partis en deux classes. Cet ensemble est not� $\pa{X_i,Y_i}_{1 \infegal i \infegal N}$ o�, $\forall i$, $X_i \in \mathbb{R}^d$ et $Y_i \in \acc{-1,1}$. Pour simplifier les expressions par la suite, les deux classes sont donc labell�es -1 et~1. On cherche alors un vecteur $w$ et une constante $b$ qui v�rifient~:
+On s'int�resse tout d'abord � l'hyperplan s�parateur d'un ensemble de points r�partis en deux classes. Cet ensemble est not� $\pa{X_i,Y_i}_{1 \leqslant i \leqslant N}$ o�, $\forall i$, $X_i \in \mathbb{R}^d$ et $Y_i \in \acc{-1,1}$. Pour simplifier les expressions par la suite, les deux classes sont donc labell�es -1 et~1. On cherche alors un vecteur $w$ et une constante $b$ qui v�rifient~:
 
             $$
-            \forall i, \; 1 \infegal i \infegal N, \; 
+            \forall i, \; 1 \leqslant i \leqslant N, \; 
                         Y_i = \left\{ \begin{array}{rl}
                                                         -1 & \text{ si } w.X_i + b \supegal 1 \\ 
-                                                         1 & \text{ si } w.X_i + b \infegal -1
+                                                         1 & \text{ si } w.X_i + b \leqslant -1
                                                     \end{array} \right.
             $$
 
 On cherche donc $w$ et $b$ tels que~:
 
             $$
-            \forall i, \; 1 \infegal i \infegal N, \; 
+            \forall i, \; 1 \leqslant i \leqslant N, \; 
                         Y_i \pa{ w.X_i + b} - 1 \supegal 0
             $$
 
@@ -50,7 +50,7 @@ Comme on cherche �galement un vecteur $w$ de norme minimum, l'hyperplan cherch
             \begin{xproblem}{meilleur hyperplan s�parateur, cas s�parable}\label{svm_problem_def}
             \indexfr{s�parable}\indexfrr{hyperplan}{s�parateur}
             Le meilleur hyperplan s�parateur de l'ensemble de points labell�s
-            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
+            $\pa{X_i,Y_i}_{1 \leqslant i \leqslant N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
             d'un probl�me de minimisation. Cet hyperplan a pour �quation $x.w^* + b^* = 0$ o� 
             $w^*$ et $b^*$ v�rifient~:
                     $$
@@ -94,7 +94,7 @@ Cette derni�re �quation (\ref{svm_lagrange_lineaire_2}) est importante puisq
 \subsection{Ensemble non s�parable}
 \indexfrr{ensemble}{non s�parable}
 
-Le paragraphe pr�c�dent supposait que l'ensemble $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ �tait s�parable ce qui, d'apr�s le paragraphe~\ref{svm_dimension_vc_lin} implique dans la plupart des cas que $N \infegal d+1$. Pour un ensemble non s�parable (voir figure~\ref{svm_non_separable_fig}), il est impossible de trouver un hyperplan s�parateur. Par cons�quent, il n'existe pas de solution au probl�me~\ref{svm_problem_def} v�rifiant les contraintes telles qu'elles ont �t� exprim�es. La recherche du meilleur hyperplan s�parateur devient alors l'�nonc�~\ref{svm_problem_def_2}.
+Le paragraphe pr�c�dent supposait que l'ensemble $\pa{X_i,Y_i}_{1 \leqslant i \leqslant N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ �tait s�parable ce qui, d'apr�s le paragraphe~\ref{svm_dimension_vc_lin} implique dans la plupart des cas que $N \leqslant d+1$. Pour un ensemble non s�parable (voir figure~\ref{svm_non_separable_fig}), il est impossible de trouver un hyperplan s�parateur. Par cons�quent, il n'existe pas de solution au probl�me~\ref{svm_problem_def} v�rifiant les contraintes telles qu'elles ont �t� exprim�es. La recherche du meilleur hyperplan s�parateur devient alors l'�nonc�~\ref{svm_problem_def_2}.
 
 
         \begin{figure}[ht]
@@ -110,7 +110,7 @@ Le paragraphe pr�c�dent supposait que l'ensemble $\pa{X_i,Y_i}_{1 \infegal i
             \indexfr{non s�parable}
             Soit $C \in \mathbb{R}^*_+$ une constante et $k \in \N^*$ un entier,
             le meilleur hyperplan s�parateur de l'ensemble de points labell�s
-            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
+            $\pa{X_i,Y_i}_{1 \leqslant i \leqslant N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
             d'un probl�me de minimisation. Cet hyperplan a pour �quation $x.w^* + b^* = 0$ o� 
             $w^*$ et $b^*$ v�rifient~:
                     $$
@@ -129,7 +129,7 @@ $C$ et $k$ sont des constantes � d�terminer. Toutefois, dans le cas o� $k 
             \label{svm_problem_def_2p}\indexfr{non s�parable}\indexfrr{probl�me}{dual}
             Soit $C \in \mathbb{R}^*_+$ une constante,
             le meilleur hyperplan s�parateur de l'ensemble de points labell�s
-            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
+            $\pa{X_i,Y_i}_{1 \leqslant i \leqslant N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
             d'un probl�me de minimisation. 
                     $$
                     \begin{array}{rcl}    \pa{\alpha_i^*} &=& \underset{\alpha_i}{\arg \min} \dfrac{1}{2}  
@@ -138,7 +138,7 @@ $C$ et $k$ sont des constantes � d�terminer. Toutefois, dans le cas o� $k 
                                                                                             Y_i Y_j \,
                                                                                             X_i . X_j
                                                                                     - \summy{i=1}{N} \alpha_i \\
-                                         \text{avec }      && \forall i, \; 1 \infegal \alpha_i \infegal C \\
+                                         \text{avec }      && \forall i, \; 1 \leqslant \alpha_i \leqslant C \\
                                          \text{et }          && \summy{i=1}{N} Y_i \, \alpha_i = 0
                     \end{array}                                        
                     $$
@@ -162,19 +162,19 @@ Ce dernier probl�me est appel�e la forme duale du probl�me~\ref{svm_proble
 
 
 
-Dans le probl�me de classification introduit au chapitre~\ref{svm_separateur_lineaire}, la dimension de Vapnik-Chervonenkis sert � majorer le risque d'erreur de classification empirique au risque d'erreur th�orique. Nous allons tout d'abord d�finir la dimension de Vapnik-Chervonenkis pour un ensemble de points donn� et not� $\pa{X_i}_{1 \infegal i \infegal N}$ et une classe de fonction $f\pa{x,\alpha}$ param�tr�e par $\alpha$.
+Dans le probl�me de classification introduit au chapitre~\ref{svm_separateur_lineaire}, la dimension de Vapnik-Chervonenkis sert � majorer le risque d'erreur de classification empirique au risque d'erreur th�orique. Nous allons tout d'abord d�finir la dimension de Vapnik-Chervonenkis pour un ensemble de points donn� et not� $\pa{X_i}_{1 \leqslant i \leqslant N}$ et une classe de fonction $f\pa{x,\alpha}$ param�tr�e par $\alpha$.
 
 
 
             \begin{xdefinition}{dimension de Vapnik-Chervonenkis}
-            Soit $\pa{X_i}_{1 \infegal i \infegal N}$ un ensemble de points appartenant � $\mathbb{R}^d$. On d�finit une 
+            Soit $\pa{X_i}_{1 \leqslant i \leqslant N}$ un ensemble de points appartenant � $\mathbb{R}^d$. On d�finit une 
             fonction $f\pa{x,\alpha} : \mathbb{R}^d \times \Omega \longmapsto  \mathbb{R}$ 
             o� $x \in \mathbb{R}^d$ et $\alpha \in \Omega$.
             $\Omega$ est appel� l'ensemble des param�tres.
             On d�finit la dimension de Vapnik-Chervonenkis comme �tant le nombre de suites 
-            $\pa{Y_i}_{1 \infegal i \infegal N} \in \acc{-1,1}^N$ v�rifiant~:
+            $\pa{Y_i}_{1 \leqslant i \leqslant N} \in \acc{-1,1}^N$ v�rifiant~:
                     $$
-                    \exists \alpha \in \Omega, \text{ tel que } \forall i, \; 1 \infegal i \infegal N, \;
+                    \exists \alpha \in \Omega, \text{ tel que } \forall i, \; 1 \leqslant i \leqslant N, \;
                             sgn\pa{ f\pa{X_i,\alpha} } = Y_i
                     $$
             La fonction $sgn\pa{x}$ d�signe le signe de $x$~: $sgn\pa{x} = \left\{ \begin{array}{rl}
@@ -212,7 +212,7 @@ Dans le cas o� la fonction $f$ est lin�aire, il existe quelques r�sultats 
 
 \subsection{Exemple}
 
-On d�finit la suite de points $\pa{X_i}_{1 \infegal i \infegal N}$ par $\forall i, \, 1 \infegal i \infegal N, \; X_i = 10^{-i}$ et l'ensemble de fonctions~:
+On d�finit la suite de points $\pa{X_i}_{1 \leqslant i \leqslant N}$ par $\forall i, \, 1 \leqslant i \leqslant N, \; X_i = 10^{-i}$ et l'ensemble de fonctions~:
 
             $$
             \acc{\alpha \in \mathbb{R}, \; f\pa{x,\alpha} = \left\{
@@ -223,7 +223,7 @@ On d�finit la suite de points $\pa{X_i}_{1 \infegal i \infegal N}$ par $\foral
             $$
 
 
-Quelque soit la suite $\pa{Y_i}_{1 \infegal i \infegal N} \in \acc{-1,1}^N$, il est possible de choisir~:
+Quelque soit la suite $\pa{Y_i}_{1 \leqslant i \leqslant N} \in \acc{-1,1}^N$, il est possible de choisir~:
 
             $$
             \alpha = \pi \pa{ 1 + \summy{i=1}{N} \frac{ \pa{ 1 - Y_i} 10^i}{ 2 } }
@@ -244,7 +244,7 @@ On d�finit maintenant le risque th�orique de classification comme �tant~:
             \end{eqnarray}
 
 \indexfrr{risque}{empirique}
-Et le risque empirique pour le nuage de points $\pa{X_i,Y_i}_{1 \infegal i \infegal N}$ par~:
+Et le risque empirique pour le nuage de points $\pa{X_i,Y_i}_{1 \leqslant i \leqslant N}$ par~:
 
             \begin{eqnarray}
             R_{emp}\pa{\alpha} = \frac{1}{2N} \; \summy{i=1}{N} \abs{ Y_i - f\pa{X_i,\alpha}}
@@ -254,11 +254,11 @@ Et le risque empirique pour le nuage de points $\pa{X_i,Y_i}_{1 \infegal i \infe
         \begin{xtheorem}{majoration du risque empirique}
         En reprenant les notations utilis�es dans les expressions 
         (\ref{svm_risque_theorique}) et (\ref{svm_risque_empirique}). Pour 
-        un nuage de points  $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{\mathbb{R}^d \times \acc{-1,1} }^N$, 
+        un nuage de points  $\pa{X_i,Y_i}_{1 \leqslant i \leqslant N} \in \pa{\mathbb{R}^d \times \acc{-1,1} }^N$, 
         on d�montre (voir \citeindex{Vapnik1995}) que $\forall \eta \in \cro{0,1}$~:
                     $$
                     \pr{ 
-                    R\pa{\alpha} \infegal R_{emp}\pa{\alpha} +
+                    R\pa{\alpha} \leqslant R_{emp}\pa{\alpha} +
                             \sqrt{\frac    {h \pa{ 1+ \ln \frac{2N}{h} } - \ln \frac{\eta}{4} }
                                                     {N}
                             }
@@ -288,7 +288,7 @@ Il est possible d'�tendre les SVM au cas non lin�aire � partir du probl�
             \indexfrr{probl�me}{dual}
             Soit $C \in \mathbb{R}^*_+$ une constante, soit $K : \mathbb{R}^d \times \mathbb{R}^d \longmapsto \mathbb{R}^+$ une fonction noyau,
             le meilleur hyperplan s�parateur de l'ensemble de points labell�s
-            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
+            $\pa{X_i,Y_i}_{1 \leqslant i \leqslant N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
             d'un probl�me de minimisation~: 
                     $$
                     \begin{array}{rcl}    \pa{\alpha_i^*} &=& \underset{\alpha_i}{\arg \min} \dfrac{1}{2}  
@@ -297,7 +297,7 @@ Il est possible d'�tendre les SVM au cas non lin�aire � partir du probl�
                                                                                             Y_i Y_j \,
                                                                                             K\pa{X_i,X_j}
                                                                                     - \summy{i=1}{N} \alpha_i \\
-                                         \text{avec }      && \forall i, \; 1 \infegal \alpha_i \infegal C \\
+                                         \text{avec }      && \forall i, \; 1 \leqslant \alpha_i \leqslant C \\
                                          \text{et }          && \summy{i=1}{N} Y_i \, \alpha_i = 0
                     \end{array}                                        
                     $$
@@ -350,7 +350,7 @@ Le probl�me~\ref{svm_problem_def_3} peut �tre formul� d'une mani�re diff
             \indexfr{non s�parable}
             Soit $C \in \mathbb{R}^*_+$ une constante, soit $K : \mathbb{R}^d \times \mathbb{R}^d \longmapsto \mathbb{R}^+$ une fonction noyau,
             le meilleur hyperplan s�parateur de l'ensemble de points labell�s
-            $\pa{X_i,Y_i}_{1 \infegal i \infegal N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
+            $\pa{X_i,Y_i}_{1 \leqslant i \leqslant N} \in \pa{ \mathbb{R}^d \times \acc{-1,1} }^N$ est la solution
             d'un probl�me de minimisation~: 
                     $$
                     \begin{array}{rcl}    \pa{\alpha_i^*, \xi_i^*} &=& \underset{\alpha_i}{\arg \min} \dfrac{1}{2}  

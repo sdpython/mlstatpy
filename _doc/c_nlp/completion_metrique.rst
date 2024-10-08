@@ -71,7 +71,7 @@ On reprend la première métrique :eq:`completion-metric1` :
     :nowrap:
 
     \begin{eqnarray*}
-    M(q, S) &=& \min_{0 \infegal k \infegal l(q)}  k + K(q, k, S)
+    M(q, S) &=& \min_{0 \leqslant k \leqslant l(q)}  k + K(q, k, S)
     \end{eqnarray*}
 
 La fonction :math:`K(q, k, S)` est définie par :eq:`nlp-comp-k`.
@@ -90,7 +90,7 @@ La fonction :math:`K(q, k, S)` est définie par :eq:`nlp-comp-k`.
         :nowrap:
 
         \begin{eqnarray*}
-        M'(q, S) &=& \min_{0 \infegal k < l(q)} \acc{ M'(q[1..k], S) +
+        M'(q, S) &=& \min_{0 \leqslant k < l(q)} \acc{ M'(q[1..k], S) +
                     \min( K(q, k, S), l(q) - k) }
         \end{eqnarray*}
 
@@ -104,11 +104,11 @@ tous les préfixes d'une complétion.
     :title: métriques
     :tag: propriété
 
-    :math:`\forall q, \; M'(q, S) \infegal M(q, S)`
+    :math:`\forall q, \; M'(q, S) \leqslant M(q, S)`
 
-Si :math:`q \notin S`, c'est évident puisque :math:`M'(q, S) \infegal M'(\emptyset, S) + l(q)`.
+Si :math:`q \notin S`, c'est évident puisque :math:`M'(q, S) \leqslant M'(\emptyset, S) + l(q)`.
 Si :math:`q \in S`, cela découle de la constation précédente puisque :
-:math:`M'(q, S) \infegal M'(q[[1..k]], S) + K(q, k, S) \infegal k + K(q, k, S)`.
+:math:`M'(q, S) \leqslant M'(q[[1..k]], S) + K(q, k, S) \leqslant k + K(q, k, S)`.
 
 Quelques résultats
 ++++++++++++++++++
@@ -154,8 +154,8 @@ considéré comme préfixe. C'est ce que prend en compte la définition suivante
 
         \begin{eqnarray*}
         M"(q, S) &=& \min \left\{ \begin{array}{l}
-                        \min_{1 \infegal k \infegal l(q)} \acc{ M"(q[1..k-1], S) + 1 +\min( K(q, k, S), l(q) - k) } \\
-                        \min_{0 \infegal k \infegal l(q)} \acc{ M"(q[1..k], S) + \delta + \min( K(q, k, S), l(q) - k) }
+                        \min_{1 \leqslant k \leqslant l(q)} \acc{ M"(q[1..k-1], S) + 1 +\min( K(q, k, S), l(q) - k) } \\
+                        \min_{0 \leqslant k \leqslant l(q)} \acc{ M"(q[1..k], S) + \delta + \min( K(q, k, S), l(q) - k) }
                         \end{array} \right .
         \end{eqnarray*}
 
@@ -171,12 +171,12 @@ Et le second cas à la séquence :
 * pression de la touche droite pour afficher les nouvelles complétions
 * sélection de la complétion *machine learning*
 
-Le coût de la pression de la touche droite est noté :math:`\delta \infegal 1` qu'on prendra inférieur à 1.
+Le coût de la pression de la touche droite est noté :math:`\delta \leqslant 1` qu'on prendra inférieur à 1.
 On remarque également qu'avec cette nouvelle métrique, il est possible
 de diminuer le nombre minimum de touches à presser pour des requêtes en dehors
 de l'ensemble :math:`S` à partir du moment où elles prolongent une complétion existante.
 C'est là un point très intéressant de cette métrique.
-De manière évidente, :math:`\forall q, \; M'(q, S) \infegal M"(q, S)`.
+De manière évidente, :math:`\forall q, \; M'(q, S) \leqslant M"(q, S)`.
 
 Questions
 +++++++++

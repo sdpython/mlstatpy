@@ -81,7 +81,7 @@ On rappelle la métrique :eq:`completion-metric2` (voir aussi :eq:`nlp-comp-k`).
     :nowrap:
 
     \begin{eqnarray*}
-    M'(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ M'(q[1..k], S) + K(q, k, S) }
+    M'(q, S) &=& \min_{0 \leqslant k \leqslant l(q)} \acc{ M'(q[1..k], S) + K(q, k, S) }
     \end{eqnarray*}
 
 Si on note :math:`L(p, S)` l'ensemble des complétions
@@ -92,7 +92,7 @@ Que dire de la définition suivante ?
     :nowrap:
 
     \begin{eqnarray*}
-    M'_p(q, S) &=& \min_{0 \infegal k \infegal l(q)} \acc{ \begin{array}{l}
+    M'_p(q, S) &=& \min_{0 \leqslant k \leqslant l(q)} \acc{ \begin{array}{l}
                             \indicatrice{ L(q[1..k], S) \neq \emptyset} \cro{M'_p(q[1..k], S) +  K(q, k, S)} + \\
                             \;\;\;\;\indicatrice{L(q[1..k], S) = \emptyset} \cro { \min_j M'_p(q[1..j], S) + M'_p(q[j+1..], S)  }
                             \end{array} }
@@ -147,7 +147,7 @@ On note la métrique :math:`M'_b`.
 
         \begin{eqnarray*}
         M'_b(q, S) &=& \min\acc{\begin{array}{l}
-                \min_{0 \infegal k < l(q)} \acc{ M'_b(q[1..k], S) +
+                \min_{0 \leqslant k < l(q)} \acc{ M'_b(q[1..k], S) +
                     \min( K(q, k, S), l(q) - k) } \\
                 \min_{s \succ q} \acc{ M'_b(s, S) + l(s) - l(q) }
                 \end{array} }

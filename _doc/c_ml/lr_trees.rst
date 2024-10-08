@@ -47,7 +47,7 @@ Un arbre de décision se construit peu à peu en répétant toujours
 la même optimisation sur des sous-ensemble de plus en plus petit.
 Il faut d'abord un critère qui permette d'évaluer la pertinence
 de la division effectuée par un noeud de l'arbre.
-Pour un ensemble :math:`(X_i, y_i)_{1 \infegal i \infegal n}`, on
+Pour un ensemble :math:`(X_i, y_i)_{1 \leqslant i \leqslant n}`, on
 peut estimer la probabilité
 :math:`p(y_1, ..., y_n) = p(Y) = \frac{1}{n}\sum{i=1}^n y_i`.
 Le critère de Gini *G* qui évalue la pertinence d'une classification est
@@ -65,7 +65,7 @@ du critère choisi :
 .. math::
 
     \begin{array}{rcl}
-    S_{ik} &=& \acc{ m | x_{mk} \infegal x_{ik}} \\
+    S_{ik} &=& \acc{ m | x_{mk} \leqslant x_{ik}} \\
     \Delta_{ik} &=& H(Y) - ( H(Y_{S_{ik}}) + H(Y_{S_{ik}^C} )
     \end{array}
 

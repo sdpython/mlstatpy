@@ -55,7 +55,7 @@ Cet algorithme est souvent appel� \emph{1-PPV} (ou \emph{1-NN} pour Nearest Ne
         incluant les $k$-plus proches voisins de $x$, cet ensemble v�rifie~:
                         \begin{eqnarray*}
                         \card{S^*_k} = 0 \text{ et } 
-                                                                         \underset{y \in S^*_k}{\max} \; d\pa{y,x} \infegal
+                                                                         \underset{y \in S^*_k}{\max} \; d\pa{y,x} \leqslant
                                                                          \underset{y \in X - S^*_k}{\min} \; d\pa{y,x} 
                         \end{eqnarray*}
         On calcule les occurrences $f(i)$ de chaque classe $i$ dans l'ensemble $S^*_k$~: 

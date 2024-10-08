@@ -58,7 +58,7 @@ linéaire, rectangulaire, triangulaire.
     On choisi aléatoirement un points du nuage
     :math:`X_i` puis on définit le neurone
     :math:`\mu_{k^*}^t` de telle sorte que :
-    :math:`\norme{ \mu_{k^*}^t - X_i} = \underset{1 \infegal j \infegal N}{\min } \; \norme{ \mu_j^t - X_i }`.
+    :math:`\norme{ \mu_{k^*}^t - X_i} = \underset{1 \leqslant j \leqslant N}{\min } \; \norme{ \mu_j^t - X_i }`.
 
     *mise à jour*
 
@@ -153,7 +153,7 @@ L'article définit ensuite la densité interne pour :math:`C` classes :
 
     \begin{eqnarray*}
     D_{int} (C) &=& \frac{1}{C} \;  \sum_{k=1}^{C} \; \sum_{i=1}^{N} \; \sum_{j=1}^{N} \;
-    a_{ik} a_{jk} \indicatrice{ \norme{ X_i - X_j} \infegal \sigma }
+    a_{ik} a_{jk} \indicatrice{ \norme{ X_i - X_j} \leqslant \sigma }
     \end{eqnarray*}
 
 On définit la distance :math:`d^*_{kl}` pour :math:`\pa{k,l} \in \ensemble{1}{C}^2`,
@@ -175,7 +175,7 @@ La densité externe est alors définie en fonction du nombre de classes :math:`C
     \begin{eqnarray*}
     D_{ext} (C) =  \sum_{k=1}^{C} \; \sum_{l=1}^{C} \; \cro{  \frac{ d_{kl} } { \sigma\pa{k} \sigma\pa{l} } \;
     \sum_{i=1}^{N} \; \indicatrice{ a_{ik} + a_{il} > 0 } \indicatrice{ \norme{ X_i - \frac{X_{i^*}^{kl} + X_{j^*}^{kl}}{2} }
-    \infegal  \frac{\sigma\pa{k} +\sigma\pa{l}}{2} } }
+    \leqslant  \frac{\sigma\pa{k} +\sigma\pa{l}}{2} } }
     \end{eqnarray*}
 
 L'article définit ensuite la séparabilité en fonction du nombre de classes :math:`C` :

@@ -89,7 +89,7 @@ La courbe ROC s'obtient en faisant varier :math:`s`.
     :math:`X` est celle des scores des expériences qui ont échoué.
     On suppose également que tous les scores sont indépendants.
     On note :math:`F_Y` et :math:`F_X` les fonctions de répartition de ces variables.
-    :math:`F_Y(s)=\pr{Y \infegal s}` et :math:`F_X(s)=\pr{X \infegal s}`.
+    :math:`F_Y(s)=\pr{Y \leqslant s}` et :math:`F_X(s)=\pr{X \leqslant s}`.
     On définit en fonction d'un seuil :math:`s \in \mathbb{R}` :
 
     * :math:`R(s) = 1 - F_Y(s) = \pr{Y > s}`
@@ -173,8 +173,8 @@ de fonction de répartition :math:`F`. Si :math:`U = F(X)`, alors :
 
 .. math::
 
-    \pr{ U \infegal t} = \pr{ F(X) \infegal t} =
-    \pr{ X \infegal F^{-1}(t)} = F \pa{ F^{-1}(t) } = t
+    \pr{ U \leqslant t} = \pr{ F(X) \leqslant t} =
+    \pr{ X \leqslant F^{-1}(t)} = F \pa{ F^{-1}(t) } = t
 
 La variable :math:`U` est de loi uniforme sur :math:`\cro{0,1}`.
 De plus, soit :math:`g` une fonction intégrable quelconque, on pose :math:`u = F(x)` et :
@@ -341,7 +341,7 @@ est construite une courbe ROC (voir :ref:`Courbe ROC <def_roc_2>`).
     `X_i` est le score obtenu pour l'expérience :math:`i`,
     `\theta_i` vaut 1 si elle a réussi et 0 si elle a échoué.
     On suppose également que cette liste est triée par ordre croissant :
-    `\forall i, \; X_i \infegal X_{i+1}`.
+    `\forall i, \; X_i \leqslant X_{i+1}`.
     On souhaite également tracer :math:`k` points sur la courbe, on détermine pour cela :math:`k` seuils
     `\ensemble{s_1}{s_k}` définis par : :math:`\forall j, s_k = X_{\frac{j \, k}{n}}`.
 
@@ -355,7 +355,7 @@ est construite une courbe ROC (voir :ref:`Courbe ROC <def_roc_2>`).
         E_j = \frac{1}{n}  \, \sum_{i=1}^{n} \pa{1-\theta_i} \; \indicatrice{X_i \supegal s_j}
         \end{eqnarray*}
 
-    La courbe ROC est composée de l'ensemble :math:`R_{OC} = \acc{ \pa{E_j,R_j} | 1 \infegal j \infegal k}`.
+    La courbe ROC est composée de l'ensemble :math:`R_{OC} = \acc{ \pa{E_j,R_j} | 1 \leqslant j \leqslant k}`.
         
 Les deux suites :math:`(R_j)_j` et :math:`(E_j)_j` sont toutes les deux décroissantes
 d'après leur définition. La courbe peut être rendue continue par interpolation.
@@ -368,7 +368,7 @@ d'après leur définition. La courbe peut être rendue continue par interpolatio
     On cherche un taux de reconnaissance pour un taux d'erreur donné.
     On dispose pour cela d'une courbe ROC obtenue par
     l'algorithme de la :ref:`courbe ROC <algo_courb_ROC>` et définie par les points
-    :math:`R_{OC} = \acc{ \pa{e_j,r_j} | 1 \infegal j \infegal k}`.
+    :math:`R_{OC} = \acc{ \pa{e_j,r_j} | 1 \leqslant j \leqslant k}`.
     On suppose ici que :math:`\pa{e_1,r_1} = \pa{1,1}` et :math:`\pa{e_k,r_k} = \pa{0,}`.
     Si ce n'est pas le cas, on
     ajoute ces valeurs à l'ensemble :math:`R_{OC}`.
@@ -377,7 +377,7 @@ d'après leur définition. La courbe peut être rendue continue par interpolatio
 
     .. math::
 
-        e_{j^*+1} \infegal e^* \infegal e_{j^*}
+        e_{j^*+1} \leqslant e^* \leqslant e_{j^*}
 
     Le taux de reconnaissance :math:`\rho` cherché est donné par :
 
@@ -409,7 +409,7 @@ On s'inspire pour cela des méthodes de `bootstrap <https://fr.wikipedia.org/wik
     On choisit :math:`C \in \N` le nombre de courbes ROC qu'on désire tracer.
     Pour chaque courbe :math:`c \in \ensemble{1}{C}` :
 
-    * On construit un nouvel ensemble :math:`\pa{X'_i,\theta'_i}_{1 \infegal i \infegal n}`
+    * On construit un nouvel ensemble :math:`\pa{X'_i,\theta'_i}_{1 \leqslant i \leqslant n}`
       construit par un tirage aléatoire dans l'ensemble :math:`E` avec remise.
     * L'algorithme de la :ref:`courbe ROC <algo_courb_ROC>` permet de constuire la courbe :math:`R_{OC}^k`.
     * L'algorithme de :ref:`taux de classification à erreur fixe <algo_courb_taux_lin>` permet ensuite de déterminer
@@ -530,7 +530,7 @@ Pour un seuil donné :math:`s`, on note :math:`E'(s)` le taux de substitution et
     E'(s) &=& \frac{1}{n \, R'(s)} \sum_{i=1}^{n} \pa{1 - \theta_i} \, \indicatrice{X_i \supegal s}
     \end{eqnarray*}
 
-On écrit différemment ces expressions en supposant que :math:`X_{i(s_1)-1} < s_1 \infegal X_{i(s_1)} :math:` :
+On écrit différemment ces expressions en supposant que :math:`X_{i(s_1)-1} < s_1 \leqslant X_{i(s_1)} :math:` :
 
 .. math::
     :nowrap:
@@ -540,7 +540,7 @@ On écrit différemment ces expressions en supposant que :math:`X_{i(s_1)-1} < s
     E'(s_1) &=& \frac{1}{n - i(s_1)} \sum_{i=i(s_1)}^{n} \pa{1 - \theta_i}
     \end{eqnarray*}
         
-On suppose maintenant que :math:`X_{i(s_2)-1} < s_2 \infegal X_{i(s_2)} :math:`
+On suppose maintenant que :math:`X_{i(s_2)-1} < s_2 \leqslant X_{i(s_2)} :math:`
 et :math:`i(s_1) +1 = i(s_2)` :
         
 .. math::

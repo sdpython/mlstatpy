@@ -166,17 +166,17 @@ Pour cela, on utilise deux propriétés sur les lois exponentielles.
 
 La démonstration est courte.
 Soit :math:`X` une variable aléatoire de densité :math:`f`,
-par définition, :math:`\pr{X \infegal x} = F(x)`. Soit :math:`U` une
+par définition, :math:`\pr{X \leqslant x} = F(x)`. Soit :math:`U` une
 variable aléatoire uniformément distribué sur :math:`\cro{0,1}`, alors :
 
 .. math::
     :nowrap:
 
     \begin{eqnarray*}
-    \forall u \in \cro{0,1}, \; \pr{U \infegal u} &=& u \\
-    \Longleftrightarrow \pr{F^{-1}(U)\infegal F^{-1}(u)} &=& u \\
-    \Longleftrightarrow \pr{F^{-1}(U)\infegal F^{-1}(F(t))} &=& F(t) \\
-    \Longleftrightarrow \pr{F^{-1}(U)\infegal t} &=& F(t)
+    \forall u \in \cro{0,1}, \; \pr{U \leqslant u} &=& u \\
+    \Longleftrightarrow \pr{F^{-1}(U)\leqslant F^{-1}(u)} &=& u \\
+    \Longleftrightarrow \pr{F^{-1}(U)\leqslant F^{-1}(F(t))} &=& F(t) \\
+    \Longleftrightarrow \pr{F^{-1}(U)\leqslant t} &=& F(t)
     \end{eqnarray*}
 
 Si la fonction :math:`F` n'est pas strictement croissante,
@@ -246,12 +246,12 @@ de la somme est celle d'une loi Gamma. On suppose que
 Ces lignes démontrent le théorème.
 On démontre maintenant :ref:`simulation d'une loi de Poisson <theoreme_simulation_poisson>`.
 La démonstration repose sur le fait que
-:math:`\pr{N(t) \supegal n} \Longleftrightarrow \pr{S_n \infegal t}`.
+:math:`\pr{N(t) \supegal n} \Longleftrightarrow \pr{S_n \leqslant t}`.
 On en déduit que :
 
 .. math::
 
-    \pr{N(t) = n} = \pr{N(t) \supegal n} - \pr{N(t) \supegal n+1} = \pr{S_n \infegal t} - \pr{S_{n+1} \infegal t}
+    \pr{N(t) = n} = \pr{N(t) \supegal n} - \pr{N(t) \supegal n+1} = \pr{S_n \leqslant t} - \pr{S_{n+1} \leqslant t}
 
 Or d'après le théorème :ref:`somme de loi exponentielle iid <theoreme_convolution_poisson>`,
 :math:`S_n` suit une loi :math:`Gamma(n,\lambda)`.

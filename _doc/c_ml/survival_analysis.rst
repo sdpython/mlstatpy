@@ -84,7 +84,7 @@ que le décès survienne au temps *t* :
 
 .. math::
 
-    \lambda(t)dt = \pr{t \infegal T < t + dt | T \supegal T} = - \frac{S'(t)}{S(t)} dt
+    \lambda(t)dt = \pr{t \leqslant T < t + dt | T \supegal T} = - \frac{S'(t)}{S(t)} dt
 
 Régression de Cox
 =================
@@ -178,7 +178,7 @@ de Breslow est :
 
 .. math::
 
-    \hat{B}(t) = \sum_{i | t_i \infegal t} \frac{1}{ \sum_{j \in R_{t_i}} h(\beta, X_j)}
+    \hat{B}(t) = \sum_{i | t_i \leqslant t} \frac{1}{ \sum_{j \in R_{t_i}} h(\beta, X_j)}
 
 C'est un estimateur de la fonction de survie :
 
