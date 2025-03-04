@@ -71,3 +71,8 @@ Xavier Dupré
     .. image:: http://img.shields.io/github/issues/sdpython/mlstatpy.png
         :alt: GitHub Issues
         :target: https://github.com/sdpython/mlstatpy/issues
+
+Older versions
+++++++++++++++
+
+* `0.4.0 <../v0.4.0/index.html>`_
