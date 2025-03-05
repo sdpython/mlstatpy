@@ -5,9 +5,6 @@
 Courbe ROC
 ==========
 
-.. contents::
-    :local:
-
 .. index:: ROC
 
 Ce document introduit la `courbe ROC

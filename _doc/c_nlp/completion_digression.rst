@@ -2,9 +2,6 @@
 Digressions
 ===========
 
-.. contents::
-    :local:
-
 Synonymes, Contexte
 +++++++++++++++++++
 

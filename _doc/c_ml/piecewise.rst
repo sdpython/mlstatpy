@@ -22,9 +22,6 @@ n'est pas de le faire mais de le faire efficacement.
 Et pour comprendre là où je veux vous emmener, il faudra
 un peu de mathématiques.
 
-.. contents::
-    :local:
-
 Une implémentation de ce type de méthode est proposée
 dans la pull request `Model trees (M5P and co)
 <https://github.com/scikit-learn/scikit-learn/issues/13106>`_

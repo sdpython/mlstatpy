@@ -5,9 +5,6 @@
 Optimisation avec données aléatoires
 ====================================
 
-.. contents::
-    :local:
-
 Un problème simple
 ==================
 

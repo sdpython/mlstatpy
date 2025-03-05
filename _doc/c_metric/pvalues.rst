@@ -5,9 +5,6 @@
 Confidence Interval and p-Value
 ===============================
 
-.. contents::
-    :local:
-
 This document explains the relationship between p-value and confidence intervals.
 It goes on with the specific case of a binamial law. Assuming we want to determine
 whether or not two binomial laws are significantly different, how many observations

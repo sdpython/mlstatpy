@@ -5,9 +5,6 @@
 Mélange de lois normales
 ========================
 
-.. contents::
-    :local:
-
 Algorithme EM
 =============
 

@@ -2,9 +2,6 @@
 Problème d'optimisation
 =======================
 
-.. contents::
-    :local:
-
 Enoncé 1
 ++++++++
 

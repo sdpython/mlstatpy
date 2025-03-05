@@ -13,9 +13,6 @@ qui allie la régression logistique et les clustering type
 :ref:`l-k-means`. Le point de départ est une conjecture :
 les régions créées par une régression logistique sont convexes.
 
-.. contents::
-    :local:
-
 Diagramme de Voronoï
 ====================
 

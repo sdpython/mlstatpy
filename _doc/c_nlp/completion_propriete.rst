@@ -6,9 +6,6 @@ On s'intéresse principalement à la métrique :math:`M'` définie par
 Dynamic Minimum Keystroke :eq:`completion-metric2` mais les résultats
 seront étendues aux autres quand cela est possible.
 
-.. contents::
-    :local:
-
 Calcul pour une complétion
 ++++++++++++++++++++++++++
 

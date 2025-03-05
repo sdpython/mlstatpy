@@ -2,9 +2,6 @@
 Fausses idées reçues
 ====================
 
-.. contents::
-    :local:
-
 Il faut trier les complétions par fréquence décroissante
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

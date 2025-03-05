@@ -4,9 +4,6 @@
 Analyse en composantes principales (ACP) et Auto Encoders
 =========================================================
 
-.. contents::
-    :local:
-
 .. index:: ACP
 
 Cet algorithme est proposé dans [Song1997]_.

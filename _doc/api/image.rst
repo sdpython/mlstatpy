@@ -2,10 +2,6 @@
 Image
 =====
 
-.. contents::
-    :local:
-    :depth: 2
-
 Conversion
 ++++++++++
 

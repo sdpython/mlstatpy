@@ -5,9 +5,6 @@ File d'attente, un petit exemple
 
 *Psychokinèse, les ampoules grillent à distance*
 
-.. contents::
-    :local:
-
 Petite histoire
 ===============
 

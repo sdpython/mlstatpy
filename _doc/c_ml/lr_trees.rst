@@ -12,9 +12,6 @@ logistiques à mi-chemin entre les arbres de décisions
 et les réseaux de neurones. Dans un premier temps, on s'intéresse
 uniquement à une classification binaire.
 
-.. contents::
-    :local:
-
 Parallèle entre un neurone et une régression logistique
 =======================================================
 

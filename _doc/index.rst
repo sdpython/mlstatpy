@@ -42,6 +42,9 @@ Le site est aussi disponible (format brut de fonderie) sur
     glossary
     CHANGELOGS
     license
+    genindex
+    modindex
+    search
 
 On fait beaucoup de choses avec l'informatique mais en pratique
 on doit maintenir, on doit réécrire sans cesse.

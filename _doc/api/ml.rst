@@ -2,10 +2,6 @@
 Machine Learning
 ================
 
-.. contents::
-    :local:
-    :depth: 2
-
 Matrices
 ++++++++
 

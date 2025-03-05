@@ -4,8 +4,5 @@
 Examples
 ========
 
-.. contents::
-    :local:
-
 .. exreflist::
     :contents:

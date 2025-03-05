@@ -5,9 +5,6 @@
 Carte de Kohonen
 ================
 
-.. contents::
-    :local:
-
 Principe
 ========
 

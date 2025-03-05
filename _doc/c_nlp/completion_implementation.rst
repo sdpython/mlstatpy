@@ -2,9 +2,6 @@
 Implémentation
 ==============
 
-.. contents::
-    :local:
-
 .. _trie: https://fr.wikipedia.org/wiki/Trie_(informatique)
 
 J'allais vous raconter en détail ce qu'est un trie_ et le paragraphe suivant

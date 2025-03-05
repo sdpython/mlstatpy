@@ -5,9 +5,6 @@
 k-means
 =======
 
-.. contents::
-    :local:
-
 *Dénomination française : algorithme des centres mobiles.*
 
 .. index:: centres mobiles, k-means, variance intra-classe, inertie

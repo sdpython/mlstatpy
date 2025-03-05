@@ -10,9 +10,6 @@ Cette méthode est utilisée dans le cadre de la recommandation de produits
 à des utilisateurs.
 Lire également [Acara2011]_, [Gupta2010]_.
 
-.. contents::
-    :local:
-
 Factorisation de matrices et rang
 =================================
 

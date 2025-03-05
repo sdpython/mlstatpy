@@ -2,9 +2,6 @@
 Prolongements
 =============
 
-.. contents::
-    :local:
-
 Base d'apprentissage et base de test
 ++++++++++++++++++++++++++++++++++++
 

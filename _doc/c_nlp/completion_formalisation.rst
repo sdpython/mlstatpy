@@ -2,9 +2,6 @@
 Formalisation
 =============
 
-.. contents::
-    :local:
-
 .. _l-completion-optim:
 
 Problème d'optimisation

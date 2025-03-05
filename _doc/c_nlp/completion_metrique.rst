@@ -2,9 +2,6 @@
 Nouvelle métrique
 =================
 
-.. contents::
-    :local:
-
 Intuitions
 ++++++++++
 

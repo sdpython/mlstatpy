@@ -2,10 +2,6 @@
 Graphes
 =======
 
-.. contents::
-    :local:
-    :depth: 2
-
 Distance
 ++++++++
 

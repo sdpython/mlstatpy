@@ -1,10 +1,6 @@
 Traitement du langage naturel
 =============================
 
-.. contents::
-    :local:
-    :depth: 2
-
 Complétion
 ++++++++++
 

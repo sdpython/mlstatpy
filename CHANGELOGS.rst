@@ -5,7 +5,7 @@ Change Logs
 +++++
 
 0.4.0
-=====
++++++
 
 * :pr:`42`: quantization
 * :pr:`39`: refactoring, use black, better documentation
@@ -28,4 +28,3 @@ Change Logs
 * :pr:`9`: fix unittest on wikipedia_dump after a change on wikipedia website (2018-04-01)
 * :pr:`4`: implémentation la complétion en C++ (2016-09-25)
 * :pr:`1`: ajouter les petits exposés finance... (2016-06-29)
-
