@@ -28,7 +28,7 @@ class SegmentBord(SegmentBord_Commun):
     """
 
     # voir la remarque de la classe Point a propos de __slots__
-    __slots__ = "angle", "fin", "vecteur", "bord1", "dangle"
+    __slots__ = ("angle", "fin", "vecteur", "bord1", "dangle")  # noqa: RUF023
 
     def __init__(self, dim, dangle=math.pi / 24.0):
         """initialise les dimensions et

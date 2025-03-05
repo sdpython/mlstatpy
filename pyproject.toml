@@ -86,6 +86,7 @@ select = [
 ]
 "_unittests/**" = ["SIM113", "RUF005", "E402"]
 "**/plot*.py" = ["B018"]
+"_doc/conf.py" = ["E501"]
 "_doc/sphinxdoc/source/conf.py" = ["F821"]
 "_doc/notebooks/dsgarden/**" = ["B007", "E402"]
 "_doc/notebooks/metric/**" = ["C400", "RUF005", "B007", "C417"]
