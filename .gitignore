@@ -18,6 +18,7 @@ prof
 temp_*
 .ipynb_checkpoints
 _doc/CHANGELOGS.rst
+_doc/sg_execution_times.rst
 _doc/LICENSE.txt
 _doc/auto_examples/*
 _doc/examples/_cache/*

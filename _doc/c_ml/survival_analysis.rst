@@ -15,9 +15,6 @@ C'est domaine développé
 pour mesurer les effets d'une substance, d'un médicament
 sur un corps vivant, une personne.
 
-.. contents::
-    :local:
-
 Lien avec le machine learning
 =============================
 
