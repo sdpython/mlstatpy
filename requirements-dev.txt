@@ -5,6 +5,7 @@ coverage
 Cython
 cytoolz
 dill
+furo
 graphviz
 hummingbird-ml
 ijson
