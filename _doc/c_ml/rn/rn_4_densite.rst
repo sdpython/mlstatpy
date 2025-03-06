@@ -2,9 +2,6 @@
 Démonstration du théorème de la densité des réseaux de neurones
 ===============================================================
 
-.. contents::
-    :local:
-
 .. _rn_enonce_probleme_regression:
 
 Formulation du problème de la régression
@@ -15,7 +12,7 @@ Soient deux variables aléatoires continues
 la résolution du problème de :ref:`régression <problem-regression>`
 est l'estimation de la fonction :math:`\esp(Y|X) = F\pa{X}`.
 Pour cela, on dispose d'un ensemble de points
-:math:`A = \acc{ \pa{X_{i},Y_{i}} \sim \loi | 1 \infegal i \infegal N }`.
+:math:`A = \acc{ \pa{X_{i},Y_{i}} \sim \loi | 1 \leqslant i \leqslant N }`.
 
 Soit :math:`f : \mathbb{R}^M \times \mathbb{R}^p \longrightarrow \mathbb{R}^q` une fonction, on définit
 :math:`\forall i \in \intervalle{1}{N}, \; \widehat{Y_{i}^{W}} = f \pa{W,X_{i}}`.
@@ -28,7 +25,7 @@ Les résidus sont supposés
 et suivant une loi normale
 :math:`\forall i \in \intervalle{1}{N}, \; \epsilon_{i}^{W} \sim \loinormale{\mu_{W}}{\sigma_{W}}`
 La vraisemblance d'un échantillon
-:math:`\pa{Z_i}_{1\infegal i \infegal N}`,
+:math:`\pa{Z_i}_{1\leqslant i \leqslant N}`,
 où les :math:`Z_i` sont indépendantes entre elles et suivent la loi de densité
 :math:`f \pa{z | \theta}`
 est la densité du vecteur :math:`\vecteur{Z_1}{Z_N}` qu'on exprime
@@ -213,7 +210,7 @@ Soit :math:`\alpha>0` et :math:`1\geqslant\varepsilon>0, \, k>0`,
 
 On pose :math:`f\left(  y_{1},...,y_{p}\right)  =\underset{i=1}{\overset{p}{\prod}}
 \dfrac{1}{1+e^{-ky_{i}}}\underset{i=1}{\overset{p}{\prod}}\dfrac {1}{1+e^{-k\left(  1-y_{i}\right)}}`
-d'après sa définition, :math:`0 \infegal f\left(  y_{1},...,y_{p}\right)  \infegal 1`.
+d'après sa définition, :math:`0 \leqslant f\left(  y_{1},...,y_{p}\right)  \leqslant 1`.
 
 Pour :math:`k \supegal k_0 \pa{\epsilon,\alpha,2p}`
 obtenu dans la partie précédente :
@@ -222,7 +219,7 @@ obtenu dans la partie précédente :
 
     \underset{_{i\in\left\{ 1,...,p\right\}}}{\inf}
     \cro { \min\left\{  \left|  y_{i}\right|  ,\left|  1-y_{i}\right|  \right\} } >\alpha
-    \Longrightarrow\left\|  f\left(  y_{1},...,y_{p}\right) - \indicatrice{x\in C}\right\|  \infegal\varepsilon
+    \Longrightarrow\left\|  f\left(  y_{1},...,y_{p}\right) - \indicatrice{x\in C}\right\|  \leqslant\varepsilon
 
 *Partie 3*
 
@@ -491,10 +488,10 @@ Ce théorème permet de déduire le corollaire suivant :
 
 Le théorème de :ref:`densité <theoreme_densite>` montre que la famille
 :math:`E_{p}` est une famille génératrice. Il reste à montrer que c'est une
-famille libre. Soient :math:`\pa{y_i}_{1 \infegal i \infegal N} \in \pa{\mathbb{R}^p}^N` et
-:math:`\pa{b_i}_{1 \infegal i \infegal N} \in \mathbb{R}^N` vérifiant :
+famille libre. Soient :math:`\pa{y_i}_{1 \leqslant i \leqslant N} \in \pa{\mathbb{R}^p}^N` et
+:math:`\pa{b_i}_{1 \leqslant i \leqslant N} \in \mathbb{R}^N` vérifiant :
 :math:`i \neq j \Longrightarrow y_i \neq y_j \text{ ou } b_i \neq b_j`.
-Soit :math:`\pa{\lambda_i}_{1 \infegal i \infegal N} \in \mathbb{R}^N`, il faut montrer que :
+Soit :math:`\pa{\lambda_i}_{1 \leqslant i \leqslant N} \in \mathbb{R}^N`, il faut montrer que :
 
 .. math::
     :nowrap:
@@ -536,11 +533,11 @@ On cherche à résoude le système de :math:`N` équations à :math:`N` inconnue
     \end{eqnarray}
 
 On note le vecteur
-:math:`\Lambda = \pa{\lambda_i}_{ 1 \infegal i \infegal N}` et :math:`M` la matrice :
+:math:`\Lambda = \pa{\lambda_i}_{ 1 \leqslant i \leqslant N}` et :math:`M` la matrice :
 
 .. math::
 
-    M= \pa{m_{ij}}_{ 1 \infegal i,j \infegal N} = \pa{ 1 - \dfrac{2}{1 + e^{<Y_j,X_i>}} }_{ 1 \infegal i,j \infegal N}
+    M= \pa{m_{ij}}_{ 1 \leqslant i,j \leqslant N} = \pa{ 1 - \dfrac{2}{1 + e^{<Y_j,X_i>}} }_{ 1 \leqslant i,j \leqslant N}
 
 L'équation :eq:`rn_coro_eq_1` est équivalente à l'équation matricielle :
 :math:`M\Lambda = 0`. On effectue une itération du pivot de Gauss.
@@ -561,14 +558,14 @@ L'équation :eq:`rn_coro_eq_1` est équivalente à l'équation matricielle :
                                     \right.
     \end{array}
 
-On note :math:`\Lambda_* = \pa{\lambda_i}_{ 2 \infegal i \infegal N}` et
+On note :math:`\Lambda_* = \pa{\lambda_i}_{ 2 \leqslant i \leqslant N}` et
 :math:`\Delta_*`, :math:`M_*` les matrices :
 
 .. math::
 
     \begin{array}{rcl}
-    M_*         &=&     \pa{m_{ij}}_{ 2 \infegal i,j \infegal N} \\
-    \Delta_*    &=&     \pa{ m_{1j} \, m_{i1} }_{ 2 \infegal i,j \infegal N}
+    M_*         &=&     \pa{m_{ij}}_{ 2 \leqslant i,j \leqslant N} \\
+    \Delta_*    &=&     \pa{ m_{1j} \, m_{i1} }_{ 2 \leqslant i,j \leqslant N}
     \end{array}
 
 Donc :eq:`rn_coro_eq_1` est équivalent à :
@@ -588,7 +585,7 @@ Donc :eq:`rn_coro_eq_1` est équivalent à :
     \end{eqnarray}
 
 Il est possible de choisir :math:`X_1\pa{\alpha} = \pa{\alpha x_1, 1}`
-de telle sorte qu'il existe une suite :math:`\pa{s_l}_{ 1 \infegal l \infegal N } \in \acc{-1,1}^{N}`
+de telle sorte qu'il existe une suite :math:`\pa{s_l}_{ 1 \leqslant l \leqslant N } \in \acc{-1,1}^{N}`
 avec :math:`s_1=1` et vérifiant :
 
 .. math::
@@ -604,7 +601,7 @@ On définit :
     \begin{array}{rll}
     U_* &=& \vecteur{m_{21}}{m_{N1}}' \\
     V_* &=& \vecteur{s_2 \, m_{21}}{s_N \, m_{N1}}' \\
-    \text{ et la matrice } L_* &=& \pa{V_*}_ { 2 \infegal i \infegal N } \text{ dont les $N-1$ colonnes sont identiques }
+    \text{ et la matrice } L_* &=& \pa{V_*}_ { 2 \leqslant i \leqslant N } \text{ dont les $N-1$ colonnes sont identiques }
     \end{array}
 
 On vérifie que :

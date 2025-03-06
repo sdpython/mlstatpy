@@ -10,7 +10,15 @@ class CompletionTrieNode:
     It should be done another way (:epkg:`cython`, :epkg:`C++`).
     """
 
-    __slots__ = ("value", "children", "weight", "leave", "stat", "parent", "disp")
+    __slots__ = (  # noqa: RUF023
+        "value",
+        "children",
+        "weight",
+        "leave",
+        "stat",
+        "parent",
+        "disp",
+    )
 
     def __init__(self, value, leave, weight=1.0, disp=None):
         """
@@ -298,7 +306,7 @@ class CompletionTrieNode:
 
             \\begin{eqnarray*}
             K(q, k, S) &=& \\min\\acc{ i | s_i \\succ q[1..k], s_i \\in S } \\\\
-            M(q, S) &=& \\min_{0 \\infegal k \\infegal l(q)}  k + K(q, k, S)
+            M(q, S) &=& \\min_{0 \\leqslant k \\leqslant l(q)}  k + K(q, k, S)
             \\end{eqnarray*}
         """
         nodes = [self]
@@ -342,7 +350,7 @@ class CompletionTrieNode:
 
             \\begin{eqnarray*}
             K(q, k, S) &=& \\min\\acc{ i | s_i \\succ q[1..k], s_i \\in S } \\\\
-            M(q, S) &=& \\min_{0 \\infegal k \\infegal l(q)}  k + K(q, k, S)
+            M(q, S) &=& \\min_{0 \\leqslant k \\leqslant l(q)}  k + K(q, k, S)
             \\end{eqnarray*}
         """
         node = self.find(word)
@@ -377,7 +385,7 @@ class CompletionTrieNode:
 
             \\begin{eqnarray*}
             K(q, k, S) &=& \\min\\acc{ i | s_i \\succ q[1..k], s_i \\in S } \\\\
-            M'(q, S) &=& \\min_{0 \\infegal k \\infegal l(q)}
+            M'(q, S) &=& \\min_{0 \\leqslant k \\leqslant l(q)}
             \\acc{ M'(q[1..k], S) + K(q, k, S) | q[1..k] \\in S }
             \\end{eqnarray*}
         """
@@ -414,10 +422,10 @@ class CompletionTrieNode:
             \\begin{eqnarray*}
             K(q, k, S) &=& \\min\\acc{ i | s_i \\succ q[1..k], s_i \\in S } \\\\
             M"(q, S) &=& \\min \\left\\{ \\begin{array}{l}
-                            \\min_{1 \\infegal k \\infegal l(q)}
+                            \\min_{1 \\leqslant k \\leqslant l(q)}
                             \\acc{ M"(q[1..k-1], S) + 1 + K(q, k, S) | q[1..k]
                             \\in S } \\\\
-                            \\min_{0 \\infegal k \\infegal l(q)}
+                            \\min_{0 \\leqslant k \\leqslant l(q)}
                             \\acc{ M"(q[1..k], S) + \\delta + K(q, k, S) | q[1..k]
                             \\in S }
                             \\end{array} \\right .

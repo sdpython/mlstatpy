@@ -5,6 +5,7 @@ coverage
 Cython
 cytoolz
 dill
+furo
 graphviz
 hummingbird-ml
 ijson
@@ -41,6 +42,7 @@ skl2onnx
 sphinx
 sphinx-gallery
 sphinx-issues
+sphinxcontrib-blockdiag
 git+https://github.com/sdpython/sphinx-runpython.git
 stack_data
 statsmodels

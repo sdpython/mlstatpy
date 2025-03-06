@@ -2,9 +2,6 @@
 Listes des définitions et théorèmes
 ===================================
 
-.. contents:: .
-    :depth: 2
-
 Corollaires
 +++++++++++
 

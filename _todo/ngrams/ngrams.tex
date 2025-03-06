@@ -128,11 +128,11 @@ Ces deux probabilitï¿½s peuvent ï¿½tre estimï¿½es ï¿½ l'aide de l'ensemble $C$ c
     p_e\pa{x,C}     &=&     \dfrac  {  card \acc {u \in C \sachant u_1^{n-1} = x }}   { \card{C}} \\ \\
     p_t\pa{x,y,C}   &=&     \left\{\begin{array}{l}
                             0 \text{ si } card \acc { \; \pa{u,t} \sachant u \in C, \; 
-                                            n \infegal t \infegal l\pa{u}, \; u_{t-n+1}^{n-1} = x} = 0 \\ \\
+                                            n \leqslant t \leqslant l\pa{u}, \; u_{t-n+1}^{n-1} = x} = 0 \\ \\
                             \text{sinon }
                             \dfrac  {  card \acc { \; \pa{u,t} \sachant u \in C, \; 
-                                            n \infegal t \infegal l\pa{u}, \; u_{t-n+1}^{n-1} = x, \; u_t = y}}
-                                    {  card \acc { \; \pa{u,t} \sachant u \in C, \; n \infegal t \infegal 
+                                            n \leqslant t \leqslant l\pa{u}, \; u_{t-n+1}^{n-1} = x, \; u_t = y}}
+                                    {  card \acc { \; \pa{u,t} \sachant u \in C, \; n \leqslant t \leqslant 
                                             l\pa{u}, \; u_{t-n+1}^{n-1} = x}}
                             \end{array}
                             \right.
@@ -225,7 +225,7 @@ En classant les mots dans une liste de classes $\vecteur{C_1}{C_X}$ considï¿½rï¿
 \indexfr{perplexitï¿½}
 \indexfr{entropie}
                 
-Alors que l'article \citeindex{Perraud2003} ï¿½labore les classes de maniï¿½re sï¿½mantique (les mots sont classï¿½s selon leur fonction grammaticale), l'article~\citeindex{Yamamoto2003} propose une mï¿½thode permettant de dï¿½terminer le nombre de classes ainsi qu'un critï¿½re d'ï¿½valuation nommï¿½ \emph{perplexitï¿½} et dï¿½fini comme suit pour une liste de sï¿½quence de symboles ${\vecteur{s_1^k}{s_{T_s}^k}}_{ 1 \infegal k \infegal K}$~:
+Alors que l'article \citeindex{Perraud2003} ï¿½labore les classes de maniï¿½re sï¿½mantique (les mots sont classï¿½s selon leur fonction grammaticale), l'article~\citeindex{Yamamoto2003} propose une mï¿½thode permettant de dï¿½terminer le nombre de classes ainsi qu'un critï¿½re d'ï¿½valuation nommï¿½ \emph{perplexitï¿½} et dï¿½fini comme suit pour une liste de sï¿½quence de symboles ${\vecteur{s_1^k}{s_{T_s}^k}}_{ 1 \leqslant k \leqslant K}$~:
 
                 \begin{eqnarray}
                 H &=&  - \frac{1}{K} \; \summy{k=1}{K} \ln \pr{ \vecteurno {s_1^k}{s_{T_s}^k}  } \nonumber\\

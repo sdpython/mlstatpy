@@ -2,9 +2,6 @@
 Apprentissage d'un réseau de neurones
 =====================================
 
-.. contents::
-    :local:
-
 Le terme apprentissage est encore inspiré de la biologie et se traduit
 par la minimisation de la fonction :eq:`equation_fonction_erreur_g` où
 :math:`f` est un réseau de neurone défini par un :ref:`perceptron <rn_definition_perpception_1>`.
@@ -237,7 +234,7 @@ itération en tenant de l'information apportée par chaque déplacement.
 
     *Mise à jour de la marice :math:`B_t`*
 
-    | si :math:`t - i \supegal M` ou :math:`g'_{t-1} B_{t-1} g_{t-1} \infegal 0` ou :math:`g'_{t-1} B_{t-1} \pa {g_t - g_{t-1}} \infegal 0`
+    | si :math:`t - i \supegal M` ou :math:`g'_{t-1} B_{t-1} g_{t-1} \leqslant 0` ou :math:`g'_{t-1} B_{t-1} \pa {g_t - g_{t-1}} \leqslant 0`
     |   :math:`B_{t} \longleftarrow I_M`
     |   :math:`i \longleftarrow  t`
     | sinon
@@ -356,7 +353,7 @@ qui propose une approximation différente de l'inverse de la dérivée seconde.
 
     *Mise à jour de la matrice :math:`B_t`*
 
-    | si :math:`t - i \supegal M` ou :math:`g'_{t-1} B_{t-1} g_{t-1} \infegal 0` ou :math:`g'_{t-1} B_{t-1} \pa {g_t - g_{t-1}} \infegal 0`
+    | si :math:`t - i \supegal M` ou :math:`g'_{t-1} B_{t-1} g_{t-1} \leqslant 0` ou :math:`g'_{t-1} B_{t-1} \pa {g_t - g_{t-1}} \leqslant 0`
     |   :math:`B_{t}       \longleftarrow    I_M`
     |   :math:`i           \longleftarrow    t`
     | sinon

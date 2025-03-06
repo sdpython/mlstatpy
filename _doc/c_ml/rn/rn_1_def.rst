@@ -157,7 +157,7 @@ Un réseau de neurones : le perceptron
     Les coefficients de la couche :math:`C_i` sont notés
     :math:`\pa {W_1^i,\dots,W_{n_i}^i}`, cette couche définit une fonction
     :math:`F_i`.
-    Soit la suite :math:`\pa{Z_i}_{0\infegal i \infegal C}` définie par :
+    Soit la suite :math:`\pa{Z_i}_{0\leqslant i \leqslant C}` définie par :
 
     .. math::
 
@@ -216,7 +216,7 @@ sachant ses poids est appelé *propagation*.
     | :math:`Z_c \longleftarrow X`
 
     Vient ensuite le calcul itératif de la suite
-    :math:`\pa{Z_c}_{1 \infegal c \infegal C}` :
+    :math:`\pa{Z_c}_{1 \leqslant c \leqslant C}` :
 
     | for c in :math:`1..C` :
     |   :math:`Y_c \longleftarrow  W_c Z_{c-1} + B_c`

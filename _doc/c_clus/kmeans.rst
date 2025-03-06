@@ -5,9 +5,6 @@
 k-means
 =======
 
-.. contents::
-    :local:
-
 *Dénomination française : algorithme des centres mobiles.*
 
 .. index:: centres mobiles, k-means, variance intra-classe, inertie
@@ -130,12 +127,12 @@ On en déduit que :
 
     \begin{eqnarray}
     J^{t+1}    &=& \sum_{i, c_i^t \neq c_i^{t+1}} \; d^2\pa{ X_i, G_{c_i^{t+1}}^t} + J^{t+1} \sum_{i, c_i^t = c_i^{t+1}} \; d^2\pa{ X_i, G_{c_i^{t+1}}^t}  \\
-    J^{t+1}    &\infegal&  \sum_{i, c_i^t \neq c_i^{t+1}} \; d^2\pa{ X_i, G_{c_i^{t}}^t} + \sum_{i, c_i^t = c_i^{t+1}} \; d^2\pa{ X_i, G_{c_i^{t}}^t} \\
-    J^{t+1}    &\infegal&  I^t
+    J^{t+1}    &\leqslant&  \sum_{i, c_i^t \neq c_i^{t+1}} \; d^2\pa{ X_i, G_{c_i^{t}}^t} + \sum_{i, c_i^t = c_i^{t+1}} \; d^2\pa{ X_i, G_{c_i^{t}}^t} \\
+    J^{t+1}    &\leqslant&  I^t
     \end{eqnarray}
 
 Le lemme précédent appliqué à chacune des classes :math:`\ensemble{1}{C}`,
-permet d'affirmer que :math:`I^{t+1} \infegal J^{t+1}`.
+permet d'affirmer que :math:`I^{t+1} \leqslant J^{t+1}`.
 Par conséquent, la suite :math:`\pa{I_t}_{t\supegal 0}` est décroissante et minorée par
 0, elle est donc convergente.
 
@@ -242,7 +239,7 @@ par la suivante :
 
     La fonction :math:`D_k` est définie par la distance du point :math:`x`
     au centre :math:`G_l` choisi parmi les :math:`k` premiers centres.
-    :math:`D_k(x) = \min_{1 \infegal l \infegal k} d(x - G_l)`.
+    :math:`D_k(x) = \min_{1 \leqslant l \leqslant k} d(x - G_l)`.
 
     La suite de l'algorithme *k-means++* reprend les mêmes étapes que
     :ref:`k-means <kmeans_def_algo>`.
@@ -257,7 +254,7 @@ centres déjà choisis. L'article montre que :
     On définit l'inertie par
     :math:`J_(X) = \sum_{i=1}^{P} \; \min_G d^2(X_i, G)`.
     Si :math:`J_{OPT}` définit l'inertie optimale alors
-    :math:`\esp{J(X)} \infegal 8 (\ln C + 2) J_{OPT}(X)`.
+    :math:`\esp{J(X)} \leqslant 8 (\ln C + 2) J_{OPT}(X)`.
 
 La démonstration est disponible dans l'article [Arthur2007]_.
 
@@ -314,7 +311,7 @@ Estimation de probabilités
 ==========================
 
 A partir de cette classification en :math:`C` classes, on construit un
-vecteur de probabilités pour chaque point :math:`\pa{X_{i}}_{1 \infegal i \infegal P}`
+vecteur de probabilités pour chaque point :math:`\pa{X_{i}}_{1 \leqslant i \leqslant P}`
 en supposant que la loi de :math:`X` sachant sa classe :math:`c_X` est une loi
 normale multidimensionnelle. La classe de :math:`X_i` est
 notée :math:`c_i`. On peut alors écrire :
@@ -500,7 +497,7 @@ L'inertie de ce nuage de points est définie par :
 
 On définit tout d'abord une distance
 :math:`\alpha \in \mathbb{R}^+`, puis l'ensemble
-:math:`V\pa{y,\alpha} = \acc{ z \in Y \sac d\pa{y,z} \infegal \alpha }`,
+:math:`V\pa{y,\alpha} = \acc{ z \in Y \sac d\pa{y,z} \leqslant \alpha }`,
 :math:`V\pa{y,\alpha}` est donc l'ensemble des voisins des
 centres dont la distance avec :math:`y` est inférieur à :math:`\alpha`.
 L'article [Kothari1999]_ propose de minimiser le coût :math:`J\pa{\alpha}`
@@ -596,7 +593,7 @@ Il s'appuie sur la méthode des multiplicateurs de Lagrange.
 
     | for i in :math:`1..N`
     |   Mise à jour d'après le premier terme de la fonction de coût :math:`J\pa{\alpha}`.
-    |   :math:`w \longleftarrow \underset{1 \infegal l \infegal K}{\arg \min} \; \norme{x_i - y_l}^2`
+    |   :math:`w \longleftarrow \underset{1 \leqslant l \leqslant K}{\arg \min} \; \norme{x_i - y_l}^2`
     |   :math:`z^1_w \longleftarrow z^1_w + \eta \pa{ x_i - y_w}`
     |   :math:`c^1_w \longleftarrow c^1_w + 1`
     |
@@ -617,7 +614,7 @@ Il s'appuie sur la méthode des multiplicateurs de Lagrange.
     :math:`y_k`, retour à l'étape précédente. Sinon, tous les couples de classes :math:`\pa{i,j}`
     vérifiant :math:`\norme{y_i - y_j} > \alpha` sont fusionnés :
     :math:`\alpha \longleftarrow \alpha + \alpha_t`.
-    Si :math:`\alpha \infegal \alpha2`, retour à l'étape de préparation.
+    Si :math:`\alpha \leqslant \alpha2`, retour à l'étape de préparation.
 
     *terminaison*
 
@@ -652,7 +649,7 @@ L'algorithme qui suit a pour objectif de minimiser la quantité pour un échanti
 
 .. math::
 
-    I = \sum_{i=1}^{N}\sum_{k=1}^{K} \indicatrice{ i = \underset{1 \infegal j \infegal N}{\arg \max}
+    I = \sum_{i=1}^{N}\sum_{k=1}^{K} \indicatrice{ i = \underset{1 \leqslant j \leqslant N}{\arg \max}
     G\pa{X_k, \mu_j,\Sigma_j} } \; \ln \cro{ p_i G\pa{ X_k, \mu_i, \Sigma_i } }
 
 .. mathdef::
@@ -666,7 +663,7 @@ L'algorithme qui suit a pour objectif de minimiser la quantité pour un échanti
     *initialisation*
 
     :math:`t \longleftarrow 0`.
-    Les paramètres :math:`\acc{p_i^0, \mu_i^0, \Sigma_i^0 \sac 1 \infegal i \infegal N}` sont initialisés
+    Les paramètres :math:`\acc{p_i^0, \mu_i^0, \Sigma_i^0 \sac 1 \leqslant i \leqslant N}` sont initialisés
     grâce à un algorithme des :ref:`k-means <kmeans_def_algo>` ou :ref:`FSCL <label_kmeans_fscl>`.
     :math:`\forall i, \; p_i^0 = \frac{1}{N}` et :math:`\beta_i^0 = 0`.
 
@@ -676,7 +673,7 @@ L'algorithme qui suit a pour objectif de minimiser la quantité pour un échanti
 
     .. math::
 
-        i = \underset{1 \infegal i \infegal N}{\arg \min} \; G\pa{X_k, \mu_i^t, \Sigma_i^t}
+        i = \underset{1 \leqslant i \leqslant N}{\arg \min} \; G\pa{X_k, \mu_i^t, \Sigma_i^t}
 
     | for i in :math:`1..N`
     |   :math:`\mu_i^{t+1} = \mu_i^t + \eta \, \pa{\Sigma_i^t}^{-1} \, \pa{ X_k - \mu_i^t}`
@@ -690,7 +687,7 @@ L'algorithme qui suit a pour objectif de minimiser la quantité pour un échanti
 
     *terminaison*
 
-    Tant que :math:`\underset{1 \infegal i \infegal N}{\arg \min} \; G\pa{X_k, \mu_i^t, \Sigma_i^t}`
+    Tant que :math:`\underset{1 \leqslant i \leqslant N}{\arg \min} \; G\pa{X_k, \mu_i^t, \Sigma_i^t}`
     change pour au moins un des points :math:`X_k`.
 
 Lors de la mise à jour de :math:`\Sigma^{-1}`,

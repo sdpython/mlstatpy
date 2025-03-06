@@ -122,7 +122,7 @@ Afin d'�tre capable de construire le squelette d'une forme, la notion de conne
         \begin{xdefinition}{chemin}
         \indexfr{chemin}
         Un chemin $C$ allant du pixel $x$ au pixel $y$ est une succession de petits d�placements 
-        $\pa{v_i}_{1 \infegal i \infegal n}$ telle que~:
+        $\pa{v_i}_{1 \leqslant i \leqslant n}$ telle que~:
         
                 $$
                 y = x + \summy{i=1}{n} \; v_i
@@ -157,7 +157,7 @@ On d�finit deux ensembles de d�placements �l�mentaires, $E_4$ et $E_8$~:
 
 
         \begin{xdefinition}{chemin k-connexe}
-        Le chemin $C= \pa{v_i}_{1 \infegal i \infegal n}$ est dit $k$-connexe 
+        Le chemin $C= \pa{v_i}_{1 \leqslant i \leqslant n}$ est dit $k$-connexe 
         si $\forall i \in \ensemble{1}{n}, \; v_i \in E_k$. 
         \end{xdefinition}
 
@@ -290,7 +290,7 @@ La figure~\ref{ske_cart_dist} illustre une carte de distance pour une distance q
         &
         \begin{minipage}{6.5cm}
         Exemple de masque 5x5, si ce masque est not� 
-        $M \in M_5\pa{\mathbb{R}} = \pa{m_{ij}}_{ -2 \infegal i,j \infegal 2}$,
+        $M \in M_5\pa{\mathbb{R}} = \pa{m_{ij}}_{ -2 \leqslant i,j \leqslant 2}$,
         lorsque $m_{20} > 2 m_{10}$, le calcul de distance d�fini en~\ref{squelette_def_dist_masque} ne fera jamais
         intervenir le d�placement $\vecteurim{2}{0}$.
         \end{minipage}
@@ -350,7 +350,7 @@ La figure~\ref{ske_cart_dist} illustre une carte de distance pour une distance q
         \begin{xdefinition}{masque de distance}
         \indexfrr{masque}{distance}
         
-        Soit $M \in M_{2n+1}\pa{\mathbb{R}} = \pa{m_{ij}}_{ -n \infegal i,j \infegal n}$ une matrice carr�e 
+        Soit $M \in M_{2n+1}\pa{\mathbb{R}} = \pa{m_{ij}}_{ -n \leqslant i,j \leqslant n}$ une matrice carr�e 
         de dimension $2n+1$. La matrice $M$ est un masque de distance de dimension $n$ si~:
         
                 \begin{itemize}
@@ -381,23 +381,23 @@ La figure~\ref{ske_cart_dist} illustre une carte de distance pour une distance q
             \end{xdefinition}
 
 
-L'application d�finie en~\ref{squelette_def_dist_masque} est bien une distance. Comme le masque est sym�trique, elle est aussi  sym�trique. De plus, $d_M\pa{p_1,p_2} = 0 \Longleftrightarrow p_1 = p_2$. L'in�galit� triangulaire est aussi facile � v�rifier puisque pour trois points $p_1,p_2,p$, la concat�nation des chemins allant de $p_1$ � $p$, puis de $p$ � $p_2$ forme un chemin allant de $p_1$ � $p_2$. Par cons�quent~: $d_M\pa{p_1,p_2} \infegal d_M\pa{p_1,p} + d_M\pa{p_2,p}$.
+L'application d�finie en~\ref{squelette_def_dist_masque} est bien une distance. Comme le masque est sym�trique, elle est aussi  sym�trique. De plus, $d_M\pa{p_1,p_2} = 0 \Longleftrightarrow p_1 = p_2$. L'in�galit� triangulaire est aussi facile � v�rifier puisque pour trois points $p_1,p_2,p$, la concat�nation des chemins allant de $p_1$ � $p$, puis de $p$ � $p_2$ forme un chemin allant de $p_1$ � $p_2$. Par cons�quent~: $d_M\pa{p_1,p_2} \leqslant d_M\pa{p_1,p} + d_M\pa{p_2,p}$.
 
 \indexfr{passe d'image}
 L'algorithme qui suit permet d'obtenir la carte~\ref{ske_cart_dist} � partir d'une distance d�finie en~\ref{squelette_def_dist_masque} de mani�re rapide, soit en deux "passes" d'image. Plus pr�cis�ment, il est n�cessaire de parcourir deux fois l'ensemble des pixels de l'image afin de construire la carte de distance. Auparavant, on d�finit les deux voisinages de pixels suivants~:
 
             \begin{eqnarray*}
             V_h\pa{n} &=& \acc{  v = \vecteurimm{v_x}{v_y} \; \left| \; 
-                                                -n \infegal v_y \infegal 0 \text{ et } 
-                                                 \left\{ \begin{array}{l}  -n \infegal v_x < 0 \text{ si } v_y = 0 \\
-                                                                                                            -n \infegal v_x \infegal n \text{ si } v_y < 0 
+                                                -n \leqslant v_y \leqslant 0 \text{ et } 
+                                                 \left\{ \begin{array}{l}  -n \leqslant v_x < 0 \text{ si } v_y = 0 \\
+                                                                                                            -n \leqslant v_x \leqslant n \text{ si } v_y < 0 
                                                                                                             \end{array} \right.
                                                                                                             \right. } 
                             \\
             V_b\pa{n} &=& \acc{  v = \vecteurimm{v_x}{v_y} \; \left| \; 
-                                                0 \infegal v_y \infegal n \text{ et } 
-                                                 \left\{ \begin{array}{l}  0 < v_x \infegal n \text{ si } v_y = 0 \\
-                                                                                                            -n \infegal v_x \infegal n \text{ si } v_y > 0 
+                                                0 \leqslant v_y \leqslant n \text{ et } 
+                                                 \left\{ \begin{array}{l}  0 < v_x \leqslant n \text{ si } v_y = 0 \\
+                                                                                                            -n \leqslant v_x \leqslant n \text{ si } v_y > 0 
                                                                                                             \end{array} \right.
                                                                                                             \right. } 
             \end{eqnarray*}
@@ -614,7 +614,7 @@ R�aliser une �rosion sur une forme $F$ revient � chercher tous les points 
                 pour lesquels $C^I\pa{p} > 0$ o� 
                 $C$ est la carte de distance. Puis on construit la liste des pixels $L=\vecteur{p_1}{p_n}$. 
                 Cette liste est tri�e 
-                par ordre de distance croissante~: $i \infegal j \Longrightarrow C^I\pa{p_i} \infegal C^I\pa{p_j}$.
+                par ordre de distance croissante~: $i \leqslant j \Longrightarrow C^I\pa{p_i} \leqslant C^I\pa{p_j}$.
         \end{xalgostep}
         
         \begin{xalgostep}{�rosion}\label{ske_algo_ske_2_a}
@@ -814,7 +814,7 @@ Dans les algorithmes pr�c�dents (\ref{ske_algo_ske_ero_algo_2} et~\ref{ske_a
                 $p$ pour lesquels $C^I\pa{p} > 0$ o� 
                 $C$ est la carte de distance. Puis on construit la liste des pixels $L=\vecteur{p_1}{p_n}$. 
                 Cette liste est tri�e 
-                par ordre de distance croissante~: $i \infegal j \Longrightarrow C^I\pa{p_i} \infegal C^I\pa{p_j}$.
+                par ordre de distance croissante~: $i \leqslant j \Longrightarrow C^I\pa{p_i} \leqslant C^I\pa{p_j}$.
         \end{xalgostep}
         
         \begin{xalgostep}{�rosion}\label{ske_algo_ske_2_a}
@@ -945,7 +945,7 @@ Les algorithmes de squelettisation bas�s sur une �rosion � l'aide de masqu
 \indexfrr{crit�re}{connexit�}
 \label{ske_critere_connexite}
 
-La m�thode est tir�e de l'article \citeindex{Choi2003}. Si on consid�re un point $P$ d'une forme � squelettiser, on note $Q\pa{P}$ le point le plus proche de $P$ appartenant au contour, on note �galement $\pa{P_i}_{1 \infegal i \infegal 8}$ les huits voisins de $P$. A priori, si le point $P$ n'appartient pas au squelette, l'ensemble de points $\pa{Q\pa{P_i}}_{1 \infegal i \infegal 8}$ seront proches les uns des autres. En revanche, si le point $P$ appartient au squelette, l'ensemble $\pa{Q\pa{P_i}}_{1 \infegal i \infegal 8}$ sera dispers� sur deux bords oppos�s du contour (voir figure~\ref{ske_choi2003}).
+La m�thode est tir�e de l'article \citeindex{Choi2003}. Si on consid�re un point $P$ d'une forme � squelettiser, on note $Q\pa{P}$ le point le plus proche de $P$ appartenant au contour, on note �galement $\pa{P_i}_{1 \leqslant i \leqslant 8}$ les huits voisins de $P$. A priori, si le point $P$ n'appartient pas au squelette, l'ensemble de points $\pa{Q\pa{P_i}}_{1 \leqslant i \leqslant 8}$ seront proches les uns des autres. En revanche, si le point $P$ appartient au squelette, l'ensemble $\pa{Q\pa{P_i}}_{1 \leqslant i \leqslant 8}$ sera dispers� sur deux bords oppos�s du contour (voir figure~\ref{ske_choi2003}).
 
 
         \begin{figure}[ht]
@@ -976,7 +976,7 @@ L'algorithme suppose de conna�tre pour chaque pixel de la forme le point le pl
         \end{xalgostep}
         
         \begin{xalgostep}{squelettisation}
-        Pour tout point $P \in F$, soit $\pa{P_i}_{1 \infegal i \infegal 8}$ les voinsins de $P$ 
+        Pour tout point $P \in F$, soit $\pa{P_i}_{1 \leqslant i \leqslant 8}$ les voinsins de $P$ 
         en 8-connexit�, on d�finit~:
         
                 $$
@@ -987,7 +987,7 @@ L'algorithme suppose de conna�tre pour chaque pixel de la forme le point le pl
         
                 \begin{eqnarray}
                 \norme{Q_i - Q\pa{P}}^2         &\supegal& \rho  \label{squelette_choi_condition_1}\\
-                \text{et } \norme{Q_i}^2 - \norme{Q}^2    &\infegal& \max \acc{ X\pa{Q_i - Q}, \; Y\pa{Q_i - Q}}
+                \text{et } \norme{Q_i}^2 - \norme{Q}^2    &\leqslant& \max \acc{ X\pa{Q_i - Q}, \; Y\pa{Q_i - Q}}
                 \end{eqnarray}
                 
         \end{xalgostep}
@@ -1079,7 +1079,7 @@ $e$ est l'�paisseur moyenne des traits (voir paragraphe~\ref{image_epaisseur_t
         \label{squelette_su_gabor_2}
             \end{figure}
 
-Ces quatre images sont ensuite binaris�es pour obtenir les quatre images $K_n\pa{x,y}_{1 \infegal n \infegal 4}$~:
+Ces quatre images sont ensuite binaris�es pour obtenir les quatre images $K_n\pa{x,y}_{1 \leqslant n \leqslant 4}$~:
 
 
             \begin{eqnarray}
@@ -1258,13 +1258,13 @@ Le squelette d'une image est sa repr�sentation en "fil de fer", celle-ci peut-
 Ce nettoyage peut s'appuyer sur des crit�res g�om�triques tel que celui propos� dans \citeindex{Jang1992} qui mesure le rapport entre la forme $F$ � squelettiser et l'aire form�e par l'ensemble $G$ des boules maximales incluses dans $F$ dont le centre appartient au squelette. Par d�finition, $G \subset F$, le crit�re de \citeindex{Jang1992} est �gal �~:
 
                 \begin{eqnarray}
-                c_J   =  \frac{ aire\pa{G} } { aire \pa{F} }  \infegal 1
+                c_J   =  \frac{ aire\pa{G} } { aire \pa{F} }  \leqslant 1
                 \end{eqnarray}
                 
 Le squelette est rogn� � ses extr�mit�s tant que le crit�re $c_J$ est sup�rieur � un certain seuil. Un autre crit�re provient de \citeindex{Huang2003} qui compare les longueurs (en pixel) du squelette et du contour~:
 
                 \begin{eqnarray}
-                c_H   =  \frac{ aire\pa{squelette} } { aire \pa{contour} }  \infegal 1
+                c_H   =  \frac{ aire\pa{squelette} } { aire \pa{contour} }  \leqslant 1
                 \label{squelette_haung_critere}
                 \end{eqnarray}
 
@@ -1422,17 +1422,17 @@ Le squelette obtenu est une suite de pixels. Il peut �tre int�ressant de le 
         satisfaisant l'in�galit�~:
         
                     $$
-                    0 \infegal ax + by + r < \omega
+                    0 \leqslant ax + by + r < \omega
                     $$
         
         De plus~:
         
                     $$
                     \begin{tabular}{lcl}
-                    si $1 \infegal w \infegal max\pa{\abs{a},\abs{b}}$ & alors & 
+                    si $1 \leqslant w \leqslant max\pa{\abs{a},\abs{b}}$ & alors & 
                                 la droite n'est pas connexe et est dite d�connect�e. \\
                     si $\omega = max\pa{\abs{a},\abs{b}}$ & alors & la droite est 8-connexe. \\
-                    si $max\pa{\abs{a},\abs{b}} \infegal \omega \abs{a} + \abs{b}$ & alors & 
+                    si $max\pa{\abs{a},\abs{b}} \leqslant \omega \abs{a} + \abs{b}$ & alors & 
                                 la droite est 8-connexe et 4-connexe par moment. \\
                     si $\omega = \abs{a} + \abs{b}$ & alors & la droite est 4-connexe. \\
                     si $\omega > \abs{a} + \abs{b}$ & alors & la droite est �paisse
@@ -1748,18 +1748,18 @@ Chaque arc $S$ est ensuite d�crit par six caract�ristiques. $S$ est d�fini
 \indexfrr{matrice}{adjacence}
 \indexfrr{adjacence}{matrice}
 
-L'auteur de l'article \citeindex{Ruberto2004} propose d'utiliser ce graphe "attribu�" afin de calculer une distance entre deux formes pour lesquels ce graphe $G$ aura �t� pr�alablement estim�. Ce graphe inclut un ensemble d'ar�tes d�crites par les caract�ristiques de la table~\ref{squelette_ruberto_carac} et $n$ n\oe uds qui sont les points singuliers du squelette. On d�finit $A = \pa{a_{ij}} _ { 1 \infegal i,j \infegal n } \in \cro{0,1} ^ {n^2}$ la matrice d'adjacence du graphe $G$, le graphe est donc enti�rement d�fini par $G = \acc{ A, \vecteur{v_{i,j,1}}{v_{i,j,6}} \sac 1 \infegal i,j \infegal n}$. La distance entre deux graphes~$G_1$ et~$G_2$ est d�finie par~:
+L'auteur de l'article \citeindex{Ruberto2004} propose d'utiliser ce graphe "attribu�" afin de calculer une distance entre deux formes pour lesquels ce graphe $G$ aura �t� pr�alablement estim�. Ce graphe inclut un ensemble d'ar�tes d�crites par les caract�ristiques de la table~\ref{squelette_ruberto_carac} et $n$ n\oe uds qui sont les points singuliers du squelette. On d�finit $A = \pa{a_{ij}} _ { 1 \leqslant i,j \leqslant n } \in \cro{0,1} ^ {n^2}$ la matrice d'adjacence du graphe $G$, le graphe est donc enti�rement d�fini par $G = \acc{ A, \vecteur{v_{i,j,1}}{v_{i,j,6}} \sac 1 \leqslant i,j \leqslant n}$. La distance entre deux graphes~$G_1$ et~$G_2$ est d�finie par~:
 
 
         \begin{eqnarray}
         d\pa{G_1,G_2,\alpha} &=& \inf \acc{ E\pa{G_1,G_,M = \pa{m_{ik}}_ { 
-                                                                    \begin{subarray} \,    1 \infegal i \infegal n_1 \\ 
-                                                                                                        1 \infegal k \infegal n_2 \end{subarray} }
+                                                                    \begin{subarray} \,    1 \leqslant i \leqslant n_1 \\ 
+                                                                                                        1 \leqslant k \leqslant n_2 \end{subarray} }
                                                                                 ,\alpha}  \left |
                                                                 \begin{array}{l}
                                                                 \forall i,k, \, m_{ik} \in \acc{0,1} \\
-                                                                \forall k, \, \sum_{i=1}^{n_1} m_{ik} \infegal 1 \\
-                                                                \forall i, \, \sum_{k=1}^{n_2} m_{ik} \infegal 1 
+                                                                \forall k, \, \sum_{i=1}^{n_1} m_{ik} \leqslant 1 \\
+                                                                \forall i, \, \sum_{k=1}^{n_2} m_{ik} \leqslant 1 
                                                                 \end{array} \right.
                                                                                 } 
                 \label{squelettisation_graphe_distance_matching}
@@ -1844,7 +1844,7 @@ La suite $\pa{\alpha_t}_{t \supegal 0}$ v�rifie~:
         
             \begin{eqnarray*}
             \summyone{t \supegal 0} \alpha_t = \infty \text { and } \summyone{t \supegal 0} 
-                        \alpha_t^2 \infegal \infty
+                        \alpha_t^2 \leqslant \infty
             \end{eqnarray*}
             
 Par exemple~:
@@ -1856,7 +1856,7 @@ Par exemple~:
 L'algorithme s'arr�te lorsque la condition suivante est v�rifi�e~:
 
             \begin{eqnarray*}
-            \forall i \in \ensemble{1}{n}, \; d\pa{W_i^{t+1}, W_i^{t} } \infegal \epsilon
+            \forall i \in \ensemble{1}{n}, \; d\pa{W_i^{t+1}, W_i^{t} } \leqslant \epsilon
             \end{eqnarray*}
 
 Il reste � g�rer la suppression de deux neurones trop proches, l'insertion d'un neurone entre deux autres trop �loign�s, l'insertion d'un neurone reliant trois voisins ou neurones "T". Ces op�rations sont effectu�es une fois que les �tapes pr�c�dentes ont abouti � une configuration ayant converg�. La suppression d'un neurone est effectu�e si la condition suivante est v�rifi�e~:

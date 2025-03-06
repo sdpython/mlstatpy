@@ -4,9 +4,6 @@
 Analyse en composantes principales (ACP) et Auto Encoders
 =========================================================
 
-.. contents::
-    :local:
-
 .. index:: ACP
 
 Cet algorithme est proposé dans [Song1997]_.
@@ -142,7 +139,7 @@ L'analyse en composantes principales ou ACP est définie de la manière suivante
     :lid: problem_acp
     :tag: Problème
 
-    Soit :math:`\pa{X_i}_{1 \infegal i \infegal N}` avec :math:`\forall i \in \ensemble{1}{N},
+    Soit :math:`\pa{X_i}_{1 \leqslant i \leqslant N}` avec :math:`\forall i \in \ensemble{1}{N},
     \; X_i \in \mathbb{R}^p`.
     Soit :math:`W \in M_{p,d}\pa{\mathbb{R}}`, :math:`W = \vecteur{C_1}{C_d}`
     où les vecteurs :math:`\pa{C_i}`
@@ -154,7 +151,7 @@ L'analyse en composantes principales ou ACP est définie de la manière suivante
 
         W'W = I_d
 
-    :math:`\pa{W'X_i}_{1 \infegal i \infegal N}` est l'ensemble des
+    :math:`\pa{W'X_i}_{1 \leqslant i \leqslant N}` est l'ensemble des
     vecteurs :math:`\pa{X_i}` projetés sur le sous-espace vectoriel
     engendré par les vecteurs :math:`\pa{C_i}`.
     Réaliser une analyse en composantes principales, c'est trouver le
@@ -280,7 +277,7 @@ Donc :
 *Partie 2*
 
 Soit :math:`Y \in \underset{ \begin{subarray}{c} W \in M_{p,d}\pa{\mathbb{R}} \\ W'W = I_d \end{subarray} } { \max }\; \trace{X'WW'X}`,
-:math:`Y = \vecteur{Y_1}{Y_d} = \pa{y_i^k}_{ \begin{subarray}{c} 1 \infegal i \infegal d \\ 1 \infegal k \infegal p \end{subarray} }`.
+:math:`Y = \vecteur{Y_1}{Y_d} = \pa{y_i^k}_{ \begin{subarray}{c} 1 \leqslant i \leqslant d \\ 1 \leqslant k \leqslant p \end{subarray} }`.
 
 Chaque vecteur :math:`Y_i` est écrit dans la base
 :math:`\vecteur{P_1}{P_p}` définie en :eq:`acp_equation_memo_1` :
@@ -593,7 +590,7 @@ on en déduit que :
     I = \sum_{k=1}^{P} X_k'X_k = \sum_{d=1}^{N} I_d = \sum_{d=1}^{p} \lambda_d
 
 De manière empirique, on observe fréquemment que la courbe
-:math:`\pa{d,I_d}_{1 \infegal d \infegal p}` montre un point
+:math:`\pa{d,I_d}_{1 \leqslant d \leqslant p}` montre un point
 d'inflexion (voir figure ci-dessous). Dans cet exemple, le point
 d'inflexion correspond à :math:`d=4`. En
 analyse des données, on considère empiriquement que seuls les

@@ -13,9 +13,6 @@ One of the solution is the
 a better solution is described in [Blondel2004]_. You can also read
 `Graph similarity <http://www.cs.uoi.gr/~pvassil/downloads/GraphDistance/LauraZager.pdf>`_.
 
-.. contents::
-    :local:
-
 Definitions
 ===========
 

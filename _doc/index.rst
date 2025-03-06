@@ -42,6 +42,9 @@ Le site est aussi disponible (format brut de fonderie) sur
     glossary
     CHANGELOGS
     license
+    genindex
+    modindex
+    search
 
 On fait beaucoup de choses avec l'informatique mais en pratique
 on doit maintenir, on doit réécrire sans cesse.
@@ -71,3 +74,8 @@ Xavier Dupré
     .. image:: http://img.shields.io/github/issues/sdpython/mlstatpy.png
         :alt: GitHub Issues
         :target: https://github.com/sdpython/mlstatpy/issues
+
+Older versions
+++++++++++++++
+
+* `0.4.0 <../v0.4.0/index.html>`_

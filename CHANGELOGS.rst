@@ -4,11 +4,11 @@ Change Logs
 0.5.0
 +++++
 
+0.4.0
++++++
+
 * :pr:`42`: quantization
 * :pr:`39`: refactoring, use black, better documentation
-
-0.4.0
-=====
 * :pr:`32`: Improves usability of distance_matching_graphs_paths (2021-08-10)
 * :pr:`31`: Links to notebooks are broken, notebooks slides are not working. (2021-03-31)
 * :pr:`30`: Fixes #26, implements a compact architecture (2021-01-23)
@@ -28,4 +28,3 @@ Change Logs
 * :pr:`9`: fix unittest on wikipedia_dump after a change on wikipedia website (2018-04-01)
 * :pr:`4`: implémentation la complétion en C++ (2016-09-25)
 * :pr:`1`: ajouter les petits exposés finance... (2016-06-29)
-

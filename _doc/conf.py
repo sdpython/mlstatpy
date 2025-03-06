@@ -19,10 +19,12 @@ extensions = [
     "sphinx_gallery.gen_gallery",
     "sphinx_issues",
     "sphinx_runpython.blocdefs.sphinx_exref_extension",
+    "sphinx_runpython.blocdefs.sphinx_faqref_extension",
     "sphinx_runpython.blocdefs.sphinx_mathdef_extension",
     "sphinx_runpython.epkg",
     "sphinx_runpython.gdot",
     "sphinx_runpython.runpython",
+    "sphinxcontrib.blockdiag",
     "matplotlib.sphinxext.plot_directive",
 ]
 
@@ -40,7 +42,7 @@ html_logo = "_static/project_ico.png"
 source_suffix = ".rst"
 master_doc = "index"
 project = "mlstatpy"
-copyright = "2016-2024, Xavier Dupré"
+copyright = "2016-2025, Xavier Dupré"
 author = "Xavier Dupré"
 version = __version__
 release = __version__
@@ -50,13 +52,25 @@ pygments_style = "sphinx"
 todo_include_todos = True
 nbsphinx_execute = "never"
 
-html_theme = "pydata_sphinx_theme"
+html_theme = "furo"
 html_theme_path = ["_static"]
 html_theme_options = {}
 html_sourcelink_suffix = ""
 html_static_path = ["_static"]
 
 issues_github_path = "sdpython/mlstatpy"
+
+nbsphinx_prolog = """
+
+.. _nbl-{{ env.doc2path(env.docname, base=None).replace("/", "-").split(".")[0] }}:
+
+"""
+
+nbsphinx_epilog = """
+----
+
+`Notebook on github <https://github.com/sdpython/teachpyx/tree/main/_doc/{{ env.doc2path(env.docname, base=None) }}>`_
+"""
 
 # The following is used by sphinx.ext.linkcode to provide links to github
 linkcode_resolve = make_linkcode_resolve(

@@ -12,7 +12,7 @@ def tabule_queue_binom(n, p):
       et :math:`t[(m,k)] = p * t [ (m-1, k-1)] + (1-p) * t [ (m-1,k) ]`
 
     Cette fonction calcule tous les coefficients :math:`t [ (a,b) ]` pour une
-    probabilité :math:`p` donnée et :math:`b \\infegal a \\infegal n`.
+    probabilité :math:`p` donnée et :math:`b \\leqslant a \\leqslant n`.
 
     Ces probabilités sont stockées dans un dictionnaire car s'ils étaient
     stockées dans une matrice, celle-ci serait triangulaire inférieure.

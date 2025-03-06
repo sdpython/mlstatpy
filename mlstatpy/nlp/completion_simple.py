@@ -26,7 +26,7 @@ class CompletionElement:
     :param disp: original string, use this to identify the node
     """
 
-    __slots__ = (
+    __slots__ = (  # noqa: RUF023
         "value",
         "weight",
         "disp",

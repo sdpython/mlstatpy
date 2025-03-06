@@ -5,9 +5,6 @@
 Quantization
 ============
 
-.. contents::
-    :local:
-
 Un problème simple
 ==================
 

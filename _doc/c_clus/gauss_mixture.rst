@@ -5,9 +5,6 @@
 Mélange de lois normales
 ========================
 
-.. contents::
-    :local:
-
 Algorithme EM
 =============
 
@@ -17,7 +14,7 @@ Algorithme EM
 
     Soit :math:`X` une variable aléatoire d'un espace vectoriel de dimension :math:`d`, :math:`X`
     suit un la loi d'un mélange de :math:`N` lois gaussiennes de paramètres
-    :math:`\pa{\mu_i, \Sigma_i}_ {1 \infegal i \infegal N}`,
+    :math:`\pa{\mu_i, \Sigma_i}_ {1 \leqslant i \leqslant N}`,
     alors la densité :math:`f` de :math:`X` est de la forme :
 
     .. math::
@@ -92,7 +89,7 @@ on suppose que :math:`X` suit la loi du mélange suivant :
 
     f\pa{X \sac \theta} = \sum_{i=1}^{k}  \alpha_i \, f\pa{X \sac \theta_i}
 
-Avec : :math:`\theta = \pa{\alpha_i,\theta_i}_{1 \infegal i \infegal k}, \; \forall i, \; \alpha_i \supegal 0`
+Avec : :math:`\theta = \pa{\alpha_i,\theta_i}_{1 \leqslant i \leqslant k}, \; \forall i, \; \alpha_i \supegal 0`
 et :math:`\sum_{i=1}^{k} \alpha_i = 1`.
 
 On définit pour une classe :math:`m` la probabilité
@@ -184,7 +181,7 @@ est dérivé de l'algorithme EM :
         P_a = \min \acc{ \exp\cro{ \frac{ L\pa{ \theta''_t, X} - L\pa{ \theta_t, X} }{\gamma} }, 1}
 
     On génére aléatoirement une variable :math:`u \sim U\cro{0,1}`,
-    si :math:`u \infegal P_a`, alors les paramètres :math:`\theta''_t`
+    si :math:`u \leqslant P_a`, alors les paramètres :math:`\theta''_t`
     sont validés. :math:`\hat{\theta}_t \longleftarrow \theta''_t`
     et retour à l'étape d'expectation. Dans le cas contraire, les paramètres
     :math:`\theta''_t` sont refusés et retour à l'étape précédente.

@@ -2,9 +2,6 @@
 Descente de gradient
 ====================
 
-.. contents::
-    :local:
-
 Lorsqu'un problème d'optimisation n'est pas soluble de manière déterministe,
 il existe des algorithmes permettant de trouver une solution approchée
 à condition toutefois que la fonction à maximiser ou minimiser soit dérivable,
@@ -224,7 +221,7 @@ puisque le gradient s'en déduit facilement. La dernière couche du réseau de n
                                       &=& \partialfrac{e}{z_{C,i}} \pa{W,X} f'_{c,i}\pa{y_{C,i}} \nonumber
     \end{eqnarray}
 
-Pour les autres couches :math:`c` telles que :math:`1 \infegal c \infegal C-1`, on a :
+Pour les autres couches :math:`c` telles que :math:`1 \leqslant c \leqslant C-1`, on a :
 
 .. math::
     :nowrap:

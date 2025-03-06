@@ -227,7 +227,7 @@ Alors~:
 
 Il reste � d�montrer l'in�galit� triangulaire. Soient trois mots $\pa{m_1,m_2,m_3}$, on veut d�montrer que~:
     $$
-    d\pa{m_1,m_3} \infegal d\pa{m_1,m_2} + d \pa{m_2,m_3}
+    d\pa{m_1,m_3} \leqslant d\pa{m_1,m_2} + d \pa{m_2,m_3}
     $$
 
 On d�finit~:
@@ -250,12 +250,12 @@ acc\pa{m_2} \times \in acc\pa{m_3}$ tels que~: (voir figure~\ref{edition_distanc
 
 Or comme la fonction $c$ est une distance sur $\mathcal{C}'$, on peut affirmer que~:
     $$
-    d\pa{M_1,M_3} \infegal d\pa{M_1,M_2} + d \pa{M_2,M_3}
+    d\pa{M_1,M_3} \leqslant d\pa{M_1,M_2} + d \pa{M_2,M_3}
     $$
 
 D'o�~:
     \begin{eqnarray}
-    d\pa{m_1,m_3} \infegal d\pa{m_1,m_2} + d \pa{m_2,m_3} \label{edit_demo_eq_3}
+    d\pa{m_1,m_3} \leqslant d\pa{m_1,m_2} + d \pa{m_2,m_3} \label{edit_demo_eq_3}
     \end{eqnarray}
 
 Les assertions (\ref{edit_demo_eq_1}), (\ref{edit_demo_eq_2}), (\ref{edit_demo_eq_3}) montrent que $d$ est bien une
@@ -403,7 +403,7 @@ Cette factorisation des calculs est illustr�e par les tableaux de la figure~\r
 
 \begin{xdemo}{propri�t�}{\ref{edition_distance_propriete_001}}
 
-La d�monstration s'effectue par r�currence, la d�finition~\ref{definition_edit_dist_tronc} est bien s�r �quivalente �~\ref{defition_distance_edition_1} pour des mots de longueur un. On suppose donc que ce r�sultat est vrai pour un couple de mots $\pa{m_1,m_2}$ de longueur $\pa{l_1,l_2}$ v�rifiant $l_1 \infegal i$ et $l_2 \infegal j$ avec au plus une �galit�. Soit $m$ un mot, on note $n$ le nombre de lettres qu'il contient. On note  $m\left(  l\right)  $ le mot form� des $l$ premi�res lettres de $m$. Alors~:
+La d�monstration s'effectue par r�currence, la d�finition~\ref{definition_edit_dist_tronc} est bien s�r �quivalente �~\ref{defition_distance_edition_1} pour des mots de longueur un. On suppose donc que ce r�sultat est vrai pour un couple de mots $\pa{m_1,m_2}$ de longueur $\pa{l_1,l_2}$ v�rifiant $l_1 \leqslant i$ et $l_2 \leqslant j$ avec au plus une �galit�. Soit $m$ un mot, on note $n$ le nombre de lettres qu'il contient. On note  $m\left(  l\right)  $ le mot form� des $l$ premi�res lettres de $m$. Alors~:
 
     \begin{eqnarray*}
     d_{i,j}^{m_{1},m_{2}} &=& d\left(  m_{1}\left( i\right) ,m_{2}\left( j\right)  \right)\\

@@ -5,9 +5,6 @@
 Confidence Interval and p-Value
 ===============================
 
-.. contents::
-    :local:
-
 This document explains the relationship between p-value and confidence intervals.
 It goes on with the specific case of a binamial law. Assuming we want to determine
 whether or not two binomial laws are significantly different, how many observations
@@ -26,7 +23,7 @@ Howerver p-Values and confidence interval are similar: they tell you whether
 or not a metric difference is significant.
 
 Usually, it starts from a set of identically distributed random variables
-:math:`(X_i)_{1 \infegal i \infegal N}`. We then estimate the average
+:math:`(X_i)_{1 \leqslant i \leqslant N}`. We then estimate the average
 :math:`\widehat{\theta}_N = \frac{1}{N} \sum_{i=1}^{N} X_i` and we ask
 the question is :math:`\widehat{\theta}_N` null? In others terms, we
 want to know if the average is significantly different from zero. If
@@ -48,7 +45,7 @@ Not all of them have a standard deviation. For example, if :math:`X` follows a
 This remark also concerns every distribution known as heavy tail distribution.
 
 If :math:`Y \sim \loinormale{0}{\sigma}`, then we have
-:math:`\pr{\abs{Y} \infegal 1.96} = 0.95`. That is why we can say:
+:math:`\pr{\abs{Y} \leqslant 1.96} = 0.95`. That is why we can say:
 
 .. math::
     :nowrap:
@@ -270,7 +267,7 @@ density function of :math:`X`. We also consider an interval
     :nowrap:
 
     \begin{eqnarray*}
-    \pr{X \in I} = \pr{ \abs{X} \infegal a } = \pr{ f(X) \supegal f(a)}
+    \pr{X \in I} = \pr{ \abs{X} \leqslant a } = \pr{ f(X) \supegal f(a)}
     \end{eqnarray*}
 
 This is true because :math:`f` is decreasing for :math:`x>0`.

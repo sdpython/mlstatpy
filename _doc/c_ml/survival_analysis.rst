@@ -15,9 +15,6 @@ C'est domaine développé
 pour mesurer les effets d'une substance, d'un médicament
 sur un corps vivant, une personne.
 
-.. contents::
-    :local:
-
 Lien avec le machine learning
 =============================
 
@@ -62,9 +59,9 @@ Par simplification, on note :math:`n_i = n_{t_i}`. On suppose les :math:`t_i`
 des dates à intervalles plutôt réguliers et croissants. La suite :math:`(n_i)`
 est décroissantes (on ne rescuscite pas).
 Ces calculs rappellent les calculs liés à l'espérance de vie
-(voir `Evoluation d’une population - énoncé
+(voir `Evolution d’une population - énoncé
 <https://github.com/sdpython/actuariat_python/blob/master/_doc/notebooks/sessions/seance4_projection_population_enonce.ipynb>`_,
-`Evoluation d'une population (correction)
+`Evolution d'une population (correction)
 <https://github.com/sdpython/actuariat_python/blob/master/_doc/notebooks/sessions/seance4_projection_population_correction.ipynb>`_).
 L'espérance de vie est définie par :
 
@@ -84,7 +81,7 @@ que le décès survienne au temps *t* :
 
 .. math::
 
-    \lambda(t)dt = \pr{t \infegal T < t + dt | T \supegal T} = - \frac{S'(t)}{S(t)} dt
+    \lambda(t)dt = \pr{t \leqslant T < t + dt | T \supegal T} = - \frac{S'(t)}{S(t)} dt
 
 Régression de Cox
 =================
@@ -178,7 +175,7 @@ de Breslow est :
 
 .. math::
 
-    \hat{B}(t) = \sum_{i | t_i \infegal t} \frac{1}{ \sum_{j \in R_{t_i}} h(\beta, X_j)}
+    \hat{B}(t) = \sum_{i | t_i \leqslant t} \frac{1}{ \sum_{j \in R_{t_i}} h(\beta, X_j)}
 
 C'est un estimateur de la fonction de survie :
 

@@ -2,9 +2,6 @@
 Prolongements
 =============
 
-.. contents::
-    :local:
-
 Base d'apprentissage et base de test
 ++++++++++++++++++++++++++++++++++++
 
@@ -19,7 +16,7 @@ le modèle appris est de vérifier si l'erreur obtenue sur une base
 ayant servi à l'apprentissage (ou *base d'apprentissage*) est conservée
 sur une autre base (ou *base de test*) que le modèle découvre pour la première fois.
 
-Soit :math:`B=\acc{\pa{X_i,Y_i} | 1 \infegal i \infegal N}`
+Soit :math:`B=\acc{\pa{X_i,Y_i} | 1 \leqslant i \leqslant N}`
 l'ensemble des observations disponibles. Cet ensemble est
 aléatoirement scindé en deux sous-ensembles :math:`B_a` et :math:`B_t`
 de telle sorte que :
@@ -121,13 +118,13 @@ Le plus simple tout d'abord :
     :label: eq_no_distance_nn
 
     \begin{eqnarray*}
-    1 \infegal i \infegal p, & \dfrac{\partial y}{\partial w_{i}} = & - 2 w_{p+i}\pa{w_i - x_i} \\
-    p+1 \infegal i \infegal 2p, & \dfrac{\partial y}{\partial w_{i}} = & - \pa{w_i - x_i}^2 \\
+    1 \leqslant i \leqslant p, & \dfrac{\partial y}{\partial w_{i}} = & - 2 w_{p+i}\pa{w_i - x_i} \\
+    p+1 \leqslant i \leqslant 2p, & \dfrac{\partial y}{\partial w_{i}} = & - \pa{w_i - x_i}^2 \\
     i = 2p+1, & \dfrac{\partial y}{\partial w_{i}} = & -1
     \end{eqnarray*}
 
 Pour le neurone distance simple, la ligne :eq:`eq_no_distance_nn`
-est superflue, tous les coefficients :math:`(w_i)_{p+1 \infegal i \infegal 2p}`
+est superflue, tous les coefficients :math:`(w_i)_{p+1 \leqslant i \leqslant 2p}`
 sont égaux à 1. La relation :eq:`retro_eq_nn_3` reste vraie mais n'aboutit plus à:eq:`algo_retro_5`,
 celle-ci devient en supposant que la couche d'indice :math:`c+1`
 ne contient que des neurones définie par la définition précédente.
@@ -433,8 +430,8 @@ régression grâce à l'algorithme suivant.
     .. math::
 
         \begin{array}{l}
-        \text{soit } \pa{\epsilon_i}_{1 \infegal i \infegal N} \text{ un bruit blanc} \\
-        A = \acc{ \left. \pa{X_i,Y_i}_{1 \infegal i \infegal N} \right|
+        \text{soit } \pa{\epsilon_i}_{1 \leqslant i \leqslant N} \text{ un bruit blanc} \\
+        A = \acc{ \left. \pa{X_i,Y_i}_{1 \leqslant i \leqslant N} \right|
                     \forall i \in \intervalle{1}{N}, \; Y_i = f\pa{X_i} + \epsilon_i }
         \end{array}
 

@@ -139,7 +139,7 @@ def get_url_content_timeout(
         raise e
 
     if chunk is None:
-        if len(res) >= 2 and res[:2] == b"\x1f\x8B":
+        if len(res) >= 2 and res[:2] == b"\x1f\x8b":
             # gzip format
             res = gzip.decompress(res)
 
@@ -753,7 +753,7 @@ def ungzip_files(
         is_file = True
 
     if encoding is None:
-        f = gzip.open(filename, "rb")
+        f = gzip.open(filename, "rb")  # noqa: SIM115
         content = f.read()
         f.close()
         if unzip:
@@ -769,7 +769,7 @@ def ungzip_files(
             return filename
         return content
     else:
-        f = gzip.open(filename, "rt", encoding="utf-8")
+        f = gzip.open(filename, "rt", encoding="utf-8")  # noqa: SIM115
         content = f.read()
         f.close()
         if is_file:

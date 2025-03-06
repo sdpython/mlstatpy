@@ -34,7 +34,7 @@ class InformationPoint:
     proche du vecteur normal au segment (aligne)"""
 
     # voir la classe Point pour __slots__
-    __slots__ = "pos", "aligne", "norme"
+    __slots__ = ("pos", "aligne", "norme")  # noqa: RUF023
 
     def __init__(self, pos, aligne, norme):
         """constructeur, initialisation"""

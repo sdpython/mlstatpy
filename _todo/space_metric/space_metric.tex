@@ -26,7 +26,7 @@
 Chercher des mots identiques ou similaires dans un dictionnaire est un problï¿½me classique et peut ï¿½tre dï¿½fini pour tout espace mï¿½trique. \indexfr{dictionnaire}\indexfr{lexique}\indexfr{plus proches voisins}\indexfrr{distance}{ï¿½dition} Soit $\pa{E,d}$ un espace mï¿½trique quelconque et $D \subset E$ un ensemble fini quelconque, $x \in E$ est un ï¿½lï¿½ment de $E$ et $s \in \mathbb{R}_+$ un rï¿½el positif. L'objectif est de trouver le sous-ensemble $D'\pa{x,s} \subset D$ des voisins les plus proches de $x$ tels que~:
 
     $$
-    D'\pa{x,s} = \acc{  y \in D \sac d\pa{x,y} \infegal s}
+    D'\pa{x,s} = \acc{  y \in D \sac d\pa{x,y} \leqslant s}
     $$
 
 Afin de dï¿½terminer les voisins de $x$, une mï¿½thode simple consiste ï¿½ estimer toutes les distances entre $x$ et les ï¿½lï¿½ments de $D$. Le coï¿½t de cette mï¿½thode est proportionnel au nombre d'ï¿½lï¿½ments de $D$ et ï¿½ la complexitï¿½ du calcul de la distance. On distingue gï¿½nï¿½ralement deux directions afin d'amï¿½liorer la rapiditï¿½ des algorithmes de recherche~:
@@ -78,7 +78,7 @@ L'objectif de cette partie est de construire un arbre de partitionnement qui ser
 
 
 \begin{xremark}{cas particulier}
-Si $A,B \subset D$ et $A \subset B$, cela n'implique pas que $R\pa{A} \infegal R\pa{B}$ comme le montre la
+Si $A,B \subset D$ et $A \subset B$, cela n'implique pas que $R\pa{A} \leqslant R\pa{B}$ comme le montre la
 figure~\ref{figure_partition_inclusion} oï¿½ $$R\pa{A} = d\pa{x,y} > d\pa{x,z} = R\pa{B}$$.
 \end{xremark}
 
@@ -155,7 +155,7 @@ Autre formulation~:
 
 
 
-La suite $\pa{P_n}_{1 \infegal n \infegal N}$ dï¿½finit un graphe d'inclusion illustrï¿½ par la
+La suite $\pa{P_n}_{1 \leqslant n \leqslant N}$ dï¿½finit un graphe d'inclusion illustrï¿½ par la
 figure~\ref{figure_partition_inclusion_graph}) pour cinq ï¿½lï¿½ments.\\
 
 
@@ -223,12 +223,12 @@ considï¿½rï¿½ comme une hiï¿½rarchie pour un certain indice dï¿½fini par le thï¿
 
             \begin{xtheorem}{hiï¿½rarchie}\label{theorem_hierarchy}
             \indexfr{hiï¿½rarchie}
-            Soit $\pa{P_n}_{1 \infegal n \infegal N}$ la suite construite par l'algorithme~\ref{algorithm_AHC}. 
+            Soit $\pa{P_n}_{1 \leqslant n \leqslant N}$ la suite construite par l'algorithme~\ref{algorithm_AHC}. 
             Soit $i\pa{P_n}$ dï¿½fini par~:
                 $$
                 i\pa{P_n} = \underset{p \in P_n} {\max} \, R\pa{p}
                 $$
-            Alors, la suite $\pa{i\pa{P_n}}_{1 \infegal n \infegal N}$ est croissante.
+            Alors, la suite $\pa{i\pa{P_n}}_{1 \leqslant n \leqslant N}$ est croissante.
             \indexfrr{suite}{croissante}
             \end{xtheorem}
 
@@ -240,12 +240,12 @@ considï¿½rï¿½ comme une hiï¿½rarchie pour un certain indice dï¿½fini par le thï¿
 
 Afin que la dï¿½monstration soit plus claire, les partitions notï¿½es~:
     $$
-    \pa{P_{ni}}_{  \begin{subarray}{l} 1 \infegal n \infegal N \\ 1 \infegal i \infegal N-n+1 \end{subarray}  }%
+    \pa{P_{ni}}_{  \begin{subarray}{l} 1 \leqslant n \leqslant N \\ 1 \leqslant i \leqslant N-n+1 \end{subarray}  }%
     \text{ avec } \forall \pa{n,i}, \; P_{ni} \neq \emptyset
     $$
 sont maintenant notï¿½es~:
     $$
-    \pa{P_{ni}}_{\begin{subarray}{l} 1 \infegal n \infegal N \\ 1 \infegal i \infegal N \end{subarray}} %
+    \pa{P_{ni}}_{\begin{subarray}{l} 1 \leqslant n \leqslant N \\ 1 \leqslant i \leqslant N \end{subarray}} %
     \text{ avec } \forall n, \; card \acc{ i | P_{ni} = \emptyset } = N-n+1
     $$
 
@@ -319,8 +319,8 @@ Par consï¿½quent, $\acc{a_k,b_k} \bigcap \acc{a_{k+1},b_{k+1}} = \emptyset$ impl
     &\Longrightarrow& \acc{a_{k+1},b_{k+1}} \in \underset{  \begin{subarray}{c} i < j \\ i \neq a_k, j\neq b_k\\
         P_{k-1}^i \neq \emptyset \\ P_{k-1}^j \neq \emptyset\end{subarray} }
         {\arg \min} \, R\pa{P_{k-1}^i \bigcup P_{k-1}^j}\\
-    &\Longrightarrow& R\pa{P_k^{a_{k-1}} \bigcup P_k^{b_{k-1}}}   \infegal R\pa{P_k^{a_{k+1}} \bigcup P_k^{b_{k+1}}} \\
-    &\Longrightarrow& R\pa{ P_k^{a_{k}} }   \infegal R\pa{ P_{k+1}^{a_{k+1}} }
+    &\Longrightarrow& R\pa{P_k^{a_{k-1}} \bigcup P_k^{b_{k-1}}}   \leqslant R\pa{P_k^{a_{k+1}} \bigcup P_k^{b_{k+1}}} \\
+    &\Longrightarrow& R\pa{ P_k^{a_{k}} }   \leqslant R\pa{ P_{k+1}^{a_{k+1}} }
     \end{eqnarray*}
 
 D'oï¿½~:
@@ -358,9 +358,9 @@ Deux cas sont possibles~:
 \item si $C_{k+1}^{a_k} \in P_{k}^{a_{k}}$, alors :
     \begin{eqnarray}
     R_k^{a_k}   &=&         \underset{y \in P_{k}^{a_{k}}}{\max} \, d\pa{C_{k}^{a_k},y} %\nonumber\\
-                \infegal  \underset{y \in P_{k}^{a_{k}}}{\max} \, d\pa{C_{k+1}^{a_k},y} 
-                \infegal  \underset{y \in P_{k+1}^{a_{k}}}{\max} \, d\pa{C_{k+1}^{a_k},y} %\nonumber\\
-                \infegal  R_{k+1}^{a_k} \label{equation_reca_2}
+                \leqslant  \underset{y \in P_{k}^{a_{k}}}{\max} \, d\pa{C_{k+1}^{a_k},y} 
+                \leqslant  \underset{y \in P_{k+1}^{a_{k}}}{\max} \, d\pa{C_{k+1}^{a_k},y} %\nonumber\\
+                \leqslant  R_{k+1}^{a_k} \label{equation_reca_2}
     \end{eqnarray}
 \item si $C_{k+1}^{a_k} \in P_{k}^{b_{k+1}}$, alors l'algorithm~\ref{algorithm_AHC} implique que~:
     \begin{eqnarray}
@@ -382,7 +382,7 @@ Deux cas sont possibles~:
 
 
 En conclusion, la rï¿½currence est dï¿½montrï¿½e par les inï¿½galitï¿½s (\ref{equation_reca_1}), (\ref{equation_reca_2}),
-(\ref{equation_reca_3}). Par consï¿½quent, la suite d'indices $\pa{i\pa{P_n}}_{1 \infegal n \infegal N}$ est croissante.
+(\ref{equation_reca_3}). Par consï¿½quent, la suite d'indices $\pa{i\pa{P_n}}_{1 \leqslant n \leqslant N}$ est croissante.
 
 
 \end{xdemo}
@@ -397,13 +397,13 @@ En conclusion, la rï¿½currence est dï¿½montrï¿½e par les inï¿½galitï¿½s (\ref{eq
             soit $n$ un n\oe ud quelconque de cet arbre, alors~:\indexfr{successeur}
                 \begin{eqnarray}
                 \textnormal{le successeur } s\pa{n} \text { de } n\; { existe} 
-                \Longrightarrow R\pa{n} \infegal R\pa{s\pa{n}}
+                \Longrightarrow R\pa{n} \leqslant R\pa{s\pa{n}}
                 \end{eqnarray}
             \end{xcorollary}
 
 
 Finalement, si $p_1$ et $p_2$ sont deux partitions de l'arbre de partitionnement, et $p_1 \subset p_2$, alors
-$R\pa{p_1} \infegal R\pa{p_2}$. Cette conclusion n'ï¿½tait pas ï¿½vidente d'aprï¿½s le cas particulier de la figure~\ref{figure_partition_inclusion}. 
+$R\pa{p_1} \leqslant R\pa{p_2}$. Cette conclusion n'ï¿½tait pas ï¿½vidente d'aprï¿½s le cas particulier de la figure~\ref{figure_partition_inclusion}. 
 
 
 
@@ -496,7 +496,7 @@ L'algorithme~\ref{algorithm_AHC} ne permet d'insï¿½rer de nouveaux n\oe uds une 
                 \xelse
                     $$
                     \begin{array}{lr}
-                    \exists n \in N \text{ tel que } d\pa{m,C\pa{n}} \infegal R\pa{n} &
+                    \exists n \in N \text{ tel que } d\pa{m,C\pa{n}} \leqslant R\pa{n} &
                                                 \hspace{6.5cm}\refstepcounter{equation}(\theequation)
                                                  \label{amelioration_insertion_2} \\
                     \text{et } N \longleftarrow \acc{N - \acc{n} } \cup \acc{p_1\pa{n},p_2\pa{n}} &
@@ -537,7 +537,7 @@ figure~\ref{partition_inclusion_graphe_ordre_insertion}. L'algorithme~\ref{algor
 
     \begin{eqnarray}
     \text{si }      && \forall n \in N, \; d\pa{m,ArgC\pa{n}} > R\pa{n} \label{amelioration_insertion_1_p} \\
-    \text{sinon }   && \exists n \in N \text{ tel que } d\pa{m,ArgC\pa{n}} \infegal R\pa{n}
+    \text{sinon }   && \exists n \in N \text{ tel que } d\pa{m,ArgC\pa{n}} \leqslant R\pa{n}
     \label{amelioration_insertion_2_p}
     \end{eqnarray}
 
@@ -572,7 +572,7 @@ On ne considï¿½re pas seulement un centre mais l'ensemble des centres possibles,
 Cette optimisation de la recherche utilise un des arbres construits par l'algorithme~\ref{algorithm_AHC} ou la rï¿½pï¿½tition de l'algorithme~\ref{algorithm_insertion} ou~\ref{algorithm_insertion}$^*$. Chaque n\oe ud dï¿½finit une partie dï¿½crite par un centre et un rayon. Le problï¿½me ï¿½ rï¿½soudre consiste ici ï¿½ trouver pour un ï¿½lï¿½ment $m$ la liste $B\pa{s}$ des voisins inclus dans le sous-ensemble $D\vecteur{y_1}{y_N}$ vï¿½rifiant~:
 
             $$
-            B\pa{s} = \acc{ x \in D \sachant d\pa{x,m} \infegal s }
+            B\pa{s} = \acc{ x \in D \sachant d\pa{x,m} \leqslant s }
             $$
 
 Soit $P \subset E$ une partie dont le centre est $C\pa{P}$ et le rayon $R\pa{P}$, l'optimisation est basï¿½e sur les deux remarques suivantes~:
@@ -581,8 +581,8 @@ Soit $P \subset E$ une partie dont le centre est $C\pa{P}$ et le rayon $R\pa{P}$
     d\pa{m,C\pa{P}} > s + R\pa{P}                 &\Longrightarrow& 
                                                                                 \forall w \in P, \; d\pa{m,w} > s 
                                                     \Longrightarrow    B\pa{s} \cap P = \emptyset                    \label{equation_un}     \\
-    d\pa{m,C\pa{P}} + R\pa{P} \infegal s     &\Longrightarrow& 
-                                                                                \forall w \in P, \; d\pa{m,w} \infegal s 
+    d\pa{m,C\pa{P}} + R\pa{P} \leqslant s     &\Longrightarrow& 
+                                                                                \forall w \in P, \; d\pa{m,w} \leqslant s 
                                                                             \Longrightarrow    B\pa{s} \subset  P \label{equation_deux} 
     \end{eqnarray}
 
@@ -593,7 +593,7 @@ Soit $P \subset E$ une partie dont le centre est $C\pa{P}$ et le rayon $R\pa{P}$
         Soit $r$ la racine de l'arbre $A$ obtenu par un des algorithmes~\ref{algorithm_AHC},
         \ref{algorithm_insertion_all},
         $\ref{algorithm_insertion}^*$. $N$ est un ensemble de n\oe uds. Soit $s \in \mathbb{R}_+$, $B\pa{s}$ est 
-        l'ensemble cherchï¿½, il est dï¿½fini par $B\pa{s} = \acc{ x \in D \sachant d\pa{x,m} \infegal s }$.
+        l'ensemble cherchï¿½, il est dï¿½fini par $B\pa{s} = \acc{ x \in D \sachant d\pa{x,m} \leqslant s }$.
         
         \begin{xalgostep}{initialisation}
             $N \longleftarrow r$ \\
@@ -605,14 +605,14 @@ Soit $P \subset E$ une partie dont le centre est $C\pa{P}$ et le rayon $R\pa{P}$
                 Soit $n \in N$ et $p$ la partie dï¿½finie par $n$, $n$ est retirï¿½ de $N$ : 
                                             $N \longleftarrow N \backslash n$
                 et~: \\
-                \begin{xif}{$d\pa{m, C\pa{p}} + R\pa{p}\infegal s $}
+                \begin{xif}{$d\pa{m, C\pa{p}} + R\pa{p}\leqslant s $}
                     $B\pa{s} \longleftarrow B\pa{s} \bigcup p$
                     
                         \xelseif{$ d\pa{m, C\pa{p}} > s + R\pa{p} $}
                                 ne rien faire
                 \xelse
                     \begin{xif}{$p = \acc{ w \in D}$}
-                            \begin{xif}{$d\pa{m, w} \infegal s$}
+                            \begin{xif}{$d\pa{m, w} \leqslant s$}
                                 $B\pa{s} \longleftarrow B\pa{s} \bigcup \acc{w}$
                             \end{xif}
                     \xelse
@@ -644,7 +644,7 @@ Quelque soit la mï¿½thode choisie pour construire l'arbre de partitionnement, l'
     \begin{eqnarray}
     Cr_1\pa{A}                            &=&  \left\{   \begin{array}{l}
                                                 0 \text{ si } R\pa{D} = 0 \text{ ou } 
-                                                                card\pa{D} \infegal 1 \\ \\  \textnormal{sinon }
+                                                                card\pa{D} \leqslant 1 \\ \\  \textnormal{sinon }
                                                 \dfrac{\summyone{n \in A} R\pa{n}}{\pa{card\pa{D}-1} * R\pa{D}}
                                                 \end{array}%
                                                 \right.
@@ -657,22 +657,22 @@ Quelque soit la mï¿½thode choisie pour construire l'arbre de partitionnement, l'
     \end{eqnarray}
 
 
-Si l'arbre $A$ choisi est construit par l'algorithme~\ref{algorithm_AHC}, le corollaire~\ref{corollary_AHC} permet d'affirmer que si $n$ est un n\oe ud de $A$, alors $R\pa{n} \infegal R\pa{D}$. De plus, l'arbre contient au plus $card\pa{D}-1$ n\oe uds dont le rayon est strictement positif~:
+Si l'arbre $A$ choisi est construit par l'algorithme~\ref{algorithm_AHC}, le corollaire~\ref{corollary_AHC} permet d'affirmer que si $n$ est un n\oe ud de $A$, alors $R\pa{n} \leqslant R\pa{D}$. De plus, l'arbre contient au plus $card\pa{D}-1$ n\oe uds dont le rayon est strictement positif~:
 
     $$
-    card  \acc{n \in A \; | \; R \pa{n} > 0} \infegal card\pa{D}-1
+    card  \acc{n \in A \; | \; R \pa{n} > 0} \leqslant card\pa{D}-1
     $$
 
 Par consï¿½quent, l'arbre $A$ construit par l'algorithme~\ref{algorithm_AHC} satisfait~:
 
     \begin{eqnarray}
-    R\pa{D} \infegal    \summyone{n \in A} R\pa{n} \infegal \pa{card\pa{D}-1} * R\pa{D}
+    R\pa{D} \leqslant    \summyone{n \in A} R\pa{n} \leqslant \pa{card\pa{D}-1} * R\pa{D}
                      \label{inegalite_critere}
     \end{eqnarray}
 
 L'inï¿½galitï¿½ (\ref{inegalite_critere}) explique l'expression du critï¿½re (\ref{critere_optimalite}) puisque~:
     \begin{eqnarray}
-    R\pa{D} > 0 \Longrightarrow \dfrac{1}{card\pa{D}-1} \infegal    Cr_1\pa{A} \infegal 1  &&
+    R\pa{D} > 0 \Longrightarrow \dfrac{1}{card\pa{D}-1} \leqslant    Cr_1\pa{A} \leqslant 1  &&
              \label{inegalite_critere2}
     \end{eqnarray}
 
@@ -754,7 +754,7 @@ Pour prendre en compte la pertinence de la rï¿½union de deux parties, un second 
 
             \begin{eqnarray}
             Cr_2\pa{A}      &=&     \left\{\begin{array}{l}
-                                      0 \text{ si } R\pa{D} = 0 \text{ ou } card\pa{D} \infegal 1 \\
+                                      0 \text{ si } R\pa{D} = 0 \text{ ou } card\pa{D} \leqslant 1 \\
                               \dfrac{ \summyone{n \in A} \biggcro{ 2 R\pa{n} - d\pa{n} }} 
                                           {\pa{card\pa{D}-1} * R\pa{D}} \text{ sinon}
                                                             \end{array}%
@@ -768,7 +768,7 @@ Pour prendre en compte la pertinence de la rï¿½union de deux parties, un second 
 De maniï¿½re ï¿½vidente, ce critï¿½re vï¿½rifie (\ref{inegalite_critere3})~:
 
     \begin{eqnarray}
-    R\pa{D} > 0 \Longrightarrow 0 \infegal    Cr_2\pa{A} \infegal 2  && \label{inegalite_critere3}
+    R\pa{D} > 0 \Longrightarrow 0 \leqslant    Cr_2\pa{A} \leqslant 2  && \label{inegalite_critere3}
     \end{eqnarray}
 
 Ce second critï¿½re ne sera pas ï¿½voquï¿½ par la suite car il corrobore les dï¿½ductions obtenus avec le premier critï¿½re.
@@ -789,7 +789,7 @@ Ce second critï¿½re ne sera pas ï¿½voquï¿½ par la suite car il corrobore les dï¿
 \label{section_test}
 
 
-La premiï¿½re expï¿½rience consiste ï¿½ chercher les voisins dans un ensemble de points tirï¿½s alï¿½atoirement dans le carrï¿½ $\cro{0,1} \times \cro{0,1}$ (figure~\ref{space_metric_rnd_01_01}). L'expï¿½rience consiste d'abord ï¿½ tirer $N$ points alï¿½atoires dans ce carrï¿½. Pour diffï¿½rentes valeurs de seuil~$s$, $N$~points sont de nouveau tirï¿½s alï¿½atoirement pour lesquels le voisinage $V_s\pa{x}=\acc{y \sac d\pa{x,y} \infegal s}$ est calculï¿½ selon les deux algorithmes~\ref{algorithm_AHC} et~$\ref{algorithm_insertion}^*$. Si $X$ est une variable alï¿½atoire de l'espace mï¿½trique~$E$ -~les ï¿½lï¿½ments de $E$ sont ï¿½quiprobables~-, l'objectif est d'estimer le nombre moyen de calculs de distance $r_s\pa{N}$ effectuï¿½s pour dï¿½terminer les voisins d'un ï¿½lï¿½ment~:
+La premiï¿½re expï¿½rience consiste ï¿½ chercher les voisins dans un ensemble de points tirï¿½s alï¿½atoirement dans le carrï¿½ $\cro{0,1} \times \cro{0,1}$ (figure~\ref{space_metric_rnd_01_01}). L'expï¿½rience consiste d'abord ï¿½ tirer $N$ points alï¿½atoires dans ce carrï¿½. Pour diffï¿½rentes valeurs de seuil~$s$, $N$~points sont de nouveau tirï¿½s alï¿½atoirement pour lesquels le voisinage $V_s\pa{x}=\acc{y \sac d\pa{x,y} \leqslant s}$ est calculï¿½ selon les deux algorithmes~\ref{algorithm_AHC} et~$\ref{algorithm_insertion}^*$. Si $X$ est une variable alï¿½atoire de l'espace mï¿½trique~$E$ -~les ï¿½lï¿½ments de $E$ sont ï¿½quiprobables~-, l'objectif est d'estimer le nombre moyen de calculs de distance $r_s\pa{N}$ effectuï¿½s pour dï¿½terminer les voisins d'un ï¿½lï¿½ment~:
 
             \begin{eqnarray}
             r_s\pa{N} = \dfrac{1}{N} \; \esp{ \text{nombre de distances calculï¿½es pour $V_s\pa{X}$}}
@@ -1025,11 +1025,11 @@ Ce premier algorithme s'applique dans le cas rï¿½el afin d'ordonner des nombres 
 
         \begin{xdefinition}{B+ tree}
         Soit $B_n$ un B+ tree, soit $N$ un n\oe ud de $B_n$, il contient un vecteur $V\pa{N} = \vecteur{x_1}{x_t}$ 
-        avec $0 \infegal t \infegal n$ et $x_1 < ... < x_t$. Ce n\oe ud contient aussi exactement $t-1$ n\oe uds fils 
+        avec $0 \leqslant t \leqslant n$ et $x_1 < ... < x_t$. Ce n\oe ud contient aussi exactement $t-1$ n\oe uds fils 
         notï¿½s $\vecteur{N_1}{N_{t-1}}$. On dï¿½signe par $D\pa{N_t}$ l'ensemble des descendants du n\oe ud $N_t$ et 
         $G\pa{N_t} = \acc{ V\pa{M} \sac M \in D\pa{N_t}}$. Le n\oe ud $N$ vï¿½rifie~:
                     \begin{eqnarray*}
-                    && \forall x \in G\pa{N_t}, \; x_{t} \infegal x < x_{t+1} \\
+                    && \forall x \in G\pa{N_t}, \; x_{t} \leqslant x < x_{t+1} \\
                     && \text{avec par convention } x_0 = -\infty \text{ et } x_{t+1} = + \infty
                     \end{eqnarray*}
         \end{xdefinition}
@@ -1208,7 +1208,7 @@ La mï¿½thode prï¿½sentï¿½e dans \citeindex{D'Haes2003} utilise une analyse en co
 \indexfr{mï¿½diane}
 \indexfr{analyse en composantes principales}
 
-La mï¿½thode proposï¿½e dans cet article effectue une analyse en composantes principales afin de repï¿½rer l'axe principal du nuage qui correspond au vecteur propre $\vec{V}$ associï¿½ ï¿½ la plus grande des valeurs propres de la matrice $X'X$ oï¿½ chaque ligne de la matrice $X$ est un ï¿½lï¿½ment du nuage de points $\vecteur{\vec{x_1}}{\vec{x_n}}$. On dï¿½termine la mï¿½diane $m$ de l'ensemble $\acc{ < \vec{V}, \vec{x_i}  >  \sac 1 \infegal i \infegal n}$. Le nuage de points est alors divisï¿½e en deux sous-nuages de cardinaux ï¿½gaux selon que le produit scalaire $< \vec{V}, \vec{x_i} >$ est infï¿½rieur ou supï¿½rieur ï¿½ $m$. Chaque sous-nuage est ï¿½ nouveau divisï¿½ selon le mï¿½me processus incluant une analyse en composantes principales et la recherche de la mï¿½diane. L'algorithme s'arrï¿½te lorsque les sous-ensembles sont rï¿½duits ï¿½ un seul ï¿½lï¿½ment. 
+La mï¿½thode proposï¿½e dans cet article effectue une analyse en composantes principales afin de repï¿½rer l'axe principal du nuage qui correspond au vecteur propre $\vec{V}$ associï¿½ ï¿½ la plus grande des valeurs propres de la matrice $X'X$ oï¿½ chaque ligne de la matrice $X$ est un ï¿½lï¿½ment du nuage de points $\vecteur{\vec{x_1}}{\vec{x_n}}$. On dï¿½termine la mï¿½diane $m$ de l'ensemble $\acc{ < \vec{V}, \vec{x_i}  >  \sac 1 \leqslant i \leqslant n}$. Le nuage de points est alors divisï¿½e en deux sous-nuages de cardinaux ï¿½gaux selon que le produit scalaire $< \vec{V}, \vec{x_i} >$ est infï¿½rieur ou supï¿½rieur ï¿½ $m$. Chaque sous-nuage est ï¿½ nouveau divisï¿½ selon le mï¿½me processus incluant une analyse en composantes principales et la recherche de la mï¿½diane. L'algorithme s'arrï¿½te lorsque les sous-ensembles sont rï¿½duits ï¿½ un seul ï¿½lï¿½ment. 
 
 
 
@@ -1268,11 +1268,11 @@ La sï¿½lection des pivots demeure un problï¿½me ouvert. Ceux-ci pourrait ï¿½tre 
             inclus dans $E$ vï¿½rifiant~:
             
                         $$
-                        \forall y \in V\pa{x}, \; d\pa{x,y} \infegal \rho
+                        \forall y \in V\pa{x}, \; d\pa{x,y} \leqslant \rho
                         $$
                         
-            On suppose que la matrice $M = \pa{m_{ij}}_ { \begin{subarray} 1 \infegal i \infegal P \\ 
-            1 \infegal j \infegal N \end{subarray} }$ a ï¿½tï¿½ calculï¿½e prï¿½alablement comme suit~:
+            On suppose que la matrice $M = \pa{m_{ij}}_ { \begin{subarray} 1 \leqslant i \leqslant P \\ 
+            1 \leqslant j \leqslant N \end{subarray} }$ a ï¿½tï¿½ calculï¿½e prï¿½alablement comme suit~:
             
                         $$
                         \forall \pa{i,j}, m_{ij} = d\pa{p_i, y_j}
@@ -1330,7 +1330,7 @@ La sï¿½lection des pivots demeure un problï¿½me ouvert. Ceux-ci pourrait ï¿½tre 
                 \begin{xif}{$A \neq \emptyset$}
                 Retour ï¿½ l'ï¿½tape~\ref{classif_laesa_step_b}.
                 \xelse
-                Fin, l'ensemble cherchï¿½ correspond ï¿½ $\acc{y \in E \sac g\pa{y}} \infegal \rho$.
+                Fin, l'ensemble cherchï¿½ correspond ï¿½ $\acc{y \in E \sac g\pa{y}} \leqslant \rho$.
                 \end{xif}
             \end{xalgostep}
             
@@ -1386,11 +1386,11 @@ Cet article~\citeindex{Moreno2003} amï¿½liore ï¿½galement l'algorithme~\ref{spac
             inclus dans $E$ vï¿½rifiant~:
             
                         $$
-                        \forall y \in V\pa{x}, \; d\pa{x,y} \infegal \rho
+                        \forall y \in V\pa{x}, \; d\pa{x,y} \leqslant \rho
                         $$
                         
-            On suppose que la matrice $M = \pa{m_{ij}}_ { \begin{subarray} 1 \infegal i \infegal P \\ 
-            1 \infegal j \infegal N \end{subarray} }$ a ï¿½tï¿½ calculï¿½e prï¿½alablement comme suit~:
+            On suppose que la matrice $M = \pa{m_{ij}}_ { \begin{subarray} 1 \leqslant i \leqslant P \\ 
+            1 \leqslant j \leqslant N \end{subarray} }$ a ï¿½tï¿½ calculï¿½e prï¿½alablement comme suit~:
             
                         $$
                         \forall \pa{i,j}, \; m_{ij} = d\pa{p_i, y_j}
@@ -1407,12 +1407,12 @@ Cet article~\citeindex{Moreno2003} amï¿½liore ï¿½galement l'algorithme~\ref{spac
             \begin{xalgostep}{tri}
                 Tri l'ensemble $g\pa{y_i}$ par ordre croissant $\longrightarrow g\pa{y_{\sigma\pa{j}}}$. \\
                 \begin{xfor}{j}{1}{N}
-                   \begin{xif}{$g\pa{y_{\sigma\pa{j}}} \infegal \rho$}
+                   \begin{xif}{$g\pa{y_{\sigma\pa{j}}} \leqslant \rho$}
                    $g\pa{y_{\sigma\pa{j}}} = d\pa{x,y_{\sigma\pa{j}}}$
                    \end{xif}
                 \end{xfor} 
                 
-                Fin, l'ensemble cherchï¿½ correspond ï¿½ $\acc{y \in E \sac g\pa{y}} \infegal \rho$.
+                Fin, l'ensemble cherchï¿½ correspond ï¿½ $\acc{y \in E \sac g\pa{y}} \leqslant \rho$.
             \end{xalgostep}
 
 \end{xalgorithm}
@@ -1458,7 +1458,7 @@ L'algorithme dï¿½veloppï¿½ dans~\citeindex{Farag\'o1993} permet de trouver le po
             
             \begin{xalgostep}{ï¿½laguage}
             On dï¿½finit $t_0 \longleftarrow \underset{i} {\min} \; \gamma\pa{x_i}$. \\
-            Puis on construit l'ensemble $F\pa{x} = \acc{ x_i \in E \sac \gamma\pa{x_i} }\infegal
+            Puis on construit l'ensemble $F\pa{x} = \acc{ x_i \in E \sac \gamma\pa{x_i} }\leqslant
                          \frac{\alpha}{\beta} \, t_0$.
             \end{xalgostep}        
             
@@ -1506,7 +1506,7 @@ L'algorithme~\ref{space_metric_algo_farago} est en fait valable pour une distanc
           
                       $$
                       \underset{ n \rightarrow \infty } { \lim \sup } \;
-                                      \esp{F_N} \infegal k + \pa{\frac{\alpha}{\beta}}^{2d}
+                                      \esp{F_N} \leqslant k + \pa{\frac{\alpha}{\beta}}^{2d}
                       $$
                                                                             
             \end{xtheorem}
@@ -1529,7 +1529,7 @@ L'algorithme~\ref{space_metric_algo_farago} est en fait valable pour une distanc
 L'article \citeindex{Wu2002} propose une idï¿½e intï¿½ressante qui consiste ï¿½ supprimer les voisins inutiles. Cette mï¿½thode s'applique dans le cas d'une classification ï¿½ l'aide de plus proches voisins. A un ï¿½lï¿½ment ï¿½ classer, cette mï¿½thode attribue la classe du point le plus proche, il faut donc a priori calculer les distances du point en question ï¿½ tous ceux dï¿½jï¿½ classï¿½s. Certains points de cet ensemble ont une forte "capacitï¿½ d'attraction"~: ils sont le centre d'une rï¿½gion dans laquelle seuls des points de la mï¿½me classe figurent. Plus concrï¿½tement, soient un point $y$ ï¿½ classer et une base de points classï¿½s notï¿½ $\vecteur{x_1}{x_N}$ de classe $\vecteur{c\pa{x_1}}{c\pa{x_N}}$, on suppose que $x_i$ et $x_j$ sont deux points, enfin, on dï¿½finit~:
 
         \begin{eqnarray}
-        y^*                     = \arg \min \acc{ d\pa{x_k, y} \sac 1 \infegal k \infegal n }
+        y^*                     = \arg \min \acc{ d\pa{x_k, y} \sac 1 \leqslant k \leqslant n }
         \end{eqnarray}
 
 On suppose ï¿½galement que $x_i$ est un point de forte capacitï¿½ et que~:

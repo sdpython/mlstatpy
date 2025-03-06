@@ -10,9 +10,6 @@ Cette méthode est utilisée dans le cadre de la recommandation de produits
 à des utilisateurs.
 Lire également [Acara2011]_, [Gupta2010]_.
 
-.. contents::
-    :local:
-
 Factorisation de matrices et rang
 =================================
 
@@ -95,8 +92,8 @@ Nous allons le montrer grâce à quelques lemmes et théorèmes.
 
     On note :math:`M=(m_{ij})`,
     :math:`W^k=(w^k_{il})`, :math:`H^k=(h^k_{lj})` avec
-    :math:`1 \infegal i \infegal p`, :math:`1 \infegal j \infegal q`,
-    et :math:`1 \infegal l \infegal k` avec :math:`k < \min(p,q)`.
+    :math:`1 \leqslant i \leqslant p`, :math:`1 \leqslant j \leqslant q`,
+    et :math:`1 \leqslant l \leqslant k` avec :math:`k < \min(p,q)`.
     On suppose que les matrices
     sont solution du problème d'optimisation
     :math:`\min_{W,H} \norm{ M - WH }^2`.
@@ -147,8 +144,8 @@ Cela signifie qu'on peut écrire la matrice :math:`W_k` dans une base
 
     On note :math:`M=(m_{ij})`,
     :math:`W^k=(w^k_{il})`, :math:`H^k=(h^k_{lj})` avec
-    :math:`1 \infegal i \infegal p`, :math:`1 \infegal j \infegal q`,
-    et :math:`1 \infegal l \infegal k` avec :math:`k < \min(p,q)`.
+    :math:`1 \leqslant i \leqslant p`, :math:`1 \leqslant j \leqslant q`,
+    et :math:`1 \leqslant l \leqslant k` avec :math:`k < \min(p,q)`.
     On suppose que les matrices
     sont solution du problème d'optimisation
     :math:`\min_{W,H} \norm{ M - WH }^2`.
@@ -181,8 +178,8 @@ sur ce plan.
 
     On note :math:`M=(m_{ij})`,
     :math:`W^k=(w^k_{il})`, :math:`H^k=(h^k_{lj})` avec
-    :math:`1 \infegal i \infegal p`, :math:`1 \infegal j \infegal q`,
-    et :math:`1 \infegal l \infegal k` avec :math:`k < \min(p,q)`.
+    :math:`1 \leqslant i \leqslant p`, :math:`1 \leqslant j \leqslant q`,
+    et :math:`1 \leqslant l \leqslant k` avec :math:`k < \min(p,q)`.
     On suppose que les matrices
     sont solution du problème d'optimisation
     :math:`\min_{W,H} \norm{ M - WH }^2`.

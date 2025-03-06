@@ -6,9 +6,6 @@ On s'intéresse principalement à la métrique :math:`M'` définie par
 Dynamic Minimum Keystroke :eq:`completion-metric2` mais les résultats
 seront étendues aux autres quand cela est possible.
 
-.. contents::
-    :local:
-
 Calcul pour une complétion
 ++++++++++++++++++++++++++
 
@@ -31,7 +28,7 @@ pour l'ensemble des complétions.
         :nowrap:
 
         \begin{eqnarray*}
-        M'(q, S) &=& \min_{d(q, S) \infegal k < l(q)} \acc{ M'(q[1..k], S) + \min( K(q, k, S), l(q) - k) }
+        M'(q, S) &=& \min_{d(q, S) \leqslant k < l(q)} \acc{ M'(q[1..k], S) + \min( K(q, k, S), l(q) - k) }
         \end{eqnarray*}
 
 Il n'est pas nécessaire de regarder tous les préfixes mais seulement ceux entre le plus long préfixe
@@ -52,7 +49,7 @@ Calcul pour une requête en dehors
 +++++++++++++++++++++++++++++++++
 
 Mais il est faux de dire que pour deux requêtes en dehors de l'ensemble
-des complétions, :math:`q_1 \preceq q_2 \Longrightarrow M'(q_1, S) \infegal M'(q_2, S)`.
+des complétions, :math:`q_1 \preceq q_2 \Longrightarrow M'(q_1, S) \leqslant M'(q_2, S)`.
 Le lemme suivant précise pourquoi
 
 .. mathdef::
@@ -151,7 +148,7 @@ utilise la fonction :math:`K(q, k, S)` définie en :eq:`nlp-comp-k`.
     :nowrap:
 
     \begin{eqnarray*}
-    M(q, S) &=& \min_{0 \infegal k \infegal l(q)}  k + K(q, k, S)
+    M(q, S) &=& \min_{0 \leqslant k \leqslant l(q)}  k + K(q, k, S)
     \end{eqnarray*}
 
 Etant donné que le nombre minimum de caractères pour obtenir une complétion dans le trie

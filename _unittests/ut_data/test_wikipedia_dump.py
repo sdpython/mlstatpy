@@ -7,7 +7,7 @@ class TestWikipediaDump(ExtTestCase):
     def test_wikipedia_dump(self):
         temp = get_temp_folder(__file__, "temp_wikipedia_abstract_gz")
         name = download_dump(
-            "fr", "latest-abstract.xml.gz-rss.xml", folder=temp, unzip=False
+            "fr", "latest-page.sql.gz-rss.xml", folder=temp, unzip=False
         )
         # print(name)
         self.assertTrue(name is not None)

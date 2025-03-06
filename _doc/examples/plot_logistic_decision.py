@@ -11,9 +11,6 @@ du moins qui aboutisse à deux sous-ensemble dans lesquels
 une classe est majoritaire. Mais certains cas, c'est une
 chose compliquée.
 
-.. contents::
-    :local:
-
 Un cas simple et un cas compliqué
 +++++++++++++++++++++++++++++++++
 

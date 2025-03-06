@@ -2,10 +2,6 @@
 Source de données
 =================
 
-.. contents::
-    :local:
-    :depth: 2
-
 Wikipédia
 +++++++++
 

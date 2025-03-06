@@ -24,9 +24,6 @@ transposée dans l'espace initial.
 Une autre astuce consiste à imposer une contrainte supplémentaire sur
 le poids des coefficients de la régression, le plus souvent en les pénalisant.
 
-.. contents::
-    :local:
-
 Réduction de dimension
 ======================
 

@@ -85,7 +85,7 @@ la plus représentée parmi ses :math:`k` plus proches voisins.
     .. math::
 
         card{S^*_k} = 0 \text{ et } \underset{y \in S^*_k}{\max} \; d\pa{y,x}
-        \infegal \underset{y \in X - S^*_k}{\min} \; d\pa{y,x}
+        \leqslant \underset{y \in X - S^*_k}{\min} \; d\pa{y,x}
 
     On calcule les occurrences :math:`f(i)` de chaque classe
     :math:`i` dans l'ensemble :math:`S^*_k` :
@@ -150,7 +150,7 @@ père et pas plus de :math:`n` fils.
 
     Soit :math:`B_n` un :epkg:`B+ tree`, soit :math:`N` un noeud de :math:`B_n`,
     il contient un vecteur :math:`V\pa{N} = \vecteur{x_1}{x_t}`
-    avec :math:`0 \infegal t \infegal n` et :math:`x_1 < ... < x_t`.
+    avec :math:`0 \leqslant t \leqslant n` et :math:`x_1 < ... < x_t`.
     Ce noeud contient aussi exactement :math:`t-1` noeuds fils
     notés :math:`\vecteur{N_1}{N_{t-1}}`. On désigne par :math:`D\pa{N_t}`
     l'ensemble des descendants du noeud :math:`N_t` et
@@ -161,7 +161,7 @@ père et pas plus de :math:`n` fils.
         :nowrap:
 
         \begin{eqnarray*}
-        && \forall x \in G\pa{N_t}, \; x_{t} \infegal x < x_{t+1} \\
+        && \forall x \in G\pa{N_t}, \; x_{t} \leqslant x < x_{t+1} \\
         && \text{avec par convention } x_0 = -\infty \text{ et } x_{t+1} = + \infty
         \end{eqnarray*}
         
@@ -385,10 +385,10 @@ ne peut être l'élément le plus proche.
 
     .. math::
 
-        \forall y \in V\pa{x}, \; d\pa{x,y} \infegal \rho
+        \forall y \in V\pa{x}, \; d\pa{x,y} \leqslant \rho
 
     On suppose que la matrice
-    :math:`M = \pa{m_{ij}}_{ \begin{subarray} 1 \infegal i \infegal P \\ 1 \infegal j \infegal N \end{subarray} }`
+    :math:`M = \pa{m_{ij}}_{ \begin{subarray} 1 \leqslant i \leqslant P \\ 1 \leqslant j \leqslant N \end{subarray} }`
     a été calculée préalablement comme suit :
 
     .. math::
@@ -399,7 +399,7 @@ ne peut être l'élément le plus proche.
 
     | for i in :math:`1..P`
     |     :math:`d_i \longleftarrow d\pa{x, p_i}`
-    | :math:`d^* \longleftarrow  \min \acc{ d_i \sac 1 \infegal i \infegal P }`
+    | :math:`d^* \longleftarrow  \min \acc{ d_i \sac 1 \leqslant i \leqslant P }`
     | :math:`d^*` est la distance du point :math:`x` au pivot le plus proche.
 
     *recherche du plus proche élément*
@@ -409,7 +409,7 @@ ne peut être l'élément le plus proche.
     |     :math:`d' \longleftarrow \max \acc{ \abs{ d_j - m_{ji} } }`
     |     if :math:`d' < d^*`
     |         :math:`d \longleftarrow d\pa{x,y_i}`
-    |         if :math:`d' \infegal d^*`
+    |         if :math:`d' \leqslant d^*`
     |             :math:`d^* \longleftarrow d'`
     |             :math:`S \longleftarrow \acc{y_i}`
 
@@ -462,7 +462,7 @@ ensemble :math:`E = \ensemble{x_1}{x_N}` selon l'algorithme suivant :
 
     On définit :math:`t_0 \longleftarrow \underset{i} {\min} \; \gamma\pa{x_i}`.
     Puis on construit l'ensemble
-    :math:`F\pa{x} = \acc{ x_i \in E \sac \gamma\pa{x_i} }\infegal \frac{\alpha}{\beta} \, t_0`.
+    :math:`F\pa{x} = \acc{ x_i \in E \sac \gamma\pa{x_i} }\leqslant \frac{\alpha}{\beta} \, t_0`.
 
     *plus proche voisin*
 
@@ -511,7 +511,7 @@ Et un petit théorème.
 
     .. math::
 
-        \underset{ n \rightarrow \infty } { \lim \sup } \; \esp{F_N} \infegal k + \pa{\frac{\alpha}{\beta}}^{2d}
+        \underset{ n \rightarrow \infty } { \lim \sup } \; \esp{F_N} \leqslant k + \pa{\frac{\alpha}{\beta}}^{2d}
 
 Implémentation
 ==============

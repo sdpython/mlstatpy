@@ -3,7 +3,7 @@ import re
 
 
 class _Vertex:
-    __slots__ = ("nb", "label", "weight")
+    __slots__ = ("nb", "label", "weight")  # noqa: RUF023
 
     def __init__(self, nb, label, weight):
         self.nb = nb  # kind of id
@@ -62,7 +62,7 @@ class Vertex(_Vertex):
 
 
 class _Edge:
-    __slots__ = ("from_", "to", "label", "weight", "nb")
+    __slots__ = ("from_", "to", "label", "weight", "nb")  # noqa: RUF023
 
     def __init__(self, from_, to, label, weight):
         self.from_, self.to = from_, to

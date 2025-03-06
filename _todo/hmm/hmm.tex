@@ -330,7 +330,7 @@ Etant donnï¿½ que ni les probabilitï¿½s de transitions ni les probabilitï¿½s d'ï
         B_M    &=& \pa{   b_{M,ij} } _ {\substack{1\leqslant i\leqslant N\\1\leqslant j\leqslant D}}=
                    \pa { \pr{ O_{t}=j \sac  q_{t}=i,M } }     _ {\substack{1\leqslant i\leqslant N\\1\leqslant j\leqslant D}}
                     \label{hmm_contrainte_2}\\
-        \Pi_M  &=& \pa { \pi_{M,i} } _ { 1 \infegal i \infegal N } = \pa { \pr {  q_1 = i \sac M} } _ { 1 \infegal i \infegal N }
+        \Pi_M  &=& \pa { \pi_{M,i} } _ { 1 \leqslant i \leqslant N } = \pa { \pr {  q_1 = i \sac M} } _ { 1 \leqslant i \leqslant N }
                              \label{hmm_contrainte_3}
         \end{eqnarray*}
 
@@ -755,10 +755,10 @@ La chaï¿½ne de Markov cachï¿½e (ES) $M$ ï¿½ $N$ ï¿½tats est dï¿½finie par les pa
         B_M    &=& \pa{   b_{M,ij} } _ {\substack{1\leqslant i\leqslant N\\1\leqslant j\leqslant D}}=
                    \pa { \pr{ O_{t}=j \sac  q_{t}=i,M } }     _ {\substack{1\leqslant i\leqslant N
                                                                                \\1\leqslant j\leqslant D}} \label{hmm_contrainte_es_2}\\
-        \Pi_M  &=& \pa { \pi_{M,i} } _ { 1 \infegal i \infegal N } = \pa { \pr {  q_1 = i \sac M} } _ 
-                                                                        { 1 \infegal i \infegal N } \label{hmm_contrainte_es_3} \\
-        \Theta_M  &=& \pa { \theta_{M,i} } _ { 1 \infegal i \infegal N } = \pa { \pr {  s \sac q_{t}, M} } _ 
-                                                                                { 1 \infegal i \infegal N } \label{hmm_contrainte_es_4}
+        \Pi_M  &=& \pa { \pi_{M,i} } _ { 1 \leqslant i \leqslant N } = \pa { \pr {  q_1 = i \sac M} } _ 
+                                                                        { 1 \leqslant i \leqslant N } \label{hmm_contrainte_es_3} \\
+        \Theta_M  &=& \pa { \theta_{M,i} } _ { 1 \leqslant i \leqslant N } = \pa { \pr {  s \sac q_{t}, M} } _ 
+                                                                                { 1 \leqslant i \leqslant N } \label{hmm_contrainte_es_4}
         \end{eqnarray}
 
 
@@ -1458,7 +1458,7 @@ L'algorithme d'optimisation ou apprentissage des modï¿½les de Markov cachï¿½s es
 
 
 \begin{xremark}{convergence vers un minimum local}
-Le thï¿½orï¿½me~\ref{theoreme_hmm_baum_welch_1} dï¿½montre de la suite $\pa{L_t}_{t \infegal 0}$ construite par l'algorithme~\ref{hmm_algorithme_baumwelch}, la valeur atteinte correspond ï¿½ un minimum local et non global de la vraisemblance (\ref{hmm_eq_vraisemblance_theo}).
+Le thï¿½orï¿½me~\ref{theoreme_hmm_baum_welch_1} dï¿½montre de la suite $\pa{L_t}_{t \leqslant 0}$ construite par l'algorithme~\ref{hmm_algorithme_baumwelch}, la valeur atteinte correspond ï¿½ un minimum local et non global de la vraisemblance (\ref{hmm_eq_vraisemblance_theo}).
 \indexfr{minimum local}
 \end{xremark}
 
@@ -1735,7 +1735,7 @@ C'est ce lemme qui est ï¿½ la source du thï¿½orï¿½me~\ref{theorem_loglogconvexe}
                             \forall i \in \intervalle{1}{n}, x_i > 0 \right.} $.\newline%
             Soit $\pa{x,y} \in D^2$ alors :
                     $$
-                    \summy{i=1}{n} y_i \ln \crochet{\dfrac{x_i}{y_i}} \infegal 0
+                    \summy{i=1}{n} y_i \ln \crochet{\dfrac{x_i}{y_i}} \leqslant 0
                     $$
             \end{xlemma}
 
@@ -1745,10 +1745,10 @@ La fonction $x \longrightarrow \ln x$ est concave, donc :
         \begin{eqnarray*}
         \summy{i=1}{n} y_i \ln \crochet{\dfrac{x_i}{y_i}} &=&  \summy{i=1}{n} \;  \dfrac{y_i}{\summy{k=0}{n}y_k} \; 
                     \ln \crochet{\dfrac{x_i}{y_i}} \text{ car } y \in D\\
-        &\infegal&  \ln \crochet { \summy{i=1}{n} \dfrac{y_i}{\summy{k=0}{n}y_k}  \dfrac{x_i}{y_i} } \\
-        &\infegal&  \ln \crochet {  \dfrac{\summy{i=1}{n}x_i}{\summy{i=0}{n}y_i}  }  = 
+        &\leqslant&  \ln \crochet { \summy{i=1}{n} \dfrac{y_i}{\summy{k=0}{n}y_k}  \dfrac{x_i}{y_i} } \\
+        &\leqslant&  \ln \crochet {  \dfrac{\summy{i=1}{n}x_i}{\summy{i=0}{n}y_i}  }  = 
         \ln \dfrac{1}{1} \text{ car } \pa{x,y} \in D^2 \\
-        &\infegal& 0
+        &\leqslant& 0
         \end{eqnarray*}
 \end{xdemo}
 
@@ -1807,15 +1807,15 @@ On pose $h\pa{u} = \ln f\vecteur{e^{u_1}}{e^{u_n}}$, $f$ est log-log-convexe, do
             \dfrac{x'_i}{x_i}}
         \end{eqnarray*}
 
-Si $x' = y\pa{x} = \pa{y_i \pa{x} = \frac{x_i \partialfrac{f}{x_i}\pa{x}}{\summy{k=1}{n}x_k \partialfrac{f}{x_k}\pa{x}}}_{1 \infegal i \infegal n}$, alors~:
+Si $x' = y\pa{x} = \pa{y_i \pa{x} = \frac{x_i \partialfrac{f}{x_i}\pa{x}}{\summy{k=1}{n}x_k \partialfrac{f}{x_k}\pa{x}}}_{1 \leqslant i \leqslant n}$, alors~:
 
         $$
         \begin{array}{rrcl}
-        & - \ln \crochet{\dfrac{f \pa{y\pa{x}}}{f \pa{x}}} &\infegal&
+        & - \ln \crochet{\dfrac{f \pa{y\pa{x}}}{f \pa{x}}} &\leqslant&
                         \summy{i=1}{n} \dfrac{x_i}{f\pa{x}} \partialfrac{f}{x_i} \pa{x}\ln \crochet {\dfrac{x_i}{y_i\pa{x}}} \\
-        \Longrightarrow & - \ln \crochet{\dfrac{f \pa{y\pa{x}}}{f \pa{x}}} &\infegal&
+        \Longrightarrow & - \ln \crochet{\dfrac{f \pa{y\pa{x}}}{f \pa{x}}} &\leqslant&
                         \crochet{\summy{i=1}{n}  \dfrac{ x_i\partialfrac{f}{x_i} \pa{x} } {f\pa{x}}}
-                        \underset{\infegal 0 \text{ d'aprï¿½s le lemme ~\ref{lemme_loglogconvexe}}}{\underbrace{\crochet{\summy{i=1}{n}
+                        \underset{\leqslant 0 \text{ d'aprï¿½s le lemme ~\ref{lemme_loglogconvexe}}}{\underbrace{\crochet{\summy{i=1}{n}
                                           y_i\pa{x} \ln \crochet {\dfrac{x_i}{y_i\pa{x}}}}}} \\
         \Longrightarrow & \ln \crochet{\dfrac{f \pa{y\pa{x}}}{f \pa{x}}} &\supegal& 0 \\ \\
         \Longrightarrow &  f \pa{y\pa{x}} &\supegal& f \pa{x}
@@ -1856,14 +1856,14 @@ Soit $D$ l'ensemble dï¿½fini dans le thï¿½orï¿½me~\ref{theorem_loglogconvexe}, s
 
 Soit $x=\vecteur{x_1}{x_n} \in D$, on note $e^u = \vecteur{e_{u_1}}{e_{u_n}}$, on peut ï¿½crire le polynï¿½me $P$ sous la forme :
         \begin{eqnarray*}
-        P\pa{x} &=& \summyone{ 0 \infegal \vecteurno{i_1}{i_n} \infegal \deg P} \; 
+        P\pa{x} &=& \summyone{ 0 \leqslant \vecteurno{i_1}{i_n} \leqslant \deg P} \; 
                     a_{\vecteurno{i_1}{i_n}} \prody{k=1}{n} x_k^{i_k} \\
-        P\pa{e^u} &=& \summyone{ 0 \infegal \vecteurno{i_1}{i_n} \infegal \deg P} \; 
+        P\pa{e^u} &=& \summyone{ 0 \leqslant \vecteurno{i_1}{i_n} \leqslant \deg P} \; 
                     a_{\vecteurno{i_1}{i_n}} \prody{k=1}{n} \pa{e^{u_k}}^{i_k} \\
-        P\pa{e^u} &=& \summyone{ 0 \infegal \vecteurno{i_1}{i_n} \infegal \deg P} \; 
+        P\pa{e^u} &=& \summyone{ 0 \leqslant \vecteurno{i_1}{i_n} \leqslant \deg P} \; 
                     a_{\vecteurno{i_1}{i_n}} e^{ \summy{k=1}{n} i_k u_k} \\
-        \partialfrac{P\pa{e^u}}{u_l} &=& \summyone{ 0 \infegal \vecteurno{i_1}{i_n}
-                 \infegal \deg P} \; a_{\vecteurno{i_1}{i_n}} \,  i_l \, e^{ \summy{k=1}{n} i_k
+        \partialfrac{P\pa{e^u}}{u_l} &=& \summyone{ 0 \leqslant \vecteurno{i_1}{i_n}
+                 \leqslant \deg P} \; a_{\vecteurno{i_1}{i_n}} \,  i_l \, e^{ \summy{k=1}{n} i_k
             u_k}
         \end{eqnarray*}
         
@@ -2677,8 +2677,8 @@ On note $\pr{c|i}_{i,c} = \pa{c_{i,c}}_{i,c}$ la matrice des probabilitï¿½s ï¿½m
 On dï¿½finit de nouveaux coefficients pour le modï¿½le de Markov cachï¿½ :
 
         $$
-        \pa{c_{ci}}_{\begin{subarray}{c} 1 \infegal i \infegal N \\ 1 \infegal c \infegal C \end{subarray}} =%
-        \pa{\pr{c|i}}_{\begin{subarray}{c} 1 \infegal i \infegal N \\ 1 \infegal c \infegal C \end{subarray}}
+        \pa{c_{ci}}_{\begin{subarray}{c} 1 \leqslant i \leqslant N \\ 1 \leqslant c \leqslant C \end{subarray}} =%
+        \pa{\pr{c|i}}_{\begin{subarray}{c} 1 \leqslant i \leqslant N \\ 1 \leqslant c \leqslant C \end{subarray}}
         $$
         
 
@@ -2894,7 +2894,7 @@ Par consï¿½quent~:
                                 \; e ^{ - \frac{1}{2} \pa{O_t - \mu_i}' \,  V_i^{-1} \pa{O_t - \mu_i}             }
         $$
 
-Les formules de rï¿½estimation (voir \citeindex{Bottou1991}) ï¿½ utiliser lors de l'algorithme de Baum-Welch sont les suivantes pour les sï¿½quences d'observations $\vecteur{O^k_1}{O^k_{T_k}}_{1 \infegal k \infegal K}$, on note $P_k = f\pa{O^k|M}$ oï¿½ $f$ est la densitï¿½ des sï¿½quences d'observations~:%
+Les formules de rï¿½estimation (voir \citeindex{Bottou1991}) ï¿½ utiliser lors de l'algorithme de Baum-Welch sont les suivantes pour les sï¿½quences d'observations $\vecteur{O^k_1}{O^k_{T_k}}_{1 \leqslant k \leqslant K}$, on note $P_k = f\pa{O^k|M}$ oï¿½ $f$ est la densitï¿½ des sï¿½quences d'observations~:%
 
 \indexfrr{MMC}{Baum-Welch}%
 
@@ -3011,8 +3011,8 @@ Si $e$ est l'ï¿½tat d'entrï¿½e du modï¿½le, on pose comme convention :
         A_M \vecteur{i_1}{i_{n+1}} &=& \left \{
         \begin{array}{l}
         0 \text{ si } i_{n+1} = e \\
-        0 \text{ si } \exists k \infegal n \text{ tel que } i_k \neq e \text{ et } i_{k+1} = e \\
-        1 \text{ si } \exists k \text{ tel que }  3 \infegal k \infegal n \text{ et } \forall k' < k, \; i_{k'} =
+        0 \text{ si } \exists k \leqslant n \text{ tel que } i_k \neq e \text{ et } i_{k+1} = e \\
+        1 \text{ si } \exists k \text{ tel que }  3 \leqslant k \leqslant n \text{ et } \forall k' < k, \; i_{k'} =
                  e \text { et } \forall k' \supegal k, \; i_{k'} \neq e \\
         \pr{q_t = i_{n+1} \, | \, \vecteurno{q_{t-1} = i_n}{q_{t-n} = i_1}} \text{ sinon}
         \end{array}

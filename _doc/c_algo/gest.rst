@@ -5,9 +5,6 @@
 Détection de segments
 =====================
 
-.. contents::
-    :local:
-
 L'idée
 ======
 

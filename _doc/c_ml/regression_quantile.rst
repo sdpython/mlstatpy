@@ -9,9 +9,6 @@ La régression quantile est moins sensible aux points aberrants.
 Elle peut être définie comme une régression avec une norme
 *L1* (une valeur absolue).
 
-.. contents::
-    :local:
-
 .. _l-reg-quantile-demo:
 
 Médiane et valeur absolue

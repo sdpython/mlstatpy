@@ -316,11 +316,11 @@ Les maxima locaux indiquent la position des lignes, les minima locaux la positio
             $$
             \begin{array}{rcl}
             \forall i, \; m_i^x = \left\{ \begin{array}{l}
-                                                                        1 \text{ si } l_i = \min \acc { l_k \sac l-x \infegal k \infegal l+x } \\
+                                                                        1 \text{ si } l_i = \min \acc { l_k \sac l-x \leqslant k \leqslant l+x } \\
                                                                         0 \text{ sinon}
                                                                     \end{array} \right. \\
             \forall i, \; M_i^x = \left\{ \begin{array}{l}
-                                                                        1 \text{ si } l_i = \max \acc { l_k \sac l-x \infegal k \infegal l+x } \\
+                                                                        1 \text{ si } l_i = \max \acc { l_k \sac l-x \leqslant k \leqslant l+x } \\
                                                                         0 \text{ sinon}
                                                                     \end{array} \right.
             \end{array}
@@ -340,15 +340,15 @@ La figure~\ref{image_segline_extrema} montre que bien souvent le nombre d'extrem
 Deux rï¿½gles permettent l'ï¿½limination de ces mauvaises dï¿½tections~:
 
             \begin{enumerate}
-            \item Soit $\acc{e_i \sac 1 \infegal i \infegal 4}$ quatre extrema consï¿½cutifs, alors~:
+            \item Soit $\acc{e_i \sac 1 \leqslant i \leqslant 4}$ quatre extrema consï¿½cutifs, alors~:
                                 \begin{eqnarray}
-                                \abs{e_2 - e_3} \infegal \beta \abs{e_1 - e_4} \Longrightarrow 
+                                \abs{e_2 - e_3} \leqslant \beta \abs{e_1 - e_4} \Longrightarrow 
                                 \acc{e_2, \, e_3} \text{ doivent ï¿½tre ï¿½liminï¿½s.} 
                                 \label{image_ligne_critere_palier_1}
                                 \end{eqnarray}
             \item Soit $e_2$ un minimum et $e_1$ et $e_3$ les extrema qui l'entourent, alors~:
                                 \begin{eqnarray}
-                                e_2 \infegal \gamma \min\acc{e_1,e_3} \Longrightarrow 
+                                e_2 \leqslant \gamma \min\acc{e_1,e_3} \Longrightarrow 
                                 \acc{e_2, \, e_1 \text{ ou } e_3} \text{ doivent ï¿½tre ï¿½liminï¿½s.} 
                                 \label{image_ligne_critere_palier_2}
                                 \end{eqnarray}
@@ -545,7 +545,7 @@ Soit $I$ l'image d'un mot, On note $G_x = I * F_x$ et $G_y = I * F_y$ les produi
             \end{eqnarray}
 
 
-Cet intervalle est ensuite divisï¿½ en $n$ sous-intervalles de longueur identique afin de construire l'histogramme $\pa{\alpha_i}_{1 \infegal i \infegal n}$ suivant~:
+Cet intervalle est ensuite divisï¿½ en $n$ sous-intervalles de longueur identique afin de construire l'histogramme $\pa{\alpha_i}_{1 \leqslant i \leqslant n}$ suivant~:
 
 
         \begin{eqnarray}
@@ -691,7 +691,7 @@ Plusieurs histogrammes peuvent ï¿½tre utilisï¿½s, ï¿½paisseurs des traits, nombr
 On dï¿½finit ensuite l'intervalle $\cro{l_b,l_h}$ autour de $l$ vï¿½rifiant~:
 
             \begin{eqnarray}
-            \forall i \in \cro{l_b,l_h}, \; h_i \infegal \alpha \, h_l
+            \forall i \in \cro{l_b,l_h}, \; h_i \leqslant \alpha \, h_l
             \end{eqnarray}
 
 Le rï¿½sultat de la figure~\ref{image_ligne_appui_fig} est obtenu pour $\alpha = 3$ ainsi que ceux de la figure~\ref{image_ligne_appui_fig_bad}. Ces formules peuvent ï¿½tre ajustï¿½es manuellement sur quelques images. Puisqu'elles sont basï¿½es sur des histogrammes, elles sont en gï¿½nï¿½ral robustes. De plus, un ï¿½cart de quelques pixels n'altï¿½re pas les rï¿½sultats de la reconnaissance, l'essentiel est de dï¿½finir un repï¿½re qui permette de positionner les lettres les unes par rapport aux autres ï¿½ partir d'une origine dï¿½finie par les lettres. La seconde ligne d'appui reprï¿½sente en quelque sorte un facteur d'ï¿½chelle.
@@ -781,7 +781,7 @@ On note $d_*$ la valeur de la distance la plus frï¿½quente, l'ï¿½paisseur du tra
 
 
 \indexfrr{histogramme}{segment}
-Cette estimation peut ï¿½tre aussi effectuï¿½e au moyen d'histogrammes de projection. Une ligne ou une colonne de pixels extraite de l'image est constituï¿½e d'une suite de segments de la couleur de l'ï¿½criture. A priori, la longueur minimale de ces segments est ï¿½gale ï¿½ l'ï¿½paisseur du trait. Par consï¿½quent, on construit l'histogramme $\pa{h_i}_{1 \infegal i }$ suivant~:
+Cette estimation peut ï¿½tre aussi effectuï¿½e au moyen d'histogrammes de projection. Une ligne ou une colonne de pixels extraite de l'image est constituï¿½e d'une suite de segments de la couleur de l'ï¿½criture. A priori, la longueur minimale de ces segments est ï¿½gale ï¿½ l'ï¿½paisseur du trait. Par consï¿½quent, on construit l'histogramme $\pa{h_i}_{1 \leqslant i }$ suivant~:
 
             \begin{eqnarray}
             \forall i \supegal 1, \; h_i &=& card  \acc{ \text{ segments de longueur $i$ } }
@@ -1218,11 +1218,11 @@ L'impossibilitï¿½ de qualifier la pertinence d'une segmentation demeure un incon
 
 L'approche proposï¿½e ici est un compromis. La premiï¿½re ï¿½tape consiste ï¿½ segmenter grï¿½ce ï¿½ la mï¿½thode des histogrammes (paragraphe~\ref{image_segmentation_histogramme_direction}) en ne conservant que des coupures ï¿½videntes. Un premier ensemble de points de coupures est ainsi obtenu parmi lesquels seront sï¿½lectionnï¿½s ceux dï¿½finissant la segmentation en graphï¿½mes finale. Ce dernier rï¿½sultat n'est pourtant pas encore parfait, ce que tenteront de corriger les mï¿½thodes basï¿½es sur les contours ou les rï¿½servoirs, celles-ci permettront ensuite de couper les morceaux litigieux.
 
-Tout d'abord, les pixels sont projetï¿½s selon sept directions entourant la direction verticale $-30^o$, $-20^o$, $-10^o$, $0^o$, $10^o$, $20^o$, $30^o$.  On note $\pa{h_{ij}} _ { \begin{subarray}{c} -3 \infegal i \infegal 3 \\ 1 \infegal j \infegal X \end{subarray} }$ les sept histogrammes obtenus oï¿½ $X$ est la longueur de l'image. $h_{ij}$ est donc le nombre de pixels noirs (ï¿½crits) selon une droite formant un angle $i \times 10^o$ avec la verticale et interceptant la ligne d'appui basse au point d'abscisse $j$. Ces histogrammes sont ensuite lissï¿½s par une moyenne mobile analogue aux formules~(\ref{image_lissage_equation}). On dï¿½finit $e_t$ comme ï¿½tant l'ï¿½paisseur du tracï¿½ (paragraphe~\ref{image_epaisseur_trace}), $e_l$ correspond ï¿½ la largeur moyenne d'une lettre estimï¿½e au paragraphe~\ref{image_largeur_lettre}. Enfin $C$ est l'ensemble de coupures et dï¿½fini par~:
+Tout d'abord, les pixels sont projetï¿½s selon sept directions entourant la direction verticale $-30^o$, $-20^o$, $-10^o$, $0^o$, $10^o$, $20^o$, $30^o$.  On note $\pa{h_{ij}} _ { \begin{subarray}{c} -3 \leqslant i \leqslant 3 \\ 1 \leqslant j \leqslant X \end{subarray} }$ les sept histogrammes obtenus oï¿½ $X$ est la longueur de l'image. $h_{ij}$ est donc le nombre de pixels noirs (ï¿½crits) selon une droite formant un angle $i \times 10^o$ avec la verticale et interceptant la ligne d'appui basse au point d'abscisse $j$. Ces histogrammes sont ensuite lissï¿½s par une moyenne mobile analogue aux formules~(\ref{image_lissage_equation}). On dï¿½finit $e_t$ comme ï¿½tant l'ï¿½paisseur du tracï¿½ (paragraphe~\ref{image_epaisseur_trace}), $e_l$ correspond ï¿½ la largeur moyenne d'une lettre estimï¿½e au paragraphe~\ref{image_largeur_lettre}. Enfin $C$ est l'ensemble de coupures et dï¿½fini par~:
 
 
             \begin{eqnarray}
-            C &=&  \acc{ h_{ij} \sac h_{ij} \infegal \beta \, e_t } \text{ oï¿½ } \beta \supegal 1
+            C &=&  \acc{ h_{ij} \sac h_{ij} \leqslant \beta \, e_t } \text{ oï¿½ } \beta \supegal 1
             \label{image_graphem_seg_eq_1}
             \end{eqnarray}
 
@@ -1233,15 +1233,15 @@ Le paramï¿½tre $\beta$ est gï¿½nï¿½ralement compris entre $1$ et $2$ de maniï¿½r
             \begin{eqnarray}
             C &=& \union{k=-3}{3} \union{i=1}{I} \; \cro{a_i^k, b_i^k} 
                                             \text{ avec } \left\{ \begin{array}{l}
-                                                                a_i^k \infegal b_i^k < a^k_{i+1} \; \forall i,k \\
-                                                                h_x^k \infegal \beta \, e_t \; \forall x \in \cro{a_i^k, b_i^k}
+                                                                a_i^k \leqslant b_i^k < a^k_{i+1} \; \forall i,k \\
+                                                                h_x^k \leqslant \beta \, e_t \; \forall x \in \cro{a_i^k, b_i^k}
                                                                 \end{array} \right.
             \label{image_graphem_seg_eq_2}
             \end{eqnarray}
 
 
 
-Pour chaque intervalle de la forme $\cro{a_i^k, b_i^k}$, on vï¿½rifie que $b_i^k - a_i^k \infegal e_l$. Dans le cas contraire, on scinde cet intervalle jusqu'ï¿½ ce que chacun des morceaux soit infï¿½rieur ï¿½ $e_l$. La figure~\ref{image_graphem_zone_coupure_soulignement} soulï¿½ve le problï¿½me de soulignement. Etant donnï¿½ la condition exprimï¿½e en~(\ref{image_graphem_seg_eq_2}), il est impossible de sï¿½lectionner une seule zone de coupure probable entre graphï¿½mes. Par consï¿½quent, la solution adoptï¿½e est l'introduction de points de coupure entre les zones de non-coupure correspondant ï¿½ des minima locaux. 
+Pour chaque intervalle de la forme $\cro{a_i^k, b_i^k}$, on vï¿½rifie que $b_i^k - a_i^k \leqslant e_l$. Dans le cas contraire, on scinde cet intervalle jusqu'ï¿½ ce que chacun des morceaux soit infï¿½rieur ï¿½ $e_l$. La figure~\ref{image_graphem_zone_coupure_soulignement} soulï¿½ve le problï¿½me de soulignement. Etant donnï¿½ la condition exprimï¿½e en~(\ref{image_graphem_seg_eq_2}), il est impossible de sï¿½lectionner une seule zone de coupure probable entre graphï¿½mes. Par consï¿½quent, la solution adoptï¿½e est l'introduction de points de coupure entre les zones de non-coupure correspondant ï¿½ des minima locaux. 
 
             \begin{figure}[ht]
         $$\frame{$\begin{array}[c]{c}\includegraphics[height=1.6cm, width=3cm]
@@ -1256,7 +1256,7 @@ Pour chaque intervalle de la forme $\cro{a_i^k, b_i^k}$, on vï¿½rifie que $b_i^k
 Dans ce cas, pour une direction donnï¿½e $k$, l'ensemble des points de coupures correspond aux minima locaux de l'histogramme $\pa{h_i^k}_i$. Un minimum $m^k$ local vï¿½rifie la condition suivante~:
 
             \begin{eqnarray}
-            h^k_{m^k} &=& \min \acc{ h_x^k \sac  m^k - e_t \infegal x \infegal m^k + e_t } 
+            h^k_{m^k} &=& \min \acc{ h_x^k \sac  m^k - e_t \leqslant x \leqslant m^k + e_t } 
             \label{image_graphem_seg_eq_2_prime}
             \end{eqnarray}
 
@@ -1294,10 +1294,10 @@ Ces minima locaux n'existent pas toujours, dans ces cas, on cherche ï¿½ dï¿½term
 
 
 
-Les nombres $s_{x^-}^k$ et $s_{x^+}^k$ sont dï¿½finis par la figure~\ref{image_graphem_aire_cut}. L'ensemble $\acc{c^k_i}_{ik}$ est l'ensemble des droites de segmentation possibles sï¿½lectionnï¿½es par l'algorithme, cet ensemble est triï¿½ par $i$ et $k$ croissant ($i$ d'abord, l'indice $k$ dï¿½partageant les points de mï¿½me indice $i$) et aboutit ï¿½ la suite $\pa{d_n}_{ 1 \infegal n \infegal N }$. Il reste ï¿½ dï¿½terminer quelles sont parmi les points de cette suite les droites de segmentation les plus pertinentes.
+Les nombres $s_{x^-}^k$ et $s_{x^+}^k$ sont dï¿½finis par la figure~\ref{image_graphem_aire_cut}. L'ensemble $\acc{c^k_i}_{ik}$ est l'ensemble des droites de segmentation possibles sï¿½lectionnï¿½es par l'algorithme, cet ensemble est triï¿½ par $i$ et $k$ croissant ($i$ d'abord, l'indice $k$ dï¿½partageant les points de mï¿½me indice $i$) et aboutit ï¿½ la suite $\pa{d_n}_{ 1 \leqslant n \leqslant N }$. Il reste ï¿½ dï¿½terminer quelles sont parmi les points de cette suite les droites de segmentation les plus pertinentes.
 
 
-A cette suite, sont ajoutï¿½s les ï¿½lï¿½ments sï¿½lectionnï¿½s par l'ï¿½quation~(\ref{image_graphem_seg_eq_2_prime}) et deux ï¿½lï¿½ments $d_0$ et $d_{N+1}$ qui correspondent aux deux sï¿½parations verticales de dï¿½but et de fin, c'est-ï¿½-dire les limites de l'image. On suppose qu'il existe une distance entre deux droites de coupures $i$ et $j$ notï¿½e $\pa{D_{ij}}_{ 0 \infegal i,j \infegal N+1 }$, trouver la meilleure segmentation revient alors ï¿½ trouver le plus court chemin entre les n\oe uds $d_0$ et $d_{N+1}$ en passant ou non par $n$ autres n\oe uds $\pa{d_n}_{ 1 \infegal n \infegal N }$. Ce problï¿½me est usuel et rï¿½solu par un algorithme du plus court chemin de type Djikstra (voir \citeindex{Dijkstra1971}). Il reste ï¿½ dï¿½terminer la distance $D_{ij}$ entre deux droites de coupures qui doit prendre en compte trois ï¿½lï¿½ments~:
+A cette suite, sont ajoutï¿½s les ï¿½lï¿½ments sï¿½lectionnï¿½s par l'ï¿½quation~(\ref{image_graphem_seg_eq_2_prime}) et deux ï¿½lï¿½ments $d_0$ et $d_{N+1}$ qui correspondent aux deux sï¿½parations verticales de dï¿½but et de fin, c'est-ï¿½-dire les limites de l'image. On suppose qu'il existe une distance entre deux droites de coupures $i$ et $j$ notï¿½e $\pa{D_{ij}}_{ 0 \leqslant i,j \leqslant N+1 }$, trouver la meilleure segmentation revient alors ï¿½ trouver le plus court chemin entre les n\oe uds $d_0$ et $d_{N+1}$ en passant ou non par $n$ autres n\oe uds $\pa{d_n}_{ 1 \leqslant n \leqslant N }$. Ce problï¿½me est usuel et rï¿½solu par un algorithme du plus court chemin de type Djikstra (voir \citeindex{Dijkstra1971}). Il reste ï¿½ dï¿½terminer la distance $D_{ij}$ entre deux droites de coupures qui doit prendre en compte trois ï¿½lï¿½ments~:
 
         \indexfr{Djikstra}
         \indexfr{plus court chemin}
@@ -1442,13 +1442,13 @@ Vient ensuite le problï¿½me des accents qui se prï¿½sente sous deux formes~\text
 Parmi ces diffï¿½rents problï¿½mes, seul le cas des accents appartenant ï¿½ des composantes connexes diffï¿½rentes sera traitï¿½. Les autres n'apparaissent que pour des couples ou des groupes de lettres prï¿½cis et seront modï¿½lisï¿½s ultï¿½rieurement notamment (voir paragraphe~\ref{hmm_bi_lettre}, page~\pageref{hmm_bi_lettre}). Il n'est pas non plus nï¿½cessaire de traiter des problï¿½mes qui ne surviennent que peu frï¿½quemment, des dï¿½veloppements spï¿½cifiques risquent d'introduire de mauvais cas parmi ceux dï¿½jï¿½ bien traitï¿½s. Un motif trop peu frï¿½quent ne peut ï¿½tre appris par des modï¿½les probabilistes tels que les chaï¿½nes de Markov cachï¿½es et les rï¿½seaux de neurones, et ce, qu'il soit bien ou mal segmentï¿½.
 
 
-L'algorithme qui suit permet de dï¿½terminer la profondeur des vallï¿½es, celle des collines s'en dï¿½duit facilement. On cherche la vallï¿½e la plus profonde et pour ce faire, on construit la matrice $v\pa{x,y}_{ \begin{subarray}{c} 1 \infegal x \infegal X \\ 1 \infegal y \infegal Y \end{subarray}}$ oï¿½ $\pa{x,y}$ est un pixel de l'image. Cette matrice est dï¿½finie par l'algorithme suivant~\ref{image_algorithm_vpaxy_profondeur}.
+L'algorithme qui suit permet de dï¿½terminer la profondeur des vallï¿½es, celle des collines s'en dï¿½duit facilement. On cherche la vallï¿½e la plus profonde et pour ce faire, on construit la matrice $v\pa{x,y}_{ \begin{subarray}{c} 1 \leqslant x \leqslant X \\ 1 \leqslant y \leqslant Y \end{subarray}}$ oï¿½ $\pa{x,y}$ est un pixel de l'image. Cette matrice est dï¿½finie par l'algorithme suivant~\ref{image_algorithm_vpaxy_profondeur}.
 
 
         \begin{xalgorithm}{profondeur des vallï¿½es, calcul de
                                                 $v\pa{x,y}$
                                                 %$v\pa{x,y}_{ \begin{subarray} 
-                                                %    1 \infegal x \infegal X \\ 1 \infegal y \infegal Y     \end{subarray}}$
+                                                %    1 \leqslant x \leqslant X \\ 1 \leqslant y \leqslant Y     \end{subarray}}$
                                                     }
         \label{image_algorithm_vpaxy_profondeur}
         
@@ -1473,7 +1473,7 @@ L'algorithme qui suit permet de dï¿½terminer la profondeur des vallï¿½es, celle 
             \begin{xfor}{x}{2}{X}
             $v\pa{x,y} \longleftarrow \left\{ \begin{array} {ll}
                                                 0                                                                                       & 
-                                                                \text{si } \forall i \infegal x, \; N\pa{i,y} \text{ est faux}\\
+                                                                \text{si } \forall i \leqslant x, \; N\pa{i,y} \text{ est faux}\\
                                                 max \acc{\; v\pa{x,y}, \; v\pa{x,y+1}+1 \; }        & \text{sinon}
                                                 \end{array} \right.$ 
             \end{xfor} \\
@@ -1900,7 +1900,7 @@ A partir d'une classification non supervisï¿½e des graphï¿½mes obtenue grï¿½ce ï
 Soit $v\pa{G}$ un vecteur de caractï¿½ristiques attachï¿½ ï¿½ un graphï¿½me~$G$ et~$v\pa{H}$ le vecteur attachï¿½ au graphï¿½me~$H$ qui est un exemple reprï¿½sentatif d'une classe quelconque, est-il possible de trouver une forme $G'$ obtenue par une transformation $f$ de coï¿½t $c_f$ telle que~:
 
         $$
-        d\pa{v\pa{G'},v\pa{H}} + c_f \infegal d\pa{v\pa{G},v\pa{H}} 
+        d\pa{v\pa{G'},v\pa{H}} + c_f \leqslant d\pa{v\pa{G},v\pa{H}} 
         $$
 
 \indexfrr{carte}{distance}
@@ -1938,7 +1938,7 @@ En supposant raisonnablement que la forme $G^*$ doit rester homotope\seeannex{an
                     $$
                     \begin{array}{rl}
                     \forall i,                 & G\pa{p_i} \neq H\pa{p_i} \\
-                    \forall \pa{i,j}, &  i \infegal j \Longrightarrow D_G\pa{p_i} \infegal D_G\pa{p_j}
+                    \forall \pa{i,j}, &  i \leqslant j \Longrightarrow D_G\pa{p_i} \leqslant D_G\pa{p_j}
                     \end{array}
                     $$
             
@@ -2069,8 +2069,8 @@ L'objectif consiste ï¿½ relier deux composantes connexes diffï¿½rentes par une l
             par l'ensemble~:
                     
                     $$
-                    V\pa{x,y} = \acc{ \pa{x',y'} \sac \pa{x',y'} \neq \pa{x,y}, \; \abs{x'-x} \infegal 1, 
-                                                                \; \abs{y'-y} \infegal 1 }
+                    V\pa{x,y} = \acc{ \pa{x',y'} \sac \pa{x',y'} \neq \pa{x,y}, \; \abs{x'-x} \leqslant 1, 
+                                                                \; \abs{y'-y} \leqslant 1 }
                     $$
 
             \begin{xalgostep}{tri de l'ensemble $F$}
@@ -2087,7 +2087,7 @@ L'objectif consiste ï¿½ relier deux composantes connexes diffï¿½rentes par une l
             \begin{xalgostep}{connexion des composantes connexes}
             L'ensemble $F$ est triï¿½, on note $F = \vecteur{p_1}{p_M}$, il vï¿½rifie~:
                     $$
-                            \forall i, \; dist_I\pa{p_i} \infegal dist_I\pa{p_{i+1}}
+                            \forall i, \; dist_I\pa{p_i} \leqslant dist_I\pa{p_{i+1}}
                     $$
             \end{xalgostep}
             
