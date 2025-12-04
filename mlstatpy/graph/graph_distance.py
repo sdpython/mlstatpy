@@ -758,7 +758,7 @@ class GraphDistance:
             max(sum(_.values()) for _ in countLeft.values()),
         )
         while count > 1:
-            k, v = matrix.pop()
+            _k, v = matrix.pop()
             i, j = v
             countRight[i][j] -= 1
             countLeft[j][i] -= 1
@@ -915,7 +915,7 @@ class GraphDistance:
 
         if verbose > 0:
             print("[distance_matching_graphs_paths] private_count_left_right")
-        count_edge_left, count_edge_right = self.private_count_left_right(
+        _count_edge_left, count_edge_right = self.private_count_left_right(
             reduction_edge
         )
         count_vertex_left, count_vertex_right = self.private_count_left_right(

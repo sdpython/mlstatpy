@@ -10,7 +10,7 @@ Les maths d'abord, la programmation ensuite
 Le livre `The Elements of Statistical Learning <http://statweb.stanford.edu/~tibs/ElemStatLearn/>`_
 est considéré comme la bible en matière de machine learning. Ce site aborde des sujets connexes.
 Le site est aussi disponible (format brut de fonderie) sur
-`GitHub/mlstatpy <https://github.com/sdpython/mlstatpy>`_ |gitlogo|.
+`github/mlstatpy <https://github.com/sdpython/mlstatpy>`_ |gitlogo|.
 
 .. toctree::
     :maxdepth: 1
@@ -78,4 +78,5 @@ Xavier Dupré
 Older versions
 ++++++++++++++
 
+* `0.5.0 <../v0.5.0/index.html>`_
 * `0.4.0 <../v0.4.0/index.html>`_

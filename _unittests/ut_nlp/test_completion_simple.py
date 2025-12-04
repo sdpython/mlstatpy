@@ -185,8 +185,8 @@ class TestCompletionSimple(unittest.TestCase):
         # print(titles[:5])
         trie = CompletionSystem([(None, q) for q in titles])
         trie.compute_metrics(details=True)
-        nb, gmks, gmksd, gmksd2, size = cmks(trie)
-        gain, gain_dyn, gain_dyn2, ave_length = gain_dynamique_moyen_par_mot(
+        nb, _gmks, _gmksd, _gmksd2, _size = cmks(trie)
+        _gain, _gain_dyn, _gain_dyn2, _ave_length = gain_dynamique_moyen_par_mot(
             titles, [1.0] * len(titles)
         )
         # print("***", 1, nb, size, "*", gmks / size, gmksd / size, gmksd2 / size)

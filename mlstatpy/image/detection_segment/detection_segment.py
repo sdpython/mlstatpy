@@ -233,7 +233,7 @@ def detect_segments(
     # on calcule les tables de la binomiale pour eviter d'avoir a le fait a
     # chaque fois qu'on en a besoin
     yy, xx = grad.shape[:2]
-    nbbin = int(math.ceil(math.sqrt(xx * xx + yy * yy)))
+    nbbin = int(math.ceil(math.sqrt(xx * xx + yy * yy)))  # noqa: RUF046
     binomiale = tabule_queue_binom(nbbin, proba_bin)
 
     # nb_seg est le nombre total de segment de l'image
