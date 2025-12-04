@@ -24,7 +24,6 @@ extensions = [
     "sphinx_runpython.epkg",
     "sphinx_runpython.gdot",
     "sphinx_runpython.runpython",
-    "sphinxcontrib.blockdiag",
     "matplotlib.sphinxext.plot_directive",
 ]
 

@@ -1,6 +1,5 @@
 astroid
 black
-blockdiag
 coverage
 Cython
 cytoolz
@@ -43,12 +42,12 @@ skl2onnx
 sphinx
 sphinx-gallery
 sphinx-issues
-sphinxcontrib-blockdiag
 sphinx-runpython
 stack_data
 statsmodels
 tqdm
 traitlets
+transformers
 vprof
 wheel
 xgboost
