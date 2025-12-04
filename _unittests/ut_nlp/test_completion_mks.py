@@ -56,8 +56,8 @@ class TestCompletionMks(unittest.TestCase):
             titles = [_.strip(" \n\r\t") for _ in f.readlines()]
         # print(titles[:5])
         trie = CompletionTrieNode.build([(None, q) for q in titles])
-        nb, gmks, gmksd, gmksd2, size = cmks(trie)
-        gain, gain_dyn, gain_dyn2, ave_length = gain_dynamique_moyen_par_mot(
+        nb, _gmks, _gmksd, _gmksd2, _size = cmks(trie)
+        _gain, _gain_dyn, _gain_dyn2, _ave_length = gain_dynamique_moyen_par_mot(
             titles, [1.0] * len(titles)
         )
         # print("***", 1, nb, size, "*", gmks / size, gmksd / size, gmksd2 / size)

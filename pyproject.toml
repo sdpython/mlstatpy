@@ -1,3 +1,39 @@
+[project]
+authors = [{name="Xavier Dupré", email="xavier.dupre@gmail.com"}]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: C",
+    "Programming Language :: Python",
+    "Topic :: Software Development",
+    "Topic :: Scientific/Engineering",
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = ["numpy>=2", "scikit-learn>=1.5", "scipy"]
+description = "Points de détails liés au machine learning"
+keywords = ["cython", "scikit-learn", "machine-learning"]
+license = {file = "LICENSE.txt"}
+name = "mlstatpy"
+readme = "README.rst"
+requires-python = ">=3.10"
+version = "0.5.0"
+
+[project.urls]
+homepage = "https://sdpython.github.io/doc/mlstatpy/dev/"
+documentation = "https://sdpython.github.io/doc/mlstatpy/dev/"
+repository = "https://github.com/sdpython/mlstatpy/"
+changelog = "https://sdpython.github.io/doc/mlstatpy/dev/CHANGELOGS.html"
+
 [tool.rstcheck]
 report_level = "INFO"
 ignore_directives = [
@@ -81,8 +117,8 @@ select = [
     "B905",
     "C401", "C408", "C413",
     "RUF012", "RUF100", "RUF010",
-    "SIM108", "SIM910", "SIM110", "SIM102", "SIM114", "SIM103",
-    "UP015", "UP027", "UP031", "UP034", "UP032", "UP006", "UP035", "UP007", "UP030", "UP038"
+    "SIM905", "SIM108", "SIM910", "SIM110", "SIM102", "SIM114", "SIM103",
+    "UP015", "UP027", "UP031", "UP034", "UP032", "RUF051", "UP006", "UP035", "UP045", "UP007", "UP030", "UP038"
 ]
 "_unittests/**" = ["SIM113", "RUF005", "E402"]
 "**/plot*.py" = ["B018"]

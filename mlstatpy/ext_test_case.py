@@ -50,7 +50,6 @@ def get_url_content_timeout(
     The function raises the exception :class:`InternetException`.
     """
     import gzip
-    import socket
     import urllib.error as urllib_error
     import urllib.request as urllib_request
     import http.client as http_client
@@ -110,7 +109,7 @@ def get_url_content_timeout(
         urllib_error.HTTPError,
         urllib_error.URLError,
         ConnectionRefusedError,
-        socket.timeout,
+        TimeoutError,
         ConnectionResetError,
         http_client.BadStatusLine,
         http_client.IncompleteRead,
@@ -384,7 +383,9 @@ class ExtTestCase(unittest.TestCase):
             value = numpy.array(value).astype(expected.dtype)
         self.assertEqualArray(expected, value, atol=atol, rtol=rtol)
 
-    def assertRaise(self, fct: Callable, exc_type: Optional[Exception] = None):
+    def assertRaise(
+        self, fct: Callable, exc_type: Optional[Exception] = None
+    ):  # noqa: UP045
         exct = exc_type or Exception
         try:
             fct()

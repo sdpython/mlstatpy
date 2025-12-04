@@ -76,7 +76,7 @@ class TestDocumentationNotebook(ExtTestCase):
                     cmds, stdout=subprocess.PIPE, stderr=subprocess.PIPE
                 )
                 res = p.communicate()
-                out, err = res
+                _out, err = res
                 st = err.decode("ascii", errors="ignore")
                 if "No such file or directory" in st:
                     raise FileNotFoundError(st)  # noqa: B904

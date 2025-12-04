@@ -139,7 +139,9 @@ class CompletionElement:
         return "\n".join(rows)
 
     def init_metrics(
-        self, position: int, completions: Optional[List["CompletionElement"]] = None
+        self,
+        position: int,
+        completions: Optional[List["CompletionElement"]] = None,  # noqa: UP045
     ):
         """
         Initializes the metrics.
@@ -198,7 +200,7 @@ class CompletionElement:
         position: int,
         improved: dict,
         delta: float,
-        completions: Optional[List["CompletionElement"]] = None,
+        completions: Optional[List["CompletionElement"]] = None,  # noqa: UP045
         iteration=-1,
     ):
         """

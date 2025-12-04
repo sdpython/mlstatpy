@@ -78,4 +78,5 @@ Xavier Dupré
 Older versions
 ++++++++++++++
 
+* `0.5.0 <../v0.5.0/index.html>`_
 * `0.4.0 <../v0.4.0/index.html>`_

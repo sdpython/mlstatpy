@@ -184,7 +184,7 @@ class TestCompletion(ExtTestCase):
                 nb += 1
             return nb, gmks, gmksd, size
 
-        nb, gmks, gmksd, size = cmks(trie)
+        nb, gmks, gmksd, _size = cmks(trie)
         # print(nb, size, gmks / nb, gmksd / nb, gmks / size, gmksd / size)
         if gmks > gmksd:
             raise AssertionError(f"gmks={gmks} gmksd={gmksd}")
@@ -198,7 +198,7 @@ class TestCompletion(ExtTestCase):
             raise AssertionError("should not happen")
 
         trie = CompletionTrieNode.build(titles)
-        nb2, gmks2, gmksd2, size = cmks(trie)
+        nb2, gmks2, gmksd2, _size = cmks(trie)
         self.assertEqual(nb, nb2)
         self.assertEqual(gmks, gmks2)
         self.assertEqual(gmksd, gmksd2)
@@ -207,7 +207,7 @@ class TestCompletion(ExtTestCase):
         # print("-----")
         for i in range(1, 20):
             trie = CompletionTrieNode.build(titles[:i])
-            nb, gmks, gmksd, size = cmks(trie)
+            nb, gmks, gmksd, _size = cmks(trie)
             if i == 1:
                 self.assertEqual(gmks, 30)
             # print(i, nb, size, gmks / nb, gmksd / nb, gmks / size, gmksd / size, gmks)
@@ -231,14 +231,14 @@ class TestCompletion(ExtTestCase):
             (None, '"contra el gang del chicharron"', '"Contra el gang del chicharron')
         ]
         trie = CompletionTrieNode.build(titles)
-        nb, gmks, gmksd, size = cmks(trie)
+        _nb, gmks, _gmksd, _size = cmks(trie)
         # print("***", 1, nb, size, gmks / nb, gmksd / nb,
         #       gmks / size, gmksd / size, gmks)
         self.assertEqual(gmks, 30)
 
         titles.append((None, '"la sequestree"', '"La séquestrée'))
         trie = CompletionTrieNode.build(titles)
-        nb, gmks, gmksd, size = cmks(trie)
+        _nb, gmks, _gmksd, _size = cmks(trie)
         # print("***", 2, nb, size, gmks / nb, gmksd / nb,
         #       gmks / size, gmksd / size, gmks)
         # for n in trie.leaves():
