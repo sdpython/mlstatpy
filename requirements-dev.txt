@@ -24,6 +24,7 @@ mlinsights
 nbconvert
 nbsphinx
 notebook
+onnxscript
 onnx-array-api
 onnx-extended
 onnxruntime>=1.12
