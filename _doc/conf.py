@@ -72,7 +72,7 @@ nbsphinx_epilog = """
 """
 
 # The following is used by sphinx.ext.linkcode to provide links to github
-linkcode_resolve = make_linkcode_resolve(
+_linkcode_resolve = make_linkcode_resolve(
     "mlstatpy",
     (
         "https://github.com/sdpython/mlstatpy/"
@@ -80,6 +80,11 @@ linkcode_resolve = make_linkcode_resolve(
         "{path}#L{lineno}"
     ),
 )
+
+
+def linkcode_resolve(domain, info):
+    return _linkcode_resolve(domain, info)
+
 
 latex_elements = {
     "papersize": "a4",
